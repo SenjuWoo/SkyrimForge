@@ -49,8 +49,13 @@ def _pinned_go_toolchain() -> str:
     ci.yml is the single source, so this reader and the one in
     scripts/rebuild_native_helpers.py cannot drift apart.
     """
-    workflow = ROOT / ".github" / "workflows" / "ci.yml"
-    if not workflow.exists():
+    workflow = None
+    for parent in (ROOT, *ROOT.parents):
+        candidate = parent / ".github" / "workflows" / "ci.yml"
+        if candidate.is_file():
+            workflow = candidate
+            break
+    if workflow is None:
         return ""
     versions = re.findall(r'go-version:\s*"([0-9]+\.[0-9]+(?:\.[0-9]+)?)"',
                           workflow.read_text(encoding="utf-8"))
@@ -367,7 +372,14 @@ def validate_mcp(errors: list[str]) -> dict[str, Any]:
 def _powershell_expandable_strings(text: str) -> list[tuple[int, str]]:
     strings: list[tuple[int, str]] = []
     for line_number, line in enumerate(text.splitlines(), 1):
-        for match in re.finditer(r'"(?:[^"`\r\n]|`.)*"', line):
+        # Disjoint alternatives. The escape branch starts with a backtick, so
+        # the ordinary branch excludes it -- a backtick also satisfies
+        # [^"\r\n], and that overlap is the py/redos CodeQL flagged. Restoring
+        # the parenthesis the autofix dropped made it compile and left the
+        # blowup where it was (4.2 s against 0 ms on an unterminated string
+        # with 26 escapes) -- and, by putting the ordinary branch first, made
+        # an escaped quote `" end the string instead of continuing it.
+        for match in re.finditer(r'"(?:`[^\r\n]|[^"`\r\n])*"', line):
             strings.append((line_number, match.group(0)))
     for match in re.finditer(r'@"\r?\n(.*?)\r?\n"@', text, flags=re.S):
         line_number = text.count("\n", 0, match.start()) + 1
@@ -389,7 +401,9 @@ def validate_powershell(errors: list[str], warnings: list[str]) -> dict[str, Any
             if bad:
                 findings.append(f"ambiguous variable followed by colon at {path.name}:{line_number}: {bad.group(0)}")
         # Simple delimiter scan after removing strings/comments is not a parser, but catches accidental truncation.
-        scrub=re.sub(r"(?m)#.*$|'(?:''|[^'])*'|\"(?:[^\"`]|`.)*\"","",script_text)
+        # Same disjointness rule; [\s\S] rather than . so a backtick before a
+        # newline -- PowerShell's line continuation -- is still consumed.
+        scrub=re.sub(r"(?m)#.*$|'(?:''|[^'])*'|\"(?:`[\s\S]|[^\"`])*\"","",script_text)
         for left,right in (("{","}"),("(",")")):
             if scrub.count(left)!=scrub.count(right): findings.append(f"unbalanced {left}{right}: {path.name}")
     quoted_dp0 = re.compile(r'"%~dp0"(?=\s|$)', re.I)
@@ -487,10 +501,26 @@ def validate_version_sources(errors: list[str]) -> dict[str, Any]:
     sources["integrations/skyrim-forge/SKILL.md (series)"] = series if skill_versions and not stale_skill else (stale_skill[0] if stale_skill else None)
     # The workflow must derive the expected native string rather than hardcode
     # it; a literal here is exactly what went stale before.
-    workflow = (ROOT / ".github" / "workflows" / "ci.yml").read_text(encoding="utf-8")
-    hardcoded = re.findall(r"SkyrimForge\.Native [0-9]+\.[0-9]+\.[0-9]+ go", workflow)
-    if hardcoded:
-        errors.append(f"ci.yml hardcodes a native version string: {sorted(set(hardcoded))}")
+    #
+    # Forge ships inside the Ultimate AI Starter Bundle monorepo, so the
+    # workflow that runs these jobs lives at the CHECKOUT root and not in this
+    # subtree -- GitHub only reads .github/workflows from the repository root.
+    # Walk up to find it, and check every workflow it holds rather than one
+    # remembered filename.
+    workflow_dir = next(
+        (parent / ".github" / "workflows"
+         for parent in (ROOT, *ROOT.parents)
+         if (parent / ".github" / "workflows").is_dir()),
+        None,
+    )
+    hardcoded: list[str] = []
+    # An extracted install carries no .github at all. There is no workflow to be
+    # wrong about, so absence is not a finding.
+    for path in sorted(workflow_dir.glob("*.yml")) if workflow_dir else []:
+        found = re.findall(r"SkyrimForge\.Native [0-9]+\.[0-9]+\.[0-9]+ go", path.read_text(encoding="utf-8"))
+        if found:
+            errors.append(f"{path.name} hardcodes a native version string: {sorted(set(found))}")
+            hardcoded += found
     # The archive builder names the release directory and must not restate it.
     archive_builder = (ROOT / "scripts" / "build_release_archive.py").read_text(encoding="utf-8")
     literal = re.findall(r'^VERSION\s*=\s*"[0-9]+\.[0-9]+\.[0-9]+"', archive_builder, re.M)

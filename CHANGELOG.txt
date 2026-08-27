@@ -1,3 +1,10 @@
+Skyrim Forge 6.0.0
+
+- Developed inside the Ultimate AI Starter Bundle repository at BUNDLED-TOOLS/skyrim-forge; no separate release.
+- Removed `forge bundle-contract`: a version handshake between two halves of one repository can only go stale, never usefully fail. The bundle installer runs `forge doctor` instead.
+- The version gate finds CI at the checkout root instead of opening a workflow path this subtree no longer has.
+- Native helpers rebuilt reproducibly as 6.0.0 with pinned Go 1.23.2.
+
 Skyrim Forge 5.2.1
 
 - forge --help, the GUI title and the Go self-test fixture announced the 4.2 series from a 5.2.0 install; all three now interpolate VERSION.

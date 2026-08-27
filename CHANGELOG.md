@@ -1,5 +1,30 @@
 # Changelog
 
+## 6.0.0
+
+Skyrim Forge is developed inside the **Ultimate AI Starter Bundle** repository
+now, at `BUNDLED-TOOLS/skyrim-forge`, and is no longer released separately. The
+split is what allowed bundle 7.8.0 to call a contract field Forge has never
+emitted: two files that had to agree, in two repositories, with no single commit
+that could test both. One repository, one commit, one gate.
+
+- **Removed `forge bundle-contract`.** It negotiated a supported bundle version
+  range, which was only ever needed because the two shipped from separate repos
+  on separate schedules. Shipping together, that check cannot fail for a real
+  reason -- but it can go stale and start rejecting the very bundle it lives
+  inside, which is one edit away from what already happened. The bundle
+  installer runs `forge doctor` instead, which can still genuinely fail: broken
+  virtualenv, missing native helper, unreadable config, unresolvable workspace.
+- **The version gate looks for CI at the checkout root.** GitHub reads
+  `.github/workflows` only from a repository root, so this subtree carries no
+  workflows of its own any more. The gate walks up to the checkout root and
+  scans every workflow it finds, instead of opening one remembered filename --
+  which would now be a file that no longer exists.
+- **The install directory is unchanged and still carries no version.** It is
+  `Skyrim-Forge`; the bundle installer migrates a version-stamped install onto
+  that name.
+- Native helpers rebuilt reproducibly as 6.0.0 under pinned Go 1.23.2.
+
 ## 5.2.1
 
 - **`forge --help`, the GUI title and the Go self-test fixture all announced the
@@ -21,7 +46,7 @@ Compatibility and one-click integration release for Ultimate AI Starter Bundle 7
 
 - **Machine-readable bundle handshake.** `forge bundle-contract --bundle-version X.Y.Z`
   now proves whether this Forge build and a bundle can safely cooperate. Forge 5.2
-  accepts bundle `>=7.8.0,<8.0.0`, returns capabilities as JSON, and uses a failing
+  accepts the legacy 7.8.x bundle range, returns capabilities as JSON, and uses a failing
   process exit code for an incompatible contract.
 - **Provider registration remains self-verifying.** The 5.1.7 Claude Desktop support
   is retained alongside Claude Code, Codex, Grok, Kimi, and Hermes registration.
