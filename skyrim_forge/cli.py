@@ -19,7 +19,6 @@ def parser() -> argparse.ArgumentParser:
     sub.add_parser("version")
     sub.add_parser("doctor")
     sub.add_parser("self-test")
-    bc = sub.add_parser("bundle-contract"); bc.add_argument("--bundle-version", required=True)
     sub.add_parser("config-show")
     setp = sub.add_parser("config-set"); setp.add_argument("key"); setp.add_argument("value")
     sub.add_parser("discover-tools")
@@ -90,11 +89,6 @@ def main(argv: list[str] | None = None) -> int:
     if args.command == "self-test":
         from .selftest import run_all
         value = run_all()
-        print(dumps(value))
-        return _exit_code(value)
-    if args.command == "bundle-contract":
-        from .bundle_contract import evaluate_bundle_contract
-        value = evaluate_bundle_contract(args.bundle_version)
         print(dumps(value))
         return _exit_code(value)
     if args.command == "mcp":

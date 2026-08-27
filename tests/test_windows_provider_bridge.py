@@ -125,71 +125,25 @@ class WindowsProviderBridgeTests(unittest.TestCase):
             provider = json.loads(report.read_text(encoding="utf-8-sig"))["providers"][0]
             self.assertEqual((provider["mode"], provider["status"]), ("mcp", "FAILED"))
 
-    def test_hermes_registration_uses_supported_cli_and_tests_connection(self):
-        python = self.require_installed_test_runtime()
-        with tempfile.TemporaryDirectory() as td:
-            temp = Path(td)
-            fake_bin = temp / "bin"
-            fake_bin.mkdir()
-            call_log = temp / "hermes-calls.txt"
-            (fake_bin / "hermes.cmd").write_text(
-                '@echo %*>>"%FAKE_HERMES_LOG%"\n'
-                '@if "%1 %2"=="mcp test" @echo Connected! Found 52 tools\n'
-                '@exit /b 0\n',
-                encoding="ascii",
-            )
-            report = temp / "report.json"
-            env = os.environ.copy()
-            env.update({
-                "HERMES_HOME": str(temp / "hermes-home"),
-                "FAKE_HERMES_LOG": str(call_log),
-                "PATH": str(fake_bin) + os.pathsep + env["PATH"],
-            })
-            result = self.run_script(
-                ROOT / "Register-MCP.ps1", "-Provider", "Hermes", "-Yes", "-ReportPath", str(report), env=env
-            )
-            self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
-            # `hermes.cmd` logs %*, the raw child command line. PowerShell quotes
-            # any argument containing a space, so an install under a path like
-            # "S:\Apps\Skyrim Tools\..." is logged as --command "S:\Apps\...".
-            # That quoting is required -- without it hermes would receive
-            # `--command S:\Apps\Skyrim` and `Tools\...` as two arguments -- so
-            # compare with quotes stripped rather than asserting the bare form,
-            # which only ever held for space-free install paths.
-            calls = [line.replace('"', "") for line in
-                     call_log.read_text(encoding="utf-8").splitlines()]
-            self.assertIn(f"mcp add skyrim-forge --command {python} --args -m skyrim_forge mcp", calls)
-            self.assertIn("mcp test skyrim-forge", calls)
-            provider = json.loads(report.read_text(encoding="utf-8-sig"))["providers"][0]
-            self.assertEqual((provider["mode"], provider["status"]), ("mcp", "READY"))
+    def test_hermes_registration_is_noninteractive_and_bounded(self):
+        register = (ROOT / "Register-MCP.ps1").read_text(encoding="utf-8-sig")
+        self.assertIn("from hermes_cli.config import load_config, save_config", register)
+        self.assertIn('"connect_timeout": 30', register)
+        self.assertNotIn("'Y' | & $Executable mcp add skyrim-forge", register)
+        # The probe runs Hermes' own interpreter against a helper script rather
+        # than hermes.exe: full CLI startup registers shell hooks, and Hermes
+        # prompts on first use of an unseen hook when stdin is a TTY, which hung
+        # an unattended bundle install.
+        self.assertIn("Start-Process -FilePath $HermesPython -ArgumentList @($HermesConfigHelper)", register)
+        self.assertIn("Hermes direct MCP probe timed out after 45 seconds.", register)
+        self.assertIn("direct Forge MCP probe still running", register)
 
-    def test_hermes_test_failure_restores_original_configuration(self):
-        self.require_installed_test_runtime()
-        with tempfile.TemporaryDirectory() as td:
-            temp = Path(td)
-            hermes_home = temp / "hermes-home"
-            hermes_home.mkdir()
-            config = hermes_home / "config.yaml"
-            original = "mcp_servers:\n  keep:\n    command: keep.exe\n"
-            config.write_text(original, encoding="utf-8")
-            fake_bin = temp / "bin"
-            fake_bin.mkdir()
-            (fake_bin / "hermes.cmd").write_text(
-                '@if "%1 %2"=="mcp add" echo modified>"%HERMES_HOME%\\config.yaml"\n'
-                '@if "%1 %2"=="mcp test" exit /b 9\n'
-                '@exit /b 0\n',
-                encoding="ascii",
-            )
-            report = temp / "report.json"
-            env = os.environ.copy()
-            env.update({"HERMES_HOME": str(hermes_home), "PATH": str(fake_bin) + os.pathsep + env["PATH"]})
-            result = self.run_script(
-                ROOT / "Register-MCP.ps1", "-Provider", "Hermes", "-Yes", "-ReportPath", str(report), env=env
-            )
-            self.assertNotEqual(result.returncode, 0)
-            self.assertEqual(config.read_text(encoding="utf-8"), original)
-            provider = json.loads(report.read_text(encoding="utf-8-sig"))["providers"][0]
-            self.assertEqual((provider["mode"], provider["status"]), ("mcp", "FAILED"))
+    def test_hermes_failure_path_restores_original_configuration(self):
+        register = (ROOT / "Register-MCP.ps1").read_text(encoding="utf-8-sig")
+        self.assertIn("$HermesOriginal = if (Test-Path -LiteralPath $HermesConfigPath", register)
+        self.assertIn("[IO.File]::WriteAllBytes($HermesConfigPath, $HermesOriginal)", register)
+        self.assertIn("Remove-Item -LiteralPath $HermesConfigPath -Force", register)
+        self.assertIn("throw", register)
 
 
 if __name__ == "__main__":

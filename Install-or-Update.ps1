@@ -1,4 +1,4 @@
-[CmdletBinding()]
+﻿[CmdletBinding()]
 param(
     [switch]$BootstrapPython
 )
@@ -11,8 +11,18 @@ $Utf8NoBom = New-Object System.Text.UTF8Encoding($false)
 
 function Invoke-Checked {
     param([string]$Label, [string]$Command, [object[]]$Arguments = @())
-    & $Command @Arguments
-    if ($LASTEXITCODE -ne 0) { throw "$Label failed with exit code $LASTEXITCODE." }
+    Write-Host ("  ..  " + $Label + '...') -ForegroundColor DarkCyan
+    $Timer = [Diagnostics.Stopwatch]::StartNew()
+    $prevEap=$ErrorActionPreference; $ErrorActionPreference='Continue'
+    $Output = (& $Command @Arguments 2>&1 | Out-String)
+    $ErrorActionPreference=$prevEap
+    $ExitCode = $LASTEXITCODE
+    $Timer.Stop()
+    $Elapsed = $Timer.Elapsed.TotalSeconds
+    if ($ExitCode -ne 0) {
+        throw ("{0} failed with exit code {1} after {2:N1}s.`n{3}" -f $Label, $ExitCode, $Elapsed, $Output.Trim())
+    }
+    Write-Host ("  OK  {0} ({1:N1}s)" -f $Label, $Elapsed) -ForegroundColor Green
 }
 
 function Find-Python {

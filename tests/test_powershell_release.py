@@ -7,6 +7,8 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 
+from _workflows import workflows_dir
+
 
 def owned_powershell_scripts(root: Path) -> list[Path]:
     scripts = [*root.glob('*.ps1')]
@@ -26,7 +28,8 @@ class PowerShellReleaseTests(unittest.TestCase):
         for path in owned_powershell_scripts(ROOT):
             text = path.read_text(encoding='utf-8-sig')
             for line_number, line in enumerate(text.splitlines(), 1):
-                for match in re.finditer(r'"(?:[^"`\r\n]|`.)*"', line):
+                # Disjoint alternatives; see validate_repository.py.
+                for match in re.finditer(r'"(?:`[^\r\n]|[^"`\r\n])*"', line):
                     invalid = bad.search(match.group(0))
                     if invalid:
                         findings.append(f'{path.relative_to(ROOT)}:{line_number}:{invalid.group(0)}')
@@ -100,7 +103,12 @@ class PowerShellReleaseTests(unittest.TestCase):
         self.assertIn("'tools.ui_worker.worker_sha256'", installer)
 
     def test_windows_ci_exercises_broken_virtualenv_repair(self):
-        workflow = (ROOT / '.github' / 'workflows' / 'ci.yml').read_text(encoding='utf-8')
+        # Not skippable. A Forge subtree with no CI above it would mean the
+        # bundle stopped running the Windows installer job, and this repair
+        # path is the one that has actually shipped broken.
+        workflows = workflows_dir()
+        self.assertIsNotNone(workflows, 'no .github/workflows above the Forge subtree')
+        workflow = (workflows / 'ci.yml').read_text(encoding='utf-8')
         self.assertIn("[IO.File]::WriteAllBytes((Join-Path $PWD '.venv/Scripts/python.exe')", workflow)
         self.assertIn('Broken virtual environment was not repaired.', workflow)
 
@@ -123,9 +131,17 @@ class PowerShellReleaseTests(unittest.TestCase):
         self.assertIn("'Kimi'", register)
         self.assertIn("'Hermes'", register)
         self.assertIn("Join-Path $KimiHome 'mcp.json'", register)
-        self.assertIn('mcp test skyrim-forge', register)
-        self.assertIn("'Y' | & $Executable mcp add skyrim-forge", register)
-        self.assertIn("$HermesTestOutput -notmatch", register)
+        self.assertNotIn("Start-Process -FilePath $Executable -ArgumentList @('mcp','test','skyrim-forge')", register)
+        self.assertNotIn("'Y' | & $Executable mcp add skyrim-forge", register)
+        self.assertIn('from hermes_cli.config import load_config, save_config', register)
+        self.assertIn('from hermes_cli.mcp_config import _probe_single_server', register)
+        self.assertIn("Start-Process -FilePath $HermesPython", register)
+        self.assertIn('\"connect_timeout\": 30', register)
+        self.assertIn('hard limit 45s', register)
+        self.assertIn('$HermesProcess.WaitForExit(', register)
+        self.assertIn('$HermesProcess.WaitForExit()', register)
+        self.assertNotIn('$HermesProcess.HasExited', register)
+        self.assertIn("$HermesProbe.connected", register)
         self.assertIn("'hermes-agent\\venv\\Scripts\\hermes.exe'", register)
         self.assertNotIn('$Name?', register)
         self.assertIn('${Name}?', register)

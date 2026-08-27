@@ -1,4 +1,4 @@
-[CmdletBinding()]
+﻿[CmdletBinding()]
 param(
     [ValidateSet('All', 'Codex', 'Claude', 'Grok', 'Kimi', 'Hermes')]
     [string]$Provider = 'All',
@@ -133,7 +133,9 @@ function Invoke-Registration {
     try {
         switch ($Name) {
             'Codex' {
-                & $Executable mcp remove skyrim-forge 2>$null | Out-Null
+                $ErrorActionPreference = 'Continue'
+                & $Executable mcp remove skyrim-forge 2>&1 | Out-Null
+                $ErrorActionPreference = 'Stop'
                 & $Executable mcp add skyrim-forge -- $Python -m skyrim_forge mcp | Out-Null
                 if ($LASTEXITCODE -ne 0) { throw "Codex registration exited $LASTEXITCODE." }
                 & $Executable mcp get skyrim-forge | Out-Null
@@ -142,7 +144,9 @@ function Invoke-Registration {
             'Claude' {
                 if ($Executable) {
                     # Claude Code CLI surface (~/.claude.json)
-                    & $Executable mcp remove skyrim-forge -s user 2>$null | Out-Null
+                    $ErrorActionPreference = 'Continue'
+                    & $Executable mcp remove skyrim-forge -s user 2>&1 | Out-Null
+                    $ErrorActionPreference = 'Stop'
                     & $Executable mcp add --transport stdio --scope user skyrim-forge -- $Python -m skyrim_forge mcp | Out-Null
                     if ($LASTEXITCODE -ne 0) { throw "Claude registration exited $LASTEXITCODE." }
                 }
@@ -161,7 +165,9 @@ function Invoke-Registration {
                         detail = 'Grok wedges at 8 running MCP servers. Forge was not added. Run grok mcp disable mcp-search and/or disable another server, then rerun Register-MCP.ps1 -Provider Grok. Require Forge 5.1.5+ so tools/call carries resultType.'
                     }
                 }
-                & $Executable mcp remove skyrim-forge 2>$null | Out-Null
+                $ErrorActionPreference = 'Continue'
+                & $Executable mcp remove skyrim-forge 2>&1 | Out-Null
+                $ErrorActionPreference = 'Stop'
                 # Windows PowerShell 5 rewrites native `--` boundaries when the
                 # executable is invoked through a variable. Start-Process keeps
                 # Grok's documented separator and Python's `-m` as server args.
@@ -234,14 +240,93 @@ function Invoke-Registration {
                 $HermesHome = if ($env:HERMES_HOME) { $env:HERMES_HOME } else { Join-Path ([Environment]::GetFolderPath('LocalApplicationData')) 'hermes' }
                 $HermesConfigPath = Join-Path $HermesHome 'config.yaml'
                 $HermesOriginal = if (Test-Path -LiteralPath $HermesConfigPath -PathType Leaf) { [IO.File]::ReadAllBytes($HermesConfigPath) } else { $null }
+                $HermesPython = Join-Path (Split-Path -Parent $Executable) 'python.exe'
+                if (-not (Test-Path -LiteralPath $HermesPython -PathType Leaf)) { throw "Hermes Python runtime missing beside executable: $HermesPython" }
+                $HermesConfigHelper = Join-Path ([IO.Path]::GetTempPath()) ('uabs-hermes-forge-' + [guid]::NewGuid().ToString('N') + '.py')
+                $HermesStdout = Join-Path ([IO.Path]::GetTempPath()) ('uabs-hermes-probe-' + [guid]::NewGuid().ToString('N') + '.out')
+                $HermesStderr = $HermesStdout + '.err'
+                $HermesResult = $HermesStdout + '.json'
+                $OldForgePython = $env:UABS_FORGE_PYTHON
+                $OldHermesResult = $env:UABS_HERMES_RESULT
                 try {
-                    & $Executable mcp remove skyrim-forge 2>$null | Out-Null
-                    'Y' | & $Executable mcp add skyrim-forge --command $Python --args -m skyrim_forge mcp | Out-Null
-                    if ($LASTEXITCODE -ne 0) { throw "Hermes registration exited $LASTEXITCODE." }
-                    $HermesTestOutput = (& $Executable mcp test skyrim-forge 2>&1 | Out-String)
-                    if ($LASTEXITCODE -ne 0 -or $HermesTestOutput -notmatch '(?im)(connected|found\s+\d+\s+tool)') {
-                        throw "Hermes MCP test did not confirm a Forge connection: $HermesTestOutput"
+                    # Do NOT launch hermes.exe here. Full CLI startup registers shell hooks,
+                    # and Hermes intentionally prompts on first use of unseen hooks when stdin
+                    # is a TTY. That made an unattended bundle install wait for Enter. Use the
+                    # same low-level MCP probe that `hermes mcp test` and Hermes doctor call,
+                    # without starting the interactive CLI layer at all.
+                    $HelperSource = @'
+import json
+import os
+from pathlib import Path
+from hermes_cli.config import load_config, save_config
+from hermes_cli.mcp_config import _probe_single_server
+
+result_path = Path(os.environ["UABS_HERMES_RESULT"])
+server = {
+    "command": os.environ["UABS_FORGE_PYTHON"],
+    "args": ["-m", "skyrim_forge", "mcp"],
+    "enabled": True,
+    "connect_timeout": 30,
+}
+try:
+    cfg = load_config()
+    servers = cfg.setdefault("mcp_servers", {})
+    servers["skyrim-forge"] = server
+    save_config(cfg)
+
+    verify = load_config().get("mcp_servers", {}).get("skyrim-forge", {})
+    if verify.get("command") != server["command"] or verify.get("args") != server["args"]:
+        raise RuntimeError("saved Hermes Forge MCP entry did not round-trip exactly")
+
+    tools = _probe_single_server("skyrim-forge", verify, connect_timeout=30)
+    result_path.write_text(json.dumps({
+        "connected": True,
+        "tool_count": len(tools),
+        "tools": [item[0] for item in tools],
+    }), encoding="utf-8")
+except Exception as exc:
+    result_path.write_text(json.dumps({
+        "connected": False,
+        "error": f"{type(exc).__name__}: {exc}",
+    }), encoding="utf-8")
+    raise
+'@
+                    $Utf8NoBom = New-Object System.Text.UTF8Encoding($false)
+                    [IO.File]::WriteAllText($HermesConfigHelper, $HelperSource, $Utf8NoBom)
+                    $env:UABS_FORGE_PYTHON = $Python
+                    $env:UABS_HERMES_RESULT = $HermesResult
+                    Write-Host '  .. Hermes: saving + probing Forge MCP directly (hard limit 45s; no CLI prompts)...' -ForegroundColor DarkCyan
+                    $HermesProcess = Start-Process -FilePath $HermesPython -ArgumentList @($HermesConfigHelper) -NoNewWindow -PassThru -RedirectStandardOutput $HermesStdout -RedirectStandardError $HermesStderr
+                    $HermesStarted = [DateTime]::UtcNow
+                    $HermesNextProgress = 5
+                    $HermesExited = $HermesProcess.WaitForExit(250)
+                    while (-not $HermesExited) {
+                        $Elapsed = [int]([DateTime]::UtcNow - $HermesStarted).TotalSeconds
+                        if ($Elapsed -ge 45) {
+                            try { $HermesProcess.Kill() } catch {}
+                            try { $HermesProcess.WaitForExit() } catch {}
+                            throw 'Hermes direct MCP probe timed out after 45 seconds.'
+                        }
+                        if ($Elapsed -ge $HermesNextProgress) {
+                            Write-Host ("  .. Hermes: direct Forge MCP probe still running ($Elapsed s / 45 s)...") -ForegroundColor DarkCyan
+                            $HermesNextProgress += 5
+                        }
+                        $HermesExited = $HermesProcess.WaitForExit(250)
                     }
+                    # On Windows PowerShell 5.1/.NET Framework, a timed WaitForExit() can
+                    # report completion before redirected streams and ExitCode are fully
+                    # finalized. The parameterless call is required before consuming either.
+                    $HermesProcess.WaitForExit()
+                    $HermesProcess.Refresh()
+                    $HermesExitCode = [int]$HermesProcess.ExitCode
+                    $HermesOutput = ''
+                    if (Test-Path -LiteralPath $HermesStdout -PathType Leaf) { $HermesOutput += [IO.File]::ReadAllText($HermesStdout) }
+                    if (Test-Path -LiteralPath $HermesStderr -PathType Leaf) { $HermesOutput += [IO.File]::ReadAllText($HermesStderr) }
+                    if ($HermesExitCode -ne 0) { throw "Hermes direct MCP probe exited ${HermesExitCode}: $HermesOutput" }
+                    if (-not (Test-Path -LiteralPath $HermesResult -PathType Leaf)) { throw "Hermes direct MCP probe produced no result file: $HermesOutput" }
+                    $HermesProbe = [IO.File]::ReadAllText($HermesResult) | ConvertFrom-Json
+                    if (-not $HermesProbe.connected) { throw "Hermes direct MCP probe did not connect: $($HermesProbe.error)" }
+                    Write-Host ("  OK  Hermes: Forge MCP connection verified ({0} tool(s))" -f $HermesProbe.tool_count) -ForegroundColor Green
                 } catch {
                     if ($null -ne $HermesOriginal) {
                         [IO.File]::WriteAllBytes($HermesConfigPath, $HermesOriginal)
@@ -249,6 +334,10 @@ function Invoke-Registration {
                         Remove-Item -LiteralPath $HermesConfigPath -Force
                     }
                     throw
+                } finally {
+                    if ($null -eq $OldForgePython) { Remove-Item Env:UABS_FORGE_PYTHON -ErrorAction SilentlyContinue } else { $env:UABS_FORGE_PYTHON = $OldForgePython }
+                    if ($null -eq $OldHermesResult) { Remove-Item Env:UABS_HERMES_RESULT -ErrorAction SilentlyContinue } else { $env:UABS_HERMES_RESULT = $OldHermesResult }
+                    Remove-Item -LiteralPath $HermesConfigHelper,$HermesStdout,$HermesStderr,$HermesResult -Force -ErrorAction SilentlyContinue
                 }
             }
         }

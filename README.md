@@ -1,42 +1,38 @@
-# Skyrim Forge 5.2.1
+# Skyrim Forge 6.0.0
 
-> ## Development has moved
+> ## Development happens in the Ultimate AI Starter Bundle
 >
-> Skyrim Forge is now developed inside the **Ultimate AI Starter Bundle**, at
+> Skyrim Forge is developed inside the **Ultimate AI Starter Bundle**, at
 > [`BUNDLED-TOOLS/skyrim-forge`](https://github.com/ShugokiFable/Ultimate-AI-Starter-Bundle/tree/main/BUNDLED-TOOLS/skyrim-forge).
-> This repository is frozen at **5.2.1**, its last standalone release.
+> **This repository mirrors that source.** The code here is the code that ships;
+> it is not a fork and not a separate line of development.
 >
-> **Why.** The bundle installs Forge, and the two lived in separate
+> **Why the move.** The bundle installs Forge, and the two lived in separate
 > repositories. Bundle 7.8.0 shipped an installer that read a field Forge has
 > never emitted, so the Forge step threw on every run and aborted the whole
 > install — with every gate green in both repositories, because no commit could
 > test both halves. Two files that must agree do not belong in two repositories
 > on two release schedules. Merged, one commit proves both.
 >
-> **Where Forge is now.** Forge **6.0.0** and later ship inside the bundle:
+> **Where changes land first.** In the bundle. This mirror is updated when a
+> Forge version is cut, not per-commit, so it can trail by a release. For the
+> newest Forge, and for everything else the pack installs, use the
 > [Ultimate-AI-Starter-Bundle releases](https://github.com/ShugokiFable/Ultimate-AI-Starter-Bundle/releases).
-> Run `START-HERE.bat`, or install Forge alone with
-> `TOOLS\Install-SkyrimForge.ps1 -ForgeRoot 'S:\Apps\Skyrim Tools\Skyrim-Forge'`.
-> Its source is a normal directory in that repository — read it, edit it, build
-> it, with no submodule and no download step.
 >
-> **If you are on 5.2.1.** It keeps working; nothing here was withdrawn, and the
+> **Issues and pull requests belong in the bundle** —
+> [Ultimate-AI-Starter-Bundle/issues](https://github.com/ShugokiFable/Ultimate-AI-Starter-Bundle/issues).
+> A fix made here alone would be overwritten by the next mirror update; a fix
+> made there reaches both.
+>
+> **Coming from 5.2.1?** It keeps working and the
 > [v5.2.1 release](https://github.com/ShugokiFable/SkyrimForge/releases/tag/v5.2.1)
-> stays downloadable. Upgrading is a normal install: the bundle's installer
-> migrates a version-stamped `Skyrim-Forge-5.2.1` folder onto the versionless
+> stays downloadable. Upgrading is a normal install: the installer migrates a
+> version-stamped `Skyrim-Forge-5.2.1` folder onto the versionless
 > `Skyrim-Forge` name and preserves `Workspaces`, `.venv`, `REPORTS` and a local
 > `config.toml`. 6.0.0 removes the `forge bundle-contract` command, which existed
-> only to negotiate across the repository split this notice is about.
->
-> **Support for this repository has been dropped.** 5.2.1 is not maintained:
-> no fixes, no releases, no patch versions. Issues and pull requests opened
-> here will be closed with a pointer rather than worked on. Report anything
-> against Forge in the bundle instead —
-> [Ultimate-AI-Starter-Bundle/issues](https://github.com/ShugokiFable/Ultimate-AI-Starter-Bundle/issues).
-> The code stays public and the release stays downloadable; only the
-> maintenance stops.
->
-> Everything below describes 5.2.1 and is kept as-is for that release.
+> only to negotiate across the repository split this notice is about — one
+> repository cannot usefully negotiate a version range with itself, and a stale
+> range can only start rejecting the pack it ships inside.
 
 Skyrim Forge is a local, safety-first engineering workbench and MCP server for Skyrim Special Edition and Anniversary Edition mod development.
 
@@ -46,7 +42,7 @@ handshake era every installed AI client uses today. Both eras run from the same
 process and expose the same 52 tools, so existing Codex, Claude, and Grok
 registrations need no change. See [docs/MCP.md](docs/MCP.md).
 
-Forge 4.2 includes the **Automation Fabric** plus a mandatory rights-and-publication gate for shareable releases. An AI does not click around SSEEdit, Creation Kit, Wrye Bash, LOOT, or Mod Organizer 2. It submits a typed JSON job. Forge validates the job, snapshots inputs, runs only the configured adapter, captures logs and outputs, reopens what it can verify, and writes an audit receipt.
+Forge includes the **Automation Fabric** plus a mandatory rights-and-publication gate for shareable releases. An AI does not click around SSEEdit, Creation Kit, Wrye Bash, LOOT, or Mod Organizer 2. It submits a typed JSON job. Forge validates the job, snapshots inputs, runs only the configured adapter, captures logs and outputs, reopens what it can verify, and writes an audit receipt.
 
 ## Public and Nexus releases
 
@@ -62,17 +58,25 @@ The gate maps every bundled file to its origin, author, licence or permission ba
 
 ## Install
 
+Most people should install the
+[Ultimate AI Starter Bundle](https://github.com/ShugokiFable/Ultimate-AI-Starter-Bundle)
+and run its `START-HERE.bat`, which installs Forge along with everything else
+the pack wires up. To install Forge on its own from this repository:
+
 1. Extract the release into your **Skyrim tools folder** as
    `Skyrim-Forge` (same directory as xEdit, houseCARL, Spooky, …).
    Leave the version out of the folder name: every AI provider stores the
-   MCP command as an absolute path, so a `Skyrim-Forge-5.2.1` folder
+   MCP command as an absolute path, so a `Skyrim-Forge-6.0.0` folder
    silently disconnects all of them the next time you upgrade. The
    installed version is in `VERSION.txt`.
    Do not clone or extract into `Documents`. Do not keep a second copy.
-2. Run `START-HERE.bat`.
-3. Choose **Install/update Forge and connect all detected AI apps**.
-4. Configure core paths. Job staging defaults to `<this install>\Workspaces`.
-5. Configure only the external tools actually installed on the machine.
+2. Run `START-HERE.bat`. With no arguments it installs or updates Forge and
+   connects every detected AI app, so re-running it is also how you upgrade.
+3. Configure core paths. Job staging defaults to `<this install>\Workspaces`.
+4. Configure only the external tools actually installed on the machine.
+
+The other ten maintenance actions are one keypress away: `START-HERE.bat --menu`,
+or press **M** when the install finishes.
 
 Claude Code 2026-07-28 requires Forge **5.1.5 or newer** (`tools/call` must
 carry `resultType`). Grok wedges at 8 running MCP servers; `Register-MCP.ps1`

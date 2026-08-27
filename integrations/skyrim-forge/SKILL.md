@@ -1,9 +1,9 @@
 ---
 name: skyrim-forge
-description: Use Skyrim Forge 5.2 as the primary typed automation broker for Skyrim mod development and validation.
+description: Use when Skyrim mod development or validation can benefit from the bundle-managed Skyrim Forge typed automation broker.
 ---
 
-# Skyrim Forge 5.2
+# Skyrim Forge 6.0
 
 ## Resolve this installation
 
@@ -19,16 +19,45 @@ If the descriptor is unavailable, resolve Forge in this order:
 3. an explicit path supplied by the user.
 
 Never assume a drive letter or reconstruct the application elsewhere.
-Never treat `%USERPROFILE%\Documents\SkyrimForge` or
-`Documents\Skyrim Forge` as the live product. The live install is
-`SKYRIM_FORGE_ROOT`, a versioned `Skyrim-Forge-<version>` folder under the
-user's Skyrim tools directory.
+Never treat `Documents\SkyrimForge` or `Documents\Skyrim Forge` as the live
+product. The bundle-managed live install is the versionless `Skyrim-Forge`
+directory named by `SKYRIM_FORGE_ROOT`; upgrades replace the application source
+in place while preserving the managed workspace/runtime state. Do not reconstruct
+a version-stamped install path.
 
-Require Forge 5.1.5+ for Claude Code 2026-07-28 (`tools/call` must include
-`resultType: "complete"`). Do not add Forge as a new Grok MCP server when
-Grok already has 7 configured servers, or 6 while `mcp-search` still loads.
+Forge 6 ships in the same repository as this bundle, so there is no cross-product
+version handshake. Run `forge doctor` (or the exact descriptor CLI argv plus
+`doctor`) and require `result: PASS` and `read_only_ready: true` before major
+work. Claude Code 2026-07-28 still requires `tools/call` to include
+`resultType: "complete"`. Do not add Forge as a new Grok MCP server when
+Grok already sits on the 8-running-server cliff (7 configured, or 6 while
+`mcp-search` still loads).
 
-Run `forge doctor` before major Skyrim work.
+## Venv health (Windows) — the provider-runtime trap
+
+Forge's MCP server runs from `<root>/.venv/Scripts/python.exe -m skyrim_forge mcp`.
+If that venv was created from a **provider runtime cache** python (e.g.
+`~/.cache/codex-runtimes/.../python.exe`), it dies the moment the runtime cache is
+deleted or that provider is uninstalled. Symptom: MCP clients (Grok, Claude Code,
+Codex) hang at startup waiting on a server that cannot boot; the venv python
+prints `No Python at '<runtime cache path>'`.
+
+Check: `cat <root>/.venv/pyvenv.cfg` — if `home =` points into a cache dir, repair:
+
+```text
+py -3.12 -m venv "<root>/.venv"
+"<root>/.venv/Scripts/python.exe" -m pip install "<root>"
+```
+
+Forge has zero external dependencies and a local build backend, so this is
+fast and offline. Verify the MCP server answers (must return JSON, not hang):
+
+```text
+printf '{"jsonrpc":"2.0","id":1,"method":"initialize","params":{"protocolVersion":"2024-11-05","capabilities":{},"clientInfo":{"name":"probe","version":"1"}}}\n' | "<root>/.venv/Scripts/python.exe" -m skyrim_forge mcp
+```
+
+Then restart the MCP client. Never build the venv from a provider runtime
+python — use a stable interpreter (system Python, `py -3.x`, or `uv`).
 
 Use Forge inspection and typed jobs before inventing one-off scripts. Never launch xEdit, Creation Kit, LOOT, or Wrye Bash and leave the user to click. Use an Automation Fabric job or report that the required adapter is unavailable.
 
@@ -99,3 +128,15 @@ Never call a mod Nexus-compliant merely because its files compile or lint. The r
 - Never substitute a GUI for a CLI. `Synthesis.exe` is not `Synthesis.Bethesda.CLI.exe`.
 - Use BSArch for `.bsa`/`.ba2` work when the `archive.bsa.*` capability resolves. Use the official Bethesda Papyrus compiler for publication builds when `papyrus.compile.official` resolves. Use Champollion only for recovery/analysis, never as proof of original source ownership.
 - When no eligible real tool resolves, stop and report the missing adapter instead of generating an unverified replacement.
+
+---
+
+## Portable discovery
+
+1. Read `INSTALLATION.json` beside this skill when present (per-machine; do not ship secrets).
+2. Else `$env:SKYRIM_FORGE_ROOT`.
+3. Else `forge` on PATH.
+4. Else user path.
+5. Else, when working from the bundle, run `TOOLS/Install-SkyrimForge.ps1`; do not invent a manual extraction path.
+
+After a bundle-managed install, missing or unhealthy Forge is a failed installation state, not a successful optional skip. Outside the bundle, report Forge as unavailable rather than inventing paths.

@@ -33,7 +33,14 @@ def pinned_toolchain() -> str:
     GOTOOLCHAIN makes the local `go` fetch and use that exact version, so the
     result matches CI regardless of what is installed.
     """
-    workflow = ROOT / ".github" / "workflows" / "ci.yml"
+    workflow = None
+    for parent in (ROOT, *ROOT.parents):
+        candidate = parent / ".github" / "workflows" / "ci.yml"
+        if candidate.is_file():
+            workflow = candidate
+            break
+    if workflow is None:
+        raise SystemExit("no repository-root .github/workflows/ci.yml found")
     versions = re.findall(r'go-version:\s*"([0-9]+\.[0-9]+(?:\.[0-9]+)?)"',
                           workflow.read_text(encoding="utf-8"))
     if not versions:
