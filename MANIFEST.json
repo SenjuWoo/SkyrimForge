@@ -15,8 +15,8 @@
     {
       "executable": false,
       "path": ".github/dependabot.yml",
-      "sha256": "c098ca332e35821423ba97c746f8d903ea5e0afc19e7fef81c6e71ece7c9c042",
-      "size": 642
+      "sha256": "33678f190f32b3eeaf981f26460afe07a2852db96356dd268b77ff4381f8f71e",
+      "size": 263
     },
     {
       "executable": false,
@@ -41,12 +41,6 @@
       "path": ".github/workflows/ci.yml",
       "sha256": "c49e70c532755b823a4fc01b0b65d9d98598c4b710f5ac57883433c73f888aa7",
       "size": 8519
-    },
-    {
-      "executable": false,
-      "path": ".github/workflows/codeql.yml",
-      "sha256": "9bb18ddea813430d8c0bc134f33ea12b9632eee23a761e0715b4a817069c171f",
-      "size": 722
     },
     {
       "executable": false,
@@ -117,8 +111,8 @@
     {
       "executable": false,
       "path": "DECISIONS.md",
-      "sha256": "650f9e420377515cfd9b93e2a1ed35299fe3d41de9936cf52e105d787e04ff5a",
-      "size": 3792
+      "sha256": "59b86953ef3dc8ad7203e7ba72d78acd093d2fbc616b56c0c7ad8cca1b44b4d7",
+      "size": 3846
     },
     {
       "executable": false,
@@ -1149,8 +1143,8 @@
     {
       "executable": false,
       "path": "tests/test_ci_validation.py",
-      "sha256": "2a52432ca8a4f4ae8435e790af72d710bb07e080928ffb9263e3f655a078509d",
-      "size": 4375
+      "sha256": "82ec883308707d19074285573ec74bc175ab54294ed8c067a1394fb5843be1a1",
+      "size": 4768
     },
     {
       "executable": false,

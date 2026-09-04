@@ -44,7 +44,7 @@
       "checksums": [
         {
           "algorithm": "SHA256",
-          "checksumValue": "c098ca332e35821423ba97c746f8d903ea5e0afc19e7fef81c6e71ece7c9c042"
+          "checksumValue": "33678f190f32b3eeaf981f26460afe07a2852db96356dd268b77ff4381f8f71e"
         }
       ],
       "copyrightText": "NOASSERTION",
@@ -109,21 +109,6 @@
       ],
       "copyrightText": "NOASSERTION",
       "fileName": "./.github/workflows/ci.yml",
-      "licenseConcluded": "NOASSERTION",
-      "licenseInfoInFiles": [
-        "NOASSERTION"
-      ]
-    },
-    {
-      "SPDXID": "SPDXRef-File-.github-workflows-codeql.yml",
-      "checksums": [
-        {
-          "algorithm": "SHA256",
-          "checksumValue": "9bb18ddea813430d8c0bc134f33ea12b9632eee23a761e0715b4a817069c171f"
-        }
-      ],
-      "copyrightText": "NOASSERTION",
-      "fileName": "./.github/workflows/codeql.yml",
       "licenseConcluded": "NOASSERTION",
       "licenseInfoInFiles": [
         "NOASSERTION"
@@ -299,7 +284,7 @@
       "checksums": [
         {
           "algorithm": "SHA256",
-          "checksumValue": "650f9e420377515cfd9b93e2a1ed35299fe3d41de9936cf52e105d787e04ff5a"
+          "checksumValue": "59b86953ef3dc8ad7203e7ba72d78acd093d2fbc616b56c0c7ad8cca1b44b4d7"
         }
       ],
       "copyrightText": "NOASSERTION",
@@ -2879,7 +2864,7 @@
       "checksums": [
         {
           "algorithm": "SHA256",
-          "checksumValue": "2a52432ca8a4f4ae8435e790af72d710bb07e080928ffb9263e3f655a078509d"
+          "checksumValue": "82ec883308707d19074285573ec74bc175ab54294ed8c067a1394fb5843be1a1"
         }
       ],
       "copyrightText": "NOASSERTION",
