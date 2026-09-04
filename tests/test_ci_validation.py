@@ -81,8 +81,16 @@ class WorkflowPinningTests(unittest.TestCase):
         config = self.WORKFLOWS.parent / "dependabot.yml"
         if not config.exists():
             self.skipTest("no dependabot configuration present")
-        self.assertIn("github/codeql-action", config.read_text(encoding="utf-8"),
-                      "dependabot must group codeql-action so the pair cannot be split across pull requests")
+        workflows_text = "\n".join(w.read_text(encoding="utf-8") for w in self.WORKFLOWS.glob("*.yml"))
+        if "github/codeql-action" in workflows_text:
+            self.assertIn("github/codeql-action", config.read_text(encoding="utf-8"),
+                          "dependabot must group codeql-action so the pair cannot be split across pull requests")
+            return
+        self.assertNotIn(
+            "github/codeql-action",
+            config.read_text(encoding="utf-8"),
+            "GitHub Default Setup owns CodeQL; dependabot must not track codeql-action",
+        )
 
     def test_release_publish_is_idempotent(self):
         # Forge stopped publishing releases of its own when it moved into the

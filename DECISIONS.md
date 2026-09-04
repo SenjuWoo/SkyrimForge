@@ -48,9 +48,10 @@
   manifest generated from a differently normalised tree is worse than no
   manifest, because it fails for the honest verifier and no one else.
 - Preserve 4.2.5 as the rollback release and publish 5.0.0 beside it.
-- Group `codeql-action/init` and `codeql-action/analyze` in Dependabot. They must
-  run the same release, and ungrouped updates split the pair across pull
-  requests and break every scan.
+- CodeQL is GitHub Default Setup only. Do not keep an advanced CodeQL workflow
+  or a Dependabot `codeql-action` group: Default Setup already scans, the
+  advanced workflow is `disabled_manually`, and those PRs fail the MANIFEST
+  hash gate.
 - Preserve every 4.x safety boundary unchanged: no GUI launching, no arbitrary
   shell commands, no writes to live Skyrim `Data`, external processes disabled
   by default, and third-party tools hash-pinned rather than bundled.
