@@ -1,7 +1,52 @@
+<p align="center">
+  <img src="assets/mark.svg" width="72" height="72" alt="Skyrim Forge mark">
+</p>
+
+<div align="center">
+
 # Skyrim Forge 6.0.0
 
-> ## Development happens in the Ultimate AI Starter Bundle
->
+**This standalone repository is unsupported.**
+
+Development moved into the Ultimate AI Starter Bundle.
+Do not open issues or pull requests here.
+
+<p>
+  <a href="https://github.com/ShugokiFable/SkyrimForge/actions/workflows/ci.yml"><img src="https://github.com/ShugokiFable/SkyrimForge/actions/workflows/ci.yml/badge.svg" alt="CI"></a>
+  <a href="LICENSE"><img src="https://img.shields.io/badge/license-MIT-8ec8e8?labelColor=121820" alt="MIT License"></a>
+  <a href="https://github.com/ShugokiFable/SkyrimForge/releases/tag/v6.0.0"><img src="https://img.shields.io/badge/last%20cut-v6.0.0-8ec8e8?labelColor=121820" alt="v6.0.0"></a>
+  <img src="https://img.shields.io/badge/status-unsupported-e8a54b?labelColor=121820" alt="unsupported">
+</p>
+
+<p>
+  <a href="https://github.com/ShugokiFable/Ultimate-AI-Starter-Bundle">Ultimate AI Starter Bundle</a>
+  ·
+  <a href="https://github.com/ShugokiFable/Ultimate-AI-Starter-Bundle/issues">File issues there</a>
+  ·
+  <a href="#install">Install this snapshot</a>
+  ·
+  <a href="https://github.com/ShugokiFable/SkyrimForge/releases/tag/v5.2.1">v5.2.1 still works</a>
+</p>
+
+</div>
+
+<p align="center">
+  <img src="assets/hero.svg" alt="Skyrim Forge standalone repository is unsupported; development moved to the Ultimate AI Starter Bundle" width="100%">
+</p>
+
+## Status of this repository
+
+Verified from this tree, not from the GitHub about blurb:
+
+| Pointer | Value |
+| --- | --- |
+| `CURRENT.txt` | `6.0.0` |
+| `VERSION.txt` | `Skyrim Forge 6.0.0` |
+| Latest GitHub release | [v6.0.0](https://github.com/ShugokiFable/SkyrimForge/releases/tag/v6.0.0) (2026-08-27) |
+| GitHub description | still says frozen at v5.2.1 — that line is stale |
+
+This repo is **not actively developed**. It is a published snapshot of Forge **6.0.0**. New work, issues, and pull requests belong in the bundle.
+
 > Skyrim Forge is developed inside the **Ultimate AI Starter Bundle**, at
 > [`BUNDLED-TOOLS/skyrim-forge`](https://github.com/ShugokiFable/Ultimate-AI-Starter-Bundle/tree/main/BUNDLED-TOOLS/skyrim-forge).
 > **This repository mirrors that source.** The code here is the code that ships;
@@ -244,3 +289,8 @@ Public intent automatically requires the Nexus publication plan and rights gate.
 Forge 4.2 recursively discovers real tools in directories and ZIPs, including tools nested inside another package such as `ESLifier/bsarch/BSArch.exe`. Use `forge tool-scan`, then `forge tool-import` or `forge tool-configure`. Imported tools are copied only into the local Forge tool vault, accompanied by hashes and receipts. Third-party executables are never added to the public Forge repository or a mod release. See `docs/TOOLCHAIN-BROKER.md`.
 
 Forge selects tools by an exact capability and a valid SHA-256 pin. It will not substitute `Synthesis.exe` for `Synthesis.Bethesda.CLI.exe`, or a generic archive utility for a Skyrim SE/AE BSA operation.
+
+## License
+
+[MIT](LICENSE)
+

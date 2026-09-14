@@ -56,6 +56,18 @@
     },
     {
       "executable": false,
+      "path": "assets/hero.svg",
+      "sha256": "0baa58bf32f2ed4019508a624488d7f4e9b25a02bf162319254017780bf934f8",
+      "size": 2135
+    },
+    {
+      "executable": false,
+      "path": "assets/mark.svg",
+      "sha256": "1bc517cd481a4d9868604d49fe65a3fd5181a9e3434b4cb2471df79a1c1a747c",
+      "size": 417
+    },
+    {
+      "executable": false,
       "path": "CHANGELOG.md",
       "sha256": "813bebbe733d1be02aef8ce4aa3c88ea406541c8264de3b79b8548b82d2dc1b1",
       "size": 28803
@@ -465,8 +477,8 @@
     {
       "executable": false,
       "path": "README.md",
-      "sha256": "dcce5677321c95228ae18bd6cf18e1478b1be0c7fd4223cad22bc5cd7697bd1e",
-      "size": 15623
+      "sha256": "001c8cbb83a55ab1df0deac1b5ada6edec21d142d8b4da528851f2a980bbdf88",
+      "size": 17547
     },
     {
       "executable": false,

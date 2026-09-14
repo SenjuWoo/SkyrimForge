@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1280 420" role="img" aria-label="Skyrim Forge standalone repository is unsupported; development moved to the Ultimate AI Starter Bundle">
+  <defs>
+    <linearGradient id="sfg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#1a2430"/>
+      <stop offset="1" stop-color="#121820"/>
+    </linearGradient>
+  </defs>
+  <rect width="1280" height="420" rx="28" fill="url(#sfg)"/>
+  <path fill="#8ec8e8" fill-opacity=".07" d="M0 260 220 0h180L0 340z"/>
+  <path fill="none" stroke="#8ec8e8" stroke-opacity=".22" stroke-width="2" d="M980 0l120 420M1040 0l120 420M1100 0l120 420"/>
+  <rect x="72" y="52" width="168" height="36" rx="18" fill="#e8a54b"/>
+  <text x="156" y="76" text-anchor="middle" fill="#121820" font-family="ui-sans-serif, system-ui, sans-serif" font-size="14" font-weight="800" letter-spacing="2">UNSUPPORTED</text>
+  <text x="72" y="140" fill="#e8f3f8" font-family="ui-sans-serif, system-ui, sans-serif" font-size="36" font-weight="700">Development moved.</text>
+  <text x="72" y="186" fill="#b7c9d4" font-family="ui-sans-serif, system-ui, sans-serif" font-size="20">This standalone repo is a frozen 6.0.0 mirror. New Forge work lands in UABS.</text>
+  <g font-family="ui-sans-serif, system-ui, sans-serif">
+    <rect x="72" y="230" width="360" height="118" rx="18" fill="#1c2834" stroke="#8ec8e8" stroke-opacity=".3"/>
+    <text x="96" y="270" fill="#8ec8e8" font-size="12" font-weight="700" letter-spacing="1.6">THIS REPOSITORY</text>
+    <text x="96" y="302" fill="#e8f3f8" font-size="22" font-weight="600">Last cut: 6.0.0</text>
+    <text x="96" y="328" fill="#9aafbb" font-size="14">CURRENT.txt · VERSION.txt · release</text>
+    <rect x="456" y="230" width="752" height="118" rx="18" fill="#8ec8e8"/>
+    <text x="480" y="270" fill="#121820" font-size="12" font-weight="700" letter-spacing="1.6">GO HERE</text>
+    <text x="480" y="302" fill="#121820" font-size="22" font-weight="600">Ultimate-AI-Starter-Bundle</text>
+    <text x="480" y="328" fill="#121820" font-size="14">BUNDLED-TOOLS/skyrim-forge · issues · newest Forge</text>
+  </g>
+</svg>
