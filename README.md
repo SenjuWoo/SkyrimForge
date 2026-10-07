@@ -12,20 +12,20 @@ Development moved into the Ultimate AI Starter Bundle.
 Do not open issues or pull requests here.
 
 <p>
-  <a href="https://github.com/ShugokiFable/SkyrimForge/actions/workflows/ci.yml"><img src="https://github.com/ShugokiFable/SkyrimForge/actions/workflows/ci.yml/badge.svg" alt="CI"></a>
+  <a href="https://github.com/SenjuWoo/SkyrimForge/actions/workflows/ci.yml"><img src="https://github.com/SenjuWoo/SkyrimForge/actions/workflows/ci.yml/badge.svg" alt="CI"></a>
   <a href="LICENSE"><img src="https://img.shields.io/badge/license-MIT-8ec8e8?labelColor=121820" alt="MIT License"></a>
-  <a href="https://github.com/ShugokiFable/SkyrimForge/releases/tag/v6.0.0"><img src="https://img.shields.io/badge/last%20cut-v6.0.0-8ec8e8?labelColor=121820" alt="v6.0.0"></a>
+  <a href="https://github.com/SenjuWoo/SkyrimForge/releases/tag/v6.0.0"><img src="https://img.shields.io/badge/last%20cut-v6.0.0-8ec8e8?labelColor=121820" alt="v6.0.0"></a>
   <img src="https://img.shields.io/badge/status-unsupported-e8a54b?labelColor=121820" alt="unsupported">
 </p>
 
 <p>
-  <a href="https://github.com/ShugokiFable/Ultimate-AI-Starter-Bundle">Ultimate AI Starter Bundle</a>
+  <a href="https://github.com/SenjuWoo/Ultimate-AI-Starter-Bundle">Ultimate AI Starter Bundle</a>
   ·
-  <a href="https://github.com/ShugokiFable/Ultimate-AI-Starter-Bundle/issues">File issues there</a>
+  <a href="https://github.com/SenjuWoo/Ultimate-AI-Starter-Bundle/issues">File issues there</a>
   ·
   <a href="#install">Install this snapshot</a>
   ·
-  <a href="https://github.com/ShugokiFable/SkyrimForge/releases/tag/v5.2.1">v5.2.1 still works</a>
+  <a href="https://github.com/SenjuWoo/SkyrimForge/releases/tag/v5.2.1">v5.2.1 still works</a>
 </p>
 
 </div>
@@ -42,13 +42,13 @@ Verified from this tree, not from the GitHub about blurb:
 | --- | --- |
 | `CURRENT.txt` | `6.0.0` |
 | `VERSION.txt` | `Skyrim Forge 6.0.0` |
-| Latest GitHub release | [v6.0.0](https://github.com/ShugokiFable/SkyrimForge/releases/tag/v6.0.0) (2026-08-27) |
+| Latest GitHub release | [v6.0.0](https://github.com/SenjuWoo/SkyrimForge/releases/tag/v6.0.0) (2026-08-27) |
 | GitHub description | still says frozen at v5.2.1 — that line is stale |
 
 This repo is **not actively developed**. It is a published snapshot of Forge **6.0.0**. New work, issues, and pull requests belong in the bundle.
 
 > Skyrim Forge is developed inside the **Ultimate AI Starter Bundle**, at
-> [`BUNDLED-TOOLS/skyrim-forge`](https://github.com/ShugokiFable/Ultimate-AI-Starter-Bundle/tree/main/BUNDLED-TOOLS/skyrim-forge).
+> [`BUNDLED-TOOLS/skyrim-forge`](https://github.com/SenjuWoo/Ultimate-AI-Starter-Bundle/tree/main/BUNDLED-TOOLS/skyrim-forge).
 > **This repository mirrors that source.** The code here is the code that ships;
 > it is not a fork and not a separate line of development.
 >
@@ -62,15 +62,15 @@ This repo is **not actively developed**. It is a published snapshot of Forge **6
 > **Where changes land first.** In the bundle. This mirror is updated when a
 > Forge version is cut, not per-commit, so it can trail by a release. For the
 > newest Forge, and for everything else the pack installs, use the
-> [Ultimate-AI-Starter-Bundle releases](https://github.com/ShugokiFable/Ultimate-AI-Starter-Bundle/releases).
+> [Ultimate-AI-Starter-Bundle releases](https://github.com/SenjuWoo/Ultimate-AI-Starter-Bundle/releases).
 >
 > **Issues and pull requests belong in the bundle** —
-> [Ultimate-AI-Starter-Bundle/issues](https://github.com/ShugokiFable/Ultimate-AI-Starter-Bundle/issues).
+> [Ultimate-AI-Starter-Bundle/issues](https://github.com/SenjuWoo/Ultimate-AI-Starter-Bundle/issues).
 > A fix made here alone would be overwritten by the next mirror update; a fix
 > made there reaches both.
 >
 > **Coming from 5.2.1?** It keeps working and the
-> [v5.2.1 release](https://github.com/ShugokiFable/SkyrimForge/releases/tag/v5.2.1)
+> [v5.2.1 release](https://github.com/SenjuWoo/SkyrimForge/releases/tag/v5.2.1)
 > stays downloadable. Upgrading is a normal install: the installer migrates a
 > version-stamped `Skyrim-Forge-5.2.1` folder onto the versionless
 > `Skyrim-Forge` name and preserves `Workspaces`, `.venv`, `REPORTS` and a local
@@ -104,7 +104,7 @@ The gate maps every bundled file to its origin, author, licence or permission ba
 ## Install
 
 Most people should install the
-[Ultimate AI Starter Bundle](https://github.com/ShugokiFable/Ultimate-AI-Starter-Bundle)
+[Ultimate AI Starter Bundle](https://github.com/SenjuWoo/Ultimate-AI-Starter-Bundle)
 and run its `START-HERE.bat`, which installs Forge along with everything else
 the pack wires up. To install Forge on its own from this repository:
 
