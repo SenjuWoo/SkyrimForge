@@ -1,3 +1,12 @@
+Skyrim Forge 6.0.1
+
+- Released from this repository again; the AI bundle installs a pinned, digest-verified release only for Skyrim users.
+- Windows launchers clear PSModulePath so PowerShell 7 modules cannot break Windows PowerShell startup.
+- Report path redaction also covers JSON-escaped and slash-normalised paths.
+- --write-reports refreshes MANIFEST.json before validating.
+- Skill: player-facing quality gate and Nexus presentation step.
+- Native helpers rebuilt reproducibly as 6.0.1 with pinned Go 1.23.2.
+
 Skyrim Forge 6.0.0
 
 - Developed inside the Ultimate AI Starter Bundle repository at BUNDLED-TOOLS/skyrim-forge; no separate release.

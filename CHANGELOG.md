@@ -1,5 +1,25 @@
 # Changelog
 
+## 6.0.1
+
+Skyrim Forge is released from this repository again. The Ultimate AI Starter
+Bundle now installs a pinned, digest-verified Forge release only for users who
+have Skyrim, instead of carrying the source for everyone. The bundle's CI
+installs that exact release and runs `forge doctor`, so the contract that
+broke bundle 7.8.0 is still tested in one place.
+
+- Windows launchers (`START-HERE.bat`, `Run Tests.bat`) clear `PSModulePath`
+  so a PowerShell 7 module path cannot break Windows PowerShell 5.1 startup.
+- Portable reports redact home, repository and temp paths also when they are
+  JSON-escaped or slash-normalised inside nested strings.
+- `validate_repository.py --write-reports` refreshes `MANIFEST.json` before
+  validating, so the first pass no longer fails on its own stale manifest.
+- Forge skill: player-facing quality gate (vertical slice, rendered pixels,
+  inputs, UI scale, empty/error states) and a presentation step that loads
+  `skyrim-nexus-publishing` and `visual-verification` before the Nexus gate.
+- Schema `$id` links point at SenjuWoo.
+- Native helpers rebuilt reproducibly as 6.0.1 with pinned Go 1.23.2.
+
 ## 6.0.0
 
 Skyrim Forge is developed inside the **Ultimate AI Starter Bundle** repository

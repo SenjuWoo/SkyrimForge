@@ -1,9 +1,11 @@
 from __future__ import annotations
 
 import importlib.util
+import json
 import re
 import unittest
 from pathlib import Path
+from unittest.mock import patch
 
 from _workflows import workflows_dir
 
@@ -52,6 +54,25 @@ class CIValidationScopeTests(unittest.TestCase):
             "embedded Forge rebuild helper lost the repository-root Go pin",
         )
 
+    def test_portable_report_redacts_paths_inside_nested_json(self):
+        home = str(Path.home())
+        nested = json.dumps({"path": str(Path.home() / "Private" / "fixture.txt")})
+        cleaned = self.module.portable({"raw": home, "nested": nested})
+        self.assertEqual(cleaned["raw"], "<HOME>")
+        self.assertIn("<HOME>", cleaned["nested"])
+        self.assertNotIn(json.dumps(home)[1:-1], cleaned["nested"])
+
+    def test_write_reports_refreshes_manifest_before_validation(self):
+        events = []
+        report = {"result": "PASS"}
+        with patch.object(self.module, "write_manifest", side_effect=lambda: events.append("manifest")), \
+             patch.object(self.module, "validate", side_effect=lambda scope: events.append("validate") or report), \
+             patch.object(self.module, "write_reports", side_effect=lambda result: events.append("reports")), \
+             patch("sys.argv", ["validate_repository.py", "--write-reports", "--scope", "full"]), \
+             patch("builtins.print"):
+            self.assertEqual(self.module.main(), 0)
+        self.assertEqual(events, ["manifest", "validate", "reports"])
+
 
 class WorkflowPinningTests(unittest.TestCase):
     """CodeQL's init and analyze actions must always run the same release.
@@ -78,19 +99,22 @@ class WorkflowPinningTests(unittest.TestCase):
     def test_dependabot_groups_the_codeql_pair(self):
         if self.WORKFLOWS is None:
             self.skipTest("no workflows above this subtree")
+        # A group for an action nothing uses is not a requirement, it is stale
+        # config. The host repository deleted .github/workflows/codeql.yml on
+        # 2026-08-27: code scanning DEFAULT SETUP owns CodeQL there, and
+        # enabling default setup DISABLES the advanced workflow, so the file
+        # had been inert for three days while Dependabot kept raising weekly
+        # PRs to bump pins in a workflow that could not run. This test then
+        # failed a repository that has no init/analyze pair to split. Guard on
+        # the pair existing, the way the sibling test above already does.
+        if not any("github/codeql-action" in workflow.read_text(encoding="utf-8")
+                   for workflow in self.WORKFLOWS.glob("*.yml")):
+            self.skipTest("no CodeQL workflow present")
         config = self.WORKFLOWS.parent / "dependabot.yml"
         if not config.exists():
             self.skipTest("no dependabot configuration present")
-        workflows_text = "\n".join(w.read_text(encoding="utf-8") for w in self.WORKFLOWS.glob("*.yml"))
-        if "github/codeql-action" in workflows_text:
-            self.assertIn("github/codeql-action", config.read_text(encoding="utf-8"),
-                          "dependabot must group codeql-action so the pair cannot be split across pull requests")
-            return
-        self.assertNotIn(
-            "github/codeql-action",
-            config.read_text(encoding="utf-8"),
-            "GitHub Default Setup owns CodeQL; dependabot must not track codeql-action",
-        )
+        self.assertIn("github/codeql-action", config.read_text(encoding="utf-8"),
+                      "dependabot must group codeql-action so the pair cannot be split across pull requests")
 
     def test_release_publish_is_idempotent(self):
         # Forge stopped publishing releases of its own when it moved into the

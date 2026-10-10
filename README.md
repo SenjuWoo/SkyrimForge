@@ -1,83 +1,11 @@
-<p align="center">
-  <img src="assets/mark.svg" width="72" height="72" alt="Skyrim Forge mark">
-</p>
+# Skyrim Forge 6.0.1
 
-<div align="center">
-
-# Skyrim Forge 6.0.0
-
-**This standalone repository is unsupported.**
-
-Development moved into the Ultimate AI Starter Bundle.
-Do not open issues or pull requests here.
-
-<p>
-  <a href="https://github.com/SenjuWoo/SkyrimForge/actions/workflows/ci.yml"><img src="https://github.com/SenjuWoo/SkyrimForge/actions/workflows/ci.yml/badge.svg" alt="CI"></a>
-  <a href="LICENSE"><img src="https://img.shields.io/badge/license-MIT-8ec8e8?labelColor=121820" alt="MIT License"></a>
-  <a href="https://github.com/SenjuWoo/SkyrimForge/releases/tag/v6.0.0"><img src="https://img.shields.io/badge/last%20cut-v6.0.0-8ec8e8?labelColor=121820" alt="v6.0.0"></a>
-  <img src="https://img.shields.io/badge/status-unsupported-e8a54b?labelColor=121820" alt="unsupported">
-</p>
-
-<p>
-  <a href="https://github.com/SenjuWoo/Ultimate-AI-Starter-Bundle">Ultimate AI Starter Bundle</a>
-  ·
-  <a href="https://github.com/SenjuWoo/Ultimate-AI-Starter-Bundle/issues">File issues there</a>
-  ·
-  <a href="#install">Install this snapshot</a>
-  ·
-  <a href="https://github.com/SenjuWoo/SkyrimForge/releases/tag/v5.2.1">v5.2.1 still works</a>
-</p>
-
-</div>
-
-<p align="center">
-  <img src="assets/hero.svg" alt="Skyrim Forge standalone repository is unsupported; development moved to the Ultimate AI Starter Bundle" width="100%">
-</p>
-
-## Status of this repository
-
-Verified from this tree, not from the GitHub about blurb:
-
-| Pointer | Value |
-| --- | --- |
-| `CURRENT.txt` | `6.0.0` |
-| `VERSION.txt` | `Skyrim Forge 6.0.0` |
-| Latest GitHub release | [v6.0.0](https://github.com/SenjuWoo/SkyrimForge/releases/tag/v6.0.0) (2026-08-27) |
-| GitHub description | still says frozen at v5.2.1 — that line is stale |
-
-This repo is **not actively developed**. It is a published snapshot of Forge **6.0.0**. New work, issues, and pull requests belong in the bundle.
-
-> Skyrim Forge is developed inside the **Ultimate AI Starter Bundle**, at
-> [`BUNDLED-TOOLS/skyrim-forge`](https://github.com/SenjuWoo/Ultimate-AI-Starter-Bundle/tree/main/BUNDLED-TOOLS/skyrim-forge).
-> **This repository mirrors that source.** The code here is the code that ships;
-> it is not a fork and not a separate line of development.
->
-> **Why the move.** The bundle installs Forge, and the two lived in separate
-> repositories. Bundle 7.8.0 shipped an installer that read a field Forge has
-> never emitted, so the Forge step threw on every run and aborted the whole
-> install — with every gate green in both repositories, because no commit could
-> test both halves. Two files that must agree do not belong in two repositories
-> on two release schedules. Merged, one commit proves both.
->
-> **Where changes land first.** In the bundle. This mirror is updated when a
-> Forge version is cut, not per-commit, so it can trail by a release. For the
-> newest Forge, and for everything else the pack installs, use the
-> [Ultimate-AI-Starter-Bundle releases](https://github.com/SenjuWoo/Ultimate-AI-Starter-Bundle/releases).
->
-> **Issues and pull requests belong in the bundle** —
-> [Ultimate-AI-Starter-Bundle/issues](https://github.com/SenjuWoo/Ultimate-AI-Starter-Bundle/issues).
-> A fix made here alone would be overwritten by the next mirror update; a fix
-> made there reaches both.
->
-> **Coming from 5.2.1?** It keeps working and the
-> [v5.2.1 release](https://github.com/SenjuWoo/SkyrimForge/releases/tag/v5.2.1)
-> stays downloadable. Upgrading is a normal install: the installer migrates a
-> version-stamped `Skyrim-Forge-5.2.1` folder onto the versionless
-> `Skyrim-Forge` name and preserves `Workspaces`, `.venv`, `REPORTS` and a local
-> `config.toml`. 6.0.0 removes the `forge bundle-contract` command, which existed
-> only to negotiate across the repository split this notice is about — one
-> repository cannot usefully negotiate a version range with itself, and a stale
-> range can only start rejecting the pack it ships inside.
+> Skyrim Forge is developed and released here again. The
+> [Ultimate AI Starter Bundle](https://github.com/SenjuWoo/Ultimate-AI-Starter-Bundle)
+> installs a **pinned, SHA-256-verified release** of it only when the user has
+> Skyrim (or asks for the Skyrim pack), so general users no longer carry it.
+> The bundle's CI installs that exact release end to end and requires
+> `forge doctor` to pass, which is the one contract the two repositories share.
 
 Skyrim Forge is a local, safety-first engineering workbench and MCP server for Skyrim Special Edition and Anniversary Edition mod development.
 
@@ -103,25 +31,31 @@ The gate maps every bundled file to its origin, author, licence or permission ba
 
 ## Install
 
-Most people should install the
-[Ultimate AI Starter Bundle](https://github.com/SenjuWoo/Ultimate-AI-Starter-Bundle)
-and run its `START-HERE.bat`, which installs Forge along with everything else
-the pack wires up. To install Forge on its own from this repository:
+Either let the Ultimate AI Starter Bundle install it (`START-HERE.bat`, Skyrim pack), or download
+`Skyrim-Forge-<version>.zip` from this repository's Releases, check it against `SHA256SUMS.txt`, extract it and run
+`START-HERE.bat` from the extracted folder. Setup copies this
+directory to your install root, bootstraps the virtualenv, installs the Forge
+skill into every detected AI app, and registers the MCP server with each one.
 
-1. Extract the release into your **Skyrim tools folder** as
-   `Skyrim-Forge` (same directory as xEdit, houseCARL, Spooky, …).
-   Leave the version out of the folder name: every AI provider stores the
-   MCP command as an absolute path, so a `Skyrim-Forge-6.0.0` folder
-   silently disconnects all of them the next time you upgrade. The
-   installed version is in `VERSION.txt`.
-   Do not clone or extract into `Documents`. Do not keep a second copy.
-2. Run `START-HERE.bat`. With no arguments it installs or updates Forge and
-   connects every detected AI app, so re-running it is also how you upgrade.
-3. Configure core paths. Job staging defaults to `<this install>\Workspaces`.
-4. Configure only the external tools actually installed on the machine.
+The install directory carries **no version suffix** -- it is `Skyrim-Forge`,
+next to xEdit, houseCARL and Spooky, never `Skyrim-Forge-6.0.1`. Every AI
+provider stores the MCP command as an absolute path, so a version-stamped folder
+renames itself out from under all five configs on the next upgrade, and the
+failure is silent: a provider that cannot spawn its server simply shows no
+tools. The installed version is in `VERSION.txt`. The installer migrates an
+existing version-stamped install onto the versionless name rather than leaving
+two copies behind.
 
-The other ten maintenance actions are one keypress away: `START-HERE.bat --menu`,
-or press **M** when the install finishes.
+Choose the install root with `INSTALL-AIO.ps1 -ForgeRoot 'S:\Apps\Skyrim Tools'`
+(or set `SKYRIM_FORGE_ROOT`). Without either it goes to
+`%LOCALAPPDATA%\Skyrim-Tools\Skyrim-Forge`, which needs no admin rights and
+makes no assumption about your drive letters.
+
+Then, from the install root:
+
+1. Run `START-HERE.bat`.
+2. Configure core paths. Job staging defaults to `<this install>\Workspaces`.
+3. Configure only the external tools actually installed on the machine.
 
 Claude Code 2026-07-28 requires Forge **5.1.5 or newer** (`tools/call` must
 carry `resultType`). Grok wedges at 8 running MCP servers; `Register-MCP.ps1`
@@ -289,8 +223,3 @@ Public intent automatically requires the Nexus publication plan and rights gate.
 Forge 4.2 recursively discovers real tools in directories and ZIPs, including tools nested inside another package such as `ESLifier/bsarch/BSArch.exe`. Use `forge tool-scan`, then `forge tool-import` or `forge tool-configure`. Imported tools are copied only into the local Forge tool vault, accompanied by hashes and receipts. Third-party executables are never added to the public Forge repository or a mod release. See `docs/TOOLCHAIN-BROKER.md`.
 
 Forge selects tools by an exact capability and a valid SHA-256 pin. It will not substitute `Synthesis.exe` for `Synthesis.Bethesda.CLI.exe`, or a generic archive utility for a Skyrim SE/AE BSA operation.
-
-## License
-
-[MIT](LICENSE)
-

@@ -1,9 +1,8 @@
 """Locate the CI workflows that actually build and test this subtree.
 
-Forge is developed inside the Ultimate AI Starter Bundle repository, and GitHub
-reads `.github/workflows` only from a repository ROOT. This subtree therefore
-carries no workflows of its own -- the jobs that run it live at the checkout
-root. Tests that assert something about CI have to look there, or they assert it
+GitHub reads `.github/workflows` only from a repository ROOT. Forge has lived
+both at a repository root and as a subtree of another checkout, so the jobs
+that run it are found by walking up to the nearest checkout root. Tests that assert something about CI have to look there, or they assert it
 about a file that no longer exists and pass by never running.
 """
 
