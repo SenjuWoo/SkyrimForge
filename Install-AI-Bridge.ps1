@@ -1,8 +1,10 @@
 [CmdletBinding()]
 param(
-    [ValidateSet('All', 'Codex', 'Claude', 'Grok', 'Kimi', 'Hermes')]
+    [ValidateSet('All', 'Codex', 'Claude', 'Grok', 'Kimi', 'Hermes', 'Antigravity')]
     [string]$Provider = 'All',
     [switch]$BootstrapPython,
+    [switch]$WithSkyrimPack,
+    [switch]$WithHouseCarl,
     [switch]$Yes
 )
 
@@ -18,8 +20,15 @@ if ($LASTEXITCODE -ne 0) { throw "Forge installation failed with exit code $LAST
 & (Join-Path $Root 'Install-Forge-Skill.ps1') -Provider $Provider
 if ($LASTEXITCODE -ne 0) { throw "Forge skill installation failed with exit code $LASTEXITCODE." }
 
-& (Join-Path $Root 'Register-MCP.ps1') -Provider $Provider -Yes:$Yes
-if ($LASTEXITCODE -ne 0) { throw "Forge provider integration failed with exit code $LASTEXITCODE." }
+if ($WithSkyrimPack) {
+    & (Join-Path $Root 'Install-Skyrim-Pack.ps1') -Provider $Provider -WithHouseCarl:$WithHouseCarl
+    if ($LASTEXITCODE -ne 0) { throw "Skyrim skill pack installation failed with exit code $LASTEXITCODE." }
+}
+
+if ($Provider -ne 'Antigravity') {
+    & (Join-Path $Root 'Register-MCP.ps1') -Provider $Provider -Yes:$Yes
+    if ($LASTEXITCODE -ne 0) { throw "Forge provider integration failed with exit code $LASTEXITCODE." }
+}
 
 $Python = Join-Path $Root '.venv\Scripts\python.exe'
 & $Python -m skyrim_forge doctor

@@ -48,6 +48,25 @@ class WindowsProviderBridgeTests(unittest.TestCase):
             self.assertTrue((local / "hermes" / "skills" / "skyrim-forge" / "INSTALLATION.json").is_file())
             self.assertFalse((profile / ".hermes" / "skills" / "skyrim-forge").exists())
 
+    def test_skyrim_pack_installs_skills_and_antigravity_provider(self):
+        with tempfile.TemporaryDirectory() as td:
+            temp = Path(td)
+            fixture = temp / "forge"
+            source = fixture / "integrations" / "skyrim-pack" / "skills" / "skyrim-forge"
+            source.mkdir(parents=True)
+            shutil.copy2(ROOT / "Install-Skyrim-Pack.ps1", fixture / "Install-Skyrim-Pack.ps1")
+            (source / "SKILL.md").write_text("---\nname: skyrim-forge\n---\n", encoding="utf-8")
+            (fixture / "INSTALLATION.json").write_text(
+                json.dumps({"root": str(fixture), "python": sys.executable}), encoding="utf-8"
+            )
+            ag_home = temp / "antigravity"
+            env = os.environ.copy()
+            env.update({"ANTIGRAVITY_CONFIG_DIR": str(ag_home)})
+            result = self.run_script(fixture / "Install-Skyrim-Pack.ps1", "-Provider", "Antigravity", env=env)
+            self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+            self.assertTrue((ag_home / "skills" / "skyrim-forge" / "SKILL.md").is_file())
+            self.assertTrue((ag_home / "skills" / "skyrim-forge" / "INSTALLATION.json").is_file())
+
     def require_installed_test_runtime(self) -> Path:
         python = ROOT / ".venv" / "Scripts" / "python.exe"
         if not python.is_file():

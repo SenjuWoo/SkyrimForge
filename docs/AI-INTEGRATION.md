@@ -24,6 +24,9 @@ are the authoritative machine-local launch commands. This avoids relying on
 | Grok | yes | `grok mcp` when installed; skipped if the add would wedge at 8 running servers |
 | Kimi | yes | preserving merge into `mcp.json`, followed by `kimi doctor` |
 | Hermes | yes | `hermes mcp`, followed by a live connection test |
+| Antigravity | yes (`Install-Forge-Skill.ps1 -Provider Antigravity`) | bundle-managed via `mcp_config.json` / `toolbox` |
+
+Skyrim Forge also bundles the full 48-skill Skyrim SE/AE pack under `integrations/skyrim-pack/`. Run `.\Install-Skyrim-Pack.ps1 -Provider All -WithHouseCarl` (or pass `-WithSkyrimPack -WithHouseCarl` to `Install-AI-Bridge.ps1`) to install all 48 Skyrim skills and configure `houseCARL` across your AI providers.
 
 An absent provider is reported as `NOT_INSTALLED`; it does not make Forge
 unhealthy. A detected provider whose registration fails is reported as

@@ -1,0 +1,88 @@
+{
+  "title": "Skyrim SE/AE modding",
+  "enable": "START-HERE.bat -Packs skyrim",
+  "disable": "START-HERE.bat -ExcludePacks skyrim",
+  "instructions": "BUNDLED-TOOLS/packs/skyrim/INSTRUCTIONS.md",
+  "components": [
+    "skyrim-forge",
+    "housecarl"
+  ],
+  "skills": [
+    "ai-tooling-stack",
+    "biped-slot-reference",
+    "bulk-record-jobs",
+    "dialogue-authoring",
+    "facegen-diagnostics",
+    "fictional-adult-modding",
+    "housecarl",
+    "kid-authoring",
+    "mantella-config",
+    "mutagen-reference",
+    "oar-authoring",
+    "papyrus-optimization",
+    "papyrus-reference",
+    "skse-plugin-authoring",
+    "skypatcher-authoring",
+    "skyrim-animation-behaviors",
+    "skyrim-assets-pbr",
+    "skyrim-audio",
+    "skyrim-base-object-swapper",
+    "skyrim-code-review",
+    "skyrim-container-distribution",
+    "skyrim-crash-diagnostics",
+    "skyrim-distr-kid-validation",
+    "skyrim-distribution-pipeline",
+    "skyrim-esp-vmad-renaming",
+    "skyrim-fomod-packaging",
+    "skyrim-forge",
+    "skyrim-frameworks-index",
+    "skyrim-memory",
+    "skyrim-mod-development",
+    "skyrim-mod-reworking",
+    "skyrim-modding-facts",
+    "skyrim-nexus-publishing",
+    "skyrim-nif",
+    "skyrim-papyrus-modding",
+    "skyrim-plugin-authoring",
+    "skyrim-racemenu-followers",
+    "skyrim-runtime-log-forensics",
+    "skyrim-runtime-patching",
+    "skyrim-sexlab-to-ostim-modernization",
+    "skyrim-ship-gate",
+    "skyrim-skse-commonlib",
+    "skyrim-skypatcher",
+    "skyrim-tool-router",
+    "skyrim-versioned-workspace",
+    "skyrim-voiced-dialogue",
+    "spid-authoring",
+    "tool-output-awareness"
+  ],
+  "detect": {
+    "steam_appids": [
+      "489830",
+      "611670"
+    ],
+    "my_games": [
+      "Skyrim Special Edition",
+      "Skyrim Special Edition GOG",
+      "Skyrim VR"
+    ],
+    "vortex_games": [
+      "skyrimse",
+      "skyrimvr"
+    ],
+    "env": [
+      "SKYRIM_FORGE_ROOT",
+      "SKYRIM_MO2_INSTANCE",
+      "HOUSECARL_ROOT"
+    ],
+    "gog_game_name": "Skyrim"
+  },
+  "owner_repo": "SenjuWoo/SkyrimForge",
+  "housecarl": {
+    "repo": "Avick3110/houseCARL",
+    "version": "2.1.1",
+    "asset": "houseCARL-2.1.1.zip",
+    "sha256": "1cb9fda834590d367e9907c35e5053624be050c316424d1f917f74e004c4816c"
+  }
+}

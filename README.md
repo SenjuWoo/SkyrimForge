@@ -38,13 +38,21 @@ directory to your install root, bootstraps the virtualenv, installs the Forge
 skill into every detected AI app, and registers the MCP server with each one.
 
 The install directory carries **no version suffix** -- it is `Skyrim-Forge`,
-next to xEdit, houseCARL and Spooky, never `Skyrim-Forge-6.0.1`. Every AI
+next to xEdit and houseCARL, never `Skyrim-Forge-6.0.1`. Every AI
 provider stores the MCP command as an absolute path, so a version-stamped folder
-renames itself out from under all five configs on the next upgrade, and the
+renames itself out from under all six configs on the next upgrade, and the
 failure is silent: a provider that cannot spawn its server simply shows no
 tools. The installed version is in `VERSION.txt`. The installer migrates an
 existing version-stamped install onto the versionless name rather than leaving
 two copies behind.
+
+### Skyrim Skill Pack & Toolchain Ownership
+
+Skyrim Forge is the canonical home for the **48-skill Skyrim SE/AE pack** (`integrations/skyrim-pack/`), the `houseCARL 2.1.1` setup and Vortex shim (`integrations/skyrim-pack/skills/housecarl/scripts/Setup-HouseCarl.ps1`), and Skyrim tool discovery (`integrations/skyrim-pack/skills/tool-discovery/scripts/discover_tools.ps1`). When installed standalone or delegated by the Ultimate AI Starter Bundle, you can install all 48 Skyrim skills and wire `houseCARL` with:
+
+```powershell
+.\Install-Skyrim-Pack.ps1 -Provider All -WithHouseCarl
+```
 
 Choose the install root with `INSTALL-AIO.ps1 -ForgeRoot 'S:\Apps\Skyrim Tools'`
 (or set `SKYRIM_FORGE_ROOT`). Without either it goes to
