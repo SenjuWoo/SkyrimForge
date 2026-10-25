@@ -798,7 +798,7 @@ if (-not $Quiet) {
 }
 
 # exit non-zero if critical runtimes missing (still wrote shim)
-if (-not $SkipDotNetCheck -and (-not $script:Report['dotnet9'] -or -not $script:Report['aspnet9'])) {
+if (-not $SkipDotNetCheck -and (-not $script:Report['dotnet10'] -and (-not $script:Report['dotnet9'] -or -not $script:Report['aspnet9']))) {
   Write-Warn2 "Setup wrote paths but .NET 9 pair is incomplete - houseCARL MCP may fail until installed."
   exit 4
 }

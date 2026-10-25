@@ -1,3 +1,10 @@
+## 6.1.1 (2026-10-25)
+
+- Forge exclusively owns the optional Skyrim skill pack.
+- Preserve edited skills, retain recoverable backups and lock atomic ownership ledgers.
+- Unify Codex/Hermes/Antigravity paths and bridge installation.
+- Common build tools belong to the Starter Bundle; reverse-engineering tools to Reverse THIS!.
+
 # Changelog
 
 ## 6.1.0

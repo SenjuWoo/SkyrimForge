@@ -1,4 +1,4 @@
-[CmdletBinding()]
+﻿[CmdletBinding()]
 param(
     [ValidateSet('All', 'Codex', 'Claude', 'Grok', 'Kimi', 'Hermes', 'Antigravity')]
     [string]$Provider = 'All',
@@ -16,14 +16,12 @@ $Root = $PSScriptRoot
 $InstallArguments = @{}
 if ($BootstrapPython) { $InstallArguments.BootstrapPython = $true }
 & (Join-Path $Root 'Install-or-Update.ps1') @InstallArguments
-if ($LASTEXITCODE -ne 0) { throw "Forge installation failed with exit code $LASTEXITCODE." }
 
-& (Join-Path $Root 'Install-Forge-Skill.ps1') -Provider $Provider
-if ($LASTEXITCODE -ne 0) { throw "Forge skill installation failed with exit code $LASTEXITCODE." }
-
-if (-not $SkipSkyrimPack -and (Test-Path -LiteralPath (Join-Path $Root 'Install-Skyrim-Pack.ps1') -PathType Leaf)) {
+# Both entry points share Forge's preservation ledger; install the pack once.
+if ($SkipSkyrimPack) {
+    & (Join-Path $Root 'Install-Forge-Skill.ps1') -Provider $Provider
+} else {
     & (Join-Path $Root 'Install-Skyrim-Pack.ps1') -Provider $Provider -WithHouseCarl:$WithHouseCarl
-    if ($LASTEXITCODE -ne 0) { throw "Skyrim skill pack installation failed with exit code $LASTEXITCODE." }
 }
 
 if ($Provider -ne 'Antigravity') {

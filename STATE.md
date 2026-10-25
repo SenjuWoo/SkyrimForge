@@ -1,3 +1,15 @@
+# Modular ownership recovery (2026-10-25, in progress)
+
+Source baseline 4a200b1; branch codex/skill-pack-preservation. Forge owns Skyrim
+skills and tool setup; the bundle owns common compilers and provider bootstrap;
+Reverse THIS! owns reverse-engineering tools. Existing personal copies survive.
+Eight real skill ownership/rollback fixtures passed. Finishing bridge callers,
+version 6.1.1, repository gates and release before updating the bundle pin.
+Source checkout keeps its historical folder name; live deployment is separate.
+Log: %LOCALAPPDATA%/Skyrim-Forge/logs/skill-install.log.
+Last good public version: 6.1.0. Full local validation PASS: 172 Python cases, native reproducibility, Go race
+and actual PowerShell parser. Next: exact-SHA GitHub checks and publication.
+
 # State
 
 - Active version: 6.1.0
