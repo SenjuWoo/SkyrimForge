@@ -54,3 +54,7 @@
 - Preserve every 4.x safety boundary unchanged: no GUI launching, no arbitrary
   shell commands, no writes to live Skyrim `Data`, external processes disabled
   by default, and third-party tools hash-pinned rather than bundled.
+- Own the 48-skill Skyrim SE/AE pack (`integrations/skyrim-pack/`), `Setup-HouseCarl.ps1`,
+  and `discover_tools.ps1` directly inside Skyrim Forge 6.1.0, and update the
+  Ultimate AI Starter Bundle's `managed-skills` ledger digests when co-installed
+  so both repositories can be developed and updated in parallel.

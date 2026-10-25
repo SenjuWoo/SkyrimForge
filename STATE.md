@@ -1,9 +1,10 @@
 # State
 
-- Active version: 6.0.1
-- Parent: v6.0.0
+- Active version: 6.1.0
+- Parent: v6.0.1
 - Authoritative owner: `https://github.com/SenjuWoo/SkyrimForge`, branch
   `main`
+- Skyrim Pack ownership: 48 Skyrim SE/AE skills in `integrations/skyrim-pack/`, `Install-Skyrim-Pack.ps1`, `Setup-HouseCarl.ps1`, and `discover_tools.ps1`
 - Preserved installed releases: `Skyrim-Forge-5.1.3`, `Skyrim-Forge-5.1.4`
 - 5.1.5 MCP symptom: Claude Code 2026-07-28 listed Forge tools then rejected
   every `tools/call` (`missing required resultType`). List/read had the field;

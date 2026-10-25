@@ -1,5 +1,31 @@
 # Changelog
 
+## 6.1.0
+
+Skyrim Forge is now the self-contained home for the entire Skyrim SE/AE AI
+modding ecosystem, cleanly separated from the general-purpose Ultimate AI
+Starter Bundle so both repositories can be developed and updated in parallel.
+
+- **48-skill Skyrim SE/AE pack (`integrations/skyrim-pack/`)**: all 48 Skyrim
+  modding skills (`skyrim-tool-router`, `skyrim-forge`, `housecarl`, `skyrim-nif`,
+  `skyrim-audio`, `spid-authoring`, `kid-authoring`, `skypatcher-authoring`,
+  `skyrim-base-object-swapper`, `oar-authoring`, `skyrim-fomod-packaging`,
+  `skyrim-nexus-publishing`, `skyrim-ship-gate`, etc.), `PACK.json`, and
+  `INSTRUCTIONS.md` now live canonically in Skyrim Forge.
+- **Retired legacy `spookys-automod-toolkit`**: `skyrim-nif` and `skyrim-audio`
+  route NIF, BSA/BA2, and audio workflows through `houseCARL 2.1.1`, Skyrim
+  Forge, `pynifly`, `xWMAEncode`, and `ffmpeg`.
+- **`Install-Skyrim-Pack.ps1` and `Install-AI-Bridge.ps1`**: installs all 48
+  Skyrim skills across Codex (`~/.agents/skills` when present), Claude, Grok,
+  Kimi, Hermes, and Antigravity, updates the Ultimate AI Starter Bundle's
+  `managed-skills` ledger digests when co-installed, and optionally runs
+  `Setup-HouseCarl.ps1`.
+- **`Setup-HouseCarl.ps1` external tool discovery & Vortex shim hygiene**:
+  discovers existing `houseCARL` installations across user drives, compares
+  semantic versions before upgrading with backup, and excludes `.bak*` / `.old`
+  directories from Vortex MO2 shim links.
+- Native helpers rebuilt reproducibly as 6.1.0 with pinned Go 1.23.2.
+
 ## 6.0.1
 
 Skyrim Forge is released from this repository again. The Ultimate AI Starter

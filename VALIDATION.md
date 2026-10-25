@@ -1,5 +1,11 @@
 # Validation
 
+## 6.1.0 Skyrim Pack & Parallel-Development Bridge
+
+- `integrations/skyrim-pack/` includes all 48 Skyrim SE/AE skills, `PACK.json`, `INSTRUCTIONS.md`, `Setup-HouseCarl.ps1`, and `discover_tools.ps1`.
+- `Install-Skyrim-Pack.ps1` installs all 48 skills across Codex, Claude, Grok, Kimi, Hermes, and Antigravity and updates the Ultimate AI Starter Bundle `managed-skills` ledger when present.
+- Native helpers rebuilt reproducibly as `SkyrimForge.Native 6.1.0 go` with pinned Go 1.23.2.
+
 ## 5.2.0 layout and Grok cliff
 
 - Default workspace follows `SKYRIM_FORGE_ROOT\Workspaces`; empty

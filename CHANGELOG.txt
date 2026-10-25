@@ -1,3 +1,12 @@
+Skyrim Forge 6.1.0
+
+- Canonical home for the 48-skill Skyrim SE/AE pack (integrations/skyrim-pack/), PACK.json, and INSTRUCTIONS.md.
+- Retired legacy spookys-automod-toolkit; skyrim-nif and skyrim-audio route through houseCARL 2.1.1 and Skyrim Forge.
+- Added Install-Skyrim-Pack.ps1 and Antigravity provider support in Install-Forge-Skill.ps1 and Install-AI-Bridge.ps1.
+- Parallel-development bridge updates Ultimate-AI-Starter-Bundle managed-skills digests when co-installed.
+- Setup-HouseCarl.ps1 discovers external installations, compares versions before upgrading with backup, and filters .bak* folders from the Vortex shim.
+- Native helpers rebuilt reproducibly as 6.1.0 with pinned Go 1.23.2.
+
 Skyrim Forge 6.0.1
 
 - Released from this repository again; the AI bundle installs a pinned, digest-verified release only for Skyrim users.

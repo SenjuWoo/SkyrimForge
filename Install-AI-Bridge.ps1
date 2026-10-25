@@ -4,6 +4,7 @@ param(
     [string]$Provider = 'All',
     [switch]$BootstrapPython,
     [switch]$WithSkyrimPack,
+    [switch]$SkipSkyrimPack,
     [switch]$WithHouseCarl,
     [switch]$Yes
 )
@@ -20,7 +21,7 @@ if ($LASTEXITCODE -ne 0) { throw "Forge installation failed with exit code $LAST
 & (Join-Path $Root 'Install-Forge-Skill.ps1') -Provider $Provider
 if ($LASTEXITCODE -ne 0) { throw "Forge skill installation failed with exit code $LASTEXITCODE." }
 
-if ($WithSkyrimPack) {
+if (-not $SkipSkyrimPack -and (Test-Path -LiteralPath (Join-Path $Root 'Install-Skyrim-Pack.ps1') -PathType Leaf)) {
     & (Join-Path $Root 'Install-Skyrim-Pack.ps1') -Provider $Provider -WithHouseCarl:$WithHouseCarl
     if ($LASTEXITCODE -ne 0) { throw "Skyrim skill pack installation failed with exit code $LASTEXITCODE." }
 }

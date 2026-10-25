@@ -1,11 +1,13 @@
-# Skyrim Forge 6.0.1
+# Skyrim Forge 6.1.0
 
-> Skyrim Forge is developed and released here again. The
-> [Ultimate AI Starter Bundle](https://github.com/SenjuWoo/Ultimate-AI-Starter-Bundle)
-> installs a **pinned, SHA-256-verified release** of it only when the user has
-> Skyrim (or asks for the Skyrim pack), so general users no longer carry it.
-> The bundle's CI installs that exact release end to end and requires
-> `forge doctor` to pass, which is the one contract the two repositories share.
+> Skyrim Forge is the authoritative repository for the Skyrim SE/AE AI modding
+> stack: the 52-tool Forge MCP/CLI/GUI workbench, the **48-skill Skyrim SE/AE
+> pack** (`integrations/skyrim-pack/`), the `houseCARL 2.1.1` load-order shim
+> (`Setup-HouseCarl.ps1`), and Skyrim tool discovery (`discover_tools.ps1`).
+> The [Ultimate AI Starter Bundle](https://github.com/SenjuWoo/Ultimate-AI-Starter-Bundle)
+> focuses on general AI boost and token efficiency and delegates Skyrim tooling
+> to a pinned, SHA-256-verified release of Skyrim Forge (preserving any newer
+> local Forge install untouched so you can develop both repositories in parallel).
 
 Skyrim Forge is a local, safety-first engineering workbench and MCP server for Skyrim Special Edition and Anniversary Edition mod development.
 
@@ -38,7 +40,7 @@ directory to your install root, bootstraps the virtualenv, installs the Forge
 skill into every detected AI app, and registers the MCP server with each one.
 
 The install directory carries **no version suffix** -- it is `Skyrim-Forge`,
-next to xEdit and houseCARL, never `Skyrim-Forge-6.0.1`. Every AI
+next to xEdit and houseCARL, never `Skyrim-Forge-6.1.0`. Every AI
 provider stores the MCP command as an absolute path, so a version-stamped folder
 renames itself out from under all six configs on the next upgrade, and the
 failure is silent: a provider that cannot spawn its server simply shows no
@@ -46,9 +48,16 @@ tools. The installed version is in `VERSION.txt`. The installer migrates an
 existing version-stamped install onto the versionless name rather than leaving
 two copies behind.
 
-### Skyrim Skill Pack & Toolchain Ownership
+### Skyrim Skill Pack, houseCARL & Parallel Development with the General Bundle
 
-Skyrim Forge is the canonical home for the **48-skill Skyrim SE/AE pack** (`integrations/skyrim-pack/`), the `houseCARL 2.1.1` setup and Vortex shim (`integrations/skyrim-pack/skills/housecarl/scripts/Setup-HouseCarl.ps1`), and Skyrim tool discovery (`integrations/skyrim-pack/skills/tool-discovery/scripts/discover_tools.ps1`). When installed standalone or delegated by the Ultimate AI Starter Bundle, you can install all 48 Skyrim skills and wire `houseCARL` with:
+Skyrim Forge 6.1 owns the complete Skyrim AI modding ecosystem:
+
+- **48-skill Skyrim SE/AE pack** (`integrations/skyrim-pack/skills/*`, `PACK.json`, `INSTRUCTIONS.md`): `skyrim-tool-router`, `skyrim-memory`, `skyrim-versioned-workspace`, `skyrim-forge`, `housecarl`, `spid-authoring`, `kid-authoring`, `skypatcher-authoring`, `skyrim-base-object-swapper`, `oar-authoring`, `skyrim-nif`, `skyrim-audio`, `skyrim-fomod-packaging`, `skyrim-nexus-publishing`, `skyrim-ship-gate`, and all specialist skills.
+- **`houseCARL 2.1.1` setup & Vortex load-order shim** (`integrations/skyrim-pack/skills/housecarl/scripts/Setup-HouseCarl.ps1`): discovers external user installations (e.g., `Z:\Backup\!Skyrim\Skyrim tools\houseCARL`), compares versions before upgrading with backup, filters `.bak*` folders from the Vortex shim, and respects user roots.
+- **Skyrim tool discovery** (`integrations/skyrim-pack/skills/tool-discovery/scripts/discover_tools.ps1`).
+- **Parallel development with `Ultimate-AI-Starter-Bundle`**:
+  - Running `START-HERE.bat` or `.\Install-AI-Bridge.ps1 -Provider All -Yes` installs the Forge runtime, the `skyrim-forge` skill, and all 48 Skyrim pack skills across Claude, Codex (`~/.agents/skills`), Grok, Kimi, Hermes, and Antigravity, and updates the bundle's `managed-skills` ledger digests when present.
+  - Conversely, when `Ultimate-AI-Starter-Bundle` runs `INSTALL-AIO.ps1`, its `Install-SkyrimForge.ps1` compares semantic versions and **never downgrades** a newer local `Skyrim-Forge` installation or overwrites newer Forge-owned Skyrim skills.
 
 ```powershell
 .\Install-Skyrim-Pack.ps1 -Provider All -WithHouseCarl
