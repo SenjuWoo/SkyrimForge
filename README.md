@@ -1,4 +1,4 @@
-# Skyrim Forge 6.1.0
+# Skyrim Forge 6.1.1
 
 > Skyrim Forge is the authoritative repository for the Skyrim SE/AE AI modding
 > stack: the 52-tool Forge MCP/CLI/GUI workbench, the **48-skill Skyrim SE/AE
@@ -40,7 +40,7 @@ directory to your install root, bootstraps the virtualenv, installs the Forge
 skill into every detected AI app, and registers the MCP server with each one.
 
 The install directory carries **no version suffix** -- it is `Skyrim-Forge`,
-next to xEdit and houseCARL, never `Skyrim-Forge-6.1.0`. Every AI
+next to xEdit and houseCARL, never `Skyrim-Forge-6.1.1`. Every AI
 provider stores the MCP command as an absolute path, so a version-stamped folder
 renames itself out from under all six configs on the next upgrade, and the
 failure is silent: a provider that cannot spawn its server simply shows no
@@ -240,3 +240,9 @@ Public intent automatically requires the Nexus publication plan and rights gate.
 Forge 4.2 recursively discovers real tools in directories and ZIPs, including tools nested inside another package such as `ESLifier/bsarch/BSArch.exe`. Use `forge tool-scan`, then `forge tool-import` or `forge tool-configure`. Imported tools are copied only into the local Forge tool vault, accompanied by hashes and receipts. Third-party executables are never added to the public Forge repository or a mod release. See `docs/TOOLCHAIN-BROKER.md`.
 
 Forge selects tools by an exact capability and a valid SHA-256 pin. It will not substitute `Synthesis.exe` for `Synthesis.Bethesda.CLI.exe`, or a generic archive utility for a Skyrim SE/AE BSA operation.
+
+## Companion ownership
+
+[Ultimate AI Starter Bundle](https://github.com/SenjuWoo/Ultimate-AI-Starter-Bundle) supplies shared compilers and AI provider setup. [Reverse THIS!](https://github.com/SenjuWoo/reverse-this) supplies reverse-engineering tools. Forge owns Skyrim-specific tools and the optional 48-skill pack. Updates retain personal skill edits and last-good backups outside provider indexes; the general bundle never retires Forge-owned skills.
+
+Skill installation diagnostics: `%LOCALAPPDATA%/Skyrim-Forge/logs/skill-install.log` (`SKYRIM_FORGE_DEBUG=1` for successful-operation detail). HouseCARL failures: `%LOCALAPPDATA%/Skyrim-Forge/logs/housecarl-install.log`.

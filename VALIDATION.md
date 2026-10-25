@@ -1,3 +1,12 @@
+## 6.1.1 recovery verification (2026-10-25)
+
+- Full repository validator PASS, Windows PowerShell parser PASS.
+- 172 Python cases (two platform/runtime skips); eight ownership/rollback fixtures and two modular content/path fixtures included.
+- Go formatting, vet, tests and race detector PASS with the recorded project pin.
+- Windows/Linux native builds are repeatable and match the packaged copies.
+- Exact-SHA GitHub checks and public asset verification remain pending until publication.
+- No Skyrim game/runtime, save or visual behavior was changed or certified.
+
 # Validation
 
 ## 6.1.0 Skyrim Pack & Parallel-Development Bridge

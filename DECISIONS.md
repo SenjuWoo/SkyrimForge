@@ -58,3 +58,8 @@
   and `discover_tools.ps1` directly inside Skyrim Forge 6.1.0, and update the
   Ultimate AI Starter Bundle's `managed-skills` ledger digests when co-installed
   so both repositories can be developed and updated in parallel.
+
+
+## Independent product ownership
+
+Forge owns Skyrim skills/tools. The Starter Bundle owns shared compilers and provider setup. Reverse THIS! owns reverse engineering. Installers read legacy ownership proof to adopt unmodified copies, then maintain separate ledgers without rewriting other products’ ledgers. Edited copies remain personal.

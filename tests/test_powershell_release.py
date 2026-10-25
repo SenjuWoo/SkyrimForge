@@ -49,11 +49,11 @@ class PowerShellReleaseTests(unittest.TestCase):
 
     def test_skill_installer_is_transactional_and_uses_safe_formatting(self):
         text = (ROOT / 'Install-Forge-Skill.ps1').read_text(encoding='utf-8-sig')
-        self.assertIn("Write-Host ('{0}: {1}' -f $Name, $Target)", text)
-        self.assertIn('.skyrim-forge.stage-', text)
-        self.assertIn('.skyrim-forge.backup-', text)
-        self.assertIn('Staged Forge skill validation failed', text)
-        self.assertNotIn('"$Name: $Target"', text)
+        self.assertIn("'Install-Skyrim-Pack.ps1'", text)
+        helper = (ROOT / 'scripts/Provider-Skills.ps1').read_text(encoding='utf-8-sig')
+        self.assertIn("'backup-'", helper)
+        self.assertIn('Staged skill verification failed', helper)
+        self.assertIn('$lock.Dispose()', helper)
 
     def test_batch_files_never_pass_quoted_dp0_as_a_standalone_external_argument(self):
         bad = re.compile(r'"%~dp0"(?=\s|$)', re.I)
@@ -145,7 +145,7 @@ class PowerShellReleaseTests(unittest.TestCase):
         self.assertIn("'hermes-agent\\venv\\Scripts\\hermes.exe'", register)
         self.assertNotIn('$Name?', register)
         self.assertIn('${Name}?', register)
-        self.assertIn("'INSTALLATION.json'", skill_installer)
+        self.assertIn("'Install-Skyrim-Pack.ps1'", skill_installer)
         self.assertIn('Read `INSTALLATION.json` beside this skill', skill)
 
 

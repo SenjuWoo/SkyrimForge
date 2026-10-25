@@ -1,3 +1,10 @@
+## 6.1.1 (2026-10-25)
+
+- Forge exclusively owns the optional Skyrim skill pack.
+- Preserve edited skills, retain recoverable backups and lock atomic ownership ledgers.
+- Unify Codex/Hermes/Antigravity paths and bridge installation.
+- Common build tools belong to the Starter Bundle; reverse-engineering tools to Reverse THIS!.
+
 Skyrim Forge 6.1.0
 
 - Canonical home for the 48-skill Skyrim SE/AE pack (integrations/skyrim-pack/), PACK.json, and INSTRUCTIONS.md.

@@ -15,3 +15,5 @@
 7. [complete] Deliver 6.1.0 as the self-contained Skyrim AI modding repository
    owning the 48-skill Skyrim pack (`integrations/skyrim-pack/`), `Install-Skyrim-Pack.ps1`,
    `Setup-HouseCarl.ps1`, and parallel-development compatibility with Ultimate-AI-Starter-Bundle.
+
+8. [in progress] Deliver 6.1.1 with independent skill ownership, safe provider paths, retained rollback backups and Forge-owned houseCARL installation.

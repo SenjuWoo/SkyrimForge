@@ -30,9 +30,14 @@ class WindowsProviderBridgeTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as td:
             temp = Path(td)
             fixture = temp / "forge"
-            source = fixture / "integrations" / "skyrim-forge"
+            source = fixture / "integrations" / "skyrim-pack" / "skills" / "skyrim-forge"
             source.mkdir(parents=True)
             shutil.copy2(ROOT / "Install-Forge-Skill.ps1", fixture / "Install-Forge-Skill.ps1")
+            (fixture / "scripts").mkdir(exist_ok=True)
+            shutil.copy2(ROOT / "scripts/Provider-Skills.ps1", fixture / "scripts/Provider-Skills.ps1")
+            shutil.copy2(ROOT / "Install-Skyrim-Pack.ps1", fixture / "Install-Skyrim-Pack.ps1")
+            (fixture / "scripts").mkdir(exist_ok=True)
+            shutil.copy2(ROOT / "scripts/Provider-Skills.ps1", fixture / "scripts/Provider-Skills.ps1")
             (source / "SKILL.md").write_text("---\nname: skyrim-forge\n---\n", encoding="utf-8")
             (fixture / "INSTALLATION.json").write_text(
                 json.dumps({"root": str(fixture), "python": sys.executable}), encoding="utf-8"
@@ -55,6 +60,8 @@ class WindowsProviderBridgeTests(unittest.TestCase):
             source = fixture / "integrations" / "skyrim-pack" / "skills" / "skyrim-forge"
             source.mkdir(parents=True)
             shutil.copy2(ROOT / "Install-Skyrim-Pack.ps1", fixture / "Install-Skyrim-Pack.ps1")
+            (fixture / "scripts").mkdir(exist_ok=True)
+            shutil.copy2(ROOT / "scripts/Provider-Skills.ps1", fixture / "scripts/Provider-Skills.ps1")
             (source / "SKILL.md").write_text("---\nname: skyrim-forge\n---\n", encoding="utf-8")
             (fixture / "INSTALLATION.json").write_text(
                 json.dumps({"root": str(fixture), "python": sys.executable}), encoding="utf-8"
