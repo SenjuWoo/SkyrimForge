@@ -118,12 +118,13 @@ class SkillOwnershipTests(unittest.TestCase):
         harness = r'''
 function Move-Item {
     param($LiteralPath, $Destination, [switch]$Force)
-    if ($LiteralPath -like '*stage-*' -and $Destination -eq $env:CLAUDE_CONFIG_DIR + '\skills\skyrim-forge') { throw 'injected swap failure' }
+    if ($LiteralPath -like '*stage-*' -and (Split-Path -Leaf $Destination) -eq 'skyrim-forge') { throw 'injected swap failure' }
     Microsoft.PowerShell.Management\Move-Item -LiteralPath $LiteralPath -Destination $Destination -Force:$Force
 }
 '''
         result = self.run_install(harness=harness)
         self.assertNotEqual(result.returncode, 0)
+        self.assertIn('injected swap failure', result.stderr)
         self.assertEqual((self.target / 'SKILL.md').read_bytes(), old)
 
     def test_failed_restore_retains_the_only_backup(self):

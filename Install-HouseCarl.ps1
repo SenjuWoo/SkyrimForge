@@ -29,6 +29,8 @@ if ($CheckOnly) { if (-not $existing -or $existing.version -lt $version) { throw
 $work=Join-Path $env:LOCALAPPDATA ('Skyrim-Forge\housecarl-work\'+[guid]::NewGuid().ToString('N'))
 try {
     if (-not $existing -or $existing.version -lt $version) {
+        if ([IO.Path]::GetFullPath($server).TrimEnd('\') -eq [IO.Path]::GetPathRoot([IO.Path]::GetFullPath($server)).TrimEnd('\')) { throw 'Refusing a drive-root tool installation.' }
+
         New-Item -ItemType Directory -Force -Path $work | Out-Null
         if (-not $SourceZip) {
             $SourceZip=Join-Path $work 'houseCARL-2.1.1.zip'
@@ -50,7 +52,6 @@ try {
         }
         $backup=Join-Path (Split-Path -Parent $server) ('.housecarl-backup-'+[guid]::NewGuid().ToString('N'))
         $hadServer=Test-Path -LiteralPath $server
-        if ([IO.Path]::GetFullPath($server).TrimEnd('\') -eq [IO.Path]::GetPathRoot([IO.Path]::GetFullPath($server)).TrimEnd('\')) { throw 'Refusing a drive-root tool installation.' }
         try {
             if ($hadServer) { Move-Item -LiteralPath $server -Destination $backup }
             Move-Item -LiteralPath $stage -Destination $server

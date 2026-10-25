@@ -39,8 +39,8 @@
     {
       "executable": false,
       "path": ".github/workflows/ci.yml",
-      "sha256": "c49e70c532755b823a4fc01b0b65d9d98598c4b710f5ac57883433c73f888aa7",
-      "size": 8519
+      "sha256": "39bd8d16ad4a4617d415edcfbfc870c0cab4cbb0ac0674d9a98d158da62a733c",
+      "size": 8717
     },
     {
       "executable": false,
@@ -423,8 +423,8 @@
     {
       "executable": false,
       "path": "Install-HouseCarl.ps1",
-      "sha256": "10d566960a74faf2bf460303d18060078e3d3e400a16a6824fbf80031b81a18e",
-      "size": 6058
+      "sha256": "b09378e5c8b00ff8bbb8e985e865d9df5ac65e4f33755b437b973ffe6e6d8b6c",
+      "size": 6060
     },
     {
       "executable": false,
@@ -3393,8 +3393,8 @@
     {
       "executable": false,
       "path": "tests/test_skyrim_pack_ownership.py",
-      "sha256": "92db52dc99f508ba6edd07ce68179a1af8e6df1ded5b653892a81fe45e53a7c3",
-      "size": 7458
+      "sha256": "69b1a7e771d5b787db1732e02cfde977b2063fd36d532362577fc96f887d57e2",
+      "size": 7506
     },
     {
       "executable": false,
