@@ -144,5 +144,56 @@ function Move-Item {
         self.assertTrue(backups, result.stdout + result.stderr)
 
 
+    def prepare_old_tooling(self, owned=True):
+        old=self.source.parent/'ai-tooling-stack'; old.mkdir()
+        (old/'SKILL.md').write_text('old Forge tooling index\n', encoding='utf-8')
+        if owned: self.good(self.run_install())
+        else:
+            target=self.claude/'skills/ai-tooling-stack'; target.mkdir(parents=True)
+            shutil.copy2(old/'SKILL.md',target/'SKILL.md')
+        old.rename(old.with_name('skyrim-tooling-stack'))
+        return self.claude/'skills/ai-tooling-stack'
+
+    def test_old_forge_tooling_name_migrates_with_own_digest_proof(self):
+        target=self.prepare_old_tooling()
+        old=(target/'SKILL.md').read_bytes()
+        self.good(self.run_install())
+        self.assertFalse(target.exists())
+        self.assertTrue((self.claude/'skills/skyrim-tooling-stack/SKILL.md').is_file())
+        backups=[p for p in self.base.rglob('SKILL.md') if 'backup-ai-tooling-stack-' in str(p)]
+        self.assertTrue(backups)
+        self.assertEqual(backups[0].read_bytes(),old)
+        self.assertTrue(all(self.claude/'skills' not in p.parents for p in backups))
+
+    def test_edited_old_tooling_name_is_preserved(self):
+        target=self.prepare_old_tooling()
+        (target/'SKILL.md').write_text('personal changes\n',encoding='utf-8')
+        self.good(self.run_install())
+        self.assertEqual((target/'SKILL.md').read_text(),'personal changes\n')
+
+    def test_unowned_old_tooling_name_is_preserved(self):
+        target=self.prepare_old_tooling(owned=False)
+        self.good(self.run_install())
+        self.assertTrue((target/'SKILL.md').is_file())
+
+    def test_migration_rolls_back_if_ledger_commit_fails(self):
+        target=self.prepare_old_tooling()
+        old=(target/'SKILL.md').read_bytes()
+        harness=r'''
+function Move-Item {
+    param($LiteralPath,$Destination,[switch]$Force)
+    Microsoft.PowerShell.Management\Move-Item -LiteralPath $LiteralPath -Destination $Destination -Force:$Force
+    if ((Split-Path -Leaf $LiteralPath) -eq 'ai-tooling-stack') {
+        $ledger=Get-ChildItem -LiteralPath (Join-Path $env:LOCALAPPDATA 'Skyrim-Forge\managed-skills') -Filter '*.json' | Select-Object -First 1
+        $global:blockedLedger=[IO.File]::Open($ledger.FullName,[IO.FileMode]::Open,[IO.FileAccess]::Read,[IO.FileShare]::Read)
+    }
+}
+'''
+        result=self.run_install(harness=harness)
+        self.assertNotEqual(result.returncode,0)
+        self.assertEqual((target/'SKILL.md').read_bytes(),old)
+        self.assertFalse((self.claude/'skills/skyrim-tooling-stack').exists())
+
+
 if __name__ == '__main__':
     unittest.main()

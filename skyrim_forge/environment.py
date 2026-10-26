@@ -54,11 +54,25 @@ def discover_tools(config: ForgeConfig) -> dict[str, str]:
         "synthesis_gui": ["Synthesis.exe"],
         "deadmesh_cli": ["dmscan.exe"],
         "deadmesh_gui": ["DeadMesh.exe"],
+        "resaverpp_cli": ["resaverpp-cli.exe"],
+        "resaverpp_gui": ["ReSaverPP.exe"],
+        "pgpatcher": ["PGPatcher.exe"],
+        "pgtools": ["pgtools.exe"],
+        "easynpc": ["EasyNPC.exe"],
+        "texture_analyzer": ["TextureAnalyzer.exe"],
+        "bethini": ["Bethini.exe"],
         "cmake": ["cmake.exe", "cmake"],
         "vcpkg": ["vcpkg.exe", "vcpkg"],
         "ninja": ["ninja.exe", "ninja"],
     }
     found = {}
+    # MO2's Python plugin is evidence of an installed plugin, never a standalone CLI.
+    if config.tools_root:
+        for candidate in (config.tools_root / "NIF Analyzer" / "__init__.py", config.tools_root / "__init__.py"):
+            if candidate.is_file():
+                text=candidate.read_text(encoding="utf-8-sig")
+                if "createPlugin" in text and "mobase.IPluginTool" in text and "NifAnalyzer" in text:
+                    found["nif_analyzer_mo2_plugin"]=str(candidate.parent)
     for name, executable_names in names.items():
         path = discover_executable(executable_names, roots)
         if path:

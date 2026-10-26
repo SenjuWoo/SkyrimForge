@@ -103,12 +103,12 @@
       ],
       "config_key": "champollion",
       "id": "champollion",
-      "import_mode": "single",
+      "import_mode": "configure_only",
       "license": "LGPL-3.0",
       "names": [
         "Champollion.exe"
       ],
-      "notes": "Decompiled output is evidence/recovery material, not proof of ownership or permission.",
+      "notes": "Configure the installed release in place: legacy builds require DLL/runtime sidecars and use different CLI options. Verify help against the configured hash.",
       "path_hints": [
         "champollion"
       ],
@@ -189,7 +189,7 @@
       "names": [
         "dmscan.exe"
       ],
-      "notes": "Local import only. Preserve required sidecars and included notices.",
+      "notes": "Local installation only. Local LICENSE forbids redistribution/repackaging without author permission; never publicly bundle.",
       "path_hints": [
         "deadmesh"
       ],
@@ -222,7 +222,7 @@
       "names": [
         "DeadMesh.exe"
       ],
-      "notes": "GUI companion. Forge direct scans use dmscan.exe instead.",
+      "notes": "Local installation only. Local LICENSE forbids redistribution/repackaging without author permission; never publicly bundle.",
       "path_hints": [
         "deadmesh"
       ],
@@ -283,6 +283,7 @@
       "names": [
         "NIFAnalyzer.exe"
       ],
+      "notes": "This entry is only the separately supplied NIFAnalyzer.exe. The NIF Performance Analyzer 2.0 MO2 Python plugin (mobase/PyQt6) is distinct and has no fabricated standalone CLI.",
       "path_hints": [
         "nifanalyzer"
       ],
@@ -664,6 +665,146 @@
       "priority": 80,
       "public_bundle_allowed": false,
       "source": "Creation Kit installation"
+    },
+    {
+      "automation": "worker_contract",
+      "capabilities": [
+        "save.analysis.cli"
+      ],
+      "config_key": "resaverpp_cli",
+      "id": "resaverpp_cli",
+      "import_mode": "configure_only",
+      "license": "Apache-2.0; preserve LICENSE and NOTICE.md",
+      "names": [
+        "resaverpp-cli.exe"
+      ],
+      "notes": "Discover/configure existing installation only. No public binary bundling; worker-contract entries have no direct Forge runner.",
+      "path_hints": [
+        "resaverpp cli"
+      ],
+      "priority": 20,
+      "public_bundle_allowed": false,
+      "source": "Local ReSaver++ README; source/release provenance still requires verification."
+    },
+    {
+      "automation": "human_gate",
+      "capabilities": [
+        "save.inspect.resaverpp.gui"
+      ],
+      "config_key": "resaverpp_gui",
+      "id": "resaverpp_gui",
+      "import_mode": "configure_only",
+      "license": "Apache-2.0; preserve LICENSE and NOTICE.md",
+      "names": [
+        "ReSaverPP.exe"
+      ],
+      "notes": "Discover/configure existing installation only. No public binary bundling; worker-contract entries have no direct Forge runner.",
+      "path_hints": [
+        "resaverpp gui"
+      ],
+      "priority": 20,
+      "public_bundle_allowed": false,
+      "source": "Local ReSaver++ README and NOTICE.md."
+    },
+    {
+      "automation": "human_gate",
+      "capabilities": [
+        "asset.parallax.gui"
+      ],
+      "config_key": "pgpatcher",
+      "id": "pgpatcher",
+      "import_mode": "configure_only",
+      "license": "Unknown; verify upstream",
+      "names": [
+        "PGPatcher.exe"
+      ],
+      "notes": "Discover/configure existing installation only. No public binary bundling; worker-contract entries have no direct Forge runner.",
+      "path_hints": [
+        "pgpatcher"
+      ],
+      "priority": 20,
+      "public_bundle_allowed": false,
+      "source": "Local installation; executable identity only."
+    },
+    {
+      "automation": "worker_contract",
+      "capabilities": [
+        "asset.parallax.cli"
+      ],
+      "config_key": "pgtools",
+      "id": "pgtools",
+      "import_mode": "configure_only",
+      "license": "Unknown; verify upstream",
+      "names": [
+        "pgtools.exe"
+      ],
+      "notes": "Discover/configure existing installation only. No public binary bundling; worker-contract entries have no direct Forge runner.",
+      "path_hints": [
+        "pgtools"
+      ],
+      "priority": 20,
+      "public_bundle_allowed": false,
+      "source": "Local installation; exact CLI contract not yet source-locked."
+    },
+    {
+      "automation": "human_gate",
+      "capabilities": [
+        "facegen.easynpc.gui"
+      ],
+      "config_key": "easynpc",
+      "id": "easynpc",
+      "import_mode": "configure_only",
+      "license": "Unknown; verify upstream",
+      "names": [
+        "EasyNPC.exe"
+      ],
+      "notes": "Discover/configure existing installation only. No public binary bundling; worker-contract entries have no direct Forge runner.",
+      "path_hints": [
+        "easynpc"
+      ],
+      "priority": 20,
+      "public_bundle_allowed": false,
+      "source": "Local installation; CLI automation not established."
+    },
+    {
+      "automation": "human_gate",
+      "capabilities": [
+        "texture.vram.inspect.gui"
+      ],
+      "config_key": "texture_analyzer",
+      "id": "texture_analyzer",
+      "import_mode": "configure_only",
+      "license": "Unknown; verify upstream",
+      "names": [
+        "TextureAnalyzer.exe"
+      ],
+      "notes": "Discover/configure existing installation only. No public binary bundling; worker-contract entries have no direct Forge runner.",
+      "path_hints": [
+        "texture analyzer"
+      ],
+      "priority": 20,
+      "public_bundle_allowed": false,
+      "source": "Local installation; CLI automation not established."
+    },
+    {
+      "automation": "human_gate",
+      "capabilities": [
+        "config.ini.bethini.gui"
+      ],
+      "config_key": "bethini",
+      "id": "bethini",
+      "import_mode": "configure_only",
+      "license": "CC-BY-NC-SA-4.0 (local LICENSE.txt)",
+      "names": [
+        "Bethini.exe"
+      ],
+      "notes": "Discover/configure existing installation only. No public binary bundling; worker-contract entries have no direct Forge runner.",
+      "path_hints": [
+        "bethini"
+      ],
+      "priority": 20,
+      "public_bundle_allowed": false,
+      "source": "https://www.nexusmods.com/site/mods/631/"
     }
   ]
 }

@@ -22,8 +22,8 @@ from .plugin_writer import build_plugin, validate_plan
 from .records import query_records
 from .release import build_release, validate_release_tree
 from .strictjson import load
-from .tools import tool_status
-from .toolchain import scan_tool_source, import_tool, import_all_tools, configure_existing_tool, resolve_capability, toolchain_status
+from .tools import tool_status, resolve_tool
+from .toolchain import scan_tool_source, import_tool, import_all_tools, configure_existing_tool, resolve_capability, toolchain_status, reuse_reverse_tools
 from .tool_adapters import bsarch_info, bsarch_unpack, bsarch_pack, deadmesh_scan, champollion_decompile, synthesis_run
 from .version import VERSION
 from .safety import require_approval, require_read, require_within
@@ -85,7 +85,10 @@ class ForgeService:
         target = self._read(path)
         if target.suffix.casefold() in {".bsa", ".ba2"}:
             return bsarch_info(self.config, target)
-        return plain(inspect_archive(target, seven_zip=self.config.seven_zip, allow_external=self.config.allow_external_processes))
+        seven_zip=self.config.seven_zip
+        if seven_zip and self.config.tools["archive"].executable == seven_zip:
+            _,seven_zip=resolve_tool(self.config,"archive",require_pin=True)
+        return plain(inspect_archive(target, seven_zip=seven_zip, allow_external=self.config.allow_external_processes))
 
     def tool_scan(self, source: str) -> dict[str, Any]:
         return scan_tool_source(self._read(source))
@@ -98,6 +101,9 @@ class ForgeService:
 
     def tool_configure(self, identifier: str, executable: str, approved: bool) -> dict[str, Any]:
         return configure_existing_tool(self.config, identifier, self._read(executable), approved=approved)
+
+    def tool_reuse_reverse(self, approved: bool, pointer: str | None = None) -> dict[str, Any]:
+        return reuse_reverse_tools(self.config, approved=approved, pointer=Path(pointer) if pointer else None)
 
     def tool_resolve(self, capability: str) -> dict[str, Any]:
         return resolve_capability(self.config, capability)

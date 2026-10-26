@@ -12,9 +12,9 @@ Forge is a Skyrim tool. The live product is a versioned folder next to xEdit
 and the rest of your tools:
 
 ```text
-<Skyrim Tools>\Skyrim-Forge-5.2.0\     live install, SKYRIM_FORGE_ROOT, MCP venv
+<Skyrim Tools>\Skyrim-Forge\     live install, SKYRIM_FORGE_ROOT, MCP venv
 <Skyrim Tools>\SkyrimForge\            optional git clone (source only)
-<Skyrim Tools>\Skyrim-Forge-5.2.0\Workspaces\   job staging
+<Skyrim Tools>\Skyrim-Forge\Workspaces\   job staging
 ```
 
 Never:
@@ -29,7 +29,7 @@ so a fresh install stages jobs under the live folder. If you run the installer
 from Documents it warns. MCP must point at
 `<SKYRIM_FORGE_ROOT>\.venv\Scripts\python.exe -m skyrim_forge mcp`.
 
-Keep the previous versioned folder as rollback. Do not edit an installed
+Keep the last known-good release as rollback. Do not edit an installed
 output in place when a git clone exists; edit the clone, then install into a
 new `Skyrim-Forge-<version>` folder.
 
@@ -50,3 +50,5 @@ Disable `mcp-search` with `grok mcp disable mcp-search` to free a slot.
 ### Startup parser gate
 
 `START-HERE.bat` invokes `PowerShell-Parse-Gate.ps1` without forwarding `%~dp0` as a separate argument. The gate resolves its repository root from `$PSScriptRoot`, avoiding Windows trailing-backslash quote ambiguity. `START-HERE.bat --validate-only` runs this exact startup gate noninteractively for CI and diagnostics.
+
+Standalone prerequisites, safe owner updates and shared tool reuse are documented in [STANDALONE-TOOLCHAIN.md](STANDALONE-TOOLCHAIN.md).

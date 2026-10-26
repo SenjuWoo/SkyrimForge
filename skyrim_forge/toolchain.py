@@ -400,3 +400,64 @@ def toolchain_status(config: ForgeConfig) -> dict[str, Any]:
         actual=sha256_file(tool.executable) if tool.executable.is_file() else ""
         configured.append({"tool":entry["id"],"config_key":entry["config_key"],"executable":str(tool.executable),"exists":tool.executable.is_file(),"pinned":bool(tool.sha256),"hash_match":bool(actual and tool.sha256 and actual.casefold()==tool.sha256.casefold()),"capabilities":entry["capabilities"],"automation":entry["automation"]})
     return {"result":"PASS","tool_vault_root":str(config.tool_vault_root),"configured":configured,"catalog_count":len(catalog_entries()),"public_binary_bundling":"disabled"}
+
+
+# The owner's receipt supplies bounded paths; approval pins current bytes without copying.
+def reuse_reverse_tools(config: ForgeConfig, *, approved: bool, pointer: Path | None = None) -> dict[str, Any]:
+    require_approval(approved, "reuse of Reverse THIS! tools")
+    pointer = pointer or Path(os.environ.get("LOCALAPPDATA", str(Path.home()))) / "ReverseThis" / "kit.json"
+    if not pointer.is_file():
+        return {"result":"INCOMPLETE", "configured":[], "reason":"Reverse THIS! owner receipt not found", "pointer":str(pointer)}
+    receipt=json.loads(pointer.read_text(encoding="utf-8-sig"))
+    root=Path(receipt["kit_root"]).resolve(strict=True)
+    installed=Path(receipt["installed_json"]).resolve(strict=True)
+    if not installed.is_relative_to(root): raise SafetyError("Reverse owner manifest escapes its kit root")
+    manifest=json.loads(installed.read_text(encoding="utf-8-sig"))
+    if manifest.get("schema") != 1 or Path(manifest["kit_root"]).resolve() != root:
+        raise ValidationError("Reverse THIS! owner manifest identity mismatch")
+    bindings_path=config.config_path.with_name(config.config_path.stem+".reverse-bindings.json")
+    bindings={}
+    if bindings_path.is_file():
+        saved=json.loads(bindings_path.read_text(encoding="utf-8"))
+        if saved.get("schema") != 1 or saved.get("config") != str(config.config_path.resolve()): raise ValidationError("Reverse binding receipt identity mismatch")
+        bindings=saved.get("bindings",{})
+    candidates=[]; skipped=[]
+    for owner_id, identifier, name in (("directxtex","texconv","texconv.exe"),("7zip","seven_zip","7z.exe")):
+        entry=catalog_entry(identifier); current=config.tools[entry["config_key"]]
+        proof=bindings.get(identifier,{})
+        auto_owned=bool(current.executable and str(current.executable)==proof.get("executable") and current.sha256==proof.get("sha256"))
+        if (current.executable and not auto_owned) or (identifier == "seven_zip" and config.seven_zip and (not auto_owned or config.seven_zip != current.executable)):
+            skipped.append({"tool":identifier,"reason":"existing user configuration preserved"}); continue
+        record=manifest.get("tools",{}).get(owner_id)
+        if not record: skipped.append({"tool":identifier,"reason":"not installed by owner"}); continue
+        directory=(root/record["dir"]).resolve(strict=True)
+        if not directory.is_relative_to(root): raise SafetyError("Reverse tool path escapes its kit root")
+        executable=(directory/name).resolve(strict=True)
+        if not executable.is_relative_to(directory): raise SafetyError("Reverse tool executable escapes its owned directory")
+        expected=record.get("sha256")
+        if isinstance(expected,dict) and expected.get(name) and sha256_file(executable).casefold() != expected[name].casefold():
+            raise SafetyError(f"Reverse owner file hash mismatch: {identifier}")
+        if identifier == "seven_zip" and not (directory/"7z.dll").is_file(): raise ValidationError("Reverse 7-Zip runtime is incomplete")
+        candidates.append((identifier,executable,str(record.get("version","configured-existing"))))
+    if not candidates: return {"result":"PASS", "configured":[], "skipped":skipped,"owner_manifest":str(installed),"copied":False}
+    # Validate every candidate before saving either configuration.
+    if root not in config.extra_read_roots: config.extra_read_roots.append(root)
+    if config.config_path.is_file():
+        backup=config.config_path.with_name(config.config_path.name+".before-reverse-"+utc_now().replace(":", "-")+".bak")
+        shutil.copy2(config.config_path,backup)
+    configured=[]
+    before=config.config_path.read_bytes() if config.config_path.is_file() else None
+    try:
+        for identifier,executable,version in candidates:
+            configured.append(configure_existing_tool(config,identifier,executable,approved=True))
+            key=catalog_entry(identifier)["config_key"]
+            config.tools[key].version=version
+            bindings[identifier]={"executable":str(executable),"sha256":config.tools[key].sha256}
+            if identifier == "seven_zip": config.seven_zip=executable
+        save_config(config)
+        atomic_write_text(bindings_path,json.dumps({"schema":1,"config":str(config.config_path.resolve()),"bindings":bindings},indent=2)+"\n")
+    except Exception:
+        if before is not None: config.config_path.write_bytes(before)
+        else: config.config_path.unlink(missing_ok=True)
+        raise
+    return {"result":"PASS", "configured":configured, "skipped":skipped,"owner_manifest":str(installed),"binding_receipt":str(bindings_path),"copied":False}

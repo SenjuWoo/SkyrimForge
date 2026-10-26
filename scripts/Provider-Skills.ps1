@@ -1,4 +1,4 @@
-﻿# Forge owns its provider paths, skill digests and recoverable swaps independently of the AI bundle.
+# Forge owns its provider paths, skill digests and recoverable swaps independently of the AI bundle.
 function Get-ForgeProviderSkillsRoot([string]$Provider) {
     $profileRoot = if ($env:USERPROFILE) { $env:USERPROFILE } else { [Environment]::GetFolderPath('UserProfile') }
     switch ($Provider) {
@@ -120,6 +120,28 @@ function Sync-ForgeProviderSkills {
             $change.Swapped = $true
             if ((Get-ForgeSkillDigest $target) -cne $wanted) { throw "Installed skill verification failed: $target" }
             $owned[$dir.Name] = $wanted; [void]$preserved.Remove($dir.Name); $updated++
+        }
+        # Retire the old shared name only with this owner's previous digest proof.
+        if ($dirs.Name -contains 'skyrim-tooling-stack') {
+            $oldName = 'ai-tooling-stack'
+            $oldTarget = Join-Path $skillsRoot $oldName
+            if (Test-Path -LiteralPath $oldTarget) {
+                Assert-ForgeSkillTree $oldTarget
+                $oldDigest = Get-ForgeSkillDigest $oldTarget
+                if ($owned.ContainsKey($oldName) -and $oldDigest -ceq $owned[$oldName]) {
+                    if ($Check) { throw "Legacy Forge skill needs migration: $oldTarget" }
+                    $backup = Join-Path $work ('backup-' + $oldName + '-' + [guid]::NewGuid().ToString('N'))
+                    $change = [pscustomobject]@{ Target=$oldTarget; Backup=$backup; HadOriginal=$true; Swapped=$false }
+                    Move-Item -LiteralPath $oldTarget -Destination $backup
+                    $changes.Add($change)
+                    [void]$owned.Remove($oldName); [void]$preserved.Remove($oldName)
+                    Write-Host "Legacy Forge skill recovered at $backup; general namespace released."
+                } elseif (-not $Check) {
+                    [void]$owned.Remove($oldName)
+                    $preserved[$oldName] = $oldDigest
+                    Write-Warning "Edited or unowned legacy skill preserved: $oldTarget"
+                }
+            } elseif (-not $Check) { [void]$owned.Remove($oldName); [void]$preserved.Remove($oldName) }
         }
         if (-not $Check) {
             $ledger = [ordered]@{ schema=1; owner='SkyrimForge'; provider=$Provider; skills_dir=$skillsRoot;

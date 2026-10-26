@@ -1,4 +1,4 @@
-# Skyrim Forge 6.1.1
+# Skyrim Forge 6.2.0
 
 > Skyrim Forge is the authoritative repository for the Skyrim SE/AE AI modding
 > stack: the 52-tool Forge MCP/CLI/GUI workbench, the **48-skill Skyrim SE/AE
@@ -56,7 +56,7 @@ Skyrim Forge 6.1 owns the complete Skyrim AI modding ecosystem:
 - **`houseCARL 2.1.1` setup & Vortex load-order shim** (`integrations/skyrim-pack/skills/housecarl/scripts/Setup-HouseCarl.ps1`): discovers external user installations (e.g., `Z:\Backup\!Skyrim\Skyrim tools\houseCARL`), compares versions before upgrading with backup, filters `.bak*` folders from the Vortex shim, and respects user roots.
 - **Skyrim tool discovery** (`integrations/skyrim-pack/skills/tool-discovery/scripts/discover_tools.ps1`).
 - **Parallel development with `Ultimate-AI-Starter-Bundle`**:
-  - Running `START-HERE.bat` or `.\Install-AI-Bridge.ps1 -Provider All -Yes` installs the Forge runtime, the `skyrim-forge` skill, and all 48 Skyrim pack skills across Claude, Codex (`~/.agents/skills`), Grok, Kimi, Hermes, and Antigravity, and updates the bundle's `managed-skills` ledger digests when present.
+  - Running `START-HERE.bat` or `.\Install-AI-Bridge.ps1 -Provider All -Yes` installs the Forge runtime, the `skyrim-forge` skill, and all 48 Skyrim pack skills across Claude, Codex (`~/.agents/skills`), Grok, Kimi, Hermes, and Antigravity, and maintains Forge's independent ownership ledger without rewriting the bundle's ledger.
   - Conversely, when `Ultimate-AI-Starter-Bundle` runs `INSTALL-AIO.ps1`, its `Install-SkyrimForge.ps1` compares semantic versions and **never downgrades** a newer local `Skyrim-Forge` installation or overwrites newer Forge-owned Skyrim skills.
 
 ```powershell
@@ -79,10 +79,7 @@ carry `resultType`). Grok wedges at 8 running MCP servers; `Register-MCP.ps1`
 will skip Grok rather than take the last slot. See [docs/INSTALLATION.md](docs/INSTALLATION.md)
 and [docs/MCP.md](docs/MCP.md).
 
-If Python 3.11+ is not installed, that explicit menu choice downloads the pinned
-Python 3.13.14 installer from python.org, verifies its SHA-256 and Authenticode
-signature, and performs a per-user install before creating Forge's shared
-`.venv`. No AI-specific `PYTHONPATH` is required.
+Setup prefers `UABS_PYTHON` (process, then user), then a healthy existing Forge runtime and installed Python 3.11+. Healthy app virtual environments stay intact. With `-BootstrapPython` (the default launcher), a manager-owned shared base receives patch updates on its existing major/minor and architecture; manual bases are preserved and reported as update-unverified. When none qualifies, setup installs the official Python install manager and its shared default runtime. It never downloads a separate pinned base interpreter. See [standalone setup and updates](docs/STANDALONE-TOOLCHAIN.md).
 
 The same setup installs the Forge skill for Codex, Claude, Grok, Kimi, and
 Hermes. It registers the same stdio MCP server with every installed client;
@@ -246,3 +243,5 @@ Forge selects tools by an exact capability and a valid SHA-256 pin. It will not 
 [Ultimate AI Starter Bundle](https://github.com/SenjuWoo/Ultimate-AI-Starter-Bundle) supplies shared compilers and AI provider setup. [Reverse THIS!](https://github.com/SenjuWoo/reverse-this) supplies reverse-engineering tools. Forge owns Skyrim-specific tools and the optional 48-skill pack. Updates retain personal skill edits and last-good backups outside provider indexes; the general bundle never retires Forge-owned skills.
 
 Skill installation diagnostics: `%LOCALAPPDATA%/Skyrim-Forge/logs/skill-install.log` (`SKYRIM_FORGE_DEBUG=1` for successful-operation detail). HouseCARL failures: `%LOCALAPPDATA%/Skyrim-Forge/logs/housecarl-install.log`.
+
+Forge's Skyrim-specific routing index is `skyrim-tooling-stack`; the bundle owns the general `ai-tooling-stack` name. Upgrade migrates an unchanged old Forge-owned copy only when its previous Forge digest proves ownership, retaining a recoverable backup; edited/unowned copies stay intact. Run `Update Forge.bat` for the latest stable digest-verified owner release, or `Update-Forge.ps1 -CheckOnly` to inspect availability. Git checkouts and newer installations are preserved.

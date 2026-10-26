@@ -83,12 +83,15 @@ class PowerShellReleaseTests(unittest.TestCase):
         self.assertIn("$Root.Trim().Trim([char]34)", gate)
         self.assertIn('Resolve-Path -LiteralPath $CandidateRoot', gate)
 
-    def test_python_bootstrap_is_pinned_and_verified(self):
+    def test_python_bootstrap_uses_verified_shared_manager_and_preserves_venvs(self):
         installer = (ROOT / 'Install-or-Update.ps1').read_text(encoding='utf-8-sig')
-        self.assertIn('https://www.python.org/ftp/python/3.13.14/', installer)
-        self.assertIn('C54D9B9BBB8A36E6489363DDD01139707FD781D72F1F9E90C7EC65D0061368E0', installer)
-        self.assertIn('Get-AuthenticodeSignature', installer)
-        self.assertIn('Python Software Foundation', installer)
+        self.assertNotIn('Install-PinnedPython', installer)
+        self.assertIn("'9NQ7512CXL7T'", installer)
+        self.assertIn("@('install','--yes','default')", installer)
+        self.assertIn('list --only-managed --format=json', installer)
+        self.assertIn("@('install','--update','--yes',[string]$ManagedRows[0].tag)", installer)
+        self.assertLess(installer.index("'UABS_PYTHON:Process'"), installer.index("'existing-forge-venv'"))
+        self.assertIn("'UABS_PYTHON:User'", installer)
         self.assertIn("'existing-forge-venv'", installer)
         self.assertIn('$VenvHealthy = $false', installer)
         self.assertIn('Existing Forge virtual environment is unusable', installer)
