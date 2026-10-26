@@ -16,6 +16,16 @@ from skyrim_forge.errors import SafetyError
 ROOT=Path(__file__).resolve().parents[1]
 PS=Path(os.environ.get('SystemRoot',r'C:\Windows'))/'System32/WindowsPowerShell/v1.0/powershell.exe'
 
+class AdditionalToolCoverageTests(unittest.TestCase):
+    def test_clibdt_is_configurable_but_never_a_direct_or_public_payload(self):
+        catalog=json.loads((ROOT/'references/TOOL-CATALOG.json').read_text())
+        row=next(item for item in catalog['tools'] if item['id']=='clibdt')
+        self.assertEqual(row['names'],['ClibDT.exe'])
+        self.assertEqual(row['automation'],'human_gate')
+        self.assertFalse(row['public_bundle_allowed'])
+        self.assertIn('clibdt',default_tools())
+        self.assertEqual((ROOT/'references/TOOL-CATALOG.json').read_bytes(),(ROOT/'skyrim_forge/references/TOOL-CATALOG.json').read_bytes())
+
 class ReverseReuseTests(unittest.TestCase):
     def setUp(self):
         self.temp=tempfile.TemporaryDirectory(); self.addCleanup(self.temp.cleanup)

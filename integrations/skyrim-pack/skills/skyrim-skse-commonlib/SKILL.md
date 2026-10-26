@@ -5,7 +5,7 @@ description: Create, port, diagnose, or optimize native SKSE DLL plugins using C
 compatibility: Windows 10/11; Skyrim Special Edition or Anniversary Edition; PowerShell and Python 3 when bundled scripts
   are used
 metadata:
-  version: 4.3.0
+  version: 4.4.0
   updated: '2026-07-22'
   library: overseer-skyrim-agent-skills
   error_registry_revision: 4.3.0
@@ -17,7 +17,7 @@ metadata:
 
 - Supported game runtimes: SE, AE, GOG, VR, or an explicit subset.
 - SKSE, Address Library, and CommonLib fork/revision.
-- CMake presets, vcpkg manifest, compiler toolset, and dependency lock.
+- The selected fork's build system: Xmake project/addon locks or CMake presets/vcpkg manifests, plus the compiler toolset and dependency lock.
 - Hook sites, relocation strategy, and expected thread context.
 - Crash logs and symbol files for diagnosis.
 
@@ -34,7 +34,7 @@ metadata:
 9. Build every supported target and inspect DLL imports/exports.
 10. Test failure behavior for missing dependencies and unsupported runtimes.
 
-Use `scripts/build_commonlib.ps1` as a parameterized starting point, then follow the project's presets.
+Use `scripts/build_commonlib.ps1` only for CMake projects; Xmake-based forks require their own `xmake.lua`. The supplied libxse main fork requires Xmake 3.0+ / C++23 and a populated commonlib-shared submodule. The powerof3 dev fork uses CMake with its own runtime options. Pin the fork, commit and dependency revisions; never globally upgrade a plugin's SDK or substitute one fork for another. Read the selected license and exception files; these supplied snapshots are GPL with exceptions, not the older MIT layout. CLibDT is an optional project GUI, not a verified headless build runner.
 
 ## Optimization standard
 

@@ -137,10 +137,10 @@ def default_tools() -> dict[str, ToolConfig]:
     return {name: ToolConfig() for name in (
         "xedit", "mo2", "loot", "wrye_bash", "creation_kit", "ckpe_loader",
         "papyrus_compiler", "archive", "bsarch", "champollion", "synthesis_cli", "synthesis_gui", "deadmesh_cli", "deadmesh_gui",
-        "resaverpp_cli", "resaverpp_gui", "pgpatcher", "pgtools", "easynpc", "texture_analyzer", "bethini",
+        "resaverpp_cli", "resaverpp_gui", "pgpatcher", "pgtools", "easynpc", "clibdt", "texture_analyzer", "bethini",
         "eslifier", "nif_optimizer", "nif_analyzer", "resaver", "sniff", "cathedral_assets_optimizer",
         "nifskope", "texconv", "bodyslide", "pandora", "nemesis", "xlodgen", "dyndolod",
-        "cmake", "vcpkg", "ninja", "ui_worker", "loot_worker", "wrye_worker", "ck_worker",
+        "cmake", "xmake", "vcpkg", "ninja", "ui_worker", "loot_worker", "wrye_worker", "ck_worker",
         "asset_worker", "animation_worker", "bodyslide_worker", "lod_worker", "grass_worker", "synthesis_worker", "audio_worker",
     )}
 

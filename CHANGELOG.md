@@ -1,5 +1,7 @@
 ## 6.2.0 (2026-10-26)
 
+- Discover supplied CLibDT without executing or redistributing it; distinguish the CommonLib Xmake/CMake forks and incomplete source archives.
+
 - Rename the Skyrim routing index to skyrim-tooling-stack; retire the old shared name only with prior Forge digest proof, preserving edited copies and rollback backups.
 - Reuse shared Python and healthy app venvs; update manager-owned bases on their existing feature line and provision the official manager only when required.
 - Add a digest/manifest-verified standalone owner updater with newer/Git preservation, verified local-source deployment, private-tree moves without traversal/copy, edited-file/collision protection, owner locking and failed-swap/setup rollback.
