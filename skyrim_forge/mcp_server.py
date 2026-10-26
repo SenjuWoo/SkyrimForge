@@ -60,6 +60,7 @@ TOOL_SPECS: dict[str, dict[str, Any]] = {
     "forge_tool_import": {"description": "Transactionally import a recognized local tool into the private Forge tool vault and SHA-256 pin it.", "inputSchema": _schema({"source": _string(), "identifier": _string(), "sha256": _string(), "approved": _boolean()}, ["source", "identifier", "approved"])},
     "forge_tool_import_all": {"description": "Import all unambiguous recognized automation tools from one local source; GUI tools are opt-in.", "inputSchema": _schema({"source": _string(), "include_gui": _boolean(), "approved": _boolean()}, ["source", "approved"])},
     "forge_tool_configure": {"description": "Configure and SHA-256 pin an existing legal tool installation without copying it.", "inputSchema": _schema({"identifier": _string(), "executable": _string(), "approved": _boolean()}, ["identifier", "executable", "approved"])},
+    "forge_tool_reuse_reverse": {"description": "Reuse and SHA-256 pin Reverse THIS! texconv/7-Zip in place; preserve existing tool configuration.", "inputSchema": _schema({"pointer": _string(), "approved": _boolean()}, ["approved"])},
     "forge_tool_resolve": {"description": "Resolve the best configured hash-pinned real tool for one exact capability.", "inputSchema": _schema({"capability": _string()}, ["capability"])},
     "forge_toolchain_status": {"description": "Report the private tool vault and all configured catalog tools.", "inputSchema": _schema()},
     "forge_bsarch_info": {"description": "Inspect BSA/BA2 through the configured hash-pinned BSArch.", "inputSchema": _schema({"archive": _string(), "dump": _boolean()}, ["archive"])},
@@ -120,6 +121,7 @@ def _call(service: ForgeService, name: str, args: dict[str, Any]) -> Any:
         case "forge_tool_import": return service.tool_import(args["source"], args["identifier"], approved, args.get("sha256") or None)
         case "forge_tool_import_all": return service.tool_import_all(args["source"], approved, bool(args.get("include_gui", False)))
         case "forge_tool_configure": return service.tool_configure(args["identifier"], args["executable"], approved)
+        case "forge_tool_reuse_reverse": return service.tool_reuse_reverse(approved, args.get("pointer"))
         case "forge_tool_resolve": return service.tool_resolve(args["capability"])
         case "forge_toolchain_status": return service.toolchain_status()
         case "forge_bsarch_info": return service.bsarch_info(args["archive"], bool(args.get("dump", False)))

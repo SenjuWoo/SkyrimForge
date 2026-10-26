@@ -1,6 +1,8 @@
 from __future__ import annotations
 
 import os
+import json
+import csv
 import shutil
 import uuid
 from pathlib import Path
@@ -75,15 +77,26 @@ def deadmesh_scan(config: ForgeConfig, source: Path, output_report: Path, *, app
     source=require_read(source,config.allowed_read_roots)
     if not source.is_dir(): raise ValidationError("DeadMesh source must be a directory")
     output=require_within(output_report,config.workspace_root)
-    if output.exists(): raise FileExistsError(output)
-    output.parent.mkdir(parents=True,exist_ok=True)
+    # Reports use an exact prefix; reject leftovers before launching the tool.
+    prefix=output.with_suffix("") if output.suffix.casefold() in {".csv", ".jsonl", ".txt"} else output
+    expected=[Path(str(prefix)+suffix) for suffix in (".csv", ".jsonl", ".txt")]
+    if output.exists() or any(path.exists() for path in expected): raise FileExistsError(output)
+    prefix.parent.mkdir(parents=True,exist_ok=True)
     tool,exe=_selected(config,"mesh.collision.scan","deadmesh_cli")
-    args=[str(source),"--out",str(output),"--jobs","0"]
+    args=[str(source),"--out",str(prefix),"--jobs","0"]
     if not scan_bsa: args.append("--no-bsa")
-    process=run_process(exe,args,cwd=output.parent,timeout_seconds=tool.timeout_seconds)
+    process=run_process(exe,args,cwd=prefix.parent,timeout_seconds=tool.timeout_seconds)
     if process["returncode"]!=0: raise ToolError(f"DeadMesh scan failed: {process['stderr'] or process['stdout']}")
-    produced=[p for p in output.parent.glob(output.stem+"*") if p.is_file()]
-    return {"result":"PASS","tool":"dmscan","source":str(source),"requested_report":str(output),"outputs":[{"path":str(p),"size":p.stat().st_size,"sha256":sha256_file(p)} for p in produced],"process":process,"evidence":"Static collision scan only; flagged meshes require NifSkope/in-game review."}
+    if not all(path.is_file() for path in expected) or not expected[0].stat().st_size or not expected[2].stat().st_size:
+        raise ToolError("DeadMesh reported success without fresh CSV/JSONL/text reports")
+    try:
+        with expected[0].open(encoding="utf-8-sig", newline="") as stream:
+            if not next(csv.reader(stream), None): raise ValueError("missing CSV header")
+        for line in expected[1].read_text(encoding="utf-8-sig").splitlines():
+            if line.strip() and not isinstance(json.loads(line), dict): raise ValueError("JSONL row is not an object")
+    except (ValueError, UnicodeError) as exc:
+        raise ToolError(f"DeadMesh report cannot be read: {exc}") from exc
+    return {"result":"PASS","tool":"dmscan","source":str(source),"requested_report":str(output),"outputs":[{"path":str(p),"size":p.stat().st_size,"sha256":sha256_file(p)} for p in expected],"process":process,"evidence":"Static collision scan only; flagged meshes require NifSkope/in-game review."}
 
 
 def champollion_decompile(config: ForgeConfig, pex: Path, output_dir: Path, *, approved: bool, recursive: bool=False) -> dict[str, Any]:
@@ -98,7 +111,10 @@ def champollion_decompile(config: ForgeConfig, pex: Path, output_dir: Path, *, a
     args.extend(["-d","-p",str(output),str(source)])
     process=run_process(exe,args,cwd=output,timeout_seconds=tool.timeout_seconds)
     if process["returncode"]!=0: shutil.rmtree(output,ignore_errors=True); raise ToolError(f"Champollion failed: {process['stderr'] or process['stdout']}")
-    files=[p for p in output.rglob("*.psc") if p.is_file()]
+    files=[p for p in output.rglob("*.psc") if p.is_file() and p.stat().st_size]
+    if not files: raise ToolError("Champollion reported success without fresh nonempty PSC output")
+    if any("scriptname" not in p.read_text(encoding="utf-8-sig").casefold() for p in files):
+        raise ToolError("Champollion output has no Papyrus ScriptName declaration")
     return {"result":"PASS","tool":"Champollion","source":str(source),"output":str(output),"files":[str(p) for p in files],"process":process,"warning":"Decompiler output is not authoritative original source and conveys no redistribution rights."}
 
 
@@ -117,4 +133,10 @@ def synthesis_run(config: ForgeConfig, pipeline_settings: Path, output_dir: Path
     process=run_process(exe,args,cwd=output,timeout_seconds=tool.timeout_seconds)
     if process["returncode"]!=0: raise ToolError(f"Synthesis CLI failed: {process['stderr'] or process['stdout']}")
     files=[p for p in output.rglob("*") if p.is_file()]
+    plugins=[p for p in files if p.suffix.casefold() in {".esp", ".esm", ".esl"}]
+    if not plugins: raise ToolError("Synthesis reported success without a fresh output plugin")
+    from .plugin_header import inspect_plugin_header
+    for plugin in plugins:
+        header=inspect_plugin_header(plugin)
+        if header.header_version is None: raise ToolError("Synthesis output plugin has no HEDR subrecord")
     return {"result":"PASS","tool":"Synthesis.Bethesda.CLI","output":str(output),"files":[{"path":str(p),"size":p.stat().st_size,"sha256":sha256_file(p)} for p in files],"process":process}

@@ -75,10 +75,10 @@ Prefer `houseCARL-Setup.exe` for the plugin. Set plugin user config **MO2 instan
 
 ## AI agent contract
 
-When houseCARL is missing or unconfigured, agents should run or recommend:
+When houseCARL is missing or unconfigured, resolve the Skyrim Forge owner root and run its installer. It manages the owner payload before calling this skill's setup helper:
 
-```text
-TOOLS\Setup-HouseCarl.ps1
+```powershell
+powershell -NoProfile -ExecutionPolicy Bypass -File "<FORGE_ROOT>\Install-HouseCarl.ps1"
 ```
 
 Do not invent load-order winners. Do not require `S:\` or a specific username.

@@ -1,52 +1,13 @@
-# Modular ownership recovery (2026-10-25, in progress)
+# Skyrim Forge 6.2.0 source handoff
 
-Source baseline 4a200b1; branch codex/skill-pack-preservation. Forge owns Skyrim
-skills and tool setup; the bundle owns common compilers and provider bootstrap;
-Reverse THIS! owns reverse-engineering tools. Existing personal copies survive.
-Eight real skill ownership/rollback fixtures passed. Finishing bridge callers,
-version 6.1.1, repository gates and release before updating the bundle pin.
-Source checkout keeps its historical folder name; live deployment is separate.
-Log: %LOCALAPPDATA%/Skyrim-Forge/logs/skill-install.log.
-Last good public version: 6.1.0. Full local validation PASS: 172 Python cases, native reproducibility, Go race
-and actual PowerShell parser. Next: exact-SHA GitHub checks and publication.
-
-# State
-
-- Active version: 6.1.0
-- Parent: v6.0.1
-- Authoritative owner: `https://github.com/SenjuWoo/SkyrimForge`, branch
-  `main`
-- Skyrim Pack ownership: 48 Skyrim SE/AE skills in `integrations/skyrim-pack/`, `Install-Skyrim-Pack.ps1`, `Setup-HouseCarl.ps1`, and `discover_tools.ps1`
-- Preserved installed releases: `Skyrim-Forge-5.1.3`, `Skyrim-Forge-5.1.4`
-- 5.1.5 MCP symptom: Claude Code 2026-07-28 listed Forge tools then rejected
-  every `tools/call` (`missing required resultType`). List/read had the field;
-  `tools/call` did not. Fixed by always naming complete tool results.
-- Original MCP symptom: `forge_papyrus_compile` appeared in `tools/list` but
-  had no dispatch case, so every call failed as an unknown tool
-- Provider symptom: Kimi and Hermes were reported as skill-only even though
-  both installed clients support MCP
-- Provider-home symptom: Hermes skills defaulted to `%USERPROFILE%\.hermes`,
-  but the installed application uses `%LOCALAPPDATA%\hermes`
-- Shared runtime: `.venv\Scripts\python.exe`; no provider-specific environment
-- Kimi approach: preserve all existing `mcpServers`, replace only
-  `skyrim-forge`, then run `kimi doctor`
-- Hermes approach: use `hermes mcp add` and require
-  `hermes mcp test skyrim-forge`
-- Targeted regressions: PASS, including byte-exact Kimi rollback on failure
-- Full repository validation: PASS, 151 tests
-- Native helpers: rebuilt reproducibly with pinned Go 1.23.2 for Windows x64
-  and Linux x64
-- 5.1.1 release audit: Hermes' `mcp add` cancelled at its tool-enable prompt
-  while returning exit code zero; `mcp test` also returned zero for a missing
-  server. Both conditions require explicit output validation.
-- 5.1.2 real-client probe: PASS. Hermes persisted the Forge MCP entry and
-  discovered all 52 tools after the explicit confirmation.
-- 5.1.2 release workflow failure reproduced: publication attempted to create a
-  release that already existed. The workflow now refreshes existing assets.
-- 5.1.2 installed-runtime failure reproduced: `.venv\Scripts\python.exe`
-  existed but its base Python was gone. The installer now executes and repairs
-  an unusable environment instead of treating file presence as health.
-- Target deployment folder: `Skyrim-Forge-5.1.3`; older folders remain rollback
-  copies and must not be mistaken for the active user-level pointer.
-- Runtime boundary: Skyrim gameplay and third-party GUI behavior remain outside
-  this bridge-only release
+- Goal: independently maintained Skyrim tooling with shared runtimes and reusable specialist tools.
+- Authority: this Git source checkout; branch `codex/standalone-toolchain-6-2`, baseline `efe9de1bb33babbfc3042899cd15b43a0f2bd07c` (public 6.1.1). Existing owner folder retained; Git is the restorable source snapshot, no second project copy.
+- Active version: 6.2.0; last good public version: 6.1.1. No commits, pushes, publication or live installation in this workstream.
+- Done: scoped tool inventory, `skyrim-tooling-stack` rename with digest-proven migration/rollback, shared Python manager selection/bootstrap/patch updates, verified owner update, in-place Reverse THIS! texconv/7-Zip reuse, output acceptance fixes, source docs and rebuilt Windows/Linux helpers.
+- Updater: stages manifest files only; moves private files/trees without traversing/copying them, including workspace junctions; rejects edited owner files and private/release collisions; serializes owner updates; rejects same-version mismatches; returns private paths before rollback, including nonzero setup exits. Bundle interface: `Update-Forge.ps1 -Root <installed-root> -SourceDir <source-root> -SkipSetup`.
+- Evidence: retained full 6.2.0 report proved 190 Python tests (two platform skips), pinned Go test/vet/race, matching two-build hashes, native, deterministic packaging and MCP gates. Focused updater/runtime/reuse fixtures now prove 19 cases, including local-source exclusions, junction/file-identity preservation, collision refusal and post-swap rollback. Final full gate PASS: 199 tests (two platform skips), all native/Go/race/reproducibility/packaging/MCP/version gates. Two subsequent houseCARL documentation-only owner-route corrections use this full gate plus targeted file/version/manifest checks; code stayed unchanged. `VALIDATION.json` retains the observed full result.
+- Next: parent reviews source, commits/pushes, waits for exact-SHA CI and alert checks, publishes/verifies bytes and performs any authorized deployment. Source handoff alone is not publication or runtime proof.
+- Live installation, game Data, saves and personal/provider configuration remain untouched.
+- Logs: `%LOCALAPPDATA%/Skyrim-Forge/logs`; operation detail toggle `SKYRIM_FORGE_DEBUG=1`; owner updater always records failures and backup paths in `owner-update.log` there.
+- Build/test: `.venv/Scripts/python.exe scripts/validate_repository.py --scope full --write-reports`; native rebuild uses `scripts/rebuild_native_helpers.py` and pinned Go 1.23.2.
+- Runtime status: tool-validated; no GUI/game testing or upstream third-party binary execution/bundling.

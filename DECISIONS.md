@@ -28,7 +28,7 @@
   ignore the extra field. Do not put caching hints on tool results.
 - Default job staging follows `SKYRIM_FORGE_ROOT\Workspaces`. Never create
   `Documents\Skyrim Forge` as if it were the product. The live install is a
-  versioned folder under the user's Skyrim tools directory.
+  versionless Skyrim-Forge folder under the user's Skyrim tools directory.
 - Refuse to add Forge as a new Grok MCP server when the add would reach 8
   running servers. Skip with an actionable message rather than wedge the client.
 - Refuse an unknown protocol version with `UnsupportedProtocolVersionError` and
@@ -55,11 +55,22 @@
   shell commands, no writes to live Skyrim `Data`, external processes disabled
   by default, and third-party tools hash-pinned rather than bundled.
 - Own the 48-skill Skyrim SE/AE pack (`integrations/skyrim-pack/`), `Setup-HouseCarl.ps1`,
-  and `discover_tools.ps1` directly inside Skyrim Forge 6.1.0, and update the
-  Ultimate AI Starter Bundle's `managed-skills` ledger digests when co-installed
-  so both repositories can be developed and updated in parallel.
+  and `discover_tools.ps1` directly inside Skyrim Forge. Each product maintains
+  its own ownership ledger; historical cross-ledger writes are retired.
 
 
 ## Independent product ownership
 
 Forge owns Skyrim skills/tools. The Starter Bundle owns shared compilers and provider setup. Reverse THIS! owns reverse engineering. Installers read legacy ownership proof to adopt unmodified copies, then maintain separate ledgers without rewriting other products’ ledgers. Edited copies remain personal.
+
+## 6.2.0 standalone toolchain
+
+The bundle owns the general ai-tooling-stack name; Forge owns skyrim-tooling-stack. Only prior Forge ledger digest proof can retire an unchanged old Forge copy; personal/unowned copies remain and backups stay outside provider skill indexes.
+
+The official Python install manager owns shared base interpreters. Forge honors process/user UABS_PYTHON, preserves healthy venvs, updates only a proven managed base's existing feature line, and bootstraps the shared default only when no compatible base exists. Build-only SDKs remain optional, with project pins intact.
+
+A stable owner updater verifies GitHub asset digest, version, safe archive members and manifest hashes before replacement, preserves newer/Git roots, and retains last-good owner payload backups. Private paths move intact rather than being recursively copied; a failed swap/setup moves them back before owner rollback. The Bundle delegates verified local-source replacement to this updater. It does not claim that setup/provider operations are one transaction across every external app.
+
+Reverse THIS! owns generic texconv/7-Zip payloads. Forge records an approved binding to their real paths and SHA pins instead of importing duplicates. Only bindings whose path/pin still match Forge's receipt may refresh automatically; custom settings win.
+
+Local filenames and documentation do not establish current upstream provenance or a headless contract. Added tools stay configure-only/worker-only until exact contracts are proven. DeadMesh's explicit no-redistribution terms remain respected; no third-party executables ship publicly.

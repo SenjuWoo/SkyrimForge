@@ -1,4 +1,4 @@
-﻿[CmdletBinding()]
+[CmdletBinding()]
 param(
     [switch]$BootstrapPython
 )
@@ -39,6 +39,8 @@ function Find-Python {
         }
     }
 
+    Add-Candidate -Executable $env:UABS_PYTHON -Source 'UABS_PYTHON:Process'
+    Add-Candidate -Executable ([Environment]::GetEnvironmentVariable('UABS_PYTHON','User')) -Source 'UABS_PYTHON:User'
     Add-Candidate -Executable (Join-Path $Root '.venv\Scripts\python.exe') -Source 'existing-forge-venv'
     Add-Candidate -Executable $env:SKYRIM_FORGE_PYTHON -Source 'SKYRIM_FORGE_PYTHON'
     foreach ($Name in @('py', 'python', 'python3')) {
@@ -97,64 +99,43 @@ function Find-Python {
     return $null
 }
 
-function Install-PinnedPython {
-    $Architecture = if ($env:PROCESSOR_ARCHITECTURE -eq 'ARM64') {
-        'arm64'
-    } elseif ([Environment]::Is64BitOperatingSystem) {
-        'amd64'
-    } else {
-        'win32'
-    }
-    $Package = switch ($Architecture) {
-        'amd64' {
-            [pscustomobject]@{
-                File='python-3.13.14-amd64.exe'
-                Sha256='C54D9B9BBB8A36E6489363DDD01139707FD781D72F1F9E90C7EC65D0061368E0'
-            }
-        }
-        'arm64' {
-            [pscustomobject]@{
-                File='python-3.13.14-arm64.exe'
-                Sha256='3090F98038F332CEECA0BA40D77B7A4D94A4A25B7107E6CF341547E91D983F18'
-            }
-        }
-        default {
-            [pscustomobject]@{
-                File='python-3.13.14.exe'
-                Sha256='012F050539353E6521AC7976A6B63E232102977E1DFCC747CA7FB743357AE8D1'
+# Provision the official shared manager only when no compatible runtime exists.
+function Install-SharedPython {
+    $Manager = Get-Command pymanager -ErrorAction SilentlyContinue
+    if (-not $Manager) {
+        $Winget = Get-Command winget -ErrorAction SilentlyContinue
+        if (-not $Winget) { throw 'Python 3.11+ is missing. Install the official Python install manager from https://www.python.org/downloads/ and rerun setup.' }
+        Invoke-Checked 'Official Python install manager' $Winget.Source @('install','9NQ7512CXL7T','-e','--accept-package-agreements','--accept-source-agreements','--disable-interactivity')
+        $Manager = Get-Command pymanager -ErrorAction SilentlyContinue
+        if (-not $Manager) {
+            foreach ($Family in @('PythonSoftwareFoundation.PythonManager_3847v3x7pw1km','PythonSoftwareFoundation.PythonManager_qbz5n2kfra8p0')) {
+                $Alias = Join-Path $env:LOCALAPPDATA "Microsoft\WindowsApps\$Family\pymanager.exe"
+                if (Test-Path -LiteralPath $Alias -PathType Leaf) { $Manager = Get-Item -LiteralPath $Alias; break }
             }
         }
     }
-    $Uri = "https://www.python.org/ftp/python/3.13.14/$($Package.File)"
-    $Installer = Join-Path ([IO.Path]::GetTempPath()) ("skyrim-forge-" + [Guid]::NewGuid().ToString('N') + '.exe')
-    Write-Host "Downloading pinned Python 3.13.14 from python.org..." -ForegroundColor Cyan
-    try {
-        [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
-        Invoke-WebRequest -UseBasicParsing -Uri $Uri -OutFile $Installer
-        $ActualHash = (Get-FileHash -LiteralPath $Installer -Algorithm SHA256).Hash
-        if ($ActualHash -cne $Package.Sha256) {
-            throw "Python installer hash mismatch. Expected $($Package.Sha256); got $ActualHash."
-        }
-        $Signature = Get-AuthenticodeSignature -LiteralPath $Installer
-        if ($Signature.Status -ne [System.Management.Automation.SignatureStatus]::Valid) {
-            throw "Python installer signature is not valid: $($Signature.Status)."
-        }
-        if (-not $Signature.SignerCertificate -or $Signature.SignerCertificate.Subject -notmatch 'Python Software Foundation') {
-            throw 'Python installer signature is not owned by the Python Software Foundation.'
-        }
-        $Process = Start-Process -FilePath $Installer -ArgumentList @(
-            '/quiet',
-            'InstallAllUsers=0',
-            'PrependPath=0',
-            'Include_launcher=0',
-            'Include_test=0',
-            'Include_pip=1',
-            'SimpleInstall=1'
-        ) -Wait -PassThru
-        if ($Process.ExitCode -ne 0) { throw "Python installer failed with exit code $($Process.ExitCode)." }
-    } finally {
-        Remove-Item -LiteralPath $Installer -Force -ErrorAction SilentlyContinue
+    if (-not $Manager) { throw 'Python install manager installed but its command is unavailable. Restart the terminal and rerun setup.' }
+    $Command = if ($Manager.PSObject.Properties['Source']) { $Manager.Source } else { $Manager.FullName }
+    Invoke-Checked 'Shared Python runtime' $Command @('install','--yes','default')
+    $Resolved = (& $Command exec -c 'import sys; print(sys.executable)' | Out-String).Trim()
+    if ($LASTEXITCODE -ne 0 -or -not (Test-Path -LiteralPath $Resolved -PathType Leaf)) { throw 'Python install manager did not return a working shared runtime.' }
+    $env:UABS_PYTHON = $Resolved
+    [Environment]::SetEnvironmentVariable('UABS_PYTHON',$Resolved,'User')
+}
+
+# Advance only a manager-owned base on its existing feature line; app venvs remain intact.
+function Update-SharedPython($Candidate) {
+    $Manager=Get-Command pymanager -ErrorAction SilentlyContinue
+    if (-not $Manager) { Write-Host 'Shared Python update unverified: runtime is not managed by the official install manager.'; return }
+    $Details=(& $Candidate.Exe @($Candidate.Args) -c 'import json,sys; print(json.dumps(dict(base=sys._base_executable,line=str(sys.version_info.major)+chr(46)+str(sys.version_info.minor))))' | Out-String) | ConvertFrom-Json
+    if ($LASTEXITCODE -ne 0) { throw 'Cannot identify the selected Python base for update.' }
+    $Inventory=(& $Manager.Source list --only-managed --format=json | Out-String) | ConvertFrom-Json
+    if ($LASTEXITCODE -ne 0) { throw 'Cannot verify Python install-manager ownership.' }
+    $ManagedRows=@($Inventory.versions | Where-Object { [IO.Path]::GetFullPath([string]$_.executable) -ieq [IO.Path]::GetFullPath([string]$Details.base) })
+    if ($ManagedRows.Count -ne 1 -or $ManagedRows[0].company -ne 'PythonCore' -or $ManagedRows[0].tag -notmatch ('^'+[regex]::Escape($Details.line)+'(-32|-64|-arm64)?$')) {
+        Write-Host 'Shared Python update unverified: manual/app-owned base preserved.'; return
     }
+    Invoke-Checked 'Shared Python patch update (same feature line)' $Manager.Source @('install','--update','--yes',[string]$ManagedRows[0].tag)
 }
 
 $Python = Find-Python
@@ -162,10 +143,12 @@ if (-not $Python) {
     if (-not $BootstrapPython) {
         throw 'Python 3.11 or newer was not found. Run START-HERE.bat or rerun Install-or-Update.ps1 with -BootstrapPython.'
     }
-    Install-PinnedPython
+    Install-SharedPython
     $Python = Find-Python
-    if (-not $Python) { throw 'Python 3.13.14 installed, but Forge could not discover the interpreter.' }
+    if (-not $Python) { throw 'Shared Python installed, but Forge could not discover the interpreter.' }
 }
+
+if ($BootstrapPython) { Update-SharedPython $Python }
 
 $env:SKYRIM_FORGE_BOOTSTRAP_ROOT = $Root
 $ExpectedVersion = (& $Python.Exe @($Python.Args) -c "import os,sys; sys.path.insert(0, os.environ['SKYRIM_FORGE_BOOTSTRAP_ROOT']); from skyrim_forge.version import VERSION; print(VERSION)").Trim()
@@ -175,7 +158,7 @@ $MyDocuments = [Environment]::GetFolderPath('MyDocuments')
 if ($MyDocuments) {
     $DocumentsPrefix = $MyDocuments.TrimEnd('\') + '\'
     if ($Root.StartsWith($DocumentsPrefix, [StringComparison]::OrdinalIgnoreCase) -or ($Root.TrimEnd('\') -eq $MyDocuments.TrimEnd('\'))) {
-        Write-Warning ('Forge is installing from Documents ({0}). The live product belongs in your Skyrim tools folder as Skyrim-Forge-{1}. Do not keep a second copy in Documents; MCP must point at the tools-folder venv.' -f $Root, $ExpectedVersion)
+        Write-Warning ('Forge is installing from Documents ({0}). The live product belongs in your Skyrim tools folder as Skyrim-Forge. Do not keep a second copy in Documents; MCP must point at the tools-folder venv.' -f $Root)
     }
 }
 
@@ -237,6 +220,10 @@ try {
 Invoke-Checked 'Forge version check' $VenvPython @('-m','skyrim_forge','version')
 Invoke-Checked 'Forge regression self-test' $VenvPython @('-m','skyrim_forge','self-test')
 Invoke-Checked 'Forge configuration migration' $VenvPython @('-m','skyrim_forge','config-show')
+$ReversePointer=Join-Path $env:LOCALAPPDATA 'ReverseThis\kit.json'
+if (Test-Path -LiteralPath $ReversePointer -PathType Leaf) {
+    Invoke-Checked 'Reuse owner-managed Reverse THIS! tools' $VenvPython @('-m','skyrim_forge','tool-reuse-reverse','--approve')
+}
 $UiWorker = Join-Path $Root 'workers\SkyrimForge.UIWorker.ps1'
 $PowerShellExe = Join-Path $env:SystemRoot 'System32\WindowsPowerShell\v1.0\powershell.exe'
 if (Test-Path -LiteralPath $UiWorker -PathType Leaf) {

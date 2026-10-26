@@ -16,7 +16,7 @@ Forge distinguishes evidence levels so an AI cannot turn a configured adapter in
 | Native build | Adapter | Implemented | Pinned local build tools; workspace staging only |
 | FOMOD XML | Profiled | Implemented | Declarative ModuleConfig only; arbitrary C# blocked |
 | xEdit/MO2 | Adapter | Implemented | Installed pinned tools required |
-| CK/Wrye/LOOT/Synthesis/assets/animations/LOD | Worker contract | Adapter only | Compatible pinned worker required |
+| CK/Wrye/LOOT/assets/animations/LOD | Worker contract | Adapter only | Compatible pinned worker required |
 | Nexus publication | Human gate | Implemented | Machine evidence plus uploader attestation; not legal authentication |
 | Skyrim runtime/visual/save/gameplay | Human gate | Required | Must be tested in the game |
 | Generic navmesh/worldspace/landscape binary editing | Unsupported | Blocked | Specialist editor and human verification required |

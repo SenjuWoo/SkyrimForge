@@ -19,7 +19,7 @@ Use this skill first, then load only the specialist rows that match the task.
 
 1. `skyrim-memory`
 2. This router
-3. `ai-tooling-stack` when choosing among Forge / houseCARL / MCP utilities
+3. `skyrim-tooling-stack` when choosing among Forge / houseCARL / MCP utilities
 4. `tool-discovery` when any external binary or MCP might be required
 5. `skyrim-versioned-workspace` before the first write
 6. Only the specialist skills selected below

@@ -87,11 +87,11 @@ houseCARL **always** needs an MO2-shaped instance directory (folder containing `
 ### Agent must run or recommend
 
 ```powershell
-# From the V5 pack:
-powershell -NoProfile -ExecutionPolicy Bypass -File "<PACK>\TOOLS\Setup-HouseCarl.ps1"
+# From the resolved Skyrim Forge owner root:
+powershell -NoProfile -ExecutionPolicy Bypass -File "<FORGE_ROOT>\Install-HouseCarl.ps1"
 ```
 
-Also shipped beside this skill when installed from the pack:
+The Forge owner installer manages the payload, preserves newer copies and personal settings, then runs the setup helper shipped beside this skill:
 
 ```text
 housecarl\scripts\Setup-HouseCarl.ps1
@@ -103,7 +103,7 @@ housecarl\scripts\Setup-HouseCarl.ps1
 2. Checks .NET 10 Runtime (or .NET 9 + ASP.NET Core 9 for 1.x).
 3. **Auto** selects MO2 if `ModOrganizer.ini` instances exist; else **Vortex** if staging is found.
 4. **MO2:** sets instance path.
-5. **Vortex:** creates `%LOCALAPPDATA%\houseCARL-Shim` per `references/houseCARL-Vortex-shim-setup.pdf` (also in pack `TOOLS\housecarl\`).
+5. **Vortex:** creates `%LOCALAPPDATA%\houseCARL-Shim` and reports the resolved instance path.
 6. Sets user env: `HOUSECARL_MCP`, `SKYRIM_MO2_INSTANCE`, `HouseCarl__Mo2InstanceDir`.
 7. Wires Grok MCP block when present; writes Codex hint; writes `%LOCALAPPDATA%\houseCARL-data\uabs-setup-state.json`.
 8. User must **fully restart** the AI app.

@@ -1,3 +1,13 @@
+## 6.2.0 (2026-10-26)
+
+- Rename the Skyrim routing index to skyrim-tooling-stack; retire the old shared name only with prior Forge digest proof, preserving edited copies and rollback backups.
+- Reuse shared Python and healthy app venvs; update manager-owned bases on their existing feature line and provision the official manager only when required.
+- Add a digest/manifest-verified standalone owner updater with newer/Git preservation, verified local-source deployment, private-tree moves without traversal/copy, edited-file/collision protection, owner locking and failed-swap/setup rollback.
+- Reject silent or stale DeadMesh/Champollion/Synthesis output; validate expected reports, PSC identity and plugin headers.
+- Recognize ReSaver++, PGPatcher/pgtools, EasyNPC, TextureAnalyzer and Bethini without inventing runners; distinguish the MO2 NIF Analyzer plugin.
+- Reuse Reverse THIS! texconv/7-Zip in place with pins, config backups and owner-proven automatic binding refresh; preserve custom paths/pins.
+- Rebuild Windows/Linux helpers as 6.2.0 with pinned Go 1.23.2. No third-party binaries are publicly bundled.
+
 ## 6.1.1 (2026-10-25)
 
 - Forge exclusively owns the optional Skyrim skill pack.

@@ -39,3 +39,7 @@ All writes go to the Forge workspace. Output is reopened or inventoried before s
 ## Redistribution
 
 Local import is not redistribution permission. The receipt records upstream and licence metadata, but the user remains responsible for the licence and source-offer obligations of any tool they redistribute separately. Forge's GitHub-ready archive contains no imported tool binaries.
+
+## Specialist tool reuse and broader discovery
+
+`forge tool-reuse-reverse --approve` configures the installed Reverse THIS! texconv/7-Zip in place with SHA pins and a recoverable config backup; subsequent runs refresh only its own automatic bindings. Personal paths/pins survive. See `STANDALONE-TOOLCHAIN.md` and `LOCAL-TOOL-COVERAGE.md` for exact owner/update and local-tool boundaries. ReSaver++, PGPatcher/pgtools, EasyNPC, TextureAnalyzer and Bethini are recognized as actual installation identities; unverified CLI contracts remain worker-only. The MO2 NIF Analyzer Python plugin is separately reported by discovery, never fabricated as a CLI.
