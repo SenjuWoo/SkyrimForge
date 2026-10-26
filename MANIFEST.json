@@ -69,14 +69,14 @@
     {
       "executable": false,
       "path": "CHANGELOG.md",
-      "sha256": "f2cbd99e4c6985d49718b0dc0638b02bb4391e046a04708d21da4c676c7cfeda",
-      "size": 32950
+      "sha256": "385de658554b9ed528c634094d2551b30d8efab4fa1192fc0927719c64a1faf3",
+      "size": 33094
     },
     {
       "executable": false,
       "path": "CHANGELOG.txt",
-      "sha256": "fdde6ce9447f2ae685c0010c8f3dae058ca4be87382d52fa717d468e30cd1b54",
-      "size": 10512
+      "sha256": "0b89f62b533e18df0539adba58efbe0d906b623e0f89f57efa330c7af4a459dc",
+      "size": 10656
     },
     {
       "executable": false,
@@ -201,8 +201,8 @@
     {
       "executable": false,
       "path": "docs/LOCAL-TOOL-COVERAGE.md",
-      "sha256": "9fb778a57004d8e1c831f9daf33b4ccbb37a264881e4a08a20a1306f6a8f1f82",
-      "size": 4388
+      "sha256": "ff618521d648b1cd23e02e7e95f82346ac61755e50312bd176cd2c8b4cec9244",
+      "size": 6620
     },
     {
       "executable": false,
@@ -2505,8 +2505,8 @@
     {
       "executable": false,
       "path": "integrations/skyrim-pack/skills/skyrim-skse-commonlib/SKILL.md",
-      "sha256": "d5419b67ef5a3788a008d3259653bd976d7dc2f083e3a0112826d5e141267e7d",
-      "size": 4411
+      "sha256": "b3ef907052d81701d33bfc99b3af7dfb97d3ea723bf3180c30238a07f7690ba4",
+      "size": 4968
     },
     {
       "executable": false,
@@ -2697,8 +2697,8 @@
     {
       "executable": false,
       "path": "references/TOOL-CATALOG.json",
-      "sha256": "7e00befb64f2c402c3d0967702e12b25ec1bdcad661381f35198c44ed1afa51b",
-      "size": 22509
+      "sha256": "240d7aef92e70f160ad89b8931a47983cee731f1f8eaba2d79f2a6f28acba047",
+      "size": 23486
     },
     {
       "executable": false,
@@ -2895,8 +2895,8 @@
     {
       "executable": false,
       "path": "skyrim_forge/config.py",
-      "sha256": "217a9e950ea2fd975a3cce1a87f1c6246d01a9f8a37e5ccf049fb9e7dfe52590",
-      "size": 15908
+      "sha256": "802291b69b68cf11358b76fd326dfc8b6a88db518f69c5130f106c9257ec4adc",
+      "size": 15927
     },
     {
       "executable": false,
@@ -2931,8 +2931,8 @@
     {
       "executable": false,
       "path": "skyrim_forge/docs/LOCAL-TOOL-COVERAGE.md",
-      "sha256": "9fb778a57004d8e1c831f9daf33b4ccbb37a264881e4a08a20a1306f6a8f1f82",
-      "size": 4388
+      "sha256": "ff618521d648b1cd23e02e7e95f82346ac61755e50312bd176cd2c8b4cec9244",
+      "size": 6620
     },
     {
       "executable": false,
@@ -2979,8 +2979,8 @@
     {
       "executable": false,
       "path": "skyrim_forge/environment.py",
-      "sha256": "e7a1097549245d3c1495c0d1baba6e718fdde91431e24e40aefa5034af0b81a3",
-      "size": 3709
+      "sha256": "207cb765dab4d99cb31326e328efea9347d21ab61bf67830023b315ea598f7d4",
+      "size": 3784
     },
     {
       "executable": false,
@@ -3153,8 +3153,8 @@
     {
       "executable": false,
       "path": "skyrim_forge/references/TOOL-CATALOG.json",
-      "sha256": "7e00befb64f2c402c3d0967702e12b25ec1bdcad661381f35198c44ed1afa51b",
-      "size": 22509
+      "sha256": "240d7aef92e70f160ad89b8931a47983cee731f1f8eaba2d79f2a6f28acba047",
+      "size": 23486
     },
     {
       "executable": false,
@@ -3327,8 +3327,8 @@
     {
       "executable": false,
       "path": "STATE.md",
-      "sha256": "3abd32e2d13f689fb67dfeaa8aace75cb3c49c6be7f70628f57d8c43d4e4cf99",
-      "size": 3023
+      "sha256": "427c70ca6e5f629209f9f110999ae8369eb8f061d15d6070aaa09b4bb6e5ac80",
+      "size": 3754
     },
     {
       "executable": false,
@@ -3429,8 +3429,8 @@
     {
       "executable": false,
       "path": "tests/test_standalone_toolchain.py",
-      "sha256": "0551fc659b05bba84f8c4ca086f3a45a1b2a2eeabf08c14331c757db615f9e76",
-      "size": 18449
+      "sha256": "85f8c76e737e1d05e373ec740e5df9911864718e4b47b28a795341f0a898e235",
+      "size": 19093
     },
     {
       "executable": false,

@@ -59,9 +59,11 @@ def discover_tools(config: ForgeConfig) -> dict[str, str]:
         "pgpatcher": ["PGPatcher.exe"],
         "pgtools": ["pgtools.exe"],
         "easynpc": ["EasyNPC.exe"],
+        "clibdt": ["ClibDT.exe"],
         "texture_analyzer": ["TextureAnalyzer.exe"],
         "bethini": ["Bethini.exe"],
         "cmake": ["cmake.exe", "cmake"],
+        "xmake": ["xmake.exe", "xmake"],
         "vcpkg": ["vcpkg.exe", "vcpkg"],
         "ninja": ["ninja.exe", "ninja"],
     }

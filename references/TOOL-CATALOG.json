@@ -44,6 +44,11 @@
       "sha256": "b87e72c58a265683a84eb60e267d0633d13316416d0ee3ab90d086be4a2d922b",
       "source_label": "Skyrim Tools.zip/DeadMesh/DeadMesh.exe",
       "tool": "deadmesh_gui"
+    },
+    {
+      "tool": "clibdt",
+      "source_label": "Supplied CLibDT (Windows)/ClibDT.exe; PE version 6.0.0",
+      "sha256": "4cbed885fee669bc7a731ba64de714d2b4fa2fd55f6b3c9eaddd8f4516273776"
     }
   ],
   "policy": {
@@ -805,6 +810,27 @@
       "priority": 20,
       "public_bundle_allowed": false,
       "source": "https://www.nexusmods.com/site/mods/631/"
+    },
+    {
+      "id": "clibdt",
+      "config_key": "clibdt",
+      "names": [
+        "ClibDT.exe"
+      ],
+      "path_hints": [
+        "clibdt",
+        "clibdt (windows)"
+      ],
+      "automation": "human_gate",
+      "capabilities": [
+        "skse.project.gui"
+      ],
+      "import_mode": "configure_only",
+      "license": "GPL-3.0-only (supplied LICENSE/third-party notices)",
+      "public_bundle_allowed": false,
+      "priority": 20,
+      "source": "https://github.com/Supertron42/ClibDT_CommonLibSSE_NG_VR_Toolkit",
+      "notes": "Supplied native GUI identifies itself as 6.0.0. The older public Python toolkit is not proven to produce these bytes. Discover/configure in place; no automatic replacement, public binary copy or fabricated headless runner."
     }
   ]
 }
