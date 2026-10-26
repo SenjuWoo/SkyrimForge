@@ -3,6 +3,7 @@ from pathlib import Path
 import hashlib
 import json
 import os
+import stat
 import subprocess
 import sys
 import tempfile
@@ -36,7 +37,7 @@ class ReverseReuseTests(unittest.TestCase):
         self.assertFalse(report['copied']); self.assertEqual(len(report['configured']),2)
         self.assertTrue(all(not r['copied'] for r in report['configured']))
         self.assertEqual(resolve_capability(self.cfg,'texture.dds.convert')['result'],'PASS')
-        self.assertEqual(self.cfg.seven_zip,self.kit/'sandbox/tools/7zip/7z.exe')
+        self.assertTrue(self.cfg.seven_zip.samefile(self.kit/'sandbox/tools/7zip/7z.exe'))
         self.assertTrue(list(self.root.glob('config.toml.before-reverse-*.bak')))
         self.assertFalse((self.root/'tool-vault').exists())
 
@@ -128,7 +129,8 @@ class StandaloneTests(unittest.TestCase):
         junction=self.owner/'Workspaces'
         result=self.run_ps(script,str(junction),str(external)); self.assertEqual(result.returncode,0,result.stderr)
         result=self.update(); self.assertEqual(result.returncode,0,result.stdout+result.stderr)
-        self.assertTrue(junction.is_junction())
+        self.assertTrue(junction.lstat().st_file_attributes & stat.FILE_ATTRIBUTE_REPARSE_POINT)
+        self.assertEqual(junction.resolve(),external.resolve())
         self.assertEqual((junction/'project.txt').stat().st_ino,inode)
         self.assertFalse(any((backup/'Workspaces').exists() for backup in self.base.glob('.forge-backup-*')))
         self.assertEqual(sentinel.read_text(),'private work')
