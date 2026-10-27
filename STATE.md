@@ -1,3 +1,9 @@
+# Final pre-publication local gate (2026-10-27)
+
+6.3.1 green candidate from dac5f3e7 is installed and verified before publication: 539 manifest files/0 mismatches, native/self-test/doctor and descriptor MCP53 PASS. Existing bundle doctor remains PASS with zero errors/warnings; selected-provider core MCP15 PASS. Thirteen model/permission fingerprints and private workspace identity unchanged; Forge config changed only owned UI-worker version. Historical Hermes profile copies were proven against published source, backed up and migrated through the owner installer; all48 check. Details/proofs live in the bundle artifacts/final-assurance.
+
+Final source-only safeguard removes release --clobber; all existing bytes are checked before missing-only uploads. Twenty focused tests and a real existing8-asset/no-upload verification PASS. Commit/CI then rebuild must match the locally verified candidate before v6.3.1 tagging. No runtime product change.
+
 # 6.3.1 extracted-provider correction (2026-10-27)
 
 Independent read-only review reproduced a missing runtime dependency: scripts/Provider-Skills.ps1 was omitted by the product profile. Include that exact helper; the real extracted-product gate now installs/checks all 48 skills into isolated Claude homes and reruns the dedicated Forge wrapper without retiring other skills. 6.3.1 remains unpublished until this gate and exact-SHA CI pass.

@@ -42,12 +42,8 @@ jobs:
           name: release-assets
           path: dist/
           if-no-files-found: error
-      - name: Publish or refresh release
+      - name: Publish release without replacing assets
         env:
           GH_TOKEN: ${{ github.token }}
-        run: |
-          if gh release view "$GITHUB_REF_NAME" >/dev/null 2>&1; then
-            gh release upload "$GITHUB_REF_NAME" dist/* --clobber
-          else
-            gh release create "$GITHUB_REF_NAME" dist/* --verify-tag --generate-notes
-          fi
+          GH_REPO: ${{ github.repository }}
+        run: python scripts/publish_release.py "$GITHUB_REF_NAME" dist

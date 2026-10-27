@@ -129,16 +129,15 @@ class WorkflowPinningTests(unittest.TestCase):
                       "dependabot must group codeql-action so the pair cannot be split across pull requests")
 
     def test_release_publish_is_idempotent(self):
-        # Forge stopped publishing releases of its own when it moved into the
-        # bundle repository. If a release workflow ever appears at the checkout
-        # root, re-running it over an existing tag must still not fail.
+        # Reruns must verify existing bytes before recovering missing uploads.
+        # Never replace assets that downstream consumers may already have pinned.
         release = self.WORKFLOWS / "release.yml" if self.WORKFLOWS else None
         if release is None or not release.is_file():
             self.skipTest("no release workflow present")
         workflow = release.read_text(encoding="utf-8")
-        self.assertIn('gh release view "$GITHUB_REF_NAME"', workflow)
-        self.assertIn('gh release upload "$GITHUB_REF_NAME" dist/* --clobber', workflow)
-        self.assertIn('gh release create "$GITHUB_REF_NAME" dist/* --verify-tag --generate-notes', workflow)
+        self.assertIn('python scripts/publish_release.py "$GITHUB_REF_NAME" dist', workflow)
+        self.assertIn('GH_REPO: ${{ github.repository }}', workflow)
+        self.assertNotIn('--clobber', workflow)
 
 
 if __name__ == "__main__":

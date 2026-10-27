@@ -45,8 +45,8 @@
     {
       "executable": false,
       "path": ".github/workflows/release.yml",
-      "sha256": "d510155b4dfc1e7e68cf1faadd4da84a6ae16dfdb2f3868c1b891c2950514a4d",
-      "size": 1942
+      "sha256": "44bf880707782017944413f0a1ef3557f8700da5b0ba305db18d3fb00fd691ae",
+      "size": 1806
     },
     {
       "executable": false,
@@ -75,8 +75,8 @@
     {
       "executable": false,
       "path": "CHANGELOG.md",
-      "sha256": "9396a9152f843658aed4422aa5e5f4d35254845dcab7624e596769621daee265",
-      "size": 34512
+      "sha256": "996921a2678a815a287a89c58f7e35206517faef58656ff5e502aad78c1f33c4",
+      "size": 34656
     },
     {
       "executable": false,
@@ -2804,6 +2804,12 @@
     },
     {
       "executable": false,
+      "path": "scripts/publish_release.py",
+      "sha256": "707631f7095636b084246f43a6ba16fe5216f646a92aca8890455e6551b71f61",
+      "size": 4378
+    },
+    {
+      "executable": false,
       "path": "scripts/rebuild_native_helpers.py",
       "sha256": "68e06fa6c05ffcdccacffa37fc6d1769c944a21cbd327157447916235e8126ac",
       "size": 3248
@@ -3339,8 +3345,8 @@
     {
       "executable": false,
       "path": "STATE.md",
-      "sha256": "bc7cc4441622e665eb23d89f7372b04d52b559bcbc3b061353cc0b310affaf12",
-      "size": 3906
+      "sha256": "aeb9a5878dfb9fc5443390e1720a5b634a60765d778e63be45d00da2f7ff248c",
+      "size": 4857
     },
     {
       "executable": false,
@@ -3363,8 +3369,8 @@
     {
       "executable": false,
       "path": "tests/test_ci_validation.py",
-      "sha256": "ca7d2ab3a9ab6c60350258aa84615995f7e00f48526edce2fe485e6211f9a745",
-      "size": 7204
+      "sha256": "6af4b66d06c873080fb46fff167d078f3e2b75ac3d0e00d10d8b10ee0c47c6ba",
+      "size": 7077
     },
     {
       "executable": false,
@@ -3437,6 +3443,12 @@
       "path": "tests/test_process_launch.py",
       "sha256": "c5a39df2a2335c7c11d6160a03dbef5679e4cdc2b881a4e1ce4faa6230434c9d",
       "size": 1426
+    },
+    {
+      "executable": false,
+      "path": "tests/test_publish_release.py",
+      "sha256": "da804beef88c08f4b0fa3daeae2a83c1cc3145100094f249fa682a2c342492d4",
+      "size": 10164
     },
     {
       "executable": false,
