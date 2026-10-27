@@ -1,9 +1,11 @@
-# Forge 6.2.1 cache migration correction
+# Forge 6.2.1 verified release handoff
 
-- Goal: retain standalone/modular ownership, shared tools, private work/settings and a correct upgrade from existing releases.
-- Live 6.1.1 to 6.2.0 found stale version.cpython-314.pyc: source says 6.2.0 but import says 6.1.1. Same deterministic source timestamp/size made the old cache valid to Python.
-- Fix: retain generated owner __pycache__ directories in the previous release backup instead of moving them into the new owner. Private venv/workspace trees remain intact without traversal.
-- Regression: actual compiled timestamp bytecode failed before the fix. New source/native version 6.2.1; full source validation PASS (unit/installer tests, pinned native reproducibility/race/vet, package and MCP gates); publication and live repair pending.
-- Last public release: 6.2.0 at aefa1a2d222801a4953e6fe39b65983750dc7997. Last fully proven live release: 6.1.1. Existing deployment backups and private settings remain intact.
-- Next: full pinned-toolchain validation, exact-SHA CI/security, release 6.2.1 public-byte proof, bundle repin and approved live update.
-- Run: START-HERE.bat; validate: .venv/Scripts/python.exe scripts/validate_repository.py --scope full --write-reports. Logs: LOCALAPPDATA/Skyrim-Forge/logs and installed UPDATE owner logs. Cross-provider proof is tracked by bundle STATE.md.
+- Goal: standalone Skyrim tooling, 48 specialist skills, safe owner updates and shared prerequisites without duplicate owners.
+- Published: https://github.com/SenjuWoo/SkyrimForge/releases/tag/v6.2.1 from 7adcda288d551bf4de226b82679317087c053dc0 (PR #19). All main checks/security PASS; release workflow 40431539964 success.
+- All eight public assets were downloaded and matched CI artifacts, GitHub digests and SHA256SUMS. ZIP: 5,137,963 bytes; SHA256 3d0aac570891526dfd64faface1273d1eac9dc089e1c1feb0184dd48a2a46fea.
+- The live approved upgrade passes setup/native version/doctor and imports 6.2.1. All 588 owned public files match the release manifest, zero mismatches; archive CRC/path/private-cache exclusion PASS. Previous cache bytes and release trees remain recoverable.
+- Fixed: deterministic mtime plus equal-size source let inherited 6.1.1 bytecode shadow 6.2.0. Generated owner caches now stay in the rollback tree; private venv/workspace trees move intact. The real compiled-bytecode regression fails before the fix and passes after, including retained cache-byte/private-venv oracles.
+- Verification: full Windows validator on shared Python 3.14.10 and pinned Go 1.23.2, unit/installer tests, native reproducibility/race/vet, wheel/sdist, MCP protocol checks, exact-SHA CI and downloaded release bytes. The source release is complete. Cross-provider activation/reconnect is tracked by the bundle STATE.md.
+- Last good live: 6.2.1. Rollback tags/releases 6.2.0 and 6.1.1 and deployment backups retained. Game Data, staging, saves and supplied reference folders untouched.
+- Scope: CLibDT remains a discovered/documented GUI; CommonLib variants remain per-project dependencies. No supplied third-party binary or SDK source snapshot was copied into the release. General compilers belong to the optional Starter Bundle; Reverse THIS! tools are reused in place.
+- Run: START-HERE.bat; validate: .venv/Scripts/python.exe scripts/validate_repository.py --scope full --write-reports. Logs: LOCALAPPDATA/Skyrim-Forge/logs and the configured Forge audit log. No game/GUI runtime certification is implied.

@@ -2625,8 +2625,8 @@
     {
       "executable": false,
       "path": "PLAN.md",
-      "sha256": "a95dbeeac518156c5f7c8d96e85a4813cb6462319d39d95bbc07c17f4c790ba6",
-      "size": 1811
+      "sha256": "56cad8784d5295e704cd95677890ecec4c483fe6b76ddb2ad3877845064a0ff3",
+      "size": 1808
     },
     {
       "executable": false,
@@ -3327,8 +3327,8 @@
     {
       "executable": false,
       "path": "STATE.md",
-      "sha256": "b0fa94dfba8566097a5e90495cc190d4ef190761a48147f49e7175603d434527",
-      "size": 1348
+      "sha256": "112363dfdcf76013f71bf0ec72b8d57c716a71d3e3296cef47051eb87c85694a",
+      "size": 2149
     },
     {
       "executable": false,
@@ -3471,8 +3471,8 @@
     {
       "executable": false,
       "path": "VALIDATION.md",
-      "sha256": "0dd38ee570354eab87592cf256b38b742f3c463637db2d945a1dd418a1b66cd3",
-      "size": 4600
+      "sha256": "3c19d04d5621e99a778a8c2d4726f2a88c12a455e52e134578965a3cf550e7c3",
+      "size": 6296
     },
     {
       "executable": false,
@@ -3495,8 +3495,8 @@
     {
       "executable": false,
       "path": "WORKSPACE_OWNERSHIP.md",
-      "sha256": "ccd47fd28d43adc0bbd77be18d31683fab703ee04500300a2421ae9b41b60be4",
-      "size": 541
+      "sha256": "5803ef1b9057f03b41ad3897a9316f7bdbf1730b1e6e2b3f30b1cbb9e79f677c",
+      "size": 594
     },
     {
       "executable": false,

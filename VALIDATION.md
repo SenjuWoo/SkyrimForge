@@ -1,3 +1,20 @@
+# Published 6.2.1 proof and tooling ship gate
+
+Exact main 7adcda288d551bf4de226b82679317087c053dc0 passed all attached checks/security; release workflow 40431539964 succeeded. All eight public assets match CI artifacts, GitHub digests and checksums. ZIP 5,137,963 bytes, SHA256 3d0aac570891526dfd64faface1273d1eac9dc089e1c1feb0184dd48a2a46fea. The approved live owner matches all 588 public file hashes and passes setup/native version/import/doctor. This handoff does not change tag/assets.
+
+INPUTS: source and supplied tool evidence present.
+MEMORY CHECK: existing global lessons applied to owner separation, preserved settings, runtime discovery and evidence limits.
+AUTHORITY: installed=resolved SKYRIM_FORGE_ROOT parent=6.2.0 active=6.2.1 RESULT=PASS
+VERSION GATE: changelog, native helpers, metadata and ownership agree; public owned files=588 RESULT=PASS
+EXACT BUILD: scripts/rebuild_native_helpers.py --target all; Go 1.23.2; full native reproducibility/race/vet RESULT=PASS
+FRAMEWORK VALIDATION: full existing grammar/production-path fixtures PASS; no plugin, Papyrus, FOMOD or game asset changes.
+SEMANTIC TEST: stale cache regression and actual live module import/setup/native doctor RESULT=PASS; in-game behavior=UNTESTED
+SHIP GATE: scripts/validate_repository.py --scope full --write-reports plus exact-SHA CI/release/CRC/manifest RESULT=PASS
+FINAL ARCHIVE: Skyrim-Forge-6.2.1.zip sha256=3d0aac570891526dfd64faface1273d1eac9dc089e1c1feb0184dd48a2a46fea version_strings=PASS
+RUNTIME STATUS: tool-validated
+SSEEDIT/CK: not launched
+UNRESOLVED: actual game/app GUI targets, paid APIs and guest sessions untested; cross-provider activation and host reconnect tracked by bundle STATE.md.
+
 # 6.2.1 bytecode migration regression
 
 A real timestamp-based compiled module reproduces stale bytecode promotion with equal-size source and deterministic mtimes. The new regression fails before the updater fix; it also checks old cache bytes remain in the backup and private venv caches remain unchanged. Full patch validator PASS on Windows with shared Python 3.14.10 and pinned Go 1.23.2: native builds/reproducibility, race/vet, unit/installer tests, wheel/sdist and MCP protocols. Exact-SHA CI/publication and live upgrade remain pending.
