@@ -1,3 +1,9 @@
+## 6.3.2 (2026-10-27)
+
+- The injected Skyrim pack text no longer carries the "Ownership of Skyrim tooling" prose or a maintainer path; the actionable rules are unchanged.
+- Root `.ignore` keeps ripgrep (agent searches) off generated release evidence.
+- Delivery test decodes console output tolerantly instead of crashing on non-UTF-8 bytes. Forward patch; v6.3.1 remains immutable.
+
 ## 6.3.1 (2026-10-27)
 
 - Release reruns verify every existing asset before any missing-only upload and refuse changed bytes; pinned public assets are never clobbered.

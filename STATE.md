@@ -1,4 +1,6 @@
-# Skyrim Forge 6.3.1 verified handoff
+# Skyrim Forge 6.3.2 verified handoff
+
+- 6.3.2 (forward patch; 6.3.1 stays immutable): injected pack text trimmed (no ownership prose or maintainer path), root .ignore for agent searches, delivery test decoding hardened. Details below are the 6.3.1 evidence it builds on.
 
 - Goal complete: standalone Skyrim tooling and its specialist skill pack, with optional Starter Bundle orchestration and Reverse THIS! reuse. General compilers remain shared prerequisites; Skyrim-only tools stay with this owner. Historical checkout names do not identify installed versions.
 - Published: https://github.com/SenjuWoo/SkyrimForge/releases/tag/v6.3.1 from immutable commit 533f399c7eded2fa75c0bc2dabd809ec999ccc50. All 13 exact-commit checks and CI/CodeQL workflows passed before tagging; release workflow 40533276764 passed. Fresh Dependabot, code-scanning and secret-scanning queries found zero open alerts; code quality unavailable and left off.
