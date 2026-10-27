@@ -20,6 +20,14 @@ class DeliveryTests(unittest.TestCase):
             (root/'docs/private.txt').write_text('untracked private')
             expected={'VERSION.txt','LICENSE','README.md','skyrim_forge/main.py','docs/usage.md'}
             self.assertEqual({p.relative_to(root).as_posix() for p in product_files(root)},expected)
+            if os.name=='nt':
+                import ctypes
+                buffer=ctypes.create_unicode_buffer(32768)
+                short_path=ctypes.windll.kernel32.GetShortPathNameW
+                short_path.argtypes=[ctypes.c_wchar_p,ctypes.c_wchar_p,ctypes.c_uint]
+                self.assertGreater(short_path(str(root),buffer,len(buffer)),0)
+                self.assertEqual({p.relative_to(root).as_posix() for p in product_files(Path(buffer.value))},expected)
+
             a=Path(td)/'a.zip';b=Path(td)/'b.zip'
             with patch.object(builder,'ROOT',root):
                 builder.build(a);builder.build(b)
@@ -27,7 +35,7 @@ class DeliveryTests(unittest.TestCase):
             extracted=Path(td)/'extracted'
             with zipfile.ZipFile(a) as archive:
                 self.assertIsNone(archive.testzip());archive.extractall(extracted)
-            delivery=extracted/f'Skyrim-Forge-{VERSION}'
+            delivery=(extracted/f'Skyrim-Forge-{VERSION}').resolve()
             self.assertEqual({p.relative_to(delivery).as_posix() for p in source_files(delivery)},expected|{'MANIFEST.json'})
             (delivery/'docs/private.txt').write_text('private')
             self.assertEqual(len(source_files(delivery)),len(expected)+1)

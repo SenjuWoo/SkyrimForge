@@ -3381,8 +3381,8 @@
     {
       "executable": false,
       "path": "tests/test_delivery.py",
-      "sha256": "491f2821f29ea8cc30058d2d2bc986cdcc678b2865ad23a2f82ebf16d18cb81e",
-      "size": 4727
+      "sha256": "ac72b35300e2d5e79e563bb6da97ed6fb93c76f68f2338f394cd891f72874783",
+      "size": 5211
     },
     {
       "executable": false,
