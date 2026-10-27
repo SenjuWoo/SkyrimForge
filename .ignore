@@ -1,0 +1,6 @@
+# Read by ripgrep (the agents' Grep tool): generated release evidence, not source.
+SBOM.spdx.json
+MANIFEST.json
+VALIDATION.json
+BUILD-RECEIPT.json
+CHECKSUMS-SHA256.txt

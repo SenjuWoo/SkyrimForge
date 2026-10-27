@@ -56,6 +56,12 @@
     },
     {
       "executable": false,
+      "path": ".ignore",
+      "sha256": "231a8609cfd93b38fa7e7ff0abed8cca2fb8ccb7700eeb3bf99b038e6215fbd3",
+      "size": 168
+    },
+    {
+      "executable": false,
       "path": "assets/hero.svg",
       "sha256": "0baa58bf32f2ed4019508a624488d7f4e9b25a02bf162319254017780bf934f8",
       "size": 2135
@@ -465,8 +471,8 @@
     {
       "executable": false,
       "path": "integrations/skyrim-pack/INSTRUCTIONS.md",
-      "sha256": "72e6001e7265d1e26cc29de8585446425713ac7f6bd53f2c90fb8ef7b6bf171e",
-      "size": 2711
+      "sha256": "7d0eba898a13b70a461b8842e35e59cf9e4f0dd80b7629d1ff3e4bd37abbf573",
+      "size": 1808
     },
     {
       "executable": false,
@@ -3381,8 +3387,8 @@
     {
       "executable": false,
       "path": "tests/test_delivery.py",
-      "sha256": "a341f924e692aaa2c667a173e79810ed1c83a1131db19d7f4b9be3ac0b18e451",
-      "size": 6576
+      "sha256": "be53ebac1d91b032e0b2d65ede720bff6935e502970f6b7f3a4e90ff3a2a1b77",
+      "size": 6746
     },
     {
       "executable": false,
