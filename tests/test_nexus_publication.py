@@ -261,13 +261,15 @@ class NexusPublicationTests(unittest.TestCase):
         output = workspace / "publication"
         report = build_publication_bundle(plan_path, self.release, output, workspace, approved=True)
         self.assertTrue(report["share_ready"])
-        self.assertTrue((output / "release-tree" / "NEXUS-MOD-PAGE.bbcode").is_file())
-        self.assertTrue((output / "release-tree" / "RIGHTS-MANIFEST.json").is_file())
+        self.assertTrue((output / "publication-docs" / "NEXUS-MOD-PAGE.bbcode").is_file())
+        self.assertTrue((output / "publication-docs" / "RIGHTS-MANIFEST.json").is_file())
         self.assertTrue((output / "private-audit" / "NEXUS-COMPLIANCE-AUDIT.json").is_file())
         archive = Path(report["archive"])
         with zipfile.ZipFile(archive) as zf:
             names = set(zf.namelist())
-        self.assertIn("RIGHTS-MANIFEST.json", names)
+        self.assertNotIn("RIGHTS-MANIFEST.json", names)
+        self.assertNotIn("NEXUS-MOD-PAGE.bbcode", names)
+        self.assertEqual(names, {p.relative_to(self.release).as_posix() for p in self.release.rglob("*") if p.is_file()})
         self.assertFalse(any(name.startswith("private-audit/") for name in names))
 
     def test_rendered_page_contains_credits_permissions_and_ai_disclosure(self):

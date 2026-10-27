@@ -134,3 +134,9 @@ Mandatory V4.3 fixtures include:
 - SPID/KID trailing semicolon comments do not corrupt fields;
 - KID accepts its special `ExclusiveGroup` key;
 - ordinary KID blank types and record signatures remain rejected under KID 4.0.6.
+
+## Distribution boundary
+
+New work stays local/private until publication is requested. "Put it on GitHub" means public and MIT for original work by default, subject to third-party rights and platform terms; preserve existing licences and explicit choices. Generic publication uses the appropriate destination (normally Nexus Mods for Skyrim). A mod needing no compilation does not get a duplicate GitHub repository by default; add source hosting when requested or needed for development.
+
+Stage only runtime mod files and required licences. Exclude CHANGELOG/README/progress/ownership ledgers, tests, logs and backups from the mod ZIP. Keep Nexus pages, rights audits and publication checklists in sibling `publication-docs`, outside `release-tree`; retain original required legal notices inside the payload. Toolkits may retain their actual usage help, skills and templates.

@@ -18,6 +18,7 @@ from pathlib import Path
 from typing import Any
 
 ROOT = Path(__file__).resolve().parents[1]
+sys.path.insert(0, str(ROOT))
 
 
 def _single_source_version() -> str:
@@ -89,15 +90,8 @@ def run(command: list[str], *, cwd: Path = ROOT, timeout: int = 600, env: dict[s
 
 
 def repository_files() -> list[Path]:
-    result = []
-    for path in ROOT.rglob("*"):
-        if not path.is_file() or path.is_symlink(): continue
-        rel = path.relative_to(ROOT)
-        if any(part in EXCLUDED or part.casefold().endswith(".egg-info") for part in rel.parts): continue
-        if path.name in REPORTS: continue
-        if path.suffix in {".pyc", ".pyo"}: continue
-        result.append(path)
-    return sorted(result, key=lambda p: p.relative_to(ROOT).as_posix().casefold())
+    from skyrim_forge.delivery import source_files
+    return [p for p in source_files(ROOT) if p.name not in REPORTS]
 
 
 def validate_files(errors: list[str], warnings: list[str]) -> dict[str, Any]:

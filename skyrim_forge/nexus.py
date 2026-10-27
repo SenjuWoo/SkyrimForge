@@ -897,12 +897,14 @@ def build_publication_bundle(plan_path: Path, release_root: Path, output_root: P
     try:
         shutil.copytree(release_root.resolve(strict=True), release_copy, symlinks=False)
         audit_dir.mkdir(parents=True)
-        atomic_write_text(release_copy / "NEXUS-MOD-PAGE.bbcode", render_mod_page(plan))
-        atomic_write_text(release_copy / "CREDITS.md", _credits_markdown(plan))
-        atomic_write_text(release_copy / "THIRD-PARTY-NOTICES.md", _third_party_notices(plan))
-        atomic_write_text(release_copy / "AI-DISCLOSURE.md", "# AI Assistance Disclosure\n\n" + (plan["ai"]["disclosure"] if plan["ai"]["used"] else "No generative AI assistance is declared for this release.") + "\n")
-        atomic_write_text(release_copy / "NEXUS-PERMISSIONS.md", "# Permissions\n\n" + "\n".join(f"- **{key.replace('_', ' ').title()}:** {value}" for key, value in plan["permissions"].items()) + "\n")
-        json_dump(release_copy / "RIGHTS-MANIFEST.json", _rights_manifest(plan, audit))
+        publication_docs = staged / "publication-docs"
+        publication_docs.mkdir()
+        atomic_write_text(publication_docs / "NEXUS-MOD-PAGE.bbcode", render_mod_page(plan))
+        atomic_write_text(publication_docs / "CREDITS.md", _credits_markdown(plan))
+        atomic_write_text(publication_docs / "THIRD-PARTY-NOTICES.md", _third_party_notices(plan))
+        atomic_write_text(publication_docs / "AI-DISCLOSURE.md", "# AI Assistance Disclosure\n\n" + (plan["ai"]["disclosure"] if plan["ai"]["used"] else "No generative AI assistance is declared for this release.") + "\n")
+        atomic_write_text(publication_docs / "NEXUS-PERMISSIONS.md", "# Permissions\n\n" + "\n".join(f"- **{key.replace('_', ' ').title()}:** {value}" for key, value in plan["permissions"].items()) + "\n")
+        json_dump(publication_docs / "RIGHTS-MANIFEST.json", _rights_manifest(plan, audit))
         checklist = [
             "# Nexus Mods Publication Checklist", "", "- [x] Machine-checkable release gate passed.",
             "- [x] All bundled files are mapped to rights records.", "- [x] Credits and permissions documents generated.",
@@ -911,7 +913,7 @@ def build_publication_bundle(plan_path: Path, release_root: Path, output_root: P
             "- [ ] Review the generated Nexus BBCode and every claim one final time.", "",
             "Forge cannot authenticate legal ownership or substitute for the uploader's responsibility.",
         ]
-        atomic_write_text(release_copy / "NEXUS-PUBLISH-CHECKLIST.md", "\n".join(checklist) + "\n")
+        atomic_write_text(publication_docs / "NEXUS-PUBLISH-CHECKLIST.md", "\n".join(checklist) + "\n")
         json_dump(audit_dir / "NEXUS-COMPLIANCE-AUDIT.json", audit)
         json_dump(audit_dir / "PUBLICATION-PLAN.normalized.json", plan)
         final_release_report = validate_release_tree(release_copy)
@@ -925,6 +927,7 @@ def build_publication_bundle(plan_path: Path, release_root: Path, output_root: P
     return {
         "result": "PASS", "share_ready": True, "target": "Nexus Mods", "output_root": str(target),
         "release_tree": str(target / "release-tree"), "private_audit": str(target / "private-audit"),
+        "publication_docs": str(target / "publication-docs"),
         "archive": str(target / filename), "archive_sha256": archive_report["sha256"],
         "file_count": final_release_report["file_count"],
         "human_final_steps": ["Install-test the final archive in Vortex and MO2", "Select matching Nexus permissions and content classifications", "Review the mod page and claims before pressing Publish"],

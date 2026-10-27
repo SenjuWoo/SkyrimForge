@@ -3,7 +3,7 @@ name: skyrim-forge
 description: Use when Skyrim mod development or validation can benefit from the bundle-managed Skyrim Forge typed automation broker.
 ---
 
-# Skyrim Forge 6.2
+# Skyrim Forge 6.3
 
 ## Resolve this installation
 

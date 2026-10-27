@@ -26,7 +26,7 @@ Several AI applications may work in the same workspace. They share one authorita
 project root and one active version. Switching applications is not a reason to clone
 or relocate the project.
 
-## Project layout
+## Project layout (snapshot-based mods only)
 
 ```text
 <WORKSPACE_ROOT>\<Mod Display Name>\
@@ -43,18 +43,26 @@ or relocate the project.
     VERSION.txt
 ```
 
+## Canonical ownership and publication
+
+Before the first substantive write, read or create `WORKSPACE_OWNERSHIP.md` at the settled project root. Run this skill's `scripts/ensure_ownership.py <project-root>` (or `--check`); it preserves existing records, aliases and source layout and creates no Git remote. WORKSPACE.md is a workspace map, STATE.md is progress, and neither replaces ownership.
+
+New work stays local/private until publication is requested. "Put it on GitHub" means public and MIT for original work by default, subject to third-party rights and platform terms; preserve existing licences and explicit choices. Generic publication uses the appropriate destination (normally Nexus Mods for Skyrim). A mod needing no compilation does not get a duplicate GitHub repository by default; add source hosting when requested or needed for development.
+
+Source ledgers, CHANGELOG.txt, ownership, validation and publication documents stay outside the staged mod payload. A release ZIP contains only the runtime mod/product and required licensing; retain actual runtime TXT/INI/JSON and FOMOD assets.
+
 ## Before editing
 
 1. Resolve the authoritative project from `CURRENT.txt`, ownership records,
    supplied archives, and read-only installed evidence.
 2. Reject deployed, staging, save, profile, and installed-tool paths as writable roots.
 3. Read `CURRENT.txt`, `CHANGELOG.txt`, `STATE.md`, and known-good records.
-4. Choose the semantic version bump.
-5. Fully copy the current snapshot into the new version folder.
+4. Preserve established Git layouts and tags; do not copy a Git project into nested version folders. For a snapshot-based project, choose the semantic version bump.
+5. For snapshot-based projects only, fully copy the current snapshot into the new version folder.
 6. Update `CURRENT.txt`.
 7. Create or update the new snapshot's `VERSION.txt`.
 8. Start the changelog entry before modifying the new snapshot.
-9. Edit only the new snapshot.
+9. Edit only the active source owner (the new snapshot for snapshot-based projects).
 
 ## Preflight guard
 

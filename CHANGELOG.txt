@@ -1,3 +1,9 @@
+## 6.3.0 (2026-10-27)
+
+- Runtime mod ZIPs reject changelogs, progress/ownership and publication paperwork. Nexus documents live in sibling publication-docs. Runtime translations, FOMOD assets and required licences remain.
+- Product/source archives use tracked or hash-bound inventories, excluding untracked personal files. Product diagnostics work without developer tests.
+- Ownership preserves Git layouts; new work remains local, explicit GitHub uses public/MIT defaults, contextual Skyrim publication uses Nexus.
+
 ## 6.2.1 (2026-10-26)
 
 - Keep old owner Python bytecode caches in the rollback tree during updates, so deterministic timestamps cannot make equal-size new source import the previous release. Private venv and workspace trees remain intact.

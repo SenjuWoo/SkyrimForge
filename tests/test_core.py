@@ -154,7 +154,7 @@ class CoreTests(unittest.TestCase):
     def test_release_validation_and_determinism(self):
         with tempfile.TemporaryDirectory() as td:
             root = Path(td); release = root / "release"; workspace = root / "workspace"; release.mkdir(); workspace.mkdir()
-            (release / "Data").mkdir(); (release / "Data" / "readme.txt").write_text("x")
+            (release / "Data").mkdir(); (release / "Data" / "MyMod_english.txt").write_text("x")
             self.assertEqual(validate_release_tree(release)["result"], "PASS")
             first = workspace / "a.zip"; second = workspace / "b.zip"
             a = build_release(release, first, workspace, approved=True)
@@ -237,7 +237,7 @@ class CoreTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as td:
             root = Path(td) / "release"
             root.mkdir()
-            (root / "readme.txt").write_text("private", encoding="utf-8")
+            (root / "MyMod_english.txt").write_text("private", encoding="utf-8")
             report = validate_release_tree(root)
             self.assertEqual(report["result"], "PASS")
             self.assertFalse(report["share_ready"])
