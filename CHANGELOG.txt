@@ -1,3 +1,8 @@
+## 6.3.1 (2026-10-27)
+
+- Remove the unused legacy Forge skill duplicate. Version validation and provider bridge tests now check the canonical pack skill agents actually install; a mutation regression rejects stale series there.
+- Correct the canonical skill to the current independent owner and shared-runtime repair workflow. Forward patch; v6.3.0 remains immutable.
+
 ## 6.3.0 (2026-10-27)
 
 - Runtime mod ZIPs reject changelogs, progress/ownership and publication paperwork. Nexus documents live in sibling publication-docs. Runtime translations, FOMOD assets and required licences remain.

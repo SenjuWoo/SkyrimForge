@@ -3,7 +3,7 @@ name: skyrim-forge
 description: Use when Skyrim mod development or validation can benefit from the bundle-managed Skyrim Forge typed automation broker.
 ---
 
-# Skyrim Forge 6.2
+# Skyrim Forge 6.3
 
 ## Resolve this installation
 
@@ -25,8 +25,8 @@ directory named by `SKYRIM_FORGE_ROOT`; upgrades replace the application source
 in place while preserving the managed workspace/runtime state. Do not reconstruct
 a version-stamped install path.
 
-Forge 6 ships in the same repository as this bundle, so there is no cross-product
-version handshake. Run `forge doctor` (or the exact descriptor CLI argv plus
+Forge is released independently from github.com/SenjuWoo/SkyrimForge. The
+bundle pins a verified product release; Forge also installs on its own. Run `forge doctor` (or the exact descriptor CLI argv plus
 `doctor`) and require `result: PASS` and `read_only_ready: true` before major
 work. Claude Code 2026-07-28 still requires `tools/call` to include
 `resultType: "complete"`. Do not add Forge as a new Grok MCP server when
@@ -45,12 +45,12 @@ prints `No Python at '<runtime cache path>'`.
 Check: `cat <root>/.venv/pyvenv.cfg` — if `home =` points into a cache dir, repair:
 
 ```text
-py -3.12 -m venv "<root>/.venv"
-"<root>/.venv/Scripts/python.exe" -m pip install "<root>"
+powershell.exe -NoProfile -File "<root>/Install-AI-Bridge.ps1" -Provider <selected-provider> -BootstrapPython -Yes
 ```
 
-Forge has zero external dependencies and a local build backend, so this is
-fast and offline. Verify the MCP server answers (must return JSON, not hang):
+The owner installer reuses the selected shared base Python and repairs its app
+venv; do not download a second base interpreter or borrow a provider cache.
+Verify the MCP server answers (must return JSON, not hang):
 
 ```text
 printf '{"jsonrpc":"2.0","id":1,"method":"initialize","params":{"protocolVersion":"2024-11-05","capabilities":{},"clientInfo":{"name":"probe","version":"1"}}}\n' | "<root>/.venv/Scripts/python.exe" -m skyrim_forge mcp

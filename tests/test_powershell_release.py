@@ -118,7 +118,7 @@ class PowerShellReleaseTests(unittest.TestCase):
     def test_provider_bridge_uses_exact_shared_runtime(self):
         register = (ROOT / 'Register-MCP.ps1').read_text(encoding='utf-8-sig')
         skill_installer = (ROOT / 'Install-Forge-Skill.ps1').read_text(encoding='utf-8-sig')
-        skill = (ROOT / 'integrations' / 'skyrim-forge' / 'SKILL.md').read_text(encoding='utf-8-sig')
+        skill = (ROOT / 'integrations' / 'skyrim-pack' / 'skills' / 'skyrim-forge' / 'SKILL.md').read_text(encoding='utf-8-sig')
         self.assertIn("Join-Path $Root '.venv\\Scripts\\python.exe'", register)
         self.assertIn('mcp add skyrim-forge -- $Python -m skyrim_forge mcp', register)
         self.assertIn("'mcp', 'add', '--scope', 'user', 'skyrim-forge', '--'", register)
