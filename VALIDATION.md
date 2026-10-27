@@ -1,3 +1,7 @@
+# Final assurance 6.3.0 candidate (2026-10-27)
+
+Source packaging and ownership changes implemented; 49 affected tests PASS. Full source gate PASS: 208 tests (2 platform/tool availability skips), native reproducibility/race/vet, packaging and MCP. Three extracted-product tests PASS, including actual Python/native and Windows startup. Public release and approved live refresh remain pending. Last good: 6.2.1; logs: Starter Bundle artifacts/final-assurance. Build/run: python scripts/validate_repository.py --scope full --write-reports; START-HERE.bat. Nexus publication documents now use publication-docs beside release-tree, not inside the mod ZIP. Prior reports below remain historical.
+
 # Published 6.2.1 proof and tooling ship gate
 
 Exact main 7adcda288d551bf4de226b82679317087c053dc0 passed all attached checks/security; release workflow 40431539964 succeeded. All eight public assets match CI artifacts, GitHub digests and checksums. ZIP 5,137,963 bytes, SHA256 3d0aac570891526dfd64faface1273d1eac9dc089e1c1feb0184dd48a2a46fea. The approved live owner matches all 588 public file hashes and passes setup/native version/import/doctor. This handoff does not change tag/assets.

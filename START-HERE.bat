@@ -1,7 +1,7 @@
 @echo off
 setlocal EnableExtensions
 set "PSModulePath="
-title Skyrim Forge 6.2.1
+title Skyrim Forge 6.3.0
 set "FORGE_PS_GATE=%~dp0PowerShell-Parse-Gate.ps1"
 powershell -NoLogo -NoProfile -ExecutionPolicy Bypass -File "%FORGE_PS_GATE%"
 if errorlevel 1 (
@@ -28,7 +28,7 @@ goto autoinstall
 cls
 echo.
 echo ================================================================
-echo  SKYRIM FORGE 6.2.1 - VERIFIED TOOLCHAIN FABRIC
+echo  SKYRIM FORGE 6.3.0 - VERIFIED TOOLCHAIN FABRIC
 echo ================================================================
 echo.
 echo  Installing Forge and connecting every detected AI app.
@@ -71,7 +71,7 @@ goto menu
 cls
 echo.
 echo ================================================================
-echo  SKYRIM FORGE 6.2.1 - VERIFIED TOOLCHAIN FABRIC
+echo  SKYRIM FORGE 6.3.0 - VERIFIED TOOLCHAIN FABRIC
 echo ================================================================
 echo.
 echo  1. Install/update Forge and connect all detected AI apps
@@ -82,7 +82,7 @@ echo  5. Install Forge skill for AI applications
 echo  6. Register MCP with AI applications
 echo  7. Install or repair Forge xEdit scripts
 echo  8. Open Forge GUI
-echo  9. Run regression tests
+echo  9. Run product diagnostics (full tests in source)
 echo  T. Scan/import verified local tools
 echo  D. Open documentation
 echo  0. Exit

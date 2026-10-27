@@ -39,3 +39,7 @@ Forge validates declarations and evidence files. It cannot authenticate authorsh
 The source lock is reviewed against official Nexus Mods Terms of Service, File Submission Guidelines, Adult Content Guidelines, Donation Points rules, Best Practices and, when selected, event-specific rules. Forge does not scrape Nexus Mods. A review older than 90 days blocks share-ready status.
 
 The Nexus Terms require the uploader to possess all necessary rights and permissions, comply with the original game's terms, understand the licence granted to Nexus and its partners, and avoid prohibited scraping/text-data-mining. File Submission Guidelines require permission as well as credit, truthful claims, accurate categorisation, functional files and more-than-repackaging value for compilations.
+
+## Runtime archive boundary
+
+The generated Nexus page, rights audit and publication checklist live in sibling publication-docs. The release-tree and mod ZIP retain only the staged runtime mod and required original legal files. Changelogs, README/progress/ownership files, tests and backups are refused. Return metadata includes publication_docs.

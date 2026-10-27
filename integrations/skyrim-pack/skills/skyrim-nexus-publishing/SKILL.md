@@ -138,3 +138,9 @@ Do not substitute memory, an old example, or a plausible token. Record the evide
 ### Skill-specific provider control
 
 Publish only after the ship gate passes; keep claims aligned with the actual archive and permissions.
+
+## Distribution boundary
+
+New work stays local/private until publication is requested. "Put it on GitHub" means public and MIT for original work by default, subject to third-party rights and platform terms; preserve existing licences and explicit choices. Generic publication uses the appropriate destination (normally Nexus Mods for Skyrim). A mod needing no compilation does not get a duplicate GitHub repository by default; add source hosting when requested or needed for development.
+
+Stage only runtime mod files and required licences. Exclude CHANGELOG/README/progress/ownership ledgers, tests, logs and backups from the mod ZIP. Keep Nexus pages, rights audits and publication checklists in sibling `publication-docs`, outside `release-tree`; retain original required legal notices inside the payload. Toolkits may retain their actual usage help, skills and templates.

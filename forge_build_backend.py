@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import base64, csv, gzip, hashlib, io, os, stat, tarfile, tomllib, zipfile
 from pathlib import Path, PurePosixPath
+from skyrim_forge.delivery import source_files
 
 ROOT = Path(__file__).resolve().parent
 EPOCH = int(os.environ.get("SOURCE_DATE_EPOCH", "1784764800"))
@@ -28,7 +29,8 @@ def get_requires_for_build_wheel(config_settings=None): return []
 def get_requires_for_build_sdist(config_settings=None): return []
 
 def package_files():
-    return sorted([p for p in (ROOT / "skyrim_forge").rglob("*") if p.is_file() and not p.is_symlink() and not any(x in EXCLUDED for x in p.relative_to(ROOT).parts) and p.suffix not in {".pyc", ".pyo"}], key=lambda p: p.relative_to(ROOT).as_posix().casefold())
+    return [p for p in source_files(ROOT) if p.relative_to(ROOT).parts[0] == "skyrim_forge"]
+
 
 def zinfo(name, executable=False):
     info = zipfile.ZipInfo(name, ZIP_TIME); info.compress_type = zipfile.ZIP_DEFLATED; info.create_system = 3; info.external_attr = ((0o100755 if executable else 0o100644) & 0xFFFF) << 16; info.flag_bits |= 0x800; return info
@@ -43,7 +45,7 @@ def prepare_metadata_for_build_wheel(metadata_directory, config_settings=None):
 def build_wheel(wheel_directory, config_settings=None, metadata_directory=None):
     target = Path(wheel_directory); target.mkdir(parents=True, exist_ok=True)
     name = f"{dist_name()}-{version()}-py3-none-any.whl"; output = target / name
-    members = {p.relative_to(ROOT).as_posix(): (p.read_bytes(), bool(p.stat().st_mode & stat.S_IXUSR)) for p in package_files()}
+    members = {p.relative_to(ROOT).as_posix(): (p.read_bytes(), (p.relative_to(ROOT).as_posix().endswith("linux-x64/SkyrimForge.Native") or bool(p.stat().st_mode & stat.S_IXUSR))) for p in package_files()}
     di = dist_info(); members[f"{di}/METADATA"]=(metadata(),False); members[f"{di}/WHEEL"]=(wheel_text(),False); members[f"{di}/entry_points.txt"]=(entry_points(),False); members[f"{di}/licenses/LICENSE"]=((ROOT/"LICENSE").read_bytes(),False)
     record = f"{di}/RECORD"; stream=io.StringIO(newline=""); writer=csv.writer(stream,lineterminator="\n")
     for path in sorted(members,key=str.casefold):
@@ -55,11 +57,9 @@ def build_wheel(wheel_directory, config_settings=None, metadata_directory=None):
     return name
 
 def sdist_files():
-    result=[]
-    for p in ROOT.rglob("*"):
-        if p.is_file() and not p.is_symlink() and p.name not in GENERATED_REPORTS and not any(x in EXCLUDED or x.endswith(".egg-info") for x in p.relative_to(ROOT).parts) and p.suffix not in {".pyc", ".pyo"}:
-            result.append(p)
-    return sorted(result,key=lambda p:p.relative_to(ROOT).as_posix().casefold())
+    # A labelled source distribution includes its source inventory for Git-free rebuilds.
+    return [p for p in source_files(ROOT) if p.name not in GENERATED_REPORTS or p.name == "MANIFEST.json"]
+
 
 def build_sdist(sdist_directory, config_settings=None):
     target=Path(sdist_directory); target.mkdir(parents=True,exist_ok=True); name=f"{dist_name()}-{version()}.tar.gz"; output=target/name; prefix=f"{dist_name()}-{version()}"
