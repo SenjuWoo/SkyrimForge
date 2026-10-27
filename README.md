@@ -1,4 +1,4 @@
-# Skyrim Forge 6.3.0
+# Skyrim Forge 6.3.1
 
 > Skyrim Forge is the authoritative repository for the Skyrim SE/AE AI modding
 > stack: the 52-tool Forge MCP/CLI/GUI workbench, the **48-skill Skyrim SE/AE
