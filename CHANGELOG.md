@@ -1,5 +1,6 @@
 ## 6.3.1 (2026-10-27)
 
+- Include the provider installer runtime helper in the product and test actual extracted all-skill installation/check plus the dedicated wrapper, preserving the rest of the pack.
 - Remove the unused legacy Forge skill duplicate. Version validation and provider bridge tests now check the canonical pack skill agents actually install; a mutation regression rejects stale series there.
 - Correct the canonical skill to the current independent owner and shared-runtime repair workflow. Forward patch; v6.3.0 remains immutable.
 

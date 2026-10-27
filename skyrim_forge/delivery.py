@@ -13,7 +13,7 @@ PRODUCT_FILES = {
     "Skyrim Forge.bat", "Update Forge.bat", "Configure-Automation.ps1",
     "Configure-Forge.ps1", "Configure-Toolchain.ps1", "Install-AI-Bridge.ps1",
     "Install-Forge-Skill.ps1", "Install-HouseCarl.ps1", "Install-Skyrim-Pack.ps1",
-    "Install-or-Update.ps1", "Register-MCP.ps1", "Update-Forge.ps1", "PowerShell-Parse-Gate.ps1", "Run Tests.bat",
+    "Install-or-Update.ps1", "Register-MCP.ps1", "Update-Forge.ps1", "PowerShell-Parse-Gate.ps1", "Run Tests.bat", "scripts/Provider-Skills.ps1",
 }
 PRODUCT_PREFIXES = ("skyrim_forge/", "integrations/", "references/", "resources/",
     "schemas/", "workers/", "assets/", "examples/", "docs/", "writer/published/")

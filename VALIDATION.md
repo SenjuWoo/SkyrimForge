@@ -1,3 +1,7 @@
+# 6.3.1 extracted-provider correction (2026-10-27)
+
+Independent read-only review reproduced a missing runtime dependency: scripts/Provider-Skills.ps1 was omitted by the product profile. Include that exact helper; the real extracted-product gate now installs/checks all 48 skills into isolated Claude homes and reruns the dedicated Forge wrapper without retiring other skills. 6.3.1 remains unpublished until this gate and exact-SHA CI pass.
+
 # 6.3.1 canonical-skill correction (2026-10-27)
 
 The bundle cross-product gate found the installed pack skill still advertised 6.2 while the unused legacy copy said 6.3. Remove the unused duplicate, point version validation/tests at the installed source, and add a mutation fixture. Correct standalone/shared-runtime instructions. Previous 6.3.0 release stays unchanged; new 6.3.1 source/native/CI/release proof pending. Live installation remains last-good 6.2.1 until the forward patch is verified. Build: python scripts/validate_repository.py --scope full --write-reports; logs: Starter Bundle artifacts/final-assurance.
