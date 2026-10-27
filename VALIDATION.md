@@ -1,3 +1,7 @@
+# 6.2.1 bytecode migration regression
+
+A real timestamp-based compiled module reproduces stale bytecode promotion with equal-size source and deterministic mtimes. The new regression fails before the updater fix; it also checks old cache bytes remain in the backup and private venv caches remain unchanged. Full patch validator PASS on Windows with shared Python 3.14.10 and pinned Go 1.23.2: native builds/reproducibility, race/vet, unit/installer tests, wheel/sdist and MCP protocols. Exact-SHA CI/publication and live upgrade remain pending.
+
 # Published 6.2.0 proof
 
 Release source/tag aefa1a2d222801a4953e6fe39b65983750dc7997 passed exact main checks and clean security queries. Release workflow 40421709024 succeeded after recovery of a transient GitHub publication failure. All eight public assets match GitHub digests and the published SHA256SUMS; ZIP SHA256 is 2c66c6bdf79473a68e95b749e12489e0fa14db876cc583184e77b20370d1b175 (5,137,601 bytes). Only generated validation/build receipts differ from the first CI attempt; payload manifest, wheel and sdist match. This post-publication change updates handoff documentation/integrity only; the release tag and public assets remain immutable. Machine integration is tracked by the Starter Bundle, not claimed by source validation.

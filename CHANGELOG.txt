@@ -1,3 +1,8 @@
+## 6.2.1 (2026-10-26)
+
+- Keep old owner Python bytecode caches in the rollback tree during updates, so deterministic timestamps cannot make equal-size new source import the previous release. Private venv and workspace trees remain intact.
+- Add a real compiled-bytecode migration regression and rebuild the Windows/Linux helpers with pinned Go 1.23.2.
+
 ## 6.2.0 (2026-10-26)
 
 - Discover supplied CLibDT without executing or redistributing it; distinguish the CommonLib Xmake/CMake forks and incomplete source archives.

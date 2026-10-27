@@ -130,6 +130,34 @@ class StandaloneTests(unittest.TestCase):
         self.assertIn('same version',result.stdout)
         self.assertEqual(len(list(self.base.glob('.forge-backup-*'))),1)
 
+    def test_old_bytecode_stays_in_backup_instead_of_shadowing_new_source(self):
+        import py_compile
+        import importlib.util
+        # Deterministic releases can share mtime and source size; timestamp pyc checks then accept old code.
+        stamp=1755648000
+        for folder,version in ((self.owner,'8.0.0'),(self.payload,'9.0.0')):
+            module=folder/'owned/version.py'
+            module.write_text('VERSION = "'+version+'"\n')
+            os.utime(module,(stamp,stamp))
+            manifest=folder/'MANIFEST.json'; data=json.loads(manifest.read_text())
+            data['files'].append({'path':'owned/version.py','sha256':hashlib.sha256(module.read_bytes()).hexdigest()})
+            manifest.write_text(json.dumps(data))
+        module=self.owner/'owned/version.py'
+        py_compile.compile(str(module),doraise=True,invalidation_mode=py_compile.PycInvalidationMode.TIMESTAMP)
+        cache=Path(importlib.util.cache_from_source(str(module)))
+        relative=cache.relative_to(self.owner); old_cache_bytes=cache.read_bytes()
+        private_cache=self.owner/'.venv/Scripts/__pycache__/private.pyc'
+        private_cache.parent.mkdir(); private_cache.write_bytes(b'app-owned cache preserved')
+        self.write_archive()
+        result=self.update(); self.assertEqual(result.returncode,0,result.stdout+result.stderr)
+        self.assertFalse((self.owner/relative).exists(),'Old release bytecode was promoted')
+        backup,=self.base.glob('.forge-backup-*')
+        self.assertEqual((backup/relative).read_bytes(),old_cache_bytes)
+        self.assertEqual(private_cache.read_bytes(),b'app-owned cache preserved')
+        probe=subprocess.run([sys.executable,'-I','-c','import sys; sys.path.insert(0,sys.argv[1]); import version; print(version.VERSION)',str(self.owner/'owned')],capture_output=True,text=True,timeout=15)
+        self.assertEqual(probe.returncode,0,probe.stderr)
+        self.assertEqual(probe.stdout.strip(),'9.0.0')
+
     def test_private_workspace_junction_moves_without_copy_or_traversal(self):
         external=self.base/'external workspace'; external.mkdir()
         sentinel=external/'project.txt'; sentinel.write_text('private work')

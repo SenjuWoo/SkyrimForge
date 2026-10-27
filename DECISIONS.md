@@ -74,3 +74,5 @@ A stable owner updater verifies GitHub asset digest, version, safe archive membe
 Reverse THIS! owns generic texconv/7-Zip payloads. Forge records an approved binding to their real paths and SHA pins instead of importing duplicates. Only bindings whose path/pin still match Forge's receipt may refresh automatically; custom settings win.
 
 Local filenames and documentation do not establish current upstream provenance or a headless contract. Added tools stay configure-only/worker-only until exact contracts are proven. DeadMesh's explicit no-redistribution terms remain respected; no third-party executables ship publicly.
+
+- 6.2.1: Generated __pycache__ directories encountered under public owner directories stay in the rollback tree. Unknown private directory trees (including venvs/workspaces) still move intact and are never traversed or purged.
