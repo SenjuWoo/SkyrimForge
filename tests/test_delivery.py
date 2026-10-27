@@ -54,27 +54,27 @@ class DeliveryTests(unittest.TestCase):
             self.assertTrue((product/'LICENSE').is_file())
             env=dict(os.environ,SKYRIM_FORGE_CONFIG=str(base/'private-config.toml'),SKYRIM_FORGE_ROOT=str(product))
             probe='import sys;sys.path.insert(0,sys.argv.pop(1));from skyrim_forge.cli import main;raise SystemExit(main())'
-            result=subprocess.run([sys.executable,'-I','-c',probe,str(product),'self-test'],cwd=product,env=env,capture_output=True,text=True,timeout=60)
+            result=subprocess.run([sys.executable,'-I','-c',probe,str(product),'self-test'],cwd=product,env=env,capture_output=True,text=True,encoding='utf-8',errors='replace',timeout=60)
             self.assertEqual(result.returncode,0,result.stdout+result.stderr)
             platform='win-x64' if os.name=='nt' else 'linux-x64'
             native=product/'writer/published'/platform/('SkyrimForge.Native.exe' if os.name=='nt' else 'SkyrimForge.Native')
             if os.name!='nt':native.chmod(0o755)
-            result=subprocess.run([str(native),'self-test'],cwd=product,env=env,capture_output=True,text=True,timeout=30)
+            result=subprocess.run([str(native),'self-test'],cwd=product,env=env,capture_output=True,text=True,encoding='utf-8',errors='replace',timeout=30)
             self.assertEqual(result.returncode,0,result.stdout+result.stderr)
             if os.name=='nt':
-                result=subprocess.run(['cmd.exe','/d','/c','call',str(product/'START-HERE.bat'),'--validate-only'],cwd=product,env=env,capture_output=True,text=True,timeout=45)
+                result=subprocess.run(['cmd.exe','/d','/c','call',str(product/'START-HERE.bat'),'--validate-only'],cwd=product,env=env,capture_output=True,text=True,encoding='utf-8',errors='replace',timeout=45)
                 self.assertEqual(result.returncode,0,result.stdout+result.stderr)
                 # Install/check the actual product in isolated provider homes, not just its parser/startup.
                 provider_env=dict(env,USERPROFILE=str(base/'user'),LOCALAPPDATA=str(base/'local'),CLAUDE_CONFIG_DIR=str(base/'claude'))
                 script=product/'Install-Skyrim-Pack.ps1'
                 for args in ([],['-Check']):
-                    result=subprocess.run(['powershell.exe','-NoProfile','-ExecutionPolicy','Bypass','-File',str(script),'-Provider','Claude',*args],cwd=product,env=provider_env,capture_output=True,text=True,timeout=60)
+                    result=subprocess.run(['powershell.exe','-NoProfile','-ExecutionPolicy','Bypass','-File',str(script),'-Provider','Claude',*args],cwd=product,env=provider_env,capture_output=True,text=True,encoding='utf-8',errors='replace',timeout=60)
                     self.assertEqual(result.returncode,0,result.stdout+result.stderr)
                 skills=base/'claude/skills'
                 expected={p.name for p in (product/'integrations/skyrim-pack/skills').iterdir() if p.is_dir()}
                 self.assertEqual({p.name for p in skills.iterdir() if p.is_dir()},expected)
                 self.assertIn('skyrim-forge',expected)
-                result=subprocess.run(['powershell.exe','-NoProfile','-ExecutionPolicy','Bypass','-File',str(product/'Install-Forge-Skill.ps1'),'-Provider','Claude'],cwd=product,env=provider_env,capture_output=True,text=True,timeout=60)
+                result=subprocess.run(['powershell.exe','-NoProfile','-ExecutionPolicy','Bypass','-File',str(product/'Install-Forge-Skill.ps1'),'-Provider','Claude'],cwd=product,env=provider_env,capture_output=True,text=True,encoding='utf-8',errors='replace',timeout=60)
                 self.assertEqual(result.returncode,0,result.stdout+result.stderr)
                 self.assertEqual({p.name for p in skills.iterdir() if p.is_dir()},expected)
 
