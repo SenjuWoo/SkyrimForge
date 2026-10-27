@@ -22,3 +22,5 @@
 10. [complete] Add shared runtime selection/update, verified owner updater and in-place Reverse tool reuse.
 11. [complete] Reject false-success output and document actual local tools/licensing boundaries.
 12. [complete] Validate 6.2.0, regenerate reports and hand off source to parent for exact-SHA CI/publication. No live deployment in this workstream.
+
+13. [in progress] Publish 6.2.1 with stale owner-bytecode migration protection and verified live upgrade.

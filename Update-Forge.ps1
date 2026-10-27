@@ -140,6 +140,8 @@ try {
                         throw "Edited owner file preserved; inspect before updating: $relative"
                     }
                 } else {
+                    # Old timestamp-based bytecode can shadow equal-size new source; keep it in the rollback tree.
+                    if ($item.PSIsContainer -and $item.Name -eq '__pycache__') { continue }
                     if ($newFiles.ContainsKey($relative) -or $newDirs.ContainsKey($relative)) { throw "Private path conflicts with the new release: $relative" }
                     $private.Add($relative)
                 }
