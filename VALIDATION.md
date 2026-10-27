@@ -1,3 +1,7 @@
+# Published 6.2.0 proof
+
+Release source/tag aefa1a2d222801a4953e6fe39b65983750dc7997 passed exact main checks and clean security queries. Release workflow 40421709024 succeeded after recovery of a transient GitHub publication failure. All eight public assets match GitHub digests and the published SHA256SUMS; ZIP SHA256 is 2c66c6bdf79473a68e95b749e12489e0fa14db876cc583184e77b20370d1b175 (5,137,601 bytes). Only generated validation/build receipts differ from the first CI attempt; payload manifest, wheel and sdist match. This post-publication change updates handoff documentation/integrity only; the release tag and public assets remain immutable. Machine integration is tracked by the Starter Bundle, not claimed by source validation.
+
 # Validation - 6.2.0 source
 
 Authority: the existing source owner, branch `codex/standalone-toolchain-6-2`; parent `efe9de1bb33babbfc3042899cd15b43a0f2bd07c` (public 6.1.1). Live tools, application/provider configuration, game Data, staging and saves remain untouched.
