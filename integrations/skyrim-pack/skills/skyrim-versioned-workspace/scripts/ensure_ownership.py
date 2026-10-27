@@ -21,7 +21,8 @@ def ensure(root: Path, *, check: bool = False) -> dict:
     if not root.is_dir():
         raise ValueError('Select an existing source project directory first.')
     for parent in (root, *root.parents):
-        if parent.is_symlink() or getattr(parent, 'is_junction', lambda: False)():
+        # The Windows reparse flag also detects junctions on Python 3.11.
+        if parent.is_symlink() or getattr(parent.lstat(), 'st_file_attributes', 0) & 0x400:
             raise ValueError(f'Linked project ancestry requires explicit ownership resolution: {parent}')
         if (parent / 'SkyrimSE.exe').is_file() or (parent / 'INSTALLATION.json').is_file():
             raise ValueError(f'Installed/game inputs are read-only; select the source owner instead: {parent}')

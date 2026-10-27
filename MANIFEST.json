@@ -2541,8 +2541,8 @@
     {
       "executable": false,
       "path": "integrations/skyrim-pack/skills/skyrim-versioned-workspace/scripts/ensure_ownership.py",
-      "sha256": "998cd640ac5115d1f4cfc447fd8319952e23580cbfa95203233736ae79a859dc",
-      "size": 4978
+      "sha256": "dfec80cc15572828e415208295016eb0d36b43add441519cb0d7721a9ab5c948",
+      "size": 5061
     },
     {
       "executable": false,
@@ -2919,8 +2919,8 @@
     {
       "executable": false,
       "path": "skyrim_forge/delivery.py",
-      "sha256": "465d00dae4170602c7829c9f6201aede5911eb4f9d63d39fd79b1e0ccdecc978",
-      "size": 3737
+      "sha256": "214878ce3b777cea5520e973e898213986a40189d8d0b1b3aa3a9ff54651d41e",
+      "size": 3746
     },
     {
       "executable": false,

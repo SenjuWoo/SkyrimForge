@@ -44,7 +44,7 @@ def source_files(root: Path) -> list[Path]:
         for ancestor in (path, *path.parents):
             if ancestor == root.parent:
                 break
-            if ancestor.is_symlink() or getattr(ancestor, "is_junction", lambda: False)():
+            if ancestor.is_symlink() or getattr(ancestor.lstat(), "st_file_attributes", 0) & 0x400:
                 raise ValueError(f"Linked release source: {name}")
         if not path.is_file() or not path.resolve().is_relative_to(root):
             raise ValueError(f"Missing or escaped release source: {name}")
