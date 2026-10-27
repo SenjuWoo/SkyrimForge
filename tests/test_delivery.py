@@ -11,7 +11,7 @@ builder=importlib.util.module_from_spec(spec);spec.loader.exec_module(builder)
 class DeliveryTests(unittest.TestCase):
     def test_tracked_allowlist_and_git_free_rebuild(self):
         with tempfile.TemporaryDirectory(prefix='Forge Ω ! ') as td:
-            root=Path(td)/'source';root.mkdir()
+            root=Path(td)/'source';root.mkdir();root=root.resolve()
             subprocess.run(['git','init','-q',str(root)],check=True,capture_output=True)
             for name in ['VERSION.txt','LICENSE','README.md','skyrim_forge/main.py','docs/usage.md','STATE.md','CHANGELOG.txt','tests/test.py']:
                 p=root/name;p.parent.mkdir(parents=True,exist_ok=True);p.write_text('original')

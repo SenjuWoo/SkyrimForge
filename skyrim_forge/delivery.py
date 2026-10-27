@@ -64,4 +64,5 @@ def is_product_file(name: str) -> bool:
     return name in PRODUCT_FILES or name.startswith(PRODUCT_PREFIXES)
 
 def product_files(root: Path) -> list[Path]:
+    root = root.resolve(strict=True)
     return [p for p in source_files(root) if is_product_file(p.relative_to(root).as_posix())]

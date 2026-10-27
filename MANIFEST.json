@@ -2919,8 +2919,8 @@
     {
       "executable": false,
       "path": "skyrim_forge/delivery.py",
-      "sha256": "0ee57ab98e0e0747a9d4da1651f2e5d49dc719aed5f07b5a59185b5f5f462d02",
-      "size": 3700
+      "sha256": "465d00dae4170602c7829c9f6201aede5911eb4f9d63d39fd79b1e0ccdecc978",
+      "size": 3737
     },
     {
       "executable": false,
@@ -3381,8 +3381,8 @@
     {
       "executable": false,
       "path": "tests/test_delivery.py",
-      "sha256": "5d6348cabeabc2982f9be1a550d1d6f865d137687c9544e43b0d843e3ffc9e86",
-      "size": 4707
+      "sha256": "491f2821f29ea8cc30058d2d2bc986cdcc678b2865ad23a2f82ebf16d18cb81e",
+      "size": 4727
     },
     {
       "executable": false,
