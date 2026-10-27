@@ -39,13 +39,13 @@
     {
       "executable": false,
       "path": ".github/workflows/ci.yml",
-      "sha256": "39bd8d16ad4a4617d415edcfbfc870c0cab4cbb0ac0674d9a98d158da62a733c",
+      "sha256": "4b2b11cca2ed2bf133dd44cfe32445fb3421765e44021181b8199bf115c9e0ee",
       "size": 8717
     },
     {
       "executable": false,
       "path": ".github/workflows/release.yml",
-      "sha256": "c585cc9353581f6e808a9f756fc3de8e13143df6efeae72474bee044b78d33e1",
+      "sha256": "d510155b4dfc1e7e68cf1faadd4da84a6ae16dfdb2f3868c1b891c2950514a4d",
       "size": 1942
     },
     {
