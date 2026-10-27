@@ -64,6 +64,19 @@ class DeliveryTests(unittest.TestCase):
             if os.name=='nt':
                 result=subprocess.run(['cmd.exe','/d','/c','call',str(product/'START-HERE.bat'),'--validate-only'],cwd=product,env=env,capture_output=True,text=True,timeout=45)
                 self.assertEqual(result.returncode,0,result.stdout+result.stderr)
+                # Install/check the actual product in isolated provider homes, not just its parser/startup.
+                provider_env=dict(env,USERPROFILE=str(base/'user'),LOCALAPPDATA=str(base/'local'),CLAUDE_CONFIG_DIR=str(base/'claude'))
+                script=product/'Install-Skyrim-Pack.ps1'
+                for args in ([],['-Check']):
+                    result=subprocess.run(['powershell.exe','-NoProfile','-ExecutionPolicy','Bypass','-File',str(script),'-Provider','Claude',*args],cwd=product,env=provider_env,capture_output=True,text=True,timeout=60)
+                    self.assertEqual(result.returncode,0,result.stdout+result.stderr)
+                skills=base/'claude/skills'
+                expected={p.name for p in (product/'integrations/skyrim-pack/skills').iterdir() if p.is_dir()}
+                self.assertEqual({p.name for p in skills.iterdir() if p.is_dir()},expected)
+                self.assertIn('skyrim-forge',expected)
+                result=subprocess.run(['powershell.exe','-NoProfile','-ExecutionPolicy','Bypass','-File',str(product/'Install-Forge-Skill.ps1'),'-Provider','Claude'],cwd=product,env=provider_env,capture_output=True,text=True,timeout=60)
+                self.assertEqual(result.returncode,0,result.stdout+result.stderr)
+                self.assertEqual({p.name for p in skills.iterdir() if p.is_dir()},expected)
 
     def test_duplicate_manifest_is_rejected(self):
         with tempfile.TemporaryDirectory() as td:

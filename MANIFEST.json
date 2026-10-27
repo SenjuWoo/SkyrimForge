@@ -39,13 +39,13 @@
     {
       "executable": false,
       "path": ".github/workflows/ci.yml",
-      "sha256": "39bd8d16ad4a4617d415edcfbfc870c0cab4cbb0ac0674d9a98d158da62a733c",
+      "sha256": "4b2b11cca2ed2bf133dd44cfe32445fb3421765e44021181b8199bf115c9e0ee",
       "size": 8717
     },
     {
       "executable": false,
       "path": ".github/workflows/release.yml",
-      "sha256": "c585cc9353581f6e808a9f756fc3de8e13143df6efeae72474bee044b78d33e1",
+      "sha256": "d510155b4dfc1e7e68cf1faadd4da84a6ae16dfdb2f3868c1b891c2950514a4d",
       "size": 1942
     },
     {
@@ -75,8 +75,8 @@
     {
       "executable": false,
       "path": "CHANGELOG.md",
-      "sha256": "025b1ef44ac2a355efaca391f8c3dbeb208bc36ed373522e4b1256db0320ce32",
-      "size": 34333
+      "sha256": "9396a9152f843658aed4422aa5e5f4d35254845dcab7624e596769621daee265",
+      "size": 34512
     },
     {
       "executable": false,
@@ -2631,8 +2631,8 @@
     {
       "executable": false,
       "path": "PLAN.md",
-      "sha256": "5ae572356d76f32ce5b87c1d467fa6186b859dfa6865068bb3d9a7be9438edd0",
-      "size": 3123
+      "sha256": "9b09df5ab67d3d393af02213fda20ce23f4355aebef98d38a5b6ccd1d23674f6",
+      "size": 3565
     },
     {
       "executable": false,
@@ -2913,8 +2913,8 @@
     {
       "executable": false,
       "path": "skyrim_forge/delivery.py",
-      "sha256": "214878ce3b777cea5520e973e898213986a40189d8d0b1b3aa3a9ff54651d41e",
-      "size": 3746
+      "sha256": "c0b5ba81062231091b98d5c2ede2c3401d34b082c26d5db7fd562a9d6b4eb40f",
+      "size": 3777
     },
     {
       "executable": false,
@@ -3339,8 +3339,8 @@
     {
       "executable": false,
       "path": "STATE.md",
-      "sha256": "c32f361a5bcdc7f91e21db1b7ebc33c7a4e0f3c165caaa1425c2b974df65b836",
-      "size": 3464
+      "sha256": "bc7cc4441622e665eb23d89f7372b04d52b559bcbc3b061353cc0b310affaf12",
+      "size": 3906
     },
     {
       "executable": false,
@@ -3375,8 +3375,8 @@
     {
       "executable": false,
       "path": "tests/test_delivery.py",
-      "sha256": "ac72b35300e2d5e79e563bb6da97ed6fb93c76f68f2338f394cd891f72874783",
-      "size": 5211
+      "sha256": "a341f924e692aaa2c667a173e79810ed1c83a1131db19d7f4b9be3ac0b18e451",
+      "size": 6576
     },
     {
       "executable": false,
@@ -3495,8 +3495,8 @@
     {
       "executable": false,
       "path": "VALIDATION.md",
-      "sha256": "52f8c65f7d4d4b46ccde2f4c365cce5af522a3185dda2e2de2103e0f5e0e0599",
-      "size": 7611
+      "sha256": "154e353a24ab6ff626293696b656796f66210b21e4713bd685aae16be6bb156d",
+      "size": 8053
     },
     {
       "executable": false,
