@@ -24,7 +24,7 @@ class PublishReleaseTests(unittest.TestCase):
     def setUp(self):
         temp = tempfile.TemporaryDirectory()
         self.addCleanup(temp.cleanup)
-        self.directory = Path(temp.name)
+        self.directory = Path(temp.name).resolve()
         self.files = {"a.zip": b"original-a\x00\r\n", "b.whl": b"original-b\xff"}
         for name, data in self.files.items():
             (self.directory / name).write_bytes(data)
