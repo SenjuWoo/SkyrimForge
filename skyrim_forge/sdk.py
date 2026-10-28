@@ -6,6 +6,7 @@ import re
 import shutil
 import stat
 import subprocess
+import tempfile
 import sys
 from pathlib import Path
 from typing import Any
@@ -141,10 +142,8 @@ def sdk_status(config: ForgeConfig, lock: dict[str, Any] | None = None) -> dict[
 
 
 def _fetch(entry: dict[str, Any], dest: Path) -> None:
-    partial = dest.with_name(f".{dest.name}.partial")
-    if partial.exists():
-        _rmtree(partial)
-    partial.mkdir(parents=True)
+    # A unique owned stage keeps retries and concurrent fetches away from one another's recovery data.
+    partial = Path(tempfile.mkdtemp(prefix=f".{dest.name}.", suffix=".partial", dir=dest.parent))
     try:
         _git(["init", "--quiet"], partial)
         _git(["remote", "add", "origin", entry["repository"]], partial)
@@ -155,7 +154,9 @@ def _fetch(entry: dict[str, Any], dest: Path) -> None:
         head = _git(["rev-parse", "HEAD"], partial)
         if head != entry["commit"]:
             raise ValidationError(f"{entry['id']}: fetched {head}, expected {entry['commit']}")
-        partial.replace(dest)
+        if dest.exists():
+            raise ToolError(f"{entry['id']}: destination appeared during fetch; preserved it without replacement")
+        partial.rename(dest)
     except BaseException:
         _rmtree(partial)
         raise

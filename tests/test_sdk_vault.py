@@ -1,6 +1,8 @@
 """SDK vault regressions against a local fixture repository; nothing is fetched from the network."""
 from pathlib import Path
 from unittest.mock import patch
+from concurrent.futures import ThreadPoolExecutor
+from threading import Barrier, Lock
 import json
 import os
 import shutil
@@ -9,7 +11,8 @@ import tempfile
 import unittest
 
 from skyrim_forge.config import ForgeConfig, default_tools
-from skyrim_forge.errors import ApprovalError, ValidationError
+from skyrim_forge.errors import ApprovalError, ToolError, ValidationError
+from skyrim_forge import sdk
 from skyrim_forge.sdk import load_lock, sdk_install, sdk_rows, sdk_status
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -101,6 +104,51 @@ class InstallTests(unittest.TestCase):
         self.assertTrue(first["results"][0]["bootstrapped"])
         self.assertEqual(len(first["results"][0]["sha256"]), 64)
         self.assertFalse(self.install(bootstrap=True)["results"][0]["bootstrapped"])
+
+    def test_preexisting_partial_directory_is_never_removed(self):
+        legacy = self.dest.parent / ".fixture.partial"
+        legacy.mkdir(parents=True)
+        sentinel = legacy / "keep.txt"
+        sentinel.write_text("private recovery data", encoding="utf-8")
+        self.assertEqual(self.install()["result"], "PASS")
+        self.assertEqual(sentinel.read_text(encoding="utf-8"), "private recovery data")
+
+    def test_failed_fetch_removes_only_its_own_stage(self):
+        legacy = self.dest.parent / ".fixture.partial"
+        legacy.mkdir(parents=True)
+        sentinel = legacy / "keep.txt"
+        sentinel.write_text("private recovery data", encoding="utf-8")
+        original = sdk._git
+        def fail_fetch(args, cwd=None):
+            if args[0] == "fetch":
+                raise ToolError("fixture failure")
+            return original(args, cwd)
+        with patch("skyrim_forge.sdk._git", side_effect=fail_fetch):
+            result = self.install()
+        self.assertEqual(result["result"], "INCOMPLETE")
+        self.assertFalse(self.dest.exists())
+        self.assertEqual(sentinel.read_text(encoding="utf-8"), "private recovery data")
+        self.assertEqual(list(self.dest.parent.iterdir()), [legacy])
+
+    def test_interleaved_fetches_use_distinct_stages_and_keep_winner(self):
+        ready = Barrier(2)
+        mutex = Lock()
+        stages = set()
+        original = sdk._git
+        def interleave(args, cwd=None):
+            if args[0] == "fetch":
+                with mutex:
+                    stages.add(cwd)
+                ready.wait(timeout=20)
+            return original(args, cwd)
+        with patch("skyrim_forge.sdk._git", side_effect=interleave):
+            with ThreadPoolExecutor(max_workers=2) as pool:
+                results = list(pool.map(lambda _: self.install(), range(2)))
+        self.assertEqual(len(stages), 2)
+        self.assertEqual(sum(r["result"] == "PASS" for r in results), 1, results)
+        self.assertEqual(sdk_rows(self.config, self.lock)[0]["state"], "current")
+        self.assertEqual((self.dest / "probe.txt").read_text(encoding="utf-8"), "sdk")
+        self.assertFalse(list(self.dest.parent.glob(".*.partial")))
 
     def test_unknown_id_is_rejected(self):
         with self.assertRaises(ValidationError):

@@ -1,3 +1,8 @@
+## 6.4.1 (2026-10-28)
+
+- SDK fetches use unique transaction directories, preserve preexisting partial/recovery folders and refuse a destination created by another install. Failure cleanup removes only the current operation's stage. Real local-Git regression tests cover preservation, forced failure and interleaved installs.
+- Remove stale MCP tool counts from the README; the schema remains the source of truth. SDK pins, build permissions and provider choices are unchanged.
+
 ## 6.4.0 (2026-10-27)
 
 - Add a pinned SDK vault: `sdk-status` and approval-gated `sdk-install` fetch CommonLibSSE-NG (alandtse ng, v14.1.0), vcpkg and optional libxse/powerof3 reference lineages by full commit SHA into `sdk-vault`, never overwrite a directory that is not the clean pin, and surface SDK state in `toolchain-status`. Public releases still carry no SDK source.
