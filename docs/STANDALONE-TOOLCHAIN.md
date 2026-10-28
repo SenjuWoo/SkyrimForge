@@ -22,6 +22,10 @@ The owner updater updates Forge. houseCARL's existing owner installer advances o
 
 Setup consumes `%LOCALAPPDATA%/ReverseThis/kit.json` when present. `forge tool-reuse-reverse --approve` also performs this explicitly. The owner manifest's DirectXTex and 7-Zip directories supply the exact `texconv.exe` and `7z.exe` paths. Forge verifies available per-file owner hashes, validates the 7-Zip sidecar, pins current bytes, and configures the existing broker: no second vault copy is made. Config is backed up before changes. A small `.reverse-bindings.json` receipt beside the config lets later runs refresh only previously automatic bindings after an owner update. Custom paths or changed pins stay untouched.
 
+## SDK vault
+
+`forge sdk-status` lists the pinned SDK sources (CommonLibSSE-NG, vcpkg and reference lineages) and the host build tools it can see (git, cmake, ninja, xmake, vcpkg, MSVC C++ tools). `forge sdk-install --approve` fetches the default set by commit SHA into `sdk-vault` beside the tool vault; add ids or `--all` for the reference lineages and `--bootstrap` to build `vcpkg.exe`, then pin it with `forge tool-configure vcpkg <vcpkg.exe> --approve`. See [native source lock](NATIVE-SOURCE-LOCK.md).
+
 ## Build-only prerequisites
 
 Rebuilding Forge's shipped helpers needs the Go version pinned in CI. Building a user SKSE/CommonLib project needs the configured CMake, vcpkg and Visual Studio C++/SDK toolchain; its project manifests keep exact dependency pins. The optional general bundle can provision shared build tools, but Forge's normal install does not fetch unused SDKs. See [native engineering](NATIVE-PLUGIN-ENGINEERING.md) and [local tool coverage](LOCAL-TOOL-COVERAGE.md).

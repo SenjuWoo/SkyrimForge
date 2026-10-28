@@ -21,6 +21,7 @@ from .plugin_header import inspect_plugin_header
 from .plugin_writer import build_plugin, validate_plan
 from .records import query_records
 from .release import build_release, validate_release_tree
+from .sdk import sdk_install, sdk_status
 from .strictjson import load
 from .tools import tool_status, resolve_tool
 from .toolchain import scan_tool_source, import_tool, import_all_tools, configure_existing_tool, resolve_capability, toolchain_status, reuse_reverse_tools
@@ -110,6 +111,12 @@ class ForgeService:
 
     def toolchain_status(self) -> dict[str, Any]:
         return toolchain_status(self.config)
+
+    def sdk_status(self) -> dict[str, Any]:
+        return sdk_status(self.config)
+
+    def sdk_install(self, ids: list[str], approved: bool, everything: bool = False, bootstrap: bool = False) -> dict[str, Any]:
+        return sdk_install(self.config, ids, approved=approved, everything=everything, bootstrap=bootstrap)
 
     def bsarch_info(self, archive: str, dump: bool = False) -> dict[str, Any]:
         return bsarch_info(self.config, self._read(archive), dump=dump)

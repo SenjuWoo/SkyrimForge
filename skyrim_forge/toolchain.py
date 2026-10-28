@@ -15,6 +15,7 @@ from typing import Any, Iterable
 from .config import ForgeConfig, save_config
 from .errors import ConfigurationError, SafetyError, ValidationError
 from .safety import require_approval, require_read, require_within
+from .sdk import sdk_rows
 from .util import atomic_write_text, json_dump, sha256_file, utc_now
 
 MAX_ZIP_MEMBERS = 500_000
@@ -399,7 +400,7 @@ def toolchain_status(config: ForgeConfig) -> dict[str, Any]:
         if not tool or not tool.executable: continue
         actual=sha256_file(tool.executable) if tool.executable.is_file() else ""
         configured.append({"tool":entry["id"],"config_key":entry["config_key"],"executable":str(tool.executable),"exists":tool.executable.is_file(),"pinned":bool(tool.sha256),"hash_match":bool(actual and tool.sha256 and actual.casefold()==tool.sha256.casefold()),"capabilities":entry["capabilities"],"automation":entry["automation"]})
-    return {"result":"PASS","tool_vault_root":str(config.tool_vault_root),"configured":configured,"catalog_count":len(catalog_entries()),"public_binary_bundling":"disabled"}
+    return {"result":"PASS","tool_vault_root":str(config.tool_vault_root),"configured":configured,"sdks":sdk_rows(config),"catalog_count":len(catalog_entries()),"public_binary_bundling":"disabled"}
 
 
 # The owner's receipt supplies bounded paths; approval pins current bytes without copying.
