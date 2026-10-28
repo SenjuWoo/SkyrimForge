@@ -101,6 +101,11 @@ class V41EngineeringTests(unittest.TestCase):
             self.assertNotIn("COMPATIBLE_RUNTIMES",cmake)
             self.assertIn("FORGE_OUTPUT_ROOT",cmake)
             self.assertNotIn("TARGET_PDB_FILE",cmake)
+            self.assertIn("COMMONLIBSSE_NG_ROOT",cmake)
+            self.assertIn("VCPKG_TARGET_TRIPLET \"x64-windows-static-md\"",cmake)
+            self.assertNotIn("find_package(CommonLibSSE",cmake)
+            self.assertNotIn("colorglass",(work/"project"/"vcpkg-configuration.json").read_text().casefold())
+            self.assertIn("namespace logger = SKSE::log;",(work/"project"/"src"/"PCH.h").read_text())
 
     def test_native_runtime_strategy_conflicts_are_rejected(self):
         with self.assertRaises(Exception):

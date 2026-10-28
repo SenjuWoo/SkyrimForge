@@ -10,4 +10,6 @@ The generated CMake project refuses to deploy unless `FORGE_OUTPUT_ROOT` points 
 
 `native-audit` checks the CommonLib target, lifecycle entry point, runtime strategy and staging rule. `native-binary-audit` checks x86-64 PE32+ DLL structure. `native-build` requires hash-pinned CMake and vcpkg executables and builds inside the Forge workspace.
 
+The scaffold consumes the maintained CommonLibSSE-NG checkout pinned in the SDK vault (`forge sdk-status`), not a vcpkg port; see [native source lock](NATIVE-SOURCE-LOCK.md) for the exact commit, locked dependencies and current build-proof status.
+
 A successful compilation and PE audit are not proof that a hook is correct, that offsets are current, or that the DLL coexists with another SKSE plugin. Those require a matching runtime, logs, crash testing and gameplay evidence.

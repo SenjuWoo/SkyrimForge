@@ -1,0 +1,63 @@
+{
+  "schema": "skyrim-forge-sdk-lock/1",
+  "reviewed": "2026-10-27",
+  "policy": "Forge fetches each SDK by full commit SHA into the private sdk-vault on explicit approval. Public Forge releases contain no SDK source or binaries, and an existing vault directory that is not the pinned commit is never overwritten. Move a pin only after reading the upstream diff and rebuilding a real plugin; a ref name is a label, the commit is the contract.",
+  "sdks": [
+    {
+      "id": "commonlibsse_ng",
+      "default": true,
+      "role": "CommonLibSSE-NG (alandtse ng lineage): C++23 SKSE plugin library for SE, AE and VR from one DLL. Read include/RE, include/REL and include/SKSE for exact API; consume with CMake add_subdirectory or xmake.",
+      "repository": "https://github.com/alandtse/CommonLibSSE-NG.git",
+      "ref": "v14.1.0",
+      "commit": "896f6d02e465576b6d044b36fd441835aa9c8bf6",
+      "submodules": true,
+      "probe": "include/RE/Skyrim.h",
+      "license": "GPL-3.0-or-later with Modding Exception and Linking Exception (COPYING.txt, EXCEPTIONS.md)"
+    },
+    {
+      "id": "vcpkg",
+      "default": true,
+      "role": "vcpkg package manager used by native-build and by the CommonLibSSE-NG dependency manifest. Needs --bootstrap once to produce vcpkg.exe, then pin it with tool-configure vcpkg.",
+      "repository": "https://github.com/microsoft/vcpkg.git",
+      "ref": "2026.10.16",
+      "commit": "9eec002df1cd109f8f104cd966a763daf9751489",
+      "submodules": false,
+      "probe": "bootstrap-vcpkg.bat",
+      "bootstrap": {"script": "bootstrap-vcpkg.bat", "args": ["-disableMetrics"], "artifact": "vcpkg.exe"},
+      "license": "MIT"
+    },
+    {
+      "id": "commonlibsse_libxse",
+      "default": false,
+      "role": "libxse/commonlibsse main: Xmake 3.0+ CommonLibSSE lineage. Reference for plugins that declare it; do not mix its idioms (REX::INFO logging) into a CommonLibSSE-NG plugin.",
+      "repository": "https://github.com/libxse/commonlibsse.git",
+      "ref": "main",
+      "commit": "4506c635518b2cbbf977b66143572bc8467f79d6",
+      "submodules": true,
+      "probe": "xmake.lua",
+      "license": "GPL-3.0-or-later with Modding Exception and Linking Exception (LICENSE, EXCEPTIONS)"
+    },
+    {
+      "id": "commonlibsse_powerof3",
+      "default": false,
+      "role": "powerof3/CommonLibSSE dev: SE/AE-only CMake lineage behind many established plugins (KID, SPID, PapyrusExtender family). Needed to rebuild or rework a plugin that pins it.",
+      "repository": "https://github.com/powerof3/CommonLibSSE.git",
+      "ref": "dev",
+      "commit": "11a8074acdfad7f8751bdf380a25f3656318a650",
+      "submodules": true,
+      "probe": "CMakeLists.txt",
+      "license": "GPL-3.0-or-later with Modding Exception and Linking Exception (COPYING.txt, EXCEPTIONS.md)"
+    },
+    {
+      "id": "commonlibsse_ng_template",
+      "default": false,
+      "role": "libxse commonlibsse-ng-template: minimal xmake SKSE plugin template that submodules the alandtse ng lineage; a real consumer layout to copy from.",
+      "repository": "https://github.com/libxse/commonlibsse-ng-template.git",
+      "ref": "main",
+      "commit": "117325dfe8ef4351b6a973e55692ea522dfbf026",
+      "submodules": false,
+      "probe": "xmake.lua",
+      "license": "GPL-3.0 (LICENSE, EXCEPTIONS)"
+    }
+  ]
+}

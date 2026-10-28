@@ -34,6 +34,8 @@ metadata:
 9. Build every supported target and inspect DLL imports/exports.
 10. Test failure behavior for missing dependencies and unsupported runtimes.
 
+Forge keeps pinned CommonLib sources in its SDK vault (`forge sdk-status`): the maintained alandtse CommonLibSSE-NG plus optional libxse and powerof3 lineages. They are read-only reference; pin and vendor the chosen fork per project.
+
 Use `scripts/build_commonlib.ps1` only for CMake projects; Xmake-based forks require their own `xmake.lua`. The supplied libxse main fork requires Xmake 3.0+ / C++23 and a populated commonlib-shared submodule. The powerof3 dev fork uses CMake with its own runtime options. Pin the fork, commit and dependency revisions; never globally upgrade a plugin's SDK or substitute one fork for another. Read the selected license and exception files; these supplied snapshots are GPL with exceptions, not the older MIT layout. CLibDT is an optional project GUI, not a verified headless build runner.
 
 ## Optimization standard

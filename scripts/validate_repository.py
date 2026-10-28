@@ -141,9 +141,9 @@ def validate_files(errors: list[str], warnings: list[str]) -> dict[str, Any]:
         "schemas/plugin-plan.schema.json", "schemas/ui-job.schema.json",
         "references/AUTOMATION-SOURCE-LOCK.json", "references/ERROR-REGISTRY.json", "references/FOMOD-SOURCE-LOCK.json",
         "references/FRAMEWORK-SOURCE-LOCK.json", "references/NATIVE-SOURCE-LOCK.json", "references/NEXUS-POLICY-LOCK.json",
-        "references/TOOL-CATALOG.json", "references/TOOLCHAIN-SOURCE-LOCK.json",
+        "references/TOOL-CATALOG.json", "references/TOOLCHAIN-SOURCE-LOCK.json", "references/SDK-LOCK.json",
         "resources/xedit/SkyrimForgeCheckErrors.pas", "resources/xedit/SkyrimForgeReportRecords.pas",
-        "skyrim_forge/capabilities.py", "skyrim_forge/framework_builder.py", "skyrim_forge/native.py", "skyrim_forge/nexus.py",
+        "skyrim_forge/capabilities.py", "skyrim_forge/framework_builder.py", "skyrim_forge/native.py", "skyrim_forge/nexus.py", "skyrim_forge/sdk.py",
         "skyrim_forge/papyrus.py", "skyrim_forge/selftest.py", "skyrim_forge/toolchain.py", "skyrim_forge/tool_adapters.py",
         "writer/published/win-x64/SkyrimForge.Native.exe", "writer/published/linux-x64/SkyrimForge.Native",
         "skyrim_forge/bin/win-x64/SkyrimForge.Native.exe", "skyrim_forge/bin/linux-x64/SkyrimForge.Native",
@@ -161,7 +161,7 @@ def validate_files(errors: list[str], warnings: list[str]) -> dict[str, Any]:
     for name in ("SkyrimForgeCheckErrors.pas", "SkyrimForgeReportRecords.pas"):
         if (ROOT / "resources" / "xedit" / name).read_bytes() != (ROOT / "skyrim_forge" / "resources" / "xedit" / name).read_bytes():
             errors.append(f"xEdit resource copies differ: {name}")
-    reference_names = ("AUTOMATION-SOURCE-LOCK.json", "ERROR-REGISTRY.json", "FOMOD-SOURCE-LOCK.json", "FRAMEWORK-SOURCE-LOCK.json", "NATIVE-SOURCE-LOCK.json", "NEXUS-POLICY-LOCK.json", "TOOL-CATALOG.json", "TOOLCHAIN-SOURCE-LOCK.json", "PLUGIN-INVARIANTS.md")
+    reference_names = ("AUTOMATION-SOURCE-LOCK.json", "ERROR-REGISTRY.json", "FOMOD-SOURCE-LOCK.json", "FRAMEWORK-SOURCE-LOCK.json", "NATIVE-SOURCE-LOCK.json", "NEXUS-POLICY-LOCK.json", "TOOL-CATALOG.json", "TOOLCHAIN-SOURCE-LOCK.json", "SDK-LOCK.json", "PLUGIN-INVARIANTS.md")
     for name in reference_names:
         if (ROOT / "references" / name).read_bytes() != (ROOT / "skyrim_forge" / "references" / name).read_bytes():
             errors.append(f"reference copies differ: {name}")
@@ -286,6 +286,7 @@ def validate_packaging(errors: list[str]) -> dict[str, Any]:
             "skyrim_forge/references/FRAMEWORK-SOURCE-LOCK.json", "skyrim_forge/references/NATIVE-SOURCE-LOCK.json",
             "skyrim_forge/references/NEXUS-POLICY-LOCK.json",
             "skyrim_forge/references/TOOL-CATALOG.json", "skyrim_forge/references/TOOLCHAIN-SOURCE-LOCK.json",
+            "skyrim_forge/references/SDK-LOCK.json", "skyrim_forge/sdk.py",
         }
     with tempfile.TemporaryDirectory() as a, tempfile.TemporaryDirectory() as b:
         sa=Path(a)/forge_build_backend.build_sdist(a); sb=Path(b)/forge_build_backend.build_sdist(b)

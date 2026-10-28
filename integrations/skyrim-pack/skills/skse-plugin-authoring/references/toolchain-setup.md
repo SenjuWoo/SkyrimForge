@@ -34,7 +34,7 @@ resolve or the idioms you copy from a template won't compile. Four lineages coex
 
 | Lineage | Repo | vcpkg name | CMake package | VR? | State |
 |---|---|---|---|---|---|
-| **alandtse NG** (the one to use) | `alandtse/CommonLibVR` branch `ng` | `commonlibsse-ng` @ 4.x | `CommonLibSSE` → `CommonLibSSE::CommonLibSSE` | SE+AE+VR, **single DLL** | Live |
+| **alandtse NG** (the one to use) | `alandtse/CommonLibSSE-NG` branch `ng` (the old `CommonLibVR` URL redirects) | `commonlibsse-ng` (name in its `vcpkg.json`; tags v14.x, v14.1.0 on 2026-10-27) | `CommonLibSSE` → `CommonLibSSE::CommonLibSSE` | SE+AE+VR, **single DLL** | Live |
 | CharmedBaryon (frozen origin) | `CharmedBaryon/CommonLibSSE-NG` | `commonlibsse-ng` @ 3.7.0 | `CommonLibSSE` | SE+AE+VR | Frozen since 2023-05 |
 | powerof3 dev | `powerof3/CommonLibSSE` branch `dev` | `commonlibsse` @ "1" | `CommonLibSSE` | **SE/AE only** | Active, different lineage |
 | libxse | `libxse/commonlibsse` | (xmake-only) | — | unverified | Early fork of po3 |
@@ -87,9 +87,13 @@ Consuming through any registry you see in the wild yields a **3.x build**, not t
 **The maintained acquisition is a git submodule:**
 
 ```powershell
-git submodule add -b ng https://github.com/alandtse/CommonLibVR.git lib/commonlibsse-ng
+git submodule add -b ng https://github.com/alandtse/CommonLibSSE-NG.git lib/commonlibsse-ng
 git submodule update --init --recursive
 ```
+
+**Forge scaffold:** `forge native-scaffold` now generates a CMake project that consumes this checkout through `-DCOMMONLIBSSE_NG_ROOT=<sdk-vault>/commonlibsse_ng` and `add_subdirectory` (not a vcpkg port), and `forge native-build` refuses unless the vault copy is the clean pinned commit. A scaffolded probe compiled and linked against the pinned v14.1.0 checkout on MSVC 19.51 (built by hand with the same arguments; `native-build` itself and in-game loading are untested); the xmake route below remains the battle-tested one.
+
+**Reference copy on a Forge machine:** `forge sdk-status` shows a hash-pinned checkout at `<home>\.skyrim-forge\sdk-vault\commonlibsse_ng` (v14.1.0, commit `896f6d0`; lock `references/SDK-LOCK.json`), fetched by `forge sdk-install --approve`. Read `include/RE`, `include/REL`, `include/SKSE` and the upstream `AGENTS.md`/`CLAUDE.md` there for exact API. It is read-only reference: vendor your own pinned submodule per project, and never edit the vault copy. `forge sdk-install --all` adds the libxse and powerof3 lineages for reworking plugins that pin them.
 
 That single command is the difference between building the live library and silently pinning a frozen 2023
 fork. When you audit an unfamiliar plugin's build, check *how* it acquires CommonLib before trusting that

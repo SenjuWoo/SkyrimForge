@@ -1,3 +1,15 @@
+# SDK vault (2026-10-27)
+
+- Fetch SDK sources by full commit SHA on the user's machine instead of bundling them: Forge's no-public-third-party-payload policy stands and the GPL-with-exceptions obligations stay with the plugin author.
+- Never overwrite an existing vault directory that is not the clean pinned commit; report `mismatch`/`modified` and let the user decide.
+- Installation is CLI-only. The MCP surface reports SDK state through `forge_toolchain_status` but cannot download, so a model cannot self-approve a fetch.
+- Place the vault beside the tool vault rather than adding a config key (marked as a shortcut in code).
+- Do not flip `allow_external_processes`; running builds stays the user's explicit choice.
+- Consume CommonLibSSE-NG through `add_subdirectory` of the vault checkout, not a vcpkg port: the maintained lineage publishes none, and the build refuses unless that checkout is the clean pinned commit. The native and SDK locks must name the same commit (tested).
+- Legacy colorglass projects warn in `native-audit` instead of failing, so old plugins stay auditable for rework.
+- Do not bypass `allow_external_processes` with a throwaway config to run the proof build; the permission classifier blocked that attempt and the switch stays the user's.
+- Ship as 6.4.0 (minor: new commands, changed scaffold behaviour) through the protected-main pull request flow; do not deploy it to the live installation without an explicit update.
+
 # 6.3.1 canonical-skill correction (2026-10-27)
 
 The bundle cross-product gate found the installed pack skill still advertised 6.2 while the unused legacy copy said 6.3. Remove the unused duplicate, point version validation/tests at the installed source, and add a mutation fixture. Correct standalone/shared-runtime instructions. Previous 6.3.0 release stays unchanged; new 6.3.1 source/native/CI/release proof pending. Live installation remains last-good 6.2.1 until the forward patch is verified. Build: python scripts/validate_repository.py --scope full --write-reports; logs: Starter Bundle artifacts/final-assurance.

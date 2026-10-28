@@ -1,3 +1,11 @@
+# SDK vault (2026-10-27)
+
+1. [complete] Audit Forge, host tools and upstream CommonLib lineages.
+2. [complete] Import/configure local tools; pin host build tools.
+3. [complete] Implement and test the pinned SDK vault; fetch CommonLibSSE-NG.
+4. [complete] Fetch vcpkg (+ bootstrap) and reference lineages; pin vcpkg.
+5. [complete] Migrate native scaffold to the maintained library; direct compile proof passed; native-build end to end still needs allow_external_processes.
+
 # 6.3.1 extracted-provider correction (2026-10-27)
 
 Independent read-only review reproduced a missing runtime dependency: scripts/Provider-Skills.ps1 was omitted by the product profile. Include that exact helper; the real extracted-product gate now installs/checks all 48 skills into isolated Claude homes and reruns the dedicated Forge wrapper without retiring other skills. 6.3.1 remains unpublished until this gate and exact-SHA CI pass.

@@ -1,22 +1,47 @@
 {
-  "schema_version": "1.0.0",
-  "reviewed": "2026-07-24",
-  "policy": "Pinned upstream sources define generated native project contracts. Update only after source review and regression testing.",
+  "schema_version": "1.1.0",
+  "reviewed": "2026-10-27",
+  "policy": "Pinned upstream sources define generated native project contracts. The CommonLibSSE-NG commit here must equal the commonlibsse_ng pin in SDK-LOCK.json. Update only after source review and a real build of a scaffolded plugin.",
   "commonlibsse_ng": {
-    "repository": "CharmedBaryon/CommonLibSSE-NG",
-    "vcpkg_package": "commonlibsse-ng",
-    "registry": "https://gitlab.com/colorglass/vcpkg-colorglass",
-    "registry_baseline": "6fb127f7d425ae3cf3fab0f79005d907c885c0d8",
-    "default_registry": "https://github.com/microsoft/vcpkg.git",
-    "default_registry_baseline": "cc288af760054fa489574bd8e22d05aa8fa01e5c",
+    "repository": "alandtse/CommonLibSSE-NG",
+    "branch": "ng",
+    "tag": "v14.1.0",
+    "commit": "896f6d02e465576b6d044b36fd441835aa9c8bf6",
+    "sdk_id": "commonlibsse_ng",
+    "consumption": "add_subdirectory of the pinned SDK vault checkout via COMMONLIBSSE_NG_ROOT; the add_commonlibsse_plugin helper is included explicitly because a source build does not define it",
+    "cmake_options": {
+      "BUILD_TESTS": "OFF"
+    },
+    "vcpkg_default_registry": "https://github.com/microsoft/vcpkg.git",
+    "vcpkg_baseline": "00c5775211f45cd08b37fce0484b4cb940e422ab",
+    "vcpkg_triplet": "x64-windows-static-md",
+    "vcpkg_dependencies": [
+      {"name": "directxmath", "version>=": "2025-04-03"},
+      {"name": "directxtk", "version>=": "2025-10-27"},
+      {"name": "fmt", "version>=": "12.1.0"},
+      {"name": "nlohmann-json", "version>=": "3.12.0"},
+      {"name": "rapidcsv", "version>=": "8.90"},
+      {"name": "simpleini", "version>=": "4.25"},
+      {"name": "spdlog", "version>=": "1.16.0"},
+      {"name": "toml11", "version>=": "4.4.0"},
+      {"name": "xbyak", "version>=": "7.28"}
+    ],
     "locked_claims": [
       "add_commonlibsse_plugin creates the shared library and injects SKSE plugin declarations.",
       "Address Library/signature scanning cannot be combined with explicit compatible runtimes.",
       "Explicit runtime lists support at most 16 versions.",
       "STRUCT_DEPENDENT changes the plugin declaration and must be opted into only when evidence requires it.",
       "SKSEPluginLoad must initialize SKSE before accessing interfaces.",
-      "Data-dependent registration is delayed until kDataLoaded."
-    ]
+      "Data-dependent registration is delayed until kDataLoaded.",
+      "Upstream builds every dependency with the x64-windows-static-md triplet (static libraries, dynamic CRT) for both host and target; the default x64-windows triplet would make a plugin depend on loose DLLs.",
+      "Source builds need spdlog, rapidcsv and directxtk from vcpkg and fetch MinHook v1.3.4 (hde64) at configure time while SKSE_SUPPORT_PATCH_SAFETY is on.",
+      "The dependency list above equals the upstream vcpkg.json at the pinned commit, minus the host-only vcpkg-cmake-config and the Catch2 test feature."
+    ],
+    "superseded_lineage": {
+      "repository": "CharmedBaryon/CommonLibSSE-NG",
+      "vcpkg_registry": "https://gitlab.com/colorglass/vcpkg-colorglass",
+      "reason": "Unmaintained since 2024-09; upstream documents the vcpkg and Conan routes as not maintained. Forge 6.3.x scaffolds resolved this lineage; audit now warns when a project still does."
+    }
   },
   "evidence_limits": [
     "A successful build is not evidence of SKSE loadability.",

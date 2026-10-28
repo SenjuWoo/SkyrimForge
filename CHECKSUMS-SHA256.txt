@@ -1,2 +1,2 @@
-40766482dbfb8b8fbfe3e17a09e6feeaade0c16d3777dc6fe316aa29afacb604  writer/published/linux-x64/SkyrimForge.Native
-42b000a3c44a11b65f444e807ec64f012510ff609f2f164c7d745d52399052c2  writer/published/win-x64/SkyrimForge.Native.exe
+f4eba63b7df6848cef44fc95e05d652cd77fe7fa5ed58d9ec89e47efbc27f936  writer/published/linux-x64/SkyrimForge.Native
+0e8848bc915b90a97c1e29732a4d8ffc06dc7a1c2d2a6754a6cdeced2e62e154  writer/published/win-x64/SkyrimForge.Native.exe
