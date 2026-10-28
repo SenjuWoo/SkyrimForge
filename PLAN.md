@@ -1,3 +1,10 @@
+# SDK staging safety (2026-10-28)
+
+1. [complete] Reproduce deletion of preexisting recovery data with a local-Git fixture.
+2. [complete] Use unique staging; test retries, failed downloads and interleaved installs.
+3. [complete] Rebuild helpers and pass full gates (247 tests; native, Go, packaging, MCP and dual-shell parsing).
+4. [pending] Exact-SHA CI/security, release-byte proof, backed-up live update and companion pins.
+
 # SDK vault (2026-10-27)
 
 1. [complete] Audit Forge, host tools and upstream CommonLib lineages.

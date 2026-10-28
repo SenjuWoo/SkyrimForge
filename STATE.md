@@ -1,3 +1,13 @@
+# Forge 6.4.1 SDK staging safety audit (2026-10-28)
+
+- Goal: preserve existing SDK partial/recovery directories and isolate concurrent fetches.
+- Parent: clean main 4b95e8d, public 6.4.0; active branch codex/sdk-staging-safety.
+- Scope: SDK fetch staging, regression tests, forward version/changelog, full source gate and release proof.
+- Baseline: 35 SDK/native/standalone tests PASS; exact-main 15 checks success.
+- Done: deletion regression failed before fix; 17 focused tests and full gate (247 tests, native/Go/reproducibility/packaging/MCP) PASS. Both Windows PowerShell5.1 and7 parser gates PASS.
+- Next: exact-SHA PR/main CI and security, immutable6.4.1 release-byte proof, then approved backed-up live update.
+- No live config, SDK pins, game Data or provider settings will be changed by source tests.
+
 # Skyrim Forge 6.4.0 SDK vault and scaffold migration (2026-10-27)
 
 - Goal: give AI everything to make/edit/rework mods through Forge. Done in source: `sdk-status` / approval-gated `sdk-install` (`skyrim_forge/sdk.py`, `references/SDK-LOCK.json`), SDK state in `toolchain-status`, docs and skill pointers, 7 new tests (`tests/test_sdk_vault.py`). Released as 6.4.0 from a pull request with exact-SHA CI (published assets and their digests are on the GitHub release); the live installation under `%LOCALAPPDATA%\Skyrim-Tools\Skyrim-Forge` was not changed by this work and still runs the older payload until `Update Forge.bat` is run.

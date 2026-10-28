@@ -1,3 +1,8 @@
+# SDK staging safety (2026-10-28)
+
+- A fetch owns only its uniquely created temporary directory. Existing partial/recovery data is never disposable merely because its name matches an old transaction convention. A concurrently created destination is retained; the losing fetch reports incomplete instead of overwriting it.
+- Forward patch 6.4.1 preserves the SDK pins and user approval/external-process policy from 6.4.0. No SDK source is bundled.
+
 # SDK vault (2026-10-27)
 
 - Fetch SDK sources by full commit SHA on the user's machine instead of bundling them: Forge's no-public-third-party-payload policy stands and the GPL-with-exceptions obligations stay with the plugin author.

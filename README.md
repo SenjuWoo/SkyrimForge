@@ -1,7 +1,7 @@
-# Skyrim Forge 6.4.0
+# Skyrim Forge 6.4.1
 
 > Skyrim Forge is the authoritative repository for the Skyrim SE/AE AI modding
-> stack: the 52-tool Forge MCP/CLI/GUI workbench, the **48-skill Skyrim SE/AE
+> stack: the typed Forge MCP/CLI/GUI workbench, the **48-skill Skyrim SE/AE
 > pack** (`integrations/skyrim-pack/`), the `houseCARL 2.1.1` load-order shim
 > (`Setup-HouseCarl.ps1`), and Skyrim tool discovery (`discover_tools.ps1`).
 > The [Ultimate AI Starter Bundle](https://github.com/SenjuWoo/Ultimate-AI-Starter-Bundle)
@@ -14,7 +14,7 @@ Skyrim Forge is a local, safety-first engineering workbench and MCP server for S
 Forge 5.0 speaks the current **MCP `2026-07-28`** revision, which replaced the
 `initialize` handshake with per-request metadata, while still serving the
 handshake era every installed AI client uses today. Both eras run from the same
-process and expose the same 52 tools, so existing Codex, Claude, and Grok
+process and expose the same tools, so existing Codex, Claude, and Grok
 registrations need no change. See [docs/MCP.md](docs/MCP.md).
 
 Forge includes the **Automation Fabric** plus a mandatory rights-and-publication gate for shareable releases. An AI does not click around SSEEdit, Creation Kit, Wrye Bash, LOOT, or Mod Organizer 2. It submits a typed JSON job. Forge validates the job, snapshots inputs, runs only the configured adapter, captures logs and outputs, reopens what it can verify, and writes an audit receipt.
