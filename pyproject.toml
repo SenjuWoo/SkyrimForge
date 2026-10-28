@@ -5,7 +5,7 @@ backend-path = ["."]
 
 [project]
 name = "skyrim-forge"
-version = "6.3.2"
+version = "6.4.0"
 description = "Safety-first Skyrim mod engineering, automation fabric, and Nexus publication gate"
 readme = "README.md"
 requires-python = ">=3.11"

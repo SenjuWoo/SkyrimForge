@@ -8,7 +8,7 @@
 - Consume CommonLibSSE-NG through `add_subdirectory` of the vault checkout, not a vcpkg port: the maintained lineage publishes none, and the build refuses unless that checkout is the clean pinned commit. The native and SDK locks must name the same commit (tested).
 - Legacy colorglass projects warn in `native-audit` instead of failing, so old plugins stay auditable for rework.
 - Do not bypass `allow_external_processes` with a throwaway config to run the proof build; the permission classifier blocked that attempt and the switch stays the user's.
-- Keep the released version (6.3.2 after rebasing onto upstream) and record the change as Unreleased: publication was not requested.
+- Ship as 6.4.0 (minor: new commands, changed scaffold behaviour) through the protected-main pull request flow; do not deploy it to the live installation without an explicit update.
 
 # 6.3.1 canonical-skill correction (2026-10-27)
 

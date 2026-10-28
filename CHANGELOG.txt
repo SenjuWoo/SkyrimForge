@@ -1,3 +1,8 @@
+## 6.4.0 (2026-10-27)
+
+- Add a pinned SDK vault: `sdk-status` and approval-gated `sdk-install` fetch CommonLibSSE-NG (alandtse ng, v14.1.0), vcpkg and optional libxse/powerof3 reference lineages by full commit SHA into `sdk-vault`, never overwrite a directory that is not the clean pin, and surface SDK state in `toolchain-status`. Public releases still carry no SDK source.
+- Move `native-scaffold`, `native-audit` and `native-build` from the frozen colorglass/CharmedBaryon vcpkg lineage to the maintained alandtse CommonLibSSE-NG v14.1.0 pinned in the SDK vault: `add_subdirectory` consumption, locked vcpkg dependencies, the missing `logger` alias, build refusal unless the vault checkout is the clean pin, imported Visual C++ environment and a 3600 s build floor. `native-audit` warns on legacy colorglass projects. A scaffolded probe plugin compiled and linked (525/525, no errors) against the pinned checkout with the same arguments run by hand; `native-build` end to end and in-game loading are unproven.
+
 ## 6.3.2 (2026-10-27)
 
 - The injected Skyrim pack text no longer carries the "Ownership of Skyrim tooling" prose or a maintainer path; the actionable rules are unchanged.
