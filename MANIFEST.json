@@ -87,14 +87,14 @@
     {
       "executable": false,
       "path": "CHANGELOG.md",
-      "sha256": "9df0aa7593ed17a1a4d1bd1b5118bd867ae561f098520659fea718867feca981",
-      "size": 38585
+      "sha256": "416d0c23564313a619287d888744b2adfb79565fda3a3cd69793b4520d7f8ce8",
+      "size": 38658
     },
     {
       "executable": false,
       "path": "CHANGELOG.txt",
-      "sha256": "a6da0cce37eb80bab5f67db4331119b8277e5b2594d73d967d4f3efb9de81a4c",
-      "size": 15824
+      "sha256": "3202ca51be7bf0aac872015eccee3b0507e5e41ac9233611704287129d0cf28a",
+      "size": 15897
     },
     {
       "executable": false,
@@ -3531,8 +3531,8 @@
     {
       "executable": false,
       "path": "tests/test_windows_provider_bridge.py",
-      "sha256": "4c7d8cc754d15aa30053354f1e3d8135b81616b16cc452efba8bac31752ac320",
-      "size": 17252
+      "sha256": "caea6c8adc7ef42a07ced98724562eedf2cf1f8f2dc375d0f6470a24e6549811",
+      "size": 17370
     },
     {
       "executable": true,

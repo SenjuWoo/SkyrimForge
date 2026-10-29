@@ -1,7 +1,7 @@
 ## 6.5.1 (2026-10-29)
 
 - houseCARL setup no longer guesses drive letters and personal folder layouts: it scanned 9 drives x 13 folder tails recursively on every run and shipped one machine's layout in public code. External installs are found through `HOUSECARL_MCP`, `HOUSECARL_ROOT` or `UABS_TOOL_ROOTS`, plus the standard install folder.
-- Tests pin the cross-repository contracts from Forge's side: the doctor fields the bundle installer reads (`result`, `read_only_ready`) and `UABS_TOOL_ROOTS` discovery.
+- Tests pin the cross-repository contracts from Forge's side: the doctor fields the bundle installer reads (`result`, `read_only_ready`) and `UABS_TOOL_ROOTS` discovery (compared by file identity: CI runners report TEMP as an 8.3 short path).
 
 ## 6.5.0 (2026-10-29)
 

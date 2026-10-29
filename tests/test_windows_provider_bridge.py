@@ -178,7 +178,8 @@ class WindowsProviderBridgeTests(unittest.TestCase):
             base.update({"LOCALAPPDATA": str(temp / "local"), "USERPROFILE": str(temp / "profile")})
             hinted = self.run_script(probe, "-Script", str(script), env=dict(base, UABS_TOOL_ROOTS=str(temp / "missing") + ";" + str(temp / "tools")))
             self.assertEqual(hinted.returncode, 0, hinted.stdout + hinted.stderr)
-            self.assertEqual(Path(hinted.stdout.strip()), exe)
+            # Runners report TEMP as an 8.3 short path; compare the file, not the spelling.
+            self.assertTrue(os.path.samefile(hinted.stdout.strip(), exe), hinted.stdout)
             plain = self.run_script(probe, "-Script", str(script), env=base)
             self.assertEqual(plain.stdout.strip(), "none", "houseCARL was found without any hint")
 
