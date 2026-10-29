@@ -1,6 +1,7 @@
 # Forge 6.5.1 houseCARL discovery and contract tests (2026-10-29)
 
 - Done: removed the drive-letter scan; Forge-side tests for the doctor fields and UABS_TOOL_ROOTS. Released by the self-publishing workflow from the pushed SHA.
+- After 6.5.1: `release.yml` decides inside the job (no job-level `if`), so a CI run cancelled by a newer push ends as a no-op release run instead of a skipped one that GitHub files under main's newest commit and that reads as a failed exact-SHA verdict; `tests/test_ci_validation.py` pins it. CI-only, no release.
 
 # Forge 6.5.0 independent releases (2026-10-29)
 

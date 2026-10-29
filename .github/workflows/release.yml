@@ -25,7 +25,9 @@ concurrency:
 jobs:
   release:
     name: Publish release
-    if: github.event.workflow_run.conclusion == 'success' && github.event.workflow_run.event == 'push'
+    # No job-level `if`: GitHub files a workflow_run run under main's newest commit,
+    # so a skipped run (CI cancelled by a newer push) made that commit's exact-SHA
+    # verdict read "fail". The decide step turns a non-green trigger into a no-op.
     runs-on: ubuntu-latest
     timeout-minutes: 45
     env:
@@ -49,8 +51,11 @@ jobs:
 
       - name: Decide whether this SHA is a release
         id: decide
+        env:
+          CI_GREEN: ${{ github.event.workflow_run.conclusion == 'success' && github.event.workflow_run.event == 'push' }}
         run: |
           set -euo pipefail
+          if [ "$CI_GREEN" != "true" ]; then echo "CI on $SHA did not pass on a push: nothing to publish"; echo "publish=false" >> "$GITHUB_OUTPUT"; exit 0; fi
           test "$(git rev-parse HEAD)" = "$SHA"
           test "$(go env GOVERSION)" = "go1.23.2"
           version=$(python -c "from skyrim_forge.version import VERSION; print(VERSION)")

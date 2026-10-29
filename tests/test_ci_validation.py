@@ -149,6 +149,9 @@ class WorkflowPinningTests(unittest.TestCase):
             self.assertIn(gate, workflow)
         for forbidden in ("gh release delete", "git push --force", "git tag -f"):
             self.assertNotIn(forbidden, workflow)
+        # A skipped run is filed under main's newest commit and fails its exact-SHA verdict.
+        self.assertNotIn("\n    if: github.event.workflow_run", workflow)
+        self.assertIn('if [ "$CI_GREEN" != "true" ]', workflow)
 
 
 if __name__ == "__main__":
