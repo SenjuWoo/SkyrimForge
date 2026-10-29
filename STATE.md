@@ -1,3 +1,10 @@
+# Forge 6.6.0 MCM Helper skill, data frameworks, houseCARL fallback (2026-10-29)
+
+- Goal: the AI should know MCM Helper and the other installed SKSE data frameworks without checking online, and Forge must not depend on houseCARL alone.
+- Done: `mcm-helper-authoring` (grammar from schema v1.6.3/code 15 + parser source + wiki; `validate_mcm.py` tuned on 50 shipped menus; 14 tests), `skyrim-data-frameworks` (Light Placer, AOS, EAE, DSD, SRD, SKSE HTTP from wiki/Nexus/docs/shipped examples; authority map for the rest), `load-order` / `record-conflicts` / `seq-build` with MCP tools and 10 tests, `docs/HOUSECARL-PARITY.md`, router/tooling-stack/frameworks-index routing, 50-skill pack.
+- Verified: IronSword winner and providers equal houseCARL's tree on a 2,957-plugin MO2 order; `seq-build` 229/257 byte-identical and 251/257 set-identical against shipped SEQ files.
+- Not done / limits: no record schema, field-level reads, predicates, reverse-reference index, forward/override writer, compaction/merge or NIF tools (roadmap in the parity doc); other installed frameworks (Prisma UI, SKSE Menu Framework, DAV, OIF/CIF, DEF, MTD, Inventory Injector) only have an authority map; the MO2 instance must be added to `extra_read_roots` before the CLI will read it (not changed here). Nothing loaded in Skyrim.
+
 # Resume verification: 6.4.0 work through 6.5.1 (2026-10-29)
 
 - Verified after a pause, on disk and remote: main 1b7a978 equals origin/main, 15/15 checks success on that SHA, no open Dependabot, code-scanning or secret-scanning alerts; v6.5.1 is published (8 assets, tag 012765b); the live install under `%LOCALAPPDATA%\Skyrim-Tools\Skyrim-Forge` is 6.5.1 with doctor PASS, 0 warnings and all five SDK vault entries `current`.

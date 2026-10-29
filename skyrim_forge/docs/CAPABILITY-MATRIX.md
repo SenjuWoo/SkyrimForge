@@ -8,6 +8,7 @@ Forge distinguishes evidence levels so an AI cannot turn a configured adapter in
 | BSArch BSA/BA2 | Direct | Implemented | Official BSArch contract for inspect/unpack/SSE pack; configured executable required |
 | Champollion/Synthesis CLI/DeadMesh CLI | Adapter | Implemented | Exact executable identity and hash pin required; GUI substitutes rejected |
 | Plugin header/query | Direct | Implemented | Forge parser evidence, not xEdit/runtime |
+| Load order, record winners, SEQ | Direct | Implemented | Plugin bytes without a field schema; houseCARL remains primary, parity map in `HOUSECARL-PARITY.md` |
 | Typed KYWD/GLOB/FLST/OTFT output | Direct | Implemented | No arbitrary record writing |
 | SPID/KID/BOS/SkyPatcher/FLM lint/build | Profiled | Implemented | Modeled source-locked subsets; unknown syntax is unverified, not rewritten |
 | Papyrus analysis | Profiled | Implemented | Performance findings are review heuristics |

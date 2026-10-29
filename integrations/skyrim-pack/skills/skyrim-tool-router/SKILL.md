@@ -32,7 +32,9 @@ Optional process overlays (not Skyrim-specific): `using-superpowers`, `systemati
 | Repair or modernize an existing mod | `skyrim-mod-reworking` | same specialists as evidence demands |
 | Live load order, conflict tree, MO2 patch ESP | `housecarl` | `mutagen-reference`, `tool-output-awareness`, bulk/facegen helpers |
 | ESP/ESL/ESM records without live LO | `skyrim-plugin-authoring` | `skyrim-esp-vmad-renaming` for string renames only; Forge when typed jobs fit |
-| Papyrus, quests, MCM, aliases, script events | `skyrim-papyrus-modding` | `papyrus-reference`; `papyrus-optimization` |
+| Papyrus, quests, aliases, script events | `skyrim-papyrus-modding` | `papyrus-reference`; `papyrus-optimization` |
+| In-game settings menu (MCM Helper `config.json`, keybinds, settings.ini, translations) | `mcm-helper-authoring` | `skyrim-papyrus-modding` for the quest script |
+| Light Placer, Anim Object Swapper, Enchantment Art Extender, DSD, SRD, SKSE HTTP, or locating another framework's grammar | `skyrim-data-frameworks` | `skyrim-frameworks-index` |
 | SPID exact syntax | `spid-authoring` | prefer bundled grammar reference; never invent tokens |
 | KID exact syntax | `kid-authoring` | type-label grammar only |
 | SkyPatcher exact ops | `skypatcher-authoring` or `skyrim-skypatcher` | category placement rules |
@@ -74,7 +76,7 @@ Optional process overlays (not Skyrim-specific): `using-superpowers`, `systemati
 
 - Load `skyrim-versioned-workspace` before the first write.
 - Load `skyrim-modding-facts` whenever a framework token, record field, FormID, API, hook, path, or version is uncertain.
-- Prefer live tools in this order when multiple apply: **evidence from installed LO (houseCARL) → typed Forge jobs → manual specialist skills**.
+- Prefer live tools in this order when multiple apply: **evidence from installed LO (houseCARL) → typed Forge jobs → manual specialist skills**. houseCARL is the primary builder; Forge carries its own load-order, winner and SEQ tools (`forge load-order`, `record-conflicts`, `seq-build`; map in `docs/HOUSECARL-PARITY.md`), so a houseCARL outage is a degraded mode, never a stop. Say which tool produced the evidence.
 - Try `skyrim-forge` for supported inspection; the bundle installs Forge, so it is normally present.
 - Never load every Skyrim skill into one session.
 - If a tool is missing, first decide **which kind of missing**, because the two

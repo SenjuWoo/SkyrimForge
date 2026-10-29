@@ -32,7 +32,7 @@ def _decode_zstring(data: bytes) -> str:
     return data.split(b"\x00", 1)[0].decode("utf-8", errors="replace")
 
 
-def inspect_plugin_header(path: Path, max_header_bytes: int = 64 * 1024 * 1024) -> PluginHeader:
+def inspect_plugin_header(path: Path, max_header_bytes: int = 64 * 1024 * 1024, *, with_hash: bool = True) -> PluginHeader:
     stat = path.stat()
     with path.open("rb") as handle:
         header = handle.read(24)
@@ -50,7 +50,7 @@ def inspect_plugin_header(path: Path, max_header_bytes: int = 64 * 1024 * 1024) 
     result = PluginHeader(
         path=str(path),
         size_bytes=stat.st_size,
-        sha256=sha256_file(path),
+        sha256=sha256_file(path) if with_hash else "",  # hashing a whole load order of masters is the slow part
         record_flags=flags,
         is_master_flag=bool(flags & 0x00000001),
         is_light_flag=bool(flags & 0x00000200),

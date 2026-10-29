@@ -12,7 +12,10 @@ from .environment import discover_tools, doctor
 from .frameworks import lint_paths, self_test as framework_self_test
 from .framework_builder import build as build_framework, validate_plan as validate_framework_plan
 from .fomod import build_fomod, self_test as fomod_self_test, simulate_plan, validate_fomod, validate_plan as validate_fomod_plan, write_scaffold
+from .conflicts import find_records, mo2_sources, resolve_load_order
+from .errors import ValidationError
 from .loadorder import parse_plugins_file
+from .seq import build_seq
 from .modtree import inspect_mod_directory
 from .native import audit_binary as audit_native_binary, audit_project as audit_native_project, build_project as build_native_project, scaffold as scaffold_native, validate_plan as validate_native_plan
 from .papyrus import analyze_sources, compile_scripts
@@ -81,6 +84,39 @@ class ForgeService:
         if target is None:
             return {"result": "INCOMPLETE", "message": "plugins_file is not configured"}
         return {"path": str(target), "plugins": plain(parse_plugins_file(require_read(target, self.config.allowed_read_roots)))}
+
+    def _load_order(self, mo2_instance: str | None, plugins_file: str | None, roots: list[str] | None) -> dict[str, Any]:
+        if mo2_instance:
+            source = mo2_sources(self._read(mo2_instance))
+            plugins, search = source["plugins_file"], source["roots"]
+            for top in source["top_roots"]:
+                self._read(str(top))
+            if plugins is None:
+                raise ValidationError(f"No plugins.txt or loadorder.txt in profile {source['profile_dir']}")
+        else:
+            if not plugins_file:
+                raise ValidationError("Give mo2_instance, or plugins_file with at least one root")
+            plugins, search = self._read(plugins_file), [self._read(root) for root in (roots or [])]
+            if not search:
+                raise ValidationError("plugins_file needs at least one root (a Data folder or mod folder)")
+        return resolve_load_order(plugins, search)
+
+    def load_order(self, mo2_instance: str | None = None, plugins_file: str | None = None, roots: list[str] | None = None) -> dict[str, Any]:
+        order = self._load_order(mo2_instance, plugins_file, roots)
+        rows = [{"position": i, "load_index": p.load_index, "plugin": p.name, "kind": "light" if p.is_light else "master" if p.is_master else "full",
+                 "masters": p.masters, "path": str(p.path)} for i, p in enumerate(order["plugins"])]
+        return {"result": "PASS", "full": order["full"], "light": order["light"], "missing": order["missing"], "plugins": rows,
+                "evidence": "Resolved from the profile's plugin list and the first file found along the search roots; official masters first, ESM-flagged files ahead of the rest."}
+
+    def record_conflicts(self, mo2_instance: str | None = None, plugins_file: str | None = None, roots: list[str] | None = None, editor_id: str = "",
+                         form_key: str = "", signature: str = "", exact: bool = True, only_plugins: list[str] | None = None, limit: int = 20, dump: bool = False) -> dict[str, Any]:
+        if not 1 <= limit <= 500:
+            raise ValidationError("limit must be from 1 to 500")
+        return find_records(self._load_order(mo2_instance, plugins_file, roots), editor_id=editor_id, form_key=form_key, signature=signature, exact=exact,
+                            only_plugins={name.casefold() for name in only_plugins} if only_plugins else None, limit=limit, dump=dump)
+
+    def seq_build(self, plugin: str, output_root: str, approved: bool) -> dict[str, Any]:
+        return build_seq(self._read(plugin), require_within(Path(output_root), self.config.workspace_root), approved=approved)
 
     def archive(self, path: str) -> dict[str, Any]:
         target = self._read(path)

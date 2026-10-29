@@ -13,7 +13,8 @@ Forge owns this specialist index. The general `ai-tooling-stack` skill belongs t
 
 | Need | Tool and boundary |
 |---|---|
-| Installed winner, conflict tree, MO2 VFS or live patch plan | houseCARL MCP; an offline reader cannot establish the live winner |
+| Installed winner, conflict tree, MO2 VFS or live patch plan | houseCARL MCP first. If it is unavailable: `forge load-order` + `forge record-conflicts` (byte-level winners and changed subrecords from the same MO2 profile; no field schema, no VFS asset view) |
+| Start Game Enabled quest SEQ file | houseCARL `write_seq`, or `forge seq-build` (checked against 257 shipped SEQ files) |
 | Offline plugin headers/queries, bounded typed writes, framework lint, FOMOD, release gates | Forge CLI; exact capability comes from `forge capabilities` |
 | Papyrus compile/decompile, xEdit, BSA operations | Forge's configured hash-pinned adapters; inspect `tool-resolve` first |
 | Native SKSE project builds | Forge scaffold/build plus installed CMake/vcpkg/VS; project pins stay intact |
@@ -33,4 +34,4 @@ When Reverse THIS! is installed, Forge can configure its existing texconv and 7-
 
 Installed and enabled are different states. If the current host has the toolbox, discover the requested Skyrim capability with the project path, describe its live schema and call it. Otherwise use the installed Forge CLI while checking provider scope/trust and the real MCP handshake. Do not recommend reinstalling a binary merely because deferred tool search returned no matches.
 
-houseCARL provides live MCP evidence and has no general CLI replacement. Forge's public release never contains imported third-party tools, game/compiler files, saves, personal profiles or credentials. Game Data, mod-manager staging and saves are read-only unless an explicit scoped deployment was authorized.
+houseCARL is the primary builder for load-order work and Forge is its independent fallback: `docs/HOUSECARL-PARITY.md` lists every houseCARL tool against Forge's equivalent with its covered/partial/missing status and the roadmap. Use houseCARL first; when it is down, say so, use the Forge column, and name what that route cannot prove. Forge's public release never contains imported third-party tools, game/compiler files, saves, personal profiles or credentials. Game Data, mod-manager staging and saves are read-only unless an explicit scoped deployment was authorized.

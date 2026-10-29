@@ -1,3 +1,11 @@
+## 6.6.0 (2026-10-29)
+
+- New `mcm-helper-authoring` skill with a deterministic validator (`validate_mcm.py`): MCM Helper `config.json`, `keybinds.json`, `settings.ini` and translation grammar checked against the upstream schemas (v1.6.3, version code 15) and the parser source. Notable findings from the source: `config.json` is strict JSON (no comments, trailing commas or BOM), the menu name comes from the quest's origin plugin, and only toggles and hidden toggles drive groups. The validator was tuned against 50 shipped menus so it flags real traps and tolerates what working mods do.
+- New `skyrim-data-frameworks` skill: source-checked config grammar for Light Placer, Anim Object Swapper, Enchantment Art Extender, Dynamic String Distributor, Sound Record Distributor and SKSE HTTP, plus an authority map that says where the grammar of every other installed framework lives instead of guessing it.
+- Forge no longer depends on houseCARL alone for load-order evidence: `load-order` (MO2 profile or plugins.txt to an ordered, indexed plugin list), `record-conflicts` (every version of a record across the load order, the winner and the subrecords each override changed; checked against houseCARL on a 2,957-plugin order) and `seq-build` (Start Game Enabled SEQ files; 229 of 257 shipped files byte-identical, 251 identical as a set). MCP tools `forge_load_order`, `forge_record_conflicts`, `forge_seq_build`. Reads stay inside the configured read roots.
+- `docs/HOUSECARL-PARITY.md` maps all 31 houseCARL tools to Forge's equivalent with a covered/partial/missing status and a roadmap; the router and tooling-stack skills now say houseCARL first, Forge as the independent fallback.
+- `inspect_plugin_header` can skip the whole-file hash for bulk header reads. Skill pack: 50 skills.
+
 ## 6.5.1 (2026-10-29)
 
 - houseCARL setup no longer guesses drive letters and personal folder layouts: it scanned 9 drives x 13 folder tails recursively on every run and shipped one machine's layout in public code. External installs are found through `HOUSECARL_MCP`, `HOUSECARL_ROOT` or `UABS_TOOL_ROOTS`, plus the standard install folder.

@@ -135,7 +135,7 @@ def validate_files(errors: list[str], warnings: list[str]) -> dict[str, Any]:
         "docs/AUTOMATION-FABRIC.md", "docs/CAPABILITY-MATRIX.md", "docs/FOMOD-ENGINEERING.md",
         "docs/FRAMEWORK-ENGINEERING.md", "docs/NATIVE-PLUGIN-ENGINEERING.md", "docs/NATIVE-SOURCE-LOCK.md",
         "docs/NEXUS-PUBLICATION.md", "docs/PAPYRUS-ENGINEERING.md", "docs/PUBLICATION-COMPLIANCE.md",
-        "docs/TOOLCHAIN-BROKER.md",
+        "docs/TOOLCHAIN-BROKER.md", "docs/HOUSECARL-PARITY.md",
         "schemas/automation-job.schema.json", "schemas/external-worker-job.schema.json", "schemas/fomod-plan.schema.json",
         "schemas/framework-plan.schema.json", "schemas/native-plugin-plan.schema.json", "schemas/nexus-publication-plan.schema.json",
         "schemas/plugin-plan.schema.json", "schemas/ui-job.schema.json",
@@ -165,7 +165,7 @@ def validate_files(errors: list[str], warnings: list[str]) -> dict[str, Any]:
     for name in reference_names:
         if (ROOT / "references" / name).read_bytes() != (ROOT / "skyrim_forge" / "references" / name).read_bytes():
             errors.append(f"reference copies differ: {name}")
-    documentation_names = ("AUTOMATION-FABRIC.md", "CAPABILITY-MATRIX.md", "FOMOD-ENGINEERING.md", "FRAMEWORK-ENGINEERING.md", "NATIVE-PLUGIN-ENGINEERING.md", "NATIVE-SOURCE-LOCK.md", "NEXUS-PUBLICATION.md", "PAPYRUS-ENGINEERING.md", "PUBLICATION-COMPLIANCE.md", "TOOLCHAIN-BROKER.md")
+    documentation_names = ("AUTOMATION-FABRIC.md", "CAPABILITY-MATRIX.md", "FOMOD-ENGINEERING.md", "FRAMEWORK-ENGINEERING.md", "HOUSECARL-PARITY.md", "NATIVE-PLUGIN-ENGINEERING.md", "NATIVE-SOURCE-LOCK.md", "NEXUS-PUBLICATION.md", "PAPYRUS-ENGINEERING.md", "PUBLICATION-COMPLIANCE.md", "TOOLCHAIN-BROKER.md")
     for name in documentation_names:
         if (ROOT / "docs" / name).read_bytes() != (ROOT / "skyrim_forge" / "docs" / name).read_bytes():
             errors.append(f"packaged documentation differs: {name}")

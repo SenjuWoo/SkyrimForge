@@ -72,6 +72,9 @@ TOOL_SPECS: dict[str, dict[str, Any]] = {
     "forge_plugin_info": {"description": "Inspect TES4 header and masters. Header evidence only.", "inputSchema": _schema({"path": _string()}, ["path"])},
     "forge_record_query": {"description": "Query plugin records by signature, EditorID, or raw FormID.", "inputSchema": _schema({"path": _string(), "signature": _string(), "editor_id": _string(), "form_id": _string(), "limit": _integer()}, ["path"])},
     "forge_plugins": {"description": "Read plugins.txt.", "inputSchema": _schema({"path": _string()})},
+    "forge_load_order": {"description": "Resolve the ordered, indexed plugin list from an MO2 instance, or from a plugins.txt plus search roots. Reads plugin headers only.", "inputSchema": _schema({"mo2_instance": _string(), "plugins_file": _string(), "roots": _array()})},
+    "forge_record_conflicts": {"description": "Find records by EditorID or form key across the load order and show every version, the winner, and which subrecords each override changed. Independent of houseCARL; pass signature to keep it fast.", "inputSchema": _schema({"mo2_instance": _string(), "plugins_file": _string(), "roots": _array(), "editor_id": _string(), "form_key": _string(), "signature": _string(), "exact": _boolean(), "only_plugins": _array(), "limit": _integer(), "dump": _boolean()})},
+    "forge_seq_build": {"description": "Write Seq/<plugin>.seq for the Start Game Enabled quests a plugin defines, inside the Forge workspace.", "inputSchema": _schema({"plugin": _string(), "output_root": _string(), "approved": _boolean()}, ["plugin", "output_root", "approved"])},
     "forge_archive_info": {"description": "Inspect ZIP/7z/RAR contents safely.", "inputSchema": _schema({"path": _string()}, ["path"])},
     "forge_mod_tree": {"description": "Inspect a loose mod directory.", "inputSchema": _schema({"path": _string()}, ["path"])},
     "forge_capabilities": {"description": "Return the evidence-level capability registry or one capability.", "inputSchema": _schema({"identifier": _string()})},
@@ -133,6 +136,9 @@ def _call(service: ForgeService, name: str, args: dict[str, Any]) -> Any:
         case "forge_plugin_info": return service.plugin_info(args["path"])
         case "forge_record_query": return service.record_query(args["path"], args.get("signature", ""), args.get("editor_id", ""), args.get("form_id", ""), int(args.get("limit", 5000)))
         case "forge_plugins": return service.plugins(args.get("path") or None)
+        case "forge_load_order": return service.load_order(args.get("mo2_instance") or None, args.get("plugins_file") or None, args.get("roots") or None)
+        case "forge_record_conflicts": return service.record_conflicts(args.get("mo2_instance") or None, args.get("plugins_file") or None, args.get("roots") or None, args.get("editor_id", ""), args.get("form_key", ""), args.get("signature", ""), bool(args.get("exact", True)), args.get("only_plugins") or None, int(args.get("limit", 20)), bool(args.get("dump", False)))
+        case "forge_seq_build": return service.seq_build(args["plugin"], args["output_root"], approved)
         case "forge_archive_info": return service.archive(args["path"])
         case "forge_mod_tree": return service.mod_tree(args["path"])
         case "forge_capabilities": return service.capabilities(args.get("identifier") or None)

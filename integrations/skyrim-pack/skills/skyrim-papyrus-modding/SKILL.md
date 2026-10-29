@@ -30,7 +30,7 @@ metadata:
 - Treat properties and VMAD attachment as part of the plugin contract.
 - Use `Game.GetFormFromFile` or a verified soft-dependency pattern when a dependency is optional.
 - Preserve property names and persisted state across updates unless a migration is provided.
-- Use MCM Helper as the default for new configuration menus when the installed stack supports it; verify its exact schema from installed examples. Maintain SKI_ConfigBase as a legacy fallback and do not auto-migrate an existing menu without a save/configuration migration plan.
+- Use MCM Helper as the default for new configuration menus when the installed stack supports it; grammar, runtime rules and a validator are in `mcm-helper-authoring`; verify against installed examples too. Maintain SKI_ConfigBase as a legacy fallback and do not auto-migrate an existing menu without a save/configuration migration plan.
 - Ship a debug switch from the first build (an MCM toggle or GlobalVariable, off by default). When it is on, write through one helper to `Debug.OpenUserLog("<ModName>")` / `Debug.TraceUser("<ModName>", msg)`: the mod version on init and update, resolved settings, state changes and every failed lookup or soft dependency. Tell the user the file is `Documents\My Games\Skyrim Special Edition\Logs\Script\User\<ModName>.0.log` and needs `[Papyrus] bEnableLogging=1` (plus `bEnableTrace=1` for `Debug.Trace`).
 
 ## Workflow

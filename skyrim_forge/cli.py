@@ -41,6 +41,11 @@ def parser() -> argparse.ArgumentParser:
     info = sub.add_parser("plugin-info"); info.add_argument("path")
     query = sub.add_parser("record-query"); query.add_argument("path"); query.add_argument("--signature", default=""); query.add_argument("--editor-id", default=""); query.add_argument("--form-id", default=""); query.add_argument("--limit", type=int, default=5000)
     plugins = sub.add_parser("plugins"); plugins.add_argument("path", nargs="?")
+    for name in ("load-order", "record-conflicts"):
+        lo = sub.add_parser(name); lo.add_argument("--mo2-instance"); lo.add_argument("--plugins-file"); lo.add_argument("--root", action="append", default=[], help="plugin search folder, highest priority first (with --plugins-file)")
+        if name == "record-conflicts":
+            lo.add_argument("--editor-id", default=""); lo.add_argument("--form-key", default="", help="0x12EB7~Skyrim.esm"); lo.add_argument("--signature", default=""); lo.add_argument("--contains", action="store_true"); lo.add_argument("--only-plugin", action="append", default=[]); lo.add_argument("--limit", type=int, default=20); lo.add_argument("--dump", action="store_true")
+    seq = sub.add_parser("seq-build"); seq.add_argument("plugin"); seq.add_argument("output_root"); seq.add_argument("--approve", action="store_true")
     archive = sub.add_parser("archive-info"); archive.add_argument("path")
     tree = sub.add_parser("mod-tree"); tree.add_argument("path")
     caps = sub.add_parser("capabilities"); caps.add_argument("identifier", nargs="?")
@@ -129,6 +134,9 @@ def main(argv: list[str] | None = None) -> int:
             case "plugin-info": value = service.plugin_info(args.path)
             case "record-query": value = service.record_query(args.path, args.signature, args.editor_id, args.form_id, args.limit)
             case "plugins": value = service.plugins(args.path)
+            case "load-order": value = service.load_order(args.mo2_instance, args.plugins_file, args.root)
+            case "record-conflicts": value = service.record_conflicts(args.mo2_instance, args.plugins_file, args.root, args.editor_id, args.form_key, args.signature, not args.contains, args.only_plugin or None, args.limit, args.dump)
+            case "seq-build": value = service.seq_build(args.plugin, args.output_root, args.approve)
             case "archive-info": value = service.archive(args.path)
             case "mod-tree": value = service.mod_tree(args.path)
             case "capabilities": value = service.capabilities(args.identifier)

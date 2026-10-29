@@ -1,7 +1,7 @@
-# Skyrim Forge 6.5.1
+# Skyrim Forge 6.6.0
 
 > Skyrim Forge is the authoritative repository for the Skyrim SE/AE AI modding
-> stack: the typed Forge MCP/CLI/GUI workbench, the **48-skill Skyrim SE/AE
+> stack: the typed Forge MCP/CLI/GUI workbench, the **50-skill Skyrim SE/AE
 > pack** (`integrations/skyrim-pack/`), the `houseCARL 2.1.1` load-order shim
 > (`Setup-HouseCarl.ps1`), and Skyrim tool discovery (`discover_tools.ps1`).
 > The [Ultimate AI Starter Bundle](https://github.com/SenjuWoo/Ultimate-AI-Starter-Bundle)
@@ -53,11 +53,11 @@ two copies behind.
 
 Skyrim Forge owns the complete Skyrim AI modding ecosystem:
 
-- **48-skill Skyrim SE/AE pack** (`integrations/skyrim-pack/skills/*`, `PACK.json`, `INSTRUCTIONS.md`): `skyrim-tool-router`, `skyrim-memory`, `skyrim-versioned-workspace`, `skyrim-forge`, `housecarl`, `spid-authoring`, `kid-authoring`, `skypatcher-authoring`, `skyrim-base-object-swapper`, `oar-authoring`, `skyrim-nif`, `skyrim-audio`, `skyrim-fomod-packaging`, `skyrim-nexus-publishing`, `skyrim-ship-gate`, and all specialist skills.
+- **50-skill Skyrim SE/AE pack** (`integrations/skyrim-pack/skills/*`, `PACK.json`, `INSTRUCTIONS.md`): `skyrim-tool-router`, `skyrim-memory`, `skyrim-versioned-workspace`, `skyrim-forge`, `housecarl`, `mcm-helper-authoring`, `skyrim-data-frameworks`, `spid-authoring`, `kid-authoring`, `skypatcher-authoring`, `skyrim-base-object-swapper`, `oar-authoring`, `skyrim-nif`, `skyrim-audio`, `skyrim-fomod-packaging`, `skyrim-nexus-publishing`, `skyrim-ship-gate`, and all specialist skills.
 - **`houseCARL 2.1.1` setup & Vortex load-order shim** (`integrations/skyrim-pack/skills/housecarl/scripts/Setup-HouseCarl.ps1`): finds external installations through `HOUSECARL_ROOT`, `HOUSECARL_MCP` or `UABS_TOOL_ROOTS`, compares versions before upgrading with backup, filters `.bak*` folders from the Vortex shim, and respects user roots.
 - **Skyrim tool discovery** (`integrations/skyrim-pack/skills/tool-discovery/scripts/discover_tools.ps1`).
 - **Parallel development with `Ultimate-AI-Starter-Bundle`**:
-  - Running `START-HERE.bat` or `.\Install-AI-Bridge.ps1 -Provider All -Yes` installs the Forge runtime, the `skyrim-forge` skill, and all 48 Skyrim pack skills across Claude, Codex (`~/.agents/skills`), Grok, Kimi, Hermes, and Antigravity, and maintains Forge's independent ownership ledger without rewriting the bundle's ledger.
+  - Running `START-HERE.bat` or `.\Install-AI-Bridge.ps1 -Provider All -Yes` installs the Forge runtime, the `skyrim-forge` skill, and all 50 Skyrim pack skills across Claude, Codex (`~/.agents/skills`), Grok, Kimi, Hermes, and Antigravity, and maintains Forge's independent ownership ledger without rewriting the bundle's ledger.
   - Conversely, when `Ultimate-AI-Starter-Bundle` runs `INSTALL-AIO.ps1`, its `Install-SkyrimForge.ps1` compares semantic versions and **never downgrades** a newer local `Skyrim-Forge` installation or overwrites newer Forge-owned Skyrim skills.
 
 ```powershell
@@ -187,6 +187,9 @@ forge fomod-build <Workspace>/fomod.plan.json <PayloadRoot> <Workspace>/BuiltFom
 forge fomod-validate <Workspace>/BuiltFomod
 forge plugin-info <Plugin.esp>
 forge record-query <Plugin.esp> --signature SPEL --editor-id Bound
+forge load-order --mo2-instance <MO2 folder>
+forge record-conflicts --mo2-instance <MO2 folder> --editor-id IronSword --signature WEAP
+forge seq-build <Plugin.esp> <Workspace>/Out --approve
 forge plugin-plan-validate examples/plugin-create.plan.json
 forge automation-validate examples/automation-xedit-check.job.json
 forge automation-run <job.json> --approve

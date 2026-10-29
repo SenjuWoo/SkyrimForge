@@ -1,0 +1,17 @@
+{"topic":"folder layout, required files","file":"runtime.md","section":"6. Packaging"}
+{"topic":"quest, script, PlayerAlias, SKI_PlayerLoadGameAlias","file":"runtime.md","section":"1. Quest, script, alias"}
+{"topic":"modName derivation, folder name, MergeMapper, error page","file":"runtime.md","section":"2. How MCM Helper finds your menu"}
+{"topic":"Papyrus events OnSettingChange OnConfigOpen OnPageSelect, RefreshMenu, SetMenuOptions, GetModSetting","file":"runtime.md","section":"3. Papyrus API"}
+{"topic":"hotkeys keybinds.json CallFunction SendEvent RunConsoleCommand","file":"runtime.md","section":"4. Hotkeys"}
+{"topic":"localization translations UTF-16 $Key language fallback","file":"runtime.md","section":"5. Localization"}
+{"topic":"troubleshooting menu missing, value not saved, raw $Key","file":"runtime.md","section":"7. Failure modes"}
+{"topic":"config.json top level modName displayName pages customContent cursorFillMode minMcmVersion pluginRequirements","file":"config-json.md","section":"Top level"}
+{"topic":"control types toggle slider stepper menu enum color keymap input text header empty hiddenToggle","file":"config-json.md","section":"Control types"}
+{"topic":"valueOptions sourceType PropertyValue ModSetting GlobalValue defaultValue sourceForm","file":"config-json.md","section":"valueOptions per type"}
+{"topic":"settings.ini prefixes b f i r s u, key:Section id, user settings file","file":"config-json.md","section":"ModSettings (settings.ini)"}
+{"topic":"groupControl groupCondition groupBehavior AND OR NOT ONLY","file":"config-json.md","section":"Groups"}
+{"topic":"action CallFunction CallGlobalFunction params {value} {i} {b} {f} {s}","file":"config-json.md","section":"Actions"}
+{"topic":"form string Plugin.esp|HEXID pattern light plugin","file":"config-json.md","section":"Form string"}
+{"topic":"complete working example script config settings keybinds translations","file":"templates.md","section":"all"}
+{"topic":"version history, version code, schema vs shipped reality, source facts","file":"MCM-HELPER-AUTHORITY.md","section":"all"}
+{"topic":"validator usage and exit codes","file":"../SKILL.md","section":"Validation"}

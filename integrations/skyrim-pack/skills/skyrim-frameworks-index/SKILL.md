@@ -36,8 +36,14 @@ A dedicated skill never outranks the actual parser. When evidence proves a skill
 | Generate/audit large distributions | deterministic generator | `skyrim-distribution-pipeline` + `skyrim-distr-kid-validation` |
 | CDF JSON container/vendor rules | Container Distribution Framework | `skyrim-container-distribution` |
 | Interpret framework/SKSE logs | source-aware log forensics | `skyrim-runtime-log-forensics` |
-| New settings menu | MCM Helper | `skyrim-papyrus-modding` |
+| New settings menu | MCM Helper | `mcm-helper-authoring` (script side: `skyrim-papyrus-modding`) |
 | Legacy SkyUI MCM maintenance | SKI_ConfigBase | `skyrim-papyrus-modding` |
+| Lights on meshes/actors/spell FX | Light Placer | `skyrim-data-frameworks` |
+| Swap animation props (AnimObjects) | Anim Object Swapper | `skyrim-data-frameworks` |
+| Per-weapon enchantment glow art | Enchantment Art Extender | `skyrim-data-frameworks` |
+| Replace/translate in-game text without plugin edits | Dynamic String Distributor | `skyrim-data-frameworks` |
+| Swap weapon/spell/footstep/region sounds | Sound Record Distributor | `skyrim-data-frameworks` |
+| Other installed framework, grammar unknown | authority lookup | `skyrim-data-frameworks/references/authority-map.md` |
 | Simple JSON/form persistence | PapyrusUtil | `skyrim-papyrus-modding/references/papyrusutil.md` |
 | Nested/dynamic structured data | JContainers | `skyrim-papyrus-modding/references/jcontainers.md` |
 | Unsupported operation | ESPFE, Papyrus, patcher, or DLL | `skyrim-plugin-authoring`, `skyrim-papyrus-modding`, or `skyrim-skse-commonlib` |
@@ -48,7 +54,7 @@ A dedicated skill never outranks the actual parser. When evidence proves a skill
 - **KID 4.0.6 grammar (unchanged through 4.1.0, now GPL-3.0):** use human-readable type labels. Trailing optional fields may be omitted.
 - **BOS 3.4.1 grammar (unchanged through 3.5.0, now GPL-3.0):** use pipe-delimited entries under current sections including `[Forms]`, `[References]`, `[Transforms]`, and `[Properties]`.
 - **SkyPatcher (corpus 6.4.x; Nexus is 7.1.3 as of 2026-10-10):** category placement is mandatory and operation names are category/version-specific; verify 7.x operations against the installed articles.
-- **MCM:** MCM Helper is the normal new-menu route; SKI_ConfigBase remains a legacy maintenance route.
+- **MCM:** MCM Helper is the normal new-menu route (`mcm-helper-authoring`, source-checked against v1.6.3 / code 15); SKI_ConfigBase remains a legacy maintenance route.
 
 The historical integration plan's comma-based SPID-trait decision is superseded by the current parser source. Historical documents are evidence leads, not executable syntax authorities.
 

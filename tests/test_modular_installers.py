@@ -11,7 +11,7 @@ ROOT = Path(__file__).resolve().parents[1]
 class ModularInstallerTests(unittest.TestCase):
     def test_external_skill_pack_is_complete_and_registry_is_valid(self):
         skills = ROOT / 'integrations/skyrim-pack/skills'
-        self.assertEqual(len(list(skills.glob('*/SKILL.md'))), 48)
+        self.assertEqual(len(list(skills.glob('*/SKILL.md'))), 50)
         registry = json.loads((skills / 'skyrim-memory/references/ERROR-REGISTRY.json').read_text(encoding='utf-8-sig'))
         entries = registry['entries']
         self.assertEqual(len({e['id'] for e in entries}), len(entries))
