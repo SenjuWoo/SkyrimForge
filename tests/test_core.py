@@ -26,6 +26,17 @@ class CoreTests(unittest.TestCase):
         with self.assertRaises(Exception): loads('{"a":1,"a":2}')
         with self.assertRaises(Exception): loads('{"a":NaN}')
 
+    def test_doctor_emits_the_fields_the_bundle_installer_reads(self):
+        # The Ultimate AI Starter Bundle installs Forge's latest release and reads
+        # doctor["result"] and doctor["read_only_ready"]; renaming either breaks it.
+        from skyrim_forge.environment import doctor
+        with tempfile.TemporaryDirectory() as td:
+            root = Path(td)
+            with patch.dict(os.environ, {"SKYRIM_FORGE_ROOT": str(root), "SKYRIM_FORGE_CONFIG": str(root / "config.toml")}):
+                report = doctor(load_config(root / "config.toml"))
+        self.assertIn(report["result"], ("PASS", "FAIL"))
+        self.assertIsInstance(report["read_only_ready"], bool)
+
     def test_config_first_use_creates_workspace(self):
         with tempfile.TemporaryDirectory() as td:
             root = Path(td)

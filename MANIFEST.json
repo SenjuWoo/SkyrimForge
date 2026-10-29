@@ -44,6 +44,12 @@
     },
     {
       "executable": false,
+      "path": ".github/workflows/dependabot-auto-merge.yml",
+      "sha256": "04de79b4fa9117d723caa9a6daf456db7ccc172af927701d4d5daa28a3e63b16",
+      "size": 792
+    },
+    {
+      "executable": false,
       "path": ".github/workflows/release.yml",
       "sha256": "6d41597e72ce163a69b6eb06196a3104dd878a5c89dd7f53131fa7fe71212b39",
       "size": 5809
@@ -81,14 +87,14 @@
     {
       "executable": false,
       "path": "CHANGELOG.md",
-      "sha256": "88f1359f0570f2b29862b12364020e4a497d6906a1421a266d4f544a7933fe0e",
-      "size": 38074
+      "sha256": "9df0aa7593ed17a1a4d1bd1b5118bd867ae561f098520659fea718867feca981",
+      "size": 38585
     },
     {
       "executable": false,
       "path": "CHANGELOG.txt",
-      "sha256": "fd952fe52ea96e2047da9c92c971d013f3b78c1ba6c5c29d0d1fe96840f7dfe5",
-      "size": 15313
+      "sha256": "a6da0cce37eb80bab5f67db4331119b8277e5b2594d73d967d4f3efb9de81a4c",
+      "size": 15824
     },
     {
       "executable": false,
@@ -129,7 +135,7 @@
     {
       "executable": false,
       "path": "CURRENT.txt",
-      "sha256": "3eb8e06ca1e02f0a30b0e3eebd289494b35d4fd1466ed907b9148e03b2459b00",
+      "sha256": "cd25bc61a72f650255e4c2eec7fac325befdb35236229d9f4d3d3c7edab101ea",
       "size": 6
     },
     {
@@ -609,8 +615,8 @@
     {
       "executable": false,
       "path": "integrations/skyrim-pack/skills/housecarl/scripts/Setup-HouseCarl.ps1",
-      "sha256": "4dd4e0a79a9ff919bee790232ad9ee7a7d325d7c2691d22589f96ebb16b1bf2d",
-      "size": 31871
+      "sha256": "114983d68ca7099c1f28e979c6a6efa076ecfc7fac5f88eabc6f7cfc1d66e20c",
+      "size": 31020
     },
     {
       "executable": false,
@@ -2655,14 +2661,14 @@
     {
       "executable": false,
       "path": "pyproject.toml",
-      "sha256": "a8288716f4f88dc36ae664262bdd74009fd8205cf8a3bdc7e8974892ee72cb28",
+      "sha256": "2350390c5926f3fb48aa64e8dfa0abb16326c9e20431f9341afb8741c8a112b9",
       "size": 856
     },
     {
       "executable": false,
       "path": "README.md",
-      "sha256": "a54bc2f1fd336144c87d5d26463d6016a4b7b7645fd01f81f52f68521a3e77d5",
-      "size": 17835
+      "sha256": "53d2c1ddb8919f38b09e6b62f8e6597bdcca216b075c28210a777595dfe05f12",
+      "size": 17849
     },
     {
       "executable": false,
@@ -2895,13 +2901,13 @@
     {
       "executable": false,
       "path": "skyrim_forge/bin/linux-x64/SkyrimForge.Native",
-      "sha256": "752af2f17329000f774c4190ff5a4bb4a2f0beac5b8cd87851c85cd07d93d28e",
+      "sha256": "95a5714d679a46c478c788f122f43e1214970db5e7c7b6944678e0390ab3ff4f",
       "size": 1839239
     },
     {
       "executable": true,
       "path": "skyrim_forge/bin/win-x64/SkyrimForge.Native.exe",
-      "sha256": "e3831aca967eddc6a66fc9c89c8877c3484a0bdbb4ce46a240969b70cc77c972",
+      "sha256": "5a8a66909b1357245cbca6b69314f1c5efadbb7ed50b0c9fdd6bf769c3abc48c",
       "size": 1955328
     },
     {
@@ -3339,7 +3345,7 @@
     {
       "executable": false,
       "path": "skyrim_forge/version.py",
-      "sha256": "69af8a037d0d705ee84feaab3ebbb1c4a1261320037c13a3cf26859059ca2962",
+      "sha256": "65f3513715e5b9317c2f868da012851f02a44795c4aaf7fcefe7ec1aa06a03f7",
       "size": 18
     },
     {
@@ -3363,14 +3369,14 @@
     {
       "executable": true,
       "path": "START-HERE.bat",
-      "sha256": "8e87f01e780871ae873eb4f4bbc3d6851196767a3fa2426a469aa2e718c91e75",
+      "sha256": "c778c75b15870b35011a69c244859aa48193985438a0b49a9904ae7ac5d4d770",
       "size": 4782
     },
     {
       "executable": false,
       "path": "STATE.md",
-      "sha256": "8ee537dcfc0f55a274b38d9352237c5ece08aad167630d34c00047bc51e60385",
-      "size": 9275
+      "sha256": "03196641ad314de10d5a4a686de661c0e0a5cf68f6c79531435db99194abe004",
+      "size": 9504
     },
     {
       "executable": false,
@@ -3399,8 +3405,8 @@
     {
       "executable": false,
       "path": "tests/test_core.py",
-      "sha256": "230234b443bc636ebb58d4c5347ebcb79313411701eaa47425931278e8d1dcff",
-      "size": 12531
+      "sha256": "0484b954def429c13ee15fead3d6e3494bab0654143375ffadb63a4025a218e5",
+      "size": 13214
     },
     {
       "executable": false,
@@ -3525,8 +3531,8 @@
     {
       "executable": false,
       "path": "tests/test_windows_provider_bridge.py",
-      "sha256": "4da7c74aa28dae4aa85da4ba33aeafdf438674c6dc3f3dd8fb21a67175a01ff8",
-      "size": 14841
+      "sha256": "4c7d8cc754d15aa30053354f1e3d8135b81616b16cc452efba8bac31752ac320",
+      "size": 17252
     },
     {
       "executable": true,
@@ -3549,7 +3555,7 @@
     {
       "executable": false,
       "path": "VERSION.txt",
-      "sha256": "8840c3f7170c81582a869d1b39a9020b3136db6ba656897a3bc5d31a6bf7881e",
+      "sha256": "d2127adee600e5ea57cef243d18446307532baa9b2141877f670a8c92fddf3cd",
       "size": 19
     },
     {
@@ -3579,7 +3585,7 @@
     {
       "executable": false,
       "path": "writer/native-go/main.go",
-      "sha256": "1a2ec379624b56a090a344d6f3f0ede0c63555ce2e37a9101cbb99176e1706fd",
+      "sha256": "c4189540b01619d975f2b8ee7536fa4366f9d0b585ee3f87939e87ffd5024b1f",
       "size": 3641
     },
     {
@@ -3591,16 +3597,16 @@
     {
       "executable": false,
       "path": "writer/published/linux-x64/SkyrimForge.Native",
-      "sha256": "752af2f17329000f774c4190ff5a4bb4a2f0beac5b8cd87851c85cd07d93d28e",
+      "sha256": "95a5714d679a46c478c788f122f43e1214970db5e7c7b6944678e0390ab3ff4f",
       "size": 1839239
     },
     {
       "executable": true,
       "path": "writer/published/win-x64/SkyrimForge.Native.exe",
-      "sha256": "e3831aca967eddc6a66fc9c89c8877c3484a0bdbb4ce46a240969b70cc77c972",
+      "sha256": "5a8a66909b1357245cbca6b69314f1c5efadbb7ed50b0c9fdd6bf769c3abc48c",
       "size": 1955328
     }
   ],
   "product": "Skyrim Forge",
-  "version": "6.5.0"
+  "version": "6.5.1"
 }

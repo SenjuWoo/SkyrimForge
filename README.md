@@ -1,4 +1,4 @@
-# Skyrim Forge 6.5.0
+# Skyrim Forge 6.5.1
 
 > Skyrim Forge is the authoritative repository for the Skyrim SE/AE AI modding
 > stack: the typed Forge MCP/CLI/GUI workbench, the **48-skill Skyrim SE/AE
@@ -54,7 +54,7 @@ two copies behind.
 Skyrim Forge owns the complete Skyrim AI modding ecosystem:
 
 - **48-skill Skyrim SE/AE pack** (`integrations/skyrim-pack/skills/*`, `PACK.json`, `INSTRUCTIONS.md`): `skyrim-tool-router`, `skyrim-memory`, `skyrim-versioned-workspace`, `skyrim-forge`, `housecarl`, `spid-authoring`, `kid-authoring`, `skypatcher-authoring`, `skyrim-base-object-swapper`, `oar-authoring`, `skyrim-nif`, `skyrim-audio`, `skyrim-fomod-packaging`, `skyrim-nexus-publishing`, `skyrim-ship-gate`, and all specialist skills.
-- **`houseCARL 2.1.1` setup & Vortex load-order shim** (`integrations/skyrim-pack/skills/housecarl/scripts/Setup-HouseCarl.ps1`): discovers external user installations (e.g., `<your tools folder>\houseCARL`), compares versions before upgrading with backup, filters `.bak*` folders from the Vortex shim, and respects user roots.
+- **`houseCARL 2.1.1` setup & Vortex load-order shim** (`integrations/skyrim-pack/skills/housecarl/scripts/Setup-HouseCarl.ps1`): finds external installations through `HOUSECARL_ROOT`, `HOUSECARL_MCP` or `UABS_TOOL_ROOTS`, compares versions before upgrading with backup, filters `.bak*` folders from the Vortex shim, and respects user roots.
 - **Skyrim tool discovery** (`integrations/skyrim-pack/skills/tool-discovery/scripts/discover_tools.ps1`).
 - **Parallel development with `Ultimate-AI-Starter-Bundle`**:
   - Running `START-HERE.bat` or `.\Install-AI-Bridge.ps1 -Provider All -Yes` installs the Forge runtime, the `skyrim-forge` skill, and all 48 Skyrim pack skills across Claude, Codex (`~/.agents/skills`), Grok, Kimi, Hermes, and Antigravity, and maintains Forge's independent ownership ledger without rewriting the bundle's ledger.

@@ -152,6 +152,45 @@ class WindowsProviderBridgeTests(unittest.TestCase):
             catalog.unlink()
             self.assertEqual(detect(), none)
 
+    def test_housecarl_discovery_reads_uabs_tool_roots(self):
+        # UABS_TOOL_ROOTS is the shared "extra tool folders" hint the bundle and
+        # Reverse THIS! also read: ';'-separated folders searched for the server.
+        if any(os.environ.get(n) or self.user_env(n) for n in ("HOUSECARL_MCP", "HOUSECARL_ROOT", "UABS_TOOL_ROOTS")):
+            self.skipTest("this machine registers its own houseCARL; the clean CI runner proves discovery")
+        with tempfile.TemporaryDirectory() as td:
+            temp = Path(td)
+            exe = temp / "tools" / "houseCARL" / "server" / "housecarl-mcp.exe"
+            exe.parent.mkdir(parents=True)
+            exe.write_bytes(b"fixture server")
+            probe = temp / "probe.ps1"
+            probe.write_text(
+                "param($Script)\n"
+                "$ast = [System.Management.Automation.Language.Parser]::ParseFile($Script, [ref]$null, [ref]$null)\n"
+                "foreach ($name in 'Test-ExistingPath','Get-HouseCarlExeVersion','Find-HouseCarlMcp') {\n"
+                "  $fn = $ast.Find({ param($n) $n -is [System.Management.Automation.Language.FunctionDefinitionAst] -and $n.Name -eq $name }, $true)\n"
+                "  Invoke-Expression $fn.Extent.Text }\n"
+                "$found = Find-HouseCarlMcp ''\n"
+                "if ($found) { $found } else { 'none' }\n",
+                encoding="utf-8",
+            )
+            script = ROOT / "integrations" / "skyrim-pack" / "skills" / "housecarl" / "scripts" / "Setup-HouseCarl.ps1"
+            base = os.environ.copy()
+            base.update({"LOCALAPPDATA": str(temp / "local"), "USERPROFILE": str(temp / "profile")})
+            hinted = self.run_script(probe, "-Script", str(script), env=dict(base, UABS_TOOL_ROOTS=str(temp / "missing") + ";" + str(temp / "tools")))
+            self.assertEqual(hinted.returncode, 0, hinted.stdout + hinted.stderr)
+            self.assertEqual(Path(hinted.stdout.strip()), exe)
+            plain = self.run_script(probe, "-Script", str(script), env=base)
+            self.assertEqual(plain.stdout.strip(), "none", "houseCARL was found without any hint")
+
+    @staticmethod
+    def user_env(name: str) -> str | None:
+        import winreg
+        try:
+            with winreg.OpenKey(winreg.HKEY_CURRENT_USER, "Environment") as key:
+                return winreg.QueryValueEx(key, name)[0]
+        except OSError:
+            return None
+
     def test_kimi_defers_to_bundle_toolbox_unless_global(self):
         python = self.require_installed_test_runtime()
         with tempfile.TemporaryDirectory() as td:

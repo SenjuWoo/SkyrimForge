@@ -130,31 +130,8 @@ function Find-HouseCarlMcp {
       if ($hit -and -not $rawCandidates.Contains($hit.FullName)) { [void]$rawCandidates.Add($hit.FullName) }
     }
   }
-  $searchTails = @(
-    'Backup\!Skyrim\Skyrim tools\houseCARL',
-    'Backup\!Skyrim\Skyrim Tools\houseCARL',
-    'Backup\Skyrim tools\houseCARL',
-    'Backup\Skyrim Tools\houseCARL',
-    '!Skyrim\Skyrim tools\houseCARL',
-    '!Skyrim\Skyrim Tools\houseCARL',
-    'Apps\Skyrim Tools\houseCARL',
-    'Skyrim Tools\houseCARL',
-    'Skyrim tools\houseCARL',
-    'Modding\Tools\houseCARL',
-    'Tools\Skyrim\houseCARL',
-    'Tools\houseCARL',
-    'houseCARL'
-  )
-  foreach ($letter in @('C','D','E','F','G','H','S','T','Z')) {
-    $drive = "${letter}:\"
-    if (-not (Test-ExistingPath $drive)) { continue }
-    foreach ($tail in $searchTails) {
-      $root = Join-Path $drive $tail
-      if (-not (Test-ExistingPath $root)) { continue }
-      $hit = Get-ChildItem -LiteralPath $root -Filter 'housecarl-mcp.exe' -Recurse -Depth 5 -File -ErrorAction SilentlyContinue | Select-Object -First 1
-      if ($hit -and -not $rawCandidates.Contains($hit.FullName)) { [void]$rawCandidates.Add($hit.FullName) }
-    }
-  }
+  # External installs are found through HOUSECARL_MCP, HOUSECARL_ROOT or UABS_TOOL_ROOTS;
+  # guessing drive letters and personal folder layouts was slow and leaked one machine.
   foreach ($c in @(
     (Join-Path $env:LOCALAPPDATA 'houseCARL\server\housecarl-mcp.exe'),
     (Join-Path $env:USERPROFILE '.claude\skills\housecarl\server\housecarl-mcp.exe'),

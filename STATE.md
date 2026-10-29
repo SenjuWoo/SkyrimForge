@@ -1,3 +1,7 @@
+# Forge 6.5.1 houseCARL discovery and contract tests (2026-10-29)
+
+- Done: removed the drive-letter scan; Forge-side tests for the doctor fields and UABS_TOOL_ROOTS. Released by the self-publishing workflow from the pushed SHA.
+
 # Forge 6.5.0 independent releases (2026-10-29)
 
 - Goal: release without a manual tag; nothing in Forge restates a version the bundle would also need to bump.
