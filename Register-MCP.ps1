@@ -3,7 +3,9 @@ param(
     [ValidateSet('All', 'Codex', 'Claude', 'Grok', 'Kimi', 'Hermes')]
     [string]$Provider = 'All',
     [switch]$Yes,
-    [string]$ReportPath = ''
+    [string]$ReportPath = '',
+    # Register machine-wide even where the Ultimate AI Starter Bundle toolbox already serves Forge.
+    [switch]$Global
 )
 
 Set-StrictMode -Version Latest
@@ -46,6 +48,40 @@ function Resolve-ProviderCommand {
     $Command = Get-Command $Name.ToLowerInvariant() -ErrorAction SilentlyContinue
     if ($Command) { return $Command.Source }
     return $null
+}
+
+function Test-BundleToolboxServesForge {
+    # Ultimate AI Starter Bundle contract: its toolbox MCP starts skyrim-forge on
+    # demand inside Skyrim projects (catalog %LOCALAPPDATA%\Ultimate-AI-Starter-Bundle\
+    # toolbox-profiles.json), and its installer removes global Forge entries. A global
+    # entry beside a wired toolbox makes the two installers undo each other on every run.
+    param([string]$Name)
+    $LocalData = if ($env:LOCALAPPDATA) { $env:LOCALAPPDATA } else { [Environment]::GetFolderPath('LocalApplicationData') }
+    $Catalog = Join-Path $LocalData 'Ultimate-AI-Starter-Bundle\toolbox-profiles.json'
+    if (-not (Test-Path -LiteralPath $Catalog -PathType Leaf)) { return $false }
+    if (-not [regex]::IsMatch([IO.File]::ReadAllText($Catalog), '"id"\s*:\s*"skyrim-forge"')) { return $false }
+    $UserHome = if ($env:USERPROFILE) { $env:USERPROFILE } else { [Environment]::GetFolderPath('UserProfile') }
+    $KimiHome = if ($env:KIMI_CODE_HOME) { $env:KIMI_CODE_HOME } else { Join-Path $UserHome '.kimi-code' }
+    $HermesHome = if ($env:HERMES_HOME) { $env:HERMES_HOME } else { Join-Path $LocalData 'hermes' }
+    $Check = switch ($Name) {
+        'Codex' { @{ Path = (Join-Path $UserHome '.codex\config.toml'); Kind = 'toml' } }
+        'Grok' { @{ Path = (Join-Path $UserHome '.grok\config.toml'); Kind = 'toml' } }
+        'Claude' { @{ Path = (Join-Path $UserHome '.claude.json'); Kind = 'json' } }
+        'Kimi' { @{ Path = (Join-Path $KimiHome 'mcp.json'); Kind = 'json' } }
+        'Hermes' { @{ Path = (Join-Path $HermesHome 'config.yaml'); Kind = 'yaml' } }
+        default { $null }
+    }
+    if (-not $Check -or -not (Test-Path -LiteralPath $Check.Path -PathType Leaf)) { return $false }
+    $Raw = [IO.File]::ReadAllText($Check.Path)
+    try {
+        if ($Check.Kind -eq 'toml') { return [regex]::IsMatch($Raw, '(?m)^\[mcp_servers\.(?:toolbox|"toolbox")\]') }
+        if ($Check.Kind -eq 'yaml') { return [regex]::IsMatch($Raw, '(?m)^mcp_servers:[ \t]*\r?\n(?:[ \t]+.*\r?\n|[ \t]*\r?\n)*?[ \t]+toolbox:[ \t]*\r?$') }
+        $Servers = ($Raw | ConvertFrom-Json).mcpServers
+        return [bool]($Servers -and $Servers.PSObject.Properties['toolbox'])
+    } catch {
+        # Unreadable provider config: register as before rather than guess.
+        return $false
+    }
 }
 
 function Test-GrokForgeRegistrationAllowed {
@@ -119,6 +155,15 @@ function Invoke-Registration {
             status = 'NOT_INSTALLED'
             command = $null
             detail = 'Provider command was not found. The installed skill still contains the exact Forge CLI and MCP launch descriptor.'
+        }
+    }
+    if (-not $Global -and (Test-BundleToolboxServesForge -Name $Name)) {
+        return [ordered]@{
+            provider = $Name
+            mode = 'toolbox'
+            status = 'DEFERRED'
+            command = $Executable
+            detail = 'Ultimate AI Starter Bundle toolbox starts Skyrim Forge on demand in Skyrim projects, and its installer removes global Forge entries; global registration skipped so the two installers do not undo each other. Rerun with -Global to register machine-wide anyway.'
         }
     }
     if (-not (Ask -Text "Register Skyrim Forge MCP with ${Name}?")) {

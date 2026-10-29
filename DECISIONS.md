@@ -1,3 +1,7 @@
+# Defer global MCP registration to the bundle toolbox (2026-10-29)
+
+- Where the Ultimate AI Starter Bundle toolbox serves `skyrim-forge` to a provider, Forge does not also register it globally. The bundle installer removes global Forge entries in favour of the on-demand toolbox, so a global write here was undone on every bundle install and re-added on every Forge registration. Detection reads the bundle's own catalog (`toolbox-profiles.json`) and the provider's MCP config; unreadable config falls back to registering as before. `-Global` keeps an explicit machine-wide choice available.
+
 # SDK staging safety (2026-10-28)
 
 - A fetch owns only its uniquely created temporary directory. Existing partial/recovery data is never disposable merely because its name matches an old transaction convention. A concurrently created destination is retained; the losing fetch reports incomplete instead of overwriting it.
