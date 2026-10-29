@@ -1,3 +1,7 @@
+# Bundle toolbox deferral candidate 6.4.2 (2026-10-29)
+
+Provider bridge suite 9/9 with the installed runtime: detection matches the live machine (Codex, Grok, Claude, Hermes deferred; Kimi without a toolbox registers), a Kimi config with a toolbox entry is left byte-identical and reported DEFERRED, and `-Global` writes Forge beside the toolbox.
+
 # SDK staging safety candidate 6.4.1 (2026-10-28)
 
 The new preexisting-partial regression failed before the fix (sentinel deleted). After unique staging and destination-preservation changes: 17 SDK/native-integration tests pass, including a real local-Git concurrent fetch and injected fetch failure. Full gate PASS: 247 tests; native/Go/race/reproducibility, product packaging and MCP checks pass. Windows PowerShell5.1 and7 parser gates pass. Exact-SHA CI/release proof pending; no game runtime or live-config change.

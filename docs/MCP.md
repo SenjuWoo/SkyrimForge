@@ -63,6 +63,8 @@ revision.
 
 ### Grok
 
+When the Ultimate AI Starter Bundle toolbox already serves `skyrim-forge` to a provider (its catalog lists it and that provider's MCP config has a `toolbox` entry), `Register-MCP.ps1` reports `DEFERRED` instead of writing a global entry, because the bundle installer removes global Forge entries and the two would undo each other. Pass `-Global` to register machine-wide anyway.
+
 Grok wedges at eight **running** MCP servers. `Register-MCP.ps1 -Provider Grok`
 counts `[mcp_servers.*]` in `%USERPROFILE%\.grok\config.toml` and skips the add
 when Forge would be an eighth runner (7 configured, or 6 while the

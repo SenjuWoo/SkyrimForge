@@ -105,6 +105,83 @@ class WindowsProviderBridgeTests(unittest.TestCase):
             provider = json.loads(report.read_text(encoding="utf-8-sig"))["providers"][0]
             self.assertEqual((provider["mode"], provider["status"]), ("mcp", "READY"))
 
+    def bundle_catalog(self, local: Path, server: str = "skyrim-forge") -> Path:
+        catalog = local / "Ultimate-AI-Starter-Bundle" / "toolbox-profiles.json"
+        catalog.parent.mkdir(parents=True, exist_ok=True)
+        catalog.write_text(json.dumps({"profiles": [{"id": "game-skyrim", "servers": [{"id": server}]}]}), encoding="utf-8")
+        return catalog
+
+    def test_bundle_toolbox_detection_reads_each_provider_config(self):
+        # Runs the real function from Register-MCP.ps1 without the installed runtime.
+        with tempfile.TemporaryDirectory() as td:
+            temp = Path(td)
+            profile, local = temp / "profile", temp / "local"
+            for folder in (profile / ".codex", profile / ".grok", profile / ".kimi-code", local / "hermes"):
+                folder.mkdir(parents=True)
+            (profile / ".codex" / "config.toml").write_text('[mcp_servers.toolbox]\ncommand = "t.exe"\n', encoding="utf-8")
+            (profile / ".grok" / "config.toml").write_text('[mcp_servers.other]\ncommand = "o.exe"\n', encoding="utf-8")
+            (profile / ".claude.json").write_text(json.dumps({"mcpServers": {"toolbox": {}}, "projects": {}}), encoding="utf-8")
+            (profile / ".kimi-code" / "mcp.json").write_text(json.dumps({"mcpServers": {"keep": {}}, "toolbox": {}}), encoding="utf-8")
+            (local / "hermes" / "config.yaml").write_text(
+                "model:\n  default: x\nmcp_servers:\n  context7:\n    command: c\n\n  toolbox:\n    command: t\n", encoding="utf-8"
+            )
+            probe = temp / "probe.ps1"
+            probe.write_text(
+                "param($Script)\n"
+                "$ast = [System.Management.Automation.Language.Parser]::ParseFile($Script, [ref]$null, [ref]$null)\n"
+                "$fn = $ast.Find({ param($n) $n -is [System.Management.Automation.Language.FunctionDefinitionAst] -and $n.Name -eq 'Test-BundleToolboxServesForge' }, $true)\n"
+                "Invoke-Expression $fn.Extent.Text\n"
+                "(@('Codex','Grok','Claude','Kimi','Hermes') | ForEach-Object { $_ + '=' + (Test-BundleToolboxServesForge -Name $_) }) -join ','\n",
+                encoding="utf-8",
+            )
+            env = os.environ.copy()
+            env.update({"USERPROFILE": str(profile), "LOCALAPPDATA": str(local), "HERMES_HOME": "", "KIMI_CODE_HOME": ""})
+
+            def detect() -> str:
+                result = self.run_script(probe, "-Script", str(ROOT / "Register-MCP.ps1"), env=env)
+                self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+                return result.stdout.strip()
+
+            none = "Codex=False,Grok=False,Claude=False,Kimi=False,Hermes=False"
+            self.assertEqual(detect(), none)
+            catalog = self.bundle_catalog(local, server="housecarl")
+            self.assertEqual(detect(), none)
+            self.bundle_catalog(local)
+            # Kimi's toolbox sits outside mcpServers and Grok has none: both still register.
+            self.assertEqual(detect(), "Codex=True,Grok=False,Claude=True,Kimi=False,Hermes=True")
+            catalog.unlink()
+            self.assertEqual(detect(), none)
+
+    def test_kimi_defers_to_bundle_toolbox_unless_global(self):
+        python = self.require_installed_test_runtime()
+        with tempfile.TemporaryDirectory() as td:
+            temp = Path(td)
+            local = temp / "local"
+            self.bundle_catalog(local)
+            kimi_home = temp / "kimi"
+            kimi_home.mkdir()
+            config = kimi_home / "mcp.json"
+            original = json.dumps({"mcpServers": {"toolbox": {"command": "uabs-toolbox.exe", "args": []}}}) + "\n"
+            config.write_text(original, encoding="utf-8")
+            fake_bin = temp / "bin"
+            fake_bin.mkdir()
+            (fake_bin / "kimi.cmd").write_text("@exit /b 0\n", encoding="ascii")
+            report = temp / "report.json"
+            env = os.environ.copy()
+            env.update({"KIMI_CODE_HOME": str(kimi_home), "LOCALAPPDATA": str(local), "PATH": str(fake_bin) + os.pathsep + env["PATH"]})
+            result = self.run_script(ROOT / "Register-MCP.ps1", "-Provider", "Kimi", "-Yes", "-ReportPath", str(report), env=env)
+            self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+            self.assertEqual(config.read_text(encoding="utf-8"), original)
+            provider = json.loads(report.read_text(encoding="utf-8-sig"))["providers"][0]
+            self.assertEqual((provider["mode"], provider["status"]), ("toolbox", "DEFERRED"))
+            result = self.run_script(ROOT / "Register-MCP.ps1", "-Provider", "Kimi", "-Yes", "-Global", "-ReportPath", str(report), env=env)
+            self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+            written = json.loads(config.read_text(encoding="utf-8-sig"))["mcpServers"]
+            self.assertEqual(written["skyrim-forge"]["command"], str(python))
+            self.assertIn("toolbox", written)
+            provider = json.loads(report.read_text(encoding="utf-8-sig"))["providers"][0]
+            self.assertEqual((provider["mode"], provider["status"]), ("mcp", "READY"))
+
     def test_kimi_doctor_failure_restores_original_configuration(self):
         self.require_installed_test_runtime()
         with tempfile.TemporaryDirectory() as td:

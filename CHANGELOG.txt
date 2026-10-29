@@ -1,3 +1,7 @@
+## 6.4.2 (2026-10-29)
+
+- `Register-MCP.ps1` defers to the Ultimate AI Starter Bundle toolbox: when the bundle's toolbox catalog lists `skyrim-forge` and a provider's MCP config already has a `toolbox` entry, that provider reports `DEFERRED` and no global Forge entry is written. The bundle installer removes global Forge entries, so the two installers no longer undo each other on every run. `-Global` registers machine-wide anyway; providers without the toolbox register as before. Tests run the real detection against all five provider config formats and a real Kimi deferral/`-Global` round trip.
+
 ## 6.4.1 (2026-10-28)
 
 - SDK fetches use unique transaction directories, preserve preexisting partial/recovery folders and refuse a destination created by another install. Failure cleanup removes only the current operation's stage. Real local-Git regression tests cover preservation, forced failure and interleaved installs.

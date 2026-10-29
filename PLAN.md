@@ -1,3 +1,9 @@
+# Bundle toolbox deferral (2026-10-29)
+
+1. [complete] Detect the bundle toolbox per provider and report DEFERRED; `-Global` override.
+2. [complete] Tests: real detection across five provider formats; real Kimi deferral and `-Global` round trip.
+3. [pending] Full gate, exact-SHA CI/security, 6.4.2 release-byte proof, bundle pin and live update.
+
 # SDK staging safety (2026-10-28)
 
 1. [complete] Reproduce deletion of preexisting recovery data with a local-Git fixture.

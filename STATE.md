@@ -1,3 +1,10 @@
+# Forge 6.4.2 bundle toolbox deferral (2026-10-29)
+
+- Goal: stop Forge and the Ultimate AI Starter Bundle from undoing each other's MCP registration.
+- Parent: main 31ab30c, public 6.4.1; branch fix/defer-to-bundle-toolbox.
+- Done: `Register-MCP.ps1` defers per provider when the bundle toolbox serves Forge (`-Global` overrides); helpers rebuilt with Go 1.23.2; bridge tests 9/9.
+- Next: full gate, exact-SHA CI/security, release 6.4.2, bundle pin and live update.
+
 # Forge 6.4.1 SDK staging safety audit (2026-10-28)
 
 - Goal: preserve existing SDK partial/recovery directories and isolate concurrent fetches.
