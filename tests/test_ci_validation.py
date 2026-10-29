@@ -24,11 +24,14 @@ class CIValidationScopeTests(unittest.TestCase):
         original = Path.read_text
         def stale(path, *args, **kwargs):
             text = original(path, *args, **kwargs)
-            return text.replace('Skyrim Forge '+'.'.join(self.module.VERSION.split('.')[:2]),'Skyrim Forge '+'0.0') if path == skill else text
+            return text + ' Skyrim Forge ' + '0.0 ' if path == skill else text
         errors=[]
         with patch.object(Path,'read_text',stale):
             self.module.validate_version_sources(errors)
         self.assertTrue(any('integrations/skyrim-pack/skills/skyrim-forge/SKILL.md advertises' in e for e in errors), errors)
+        clean=[]
+        self.module.validate_version_sources(clean)
+        self.assertFalse([e for e in clean if 'skyrim-forge/SKILL.md' in e], 'a version-free skill must pass')
         self.assertFalse((self.module.ROOT/'integrations/skyrim-forge/SKILL.md').exists(),'Unused duplicate skill must not return')
 
     def test_python_scope_never_rebuilds_native_binaries(self):
@@ -135,9 +138,17 @@ class WorkflowPinningTests(unittest.TestCase):
         if release is None or not release.is_file():
             self.skipTest("no release workflow present")
         workflow = release.read_text(encoding="utf-8")
-        self.assertIn('python scripts/publish_release.py "$GITHUB_REF_NAME" dist', workflow)
+        self.assertIn('python scripts/publish_release.py "$TAG" dist', workflow)
         self.assertIn('GH_REPO: ${{ github.repository }}', workflow)
         self.assertNotIn('--clobber', workflow)
+        # Self-publishing: only a green, untagged version on the exact main SHA releases,
+        # and every downloaded asset must equal the build.
+        for gate in ("workflow_run:", "workflows: [CI]", "event == 'push'", 'if [ "$main" != "$SHA" ]',
+                     "git ls-remote --tags origin", 'r["name"] != "Publish release"', '-f sha="$SHA"',
+                     "gh release download", "sha256sum -c SHA256SUMS.txt", "actions/attest-build-provenance@"):
+            self.assertIn(gate, workflow)
+        for forbidden in ("gh release delete", "git push --force", "git tag -f"):
+            self.assertNotIn(forbidden, workflow)
 
 
 if __name__ == "__main__":

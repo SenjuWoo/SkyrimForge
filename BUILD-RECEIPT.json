@@ -3,7 +3,7 @@
     "builds": {
       "linux": {
         "buildvcs": false,
-        "bundled": "0a53c952c4b4144402d2dd15147a430be1e3773695ba2fc69ef0068262638022",
+        "bundled": "752af2f17329000f774c4190ff5a4bb4a2f0beac5b8cd87851c85cd07d93d28e",
         "bundled_metadata": {
           "command": [
             "<HOME>\\AppData\\Local\\Ultimate-AI-Starter-Bundle\\toolchains\\go1.23.2\\go\\bin\\go.EXE",
@@ -15,24 +15,24 @@
           "stderr": "",
           "stdout": "<REPOSITORY_ROOT>\\writer\\published\\linux-x64\\SkyrimForge.Native: go1.23.2\n\tpath\tskyrimforge/native\n\tmod\tskyrimforge/native\t(devel)\t\n\tbuild\t-buildmode=exe\n\tbuild\t-compiler=gc\n\tbuild\t-trimpath=true\n\tbuild\tCGO_ENABLED=0\n\tbuild\tGOARCH=amd64\n\tbuild\tGOOS=linux\n\tbuild\tGOAMD64=v1\n"
         },
-        "first": "0a53c952c4b4144402d2dd15147a430be1e3773695ba2fc69ef0068262638022",
+        "first": "752af2f17329000f774c4190ff5a4bb4a2f0beac5b8cd87851c85cd07d93d28e",
         "first_metadata": {
           "command": [
             "<HOME>\\AppData\\Local\\Ultimate-AI-Starter-Bundle\\toolchains\\go1.23.2\\go\\bin\\go.EXE",
             "version",
             "-m",
-            "<HOME>\\AppData\\Local\\Temp\\tmpd32kv9yu\\linux-a"
+            "<HOME>\\AppData\\Local\\Temp\\tmp9docmdnb\\linux-a"
           ],
           "returncode": 0,
           "stderr": "",
-          "stdout": "<HOME>\\AppData\\Local\\Temp\\tmpd32kv9yu\\linux-a: go1.23.2\n\tpath\tskyrimforge/native\n\tmod\tskyrimforge/native\t(devel)\t\n\tbuild\t-buildmode=exe\n\tbuild\t-compiler=gc\n\tbuild\t-trimpath=true\n\tbuild\tCGO_ENABLED=0\n\tbuild\tGOARCH=amd64\n\tbuild\tGOOS=linux\n\tbuild\tGOAMD64=v1\n"
+          "stdout": "<HOME>\\AppData\\Local\\Temp\\tmp9docmdnb\\linux-a: go1.23.2\n\tpath\tskyrimforge/native\n\tmod\tskyrimforge/native\t(devel)\t\n\tbuild\t-buildmode=exe\n\tbuild\t-compiler=gc\n\tbuild\t-trimpath=true\n\tbuild\tCGO_ENABLED=0\n\tbuild\tGOARCH=amd64\n\tbuild\tGOOS=linux\n\tbuild\tGOAMD64=v1\n"
         },
         "result": "PASS",
-        "second": "0a53c952c4b4144402d2dd15147a430be1e3773695ba2fc69ef0068262638022"
+        "second": "752af2f17329000f774c4190ff5a4bb4a2f0beac5b8cd87851c85cd07d93d28e"
       },
       "windows": {
         "buildvcs": false,
-        "bundled": "3de371d05df1b7a68a600727981599900384dfc7f7504dce6a4a6d851a83d2f7",
+        "bundled": "e3831aca967eddc6a66fc9c89c8877c3484a0bdbb4ce46a240969b70cc77c972",
         "bundled_metadata": {
           "command": [
             "<HOME>\\AppData\\Local\\Ultimate-AI-Starter-Bundle\\toolchains\\go1.23.2\\go\\bin\\go.EXE",
@@ -44,20 +44,20 @@
           "stderr": "",
           "stdout": "<REPOSITORY_ROOT>\\writer\\published\\win-x64\\SkyrimForge.Native.exe: go1.23.2\n\tpath\tskyrimforge/native\n\tmod\tskyrimforge/native\t(devel)\t\n\tbuild\t-buildmode=exe\n\tbuild\t-compiler=gc\n\tbuild\t-trimpath=true\n\tbuild\tCGO_ENABLED=0\n\tbuild\tGOARCH=amd64\n\tbuild\tGOOS=windows\n\tbuild\tGOAMD64=v1\n"
         },
-        "first": "3de371d05df1b7a68a600727981599900384dfc7f7504dce6a4a6d851a83d2f7",
+        "first": "e3831aca967eddc6a66fc9c89c8877c3484a0bdbb4ce46a240969b70cc77c972",
         "first_metadata": {
           "command": [
             "<HOME>\\AppData\\Local\\Ultimate-AI-Starter-Bundle\\toolchains\\go1.23.2\\go\\bin\\go.EXE",
             "version",
             "-m",
-            "<HOME>\\AppData\\Local\\Temp\\tmpd32kv9yu\\windows-a.exe"
+            "<HOME>\\AppData\\Local\\Temp\\tmp9docmdnb\\windows-a.exe"
           ],
           "returncode": 0,
           "stderr": "",
-          "stdout": "<HOME>\\AppData\\Local\\Temp\\tmpd32kv9yu\\windows-a.exe: go1.23.2\n\tpath\tskyrimforge/native\n\tmod\tskyrimforge/native\t(devel)\t\n\tbuild\t-buildmode=exe\n\tbuild\t-compiler=gc\n\tbuild\t-trimpath=true\n\tbuild\tCGO_ENABLED=0\n\tbuild\tGOARCH=amd64\n\tbuild\tGOOS=windows\n\tbuild\tGOAMD64=v1\n"
+          "stdout": "<HOME>\\AppData\\Local\\Temp\\tmp9docmdnb\\windows-a.exe: go1.23.2\n\tpath\tskyrimforge/native\n\tmod\tskyrimforge/native\t(devel)\t\n\tbuild\t-buildmode=exe\n\tbuild\t-compiler=gc\n\tbuild\t-trimpath=true\n\tbuild\tCGO_ENABLED=0\n\tbuild\tGOARCH=amd64\n\tbuild\tGOOS=windows\n\tbuild\tGOAMD64=v1\n"
         },
         "result": "PASS",
-        "second": "3de371d05df1b7a68a600727981599900384dfc7f7504dce6a4a6d851a83d2f7"
+        "second": "e3831aca967eddc6a66fc9c89c8877c3484a0bdbb4ce46a240969b70cc77c972"
       }
     },
     "format": {
@@ -154,14 +154,14 @@
   "native": {
     "executed_platform": "windows",
     "hashes": {
-      "linux": "0a53c952c4b4144402d2dd15147a430be1e3773695ba2fc69ef0068262638022",
-      "windows": "3de371d05df1b7a68a600727981599900384dfc7f7504dce6a4a6d851a83d2f7"
+      "linux": "752af2f17329000f774c4190ff5a4bb4a2f0beac5b8cd87851c85cd07d93d28e",
+      "windows": "e3831aca967eddc6a66fc9c89c8877c3484a0bdbb4ce46a240969b70cc77c972"
     },
     "linux_elf": true,
     "package_copies_match": true,
     "package_copy_hashes": {
-      "linux": "0a53c952c4b4144402d2dd15147a430be1e3773695ba2fc69ef0068262638022",
-      "windows": "3de371d05df1b7a68a600727981599900384dfc7f7504dce6a4a6d851a83d2f7"
+      "linux": "752af2f17329000f774c4190ff5a4bb4a2f0beac5b8cd87851c85cd07d93d28e",
+      "windows": "e3831aca967eddc6a66fc9c89c8877c3484a0bdbb4ce46a240969b70cc77c972"
     },
     "result": "PASS",
     "self_test": {
@@ -180,11 +180,11 @@
       ],
       "returncode": 0,
       "stderr": "",
-      "stdout": "SkyrimForge.Native 6.4.2 go\n"
+      "stdout": "SkyrimForge.Native 6.5.0 go\n"
     },
     "windows_pe": true
   },
   "product": "Skyrim Forge",
   "result": "PASS",
-  "version": "6.4.2"
+  "version": "6.5.0"
 }

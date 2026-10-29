@@ -1,3 +1,7 @@
+# Self-publishing releases and version-free skill (2026-10-29)
+
+- A green, untagged version on main is the release request; nobody pushes tags. The bundle installs Forge's latest release (it pins none), so Forge releases never need a bundle release, and Forge's skill no longer restates a version that would need bumping in both.
+
 # Defer global MCP registration to the bundle toolbox (2026-10-29)
 
 - Where the Ultimate AI Starter Bundle toolbox serves `skyrim-forge` to a provider, Forge does not also register it globally. The bundle installer removes global Forge entries in favour of the on-demand toolbox, so a global write here was undone on every bundle install and re-added on every Forge registration. Detection reads the bundle's own catalog (`toolbox-profiles.json`) and the provider's MCP config; unreadable config falls back to registering as before. `-Global` keeps an explicit machine-wide choice available.

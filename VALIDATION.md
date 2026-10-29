@@ -1,3 +1,7 @@
+# Independent releases candidate 6.5.0 (2026-10-29)
+
+Release workflow gates are asserted by tests/test_ci_validation.py; the version gate passes a version-free skill and still rejects a stated stale version. Full validator PASS twice plus the idempotence run.
+
 # Bundle toolbox deferral candidate 6.4.2 (2026-10-29)
 
 Provider bridge suite 9/9 with the installed runtime: detection matches the live machine (Codex, Grok, Claude, Hermes deferred; Kimi without a toolbox registers), a Kimi config with a toolbox entry is left byte-identical and reported DEFERRED, and `-Global` writes Forge beside the toolbox.

@@ -3,7 +3,7 @@ name: skyrim-forge
 description: Use when Skyrim mod development or validation can benefit from the bundle-managed Skyrim Forge typed automation broker.
 ---
 
-# Skyrim Forge 6.4
+# Skyrim Forge
 
 ## Resolve this installation
 
@@ -25,10 +25,11 @@ directory named by `SKYRIM_FORGE_ROOT`; upgrades replace the application source
 in place while preserving the managed workspace/runtime state. Do not reconstruct
 a version-stamped install path.
 
-Forge is released independently from github.com/SenjuWoo/SkyrimForge. The
-bundle pins a verified product release; Forge also installs on its own. Run `forge doctor` (or the exact descriptor CLI argv plus
-`doctor`) and require `result: PASS` and `read_only_ready: true` before major
-work. Claude Code 2026-07-28 still requires `tools/call` to include
+Forge is released independently from github.com/SenjuWoo/SkyrimForge; `forge version`
+reports the installed release. The bundle installs Forge's latest verified release
+(it pins none); Forge also installs on its own. Run `forge doctor` (or the exact
+descriptor CLI argv plus `doctor`) and require `result: PASS` and
+`read_only_ready: true` before major work. Claude Code 2026-07-28 still requires `tools/call` to include
 `resultType: "complete"`. Do not add Forge as a new Grok MCP server when
 Grok already sits on the 8-running-server cliff (7 configured, or 6 while
 `mcp-search` still loads).

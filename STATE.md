@@ -1,3 +1,10 @@
+# Forge 6.5.0 independent releases (2026-10-29)
+
+- Goal: release without a manual tag; nothing in Forge restates a version the bundle would also need to bump.
+- Parent: main 9a568aa (6.4.2). Pushed straight to main after the full local gate.
+- Done: self-publishing `release.yml` (exact SHA, every check, attestation, no asset replacement, re-download compare); Dependabot auto-merge; version-free skill; README fixes.
+- Next: CI on the pushed SHA, the workflow publishes 6.5.0, verify the downloaded bytes.
+
 # Forge 6.4.2 bundle toolbox deferral (2026-10-29)
 
 - Goal: stop Forge and the Ultimate AI Starter Bundle from undoing each other's MCP registration.

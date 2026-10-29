@@ -1,19 +1,42 @@
 name: Release
 
+# Publishes Forge with no human step once CI is green on main. A version bump
+# that reaches main is the release request; a main commit whose version already
+# has a tag publishes nothing. Fail-closed order: exact SHA is still main ->
+# every other check on that SHA finished successful -> full publication
+# validation -> reproducible build -> build attestation -> tag that SHA ->
+# publish without replacing assets -> re-download and compare every asset.
+
 on:
-  push:
-    tags: ["v*"]
+  workflow_run:
+    workflows: [CI]
+    types: [completed]
+    branches: [main]
 
 permissions:
   contents: write
+  id-token: write
+  attestations: write
+
+concurrency:
+  group: release
+  cancel-in-progress: false
 
 jobs:
   release:
+    name: Publish release
+    if: github.event.workflow_run.conclusion == 'success' && github.event.workflow_run.event == 'push'
     runs-on: ubuntu-latest
-    timeout-minutes: 30
+    timeout-minutes: 45
+    env:
+      GH_TOKEN: ${{ github.token }}
+      GH_REPO: ${{ github.repository }}
+      REPO: ${{ github.repository }}
+      SHA: ${{ github.event.workflow_run.head_sha }}
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
+          ref: ${{ github.event.workflow_run.head_sha }}
           persist-credentials: false
           fetch-depth: 0
       - uses: actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0 # v7.1.0
@@ -23,27 +46,83 @@ jobs:
         with:
           go-version: "1.23.2"
           cache: false
-      - name: Verify tag and toolchain
+
+      - name: Decide whether this SHA is a release
+        id: decide
         run: |
-          VERSION=$(python -c "from skyrim_forge.version import VERSION; print(VERSION)")
-          test "$GITHUB_REF_NAME" = "v$VERSION"
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "$SHA"
           test "$(go env GOVERSION)" = "go1.23.2"
-      - name: Full publication validation
-        run: python scripts/validate_repository.py --scope full --write-reports
-      - name: Build release assets
+          version=$(python -c "from skyrim_forge.version import VERSION; print(VERSION)")
+          tag="v$version"
+          main=$(gh api "repos/$REPO/commits/main" --jq .sha)
+          # A newer main commit gets its own CI and its own release decision.
+          if [ "$main" != "$SHA" ]; then echo "main is $main, not $SHA: skip"; echo "publish=false" >> "$GITHUB_OUTPUT"; exit 0; fi
+          # ls-remote fails the job on a network error instead of reading it as "no tag".
+          if [ -n "$(git ls-remote --tags origin "refs/tags/$tag")" ]; then echo "$tag exists: nothing to publish"; echo "publish=false" >> "$GITHUB_OUTPUT"; exit 0; fi
+          { echo "publish=true"; echo "tag=$tag"; echo "version=$version"; } >> "$GITHUB_OUTPUT"
+
+      - name: Wait for every other check on this SHA
+        if: steps.decide.outputs.publish == 'true'
         run: |
+          python - <<'EOF'
+          import json, os, subprocess, sys, time
+          repo, sha = os.environ["REPO"], os.environ["SHA"]
+          def api(path):
+              return json.loads(subprocess.run(["gh", "api", path], check=True, capture_output=True, text=True).stdout)
+          deadline = time.monotonic() + 3600
+          while True:
+              runs = [r for r in api(f"repos/{repo}/commits/{sha}/check-runs?per_page=100")["check_runs"] if r["name"] != "Publish release"]
+              status = api(f"repos/{repo}/commits/{sha}/status")
+              bad = [r["name"] for r in runs if r["status"] == "completed" and r["conclusion"] != "success"]
+              bad += [s["context"] for s in status["statuses"] if s["state"] in ("failure", "error")]
+              if bad:
+                  sys.exit("failed checks on %s: %s" % (sha, ", ".join(bad)))
+              waiting = [r["name"] for r in runs if r["status"] != "completed"]
+              waiting += [s["context"] for s in status["statuses"] if s["state"] == "pending"]
+              if runs and not waiting:
+                  print("all %d check runs and %d statuses passed on %s" % (len(runs), len(status["statuses"]), sha))
+                  break
+              if time.monotonic() > deadline:
+                  sys.exit("still pending after 60 min: %s" % (", ".join(waiting) or "no checks reported"))
+              time.sleep(30)
+          EOF
+
+      - name: Full publication validation
+        if: steps.decide.outputs.publish == 'true'
+        run: python scripts/validate_repository.py --scope full --write-reports
+
+      - name: Build release assets
+        if: steps.decide.outputs.publish == 'true'
+        env:
+          VERSION: ${{ steps.decide.outputs.version }}
+        run: |
+          set -euo pipefail
           mkdir -p dist
-          python scripts/build_release_archive.py "dist/Skyrim-Forge-${GITHUB_REF_NAME#v}.zip"
+          python scripts/build_release_archive.py "dist/Skyrim-Forge-$VERSION.zip"
           python -c "import forge_build_backend; forge_build_backend.build_wheel('dist'); forge_build_backend.build_sdist('dist')"
           cp VALIDATION.json BUILD-RECEIPT.json MANIFEST.json SBOM.spdx.json dist/
           (cd dist && sha256sum * > SHA256SUMS.txt)
-      - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+
+      - name: Attest the build
+        if: steps.decide.outputs.publish == 'true'
+        uses: actions/attest-build-provenance@4d101475d8b20a2381f78447822ac1eab6504dd8 # v4.2.2
         with:
-          name: release-assets
-          path: dist/
-          if-no-files-found: error
-      - name: Publish release without replacing assets
+          subject-path: |
+            dist/*.zip
+            dist/*.whl
+            dist/*.tar.gz
+
+      - name: Tag the exact SHA, publish without replacing assets, verify
+        if: steps.decide.outputs.publish == 'true'
         env:
-          GH_TOKEN: ${{ github.token }}
-          GH_REPO: ${{ github.repository }}
-        run: python scripts/publish_release.py "$GITHUB_REF_NAME" dist
+          TAG: ${{ steps.decide.outputs.tag }}
+        run: |
+          set -euo pipefail
+          gh api "repos/$REPO/git/refs" -f ref="refs/tags/$TAG" -f sha="$SHA" > /dev/null
+          python scripts/publish_release.py "$TAG" dist
+          test "$(gh api "repos/$REPO/commits/$TAG" --jq .sha)" = "$SHA"
+          gh release download "$TAG" --dir published
+          for f in dist/*; do cmp "$f" "published/$(basename "$f")"; done
+          (cd published && sha256sum -c SHA256SUMS.txt)
+          echo "published $TAG at $SHA; every downloaded asset equals the build"

@@ -1,3 +1,9 @@
+## 6.5.0 (2026-10-29)
+
+- Releases publish themselves: `release.yml` runs after CI passes on main, and a version with no tag yet is the release request. It waits for every other check on that exact SHA, validates, builds, attests the build, tags that SHA, publishes without replacing assets and re-downloads every asset to compare. No manual tag push.
+- The maintainer pushes to main after the local gate; rulesets block force-push and deletion for everyone and make pull-request merges wait for CI, and Dependabot pull requests merge themselves when green.
+- The `skyrim-forge` skill is version-free (`forge version` reports the release); the version gate still rejects a stale version if one is stated. README sections that described 5.x as current now say "since"; the ownership model is linked from the bundle README instead of restated; a personal example path and an example `-ForgeRoot` the bundle installer would refuse are replaced.
+
 ## 6.4.2 (2026-10-29)
 
 - `Register-MCP.ps1` defers to the Ultimate AI Starter Bundle toolbox: when the bundle's toolbox catalog lists `skyrim-forge` and a provider's MCP config already has a `toolbox` entry, that provider reports `DEFERRED` and no global Forge entry is written. The bundle installer removes global Forge entries, so the two installers no longer undo each other on every run. `-Global` registers machine-wide anyway; providers without the toolbox register as before. Tests run the real detection against all five provider config formats and a real Kimi deferral/`-Global` round trip.

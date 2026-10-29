@@ -1,3 +1,9 @@
+# Independent releases (2026-10-29)
+
+1. [complete] CI-gated self-publishing release with build attestation; tag created on the exact SHA.
+2. [complete] Version-free skill; README history labelled; ownership linked to the bundle README.
+3. [pending] Exact-SHA CI, 6.5.0 release-byte proof.
+
 # Bundle toolbox deferral (2026-10-29)
 
 1. [complete] Detect the bundle toolbox per provider and report DEFERRED; `-Global` override.

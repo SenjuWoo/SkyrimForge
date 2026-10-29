@@ -1,17 +1,18 @@
-# Skyrim Forge 6.4.2
+# Skyrim Forge 6.5.0
 
 > Skyrim Forge is the authoritative repository for the Skyrim SE/AE AI modding
 > stack: the typed Forge MCP/CLI/GUI workbench, the **48-skill Skyrim SE/AE
 > pack** (`integrations/skyrim-pack/`), the `houseCARL 2.1.1` load-order shim
 > (`Setup-HouseCarl.ps1`), and Skyrim tool discovery (`discover_tools.ps1`).
 > The [Ultimate AI Starter Bundle](https://github.com/SenjuWoo/Ultimate-AI-Starter-Bundle)
-> focuses on general AI boost and token efficiency and delegates Skyrim tooling
-> to a pinned, SHA-256-verified release of Skyrim Forge (preserving any newer
-> local Forge install untouched so you can develop both repositories in parallel).
+> focuses on general AI boost and token efficiency and installs Forge's latest
+> digest-verified release for its opt-in Skyrim pack, keeping any newer local
+> Forge install. Forge releases on its own; who owns what across the three
+> repositories is stated once, in the [bundle README](https://github.com/SenjuWoo/Ultimate-AI-Starter-Bundle#ownership).
 
 Skyrim Forge is a local, safety-first engineering workbench and MCP server for Skyrim Special Edition and Anniversary Edition mod development.
 
-Forge 5.0 speaks the current **MCP `2026-07-28`** revision, which replaced the
+Forge speaks the current **MCP `2026-07-28`** revision (since 5.0), which replaced the
 `initialize` handshake with per-request metadata, while still serving the
 handshake era every installed AI client uses today. Both eras run from the same
 process and expose the same tools, so existing Codex, Claude, and Grok
@@ -50,10 +51,10 @@ two copies behind.
 
 ### Skyrim Skill Pack, houseCARL & Parallel Development with the General Bundle
 
-Skyrim Forge 6.1 owns the complete Skyrim AI modding ecosystem:
+Skyrim Forge owns the complete Skyrim AI modding ecosystem:
 
 - **48-skill Skyrim SE/AE pack** (`integrations/skyrim-pack/skills/*`, `PACK.json`, `INSTRUCTIONS.md`): `skyrim-tool-router`, `skyrim-memory`, `skyrim-versioned-workspace`, `skyrim-forge`, `housecarl`, `spid-authoring`, `kid-authoring`, `skypatcher-authoring`, `skyrim-base-object-swapper`, `oar-authoring`, `skyrim-nif`, `skyrim-audio`, `skyrim-fomod-packaging`, `skyrim-nexus-publishing`, `skyrim-ship-gate`, and all specialist skills.
-- **`houseCARL 2.1.1` setup & Vortex load-order shim** (`integrations/skyrim-pack/skills/housecarl/scripts/Setup-HouseCarl.ps1`): discovers external user installations (e.g., `Z:\Backup\!Skyrim\Skyrim tools\houseCARL`), compares versions before upgrading with backup, filters `.bak*` folders from the Vortex shim, and respects user roots.
+- **`houseCARL 2.1.1` setup & Vortex load-order shim** (`integrations/skyrim-pack/skills/housecarl/scripts/Setup-HouseCarl.ps1`): discovers external user installations (e.g., `<your tools folder>\houseCARL`), compares versions before upgrading with backup, filters `.bak*` folders from the Vortex shim, and respects user roots.
 - **Skyrim tool discovery** (`integrations/skyrim-pack/skills/tool-discovery/scripts/discover_tools.ps1`).
 - **Parallel development with `Ultimate-AI-Starter-Bundle`**:
   - Running `START-HERE.bat` or `.\Install-AI-Bridge.ps1 -Provider All -Yes` installs the Forge runtime, the `skyrim-forge` skill, and all 48 Skyrim pack skills across Claude, Codex (`~/.agents/skills`), Grok, Kimi, Hermes, and Antigravity, and maintains Forge's independent ownership ledger without rewriting the bundle's ledger.
@@ -63,7 +64,7 @@ Skyrim Forge 6.1 owns the complete Skyrim AI modding ecosystem:
 .\Install-Skyrim-Pack.ps1 -Provider All -WithHouseCarl
 ```
 
-Choose the install root with `INSTALL-AIO.ps1 -ForgeRoot 'S:\Apps\Skyrim Tools'`
+Choose the install root with `INSTALL-AIO.ps1 -ForgeRoot '<your tools folder>\Skyrim-Forge'`
 (or set `SKYRIM_FORGE_ROOT`). Without either it goes to
 `%LOCALAPPDATA%\Skyrim-Tools\Skyrim-Forge`, which needs no admin rights and
 makes no assumption about your drive letters.
@@ -74,8 +75,8 @@ Then, from the install root:
 2. Configure core paths. Job staging defaults to `<this install>\Workspaces`.
 3. Configure only the external tools actually installed on the machine.
 
-Claude Code 2026-07-28 requires Forge **5.1.5 or newer** (`tools/call` must
-carry `resultType`). Grok wedges at 8 running MCP servers; `Register-MCP.ps1`
+Every current release carries `resultType` on `tools/call`, which Claude Code
+2026-07-28 requires (since Forge 5.1.5). Grok wedges at 8 running MCP servers; `Register-MCP.ps1`
 will skip Grok rather than take the last slot. See [docs/INSTALLATION.md](docs/INSTALLATION.md)
 and [docs/MCP.md](docs/MCP.md).
 
@@ -139,7 +140,7 @@ Use `docs/NEXUS-PUBLICATION.md`. Forge never treats credit as a substitute for p
 
 ## FOMOD engineering
 
-Forge 5.0 includes a typed FOMOD generator rather than only detecting an existing installer. It covers the bounded standard ModuleConfig XML surface: install steps, all standard group types, informational and file-bearing options, images and descriptions, required and conditional files, condition flags, nested dependencies, dynamic option types, priorities, module metadata, UTF-8/UTF-16 output, and branch simulation. Strict validation rejects omitted payload files, unsafe source paths, temporal or undefined flag references, malformed XML order, invalid condition blocks, and unresolved destination collisions.
+Forge includes a typed FOMOD generator (since 5.0) rather than only detecting an existing installer. It covers the bounded standard ModuleConfig XML surface: install steps, all standard group types, informational and file-bearing options, images and descriptions, required and conditional files, condition flags, nested dependencies, dynamic option types, priorities, module metadata, UTF-8/UTF-16 output, and branch simulation. Strict validation rejects omitted payload files, unsafe source paths, temporal or undefined flag references, malformed XML order, invalid condition blocks, and unresolved destination collisions.
 
 C# scripted FOMOD installers are deliberately unsupported because they permit arbitrary code execution. See `docs/FOMOD-ENGINEERING.md`.
 
@@ -240,7 +241,7 @@ Forge selects tools by an exact capability and a valid SHA-256 pin. It will not 
 
 ## Companion ownership
 
-[Ultimate AI Starter Bundle](https://github.com/SenjuWoo/Ultimate-AI-Starter-Bundle) supplies shared compilers and AI provider setup. [Reverse THIS!](https://github.com/SenjuWoo/reverse-this) supplies reverse-engineering tools. Forge owns Skyrim-specific tools and the optional 48-skill pack. Updates retain personal skill edits and last-good backups outside provider indexes; the general bundle never retires Forge-owned skills.
+Ownership across Forge, the [Ultimate AI Starter Bundle](https://github.com/SenjuWoo/Ultimate-AI-Starter-Bundle) and [Reverse THIS!](https://github.com/SenjuWoo/reverse-this) is stated once, in the [bundle README](https://github.com/SenjuWoo/Ultimate-AI-Starter-Bundle#ownership). Forge's part: Skyrim-specific tools and the optional skill pack. Updates retain personal skill edits and last-good backups outside provider indexes; the bundle never retires Forge-owned skills.
 
 Skill installation diagnostics: `%LOCALAPPDATA%/Skyrim-Forge/logs/skill-install.log` (`SKYRIM_FORGE_DEBUG=1` for successful-operation detail). HouseCARL failures: `%LOCALAPPDATA%/Skyrim-Forge/logs/housecarl-install.log`.
 
