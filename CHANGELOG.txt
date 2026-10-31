@@ -1,3 +1,9 @@
+## 6.7.1 (2026-10-31)
+
+- New weekly ecosystem contract check (`scripts/check_ecosystem.py`, `.github/workflows/ecosystem.yml`): reads the Ultimate AI Starter Bundle's `skyrim-forge` catalog entry (repository, `min_version` floor, asset template, installer checksum step), this repository's published release assets, and Reverse THIS!'s `kit.json`/`installed.json` receipt shape. It reports `PASS`/`DRIFT`/`UNKNOWN` (exit 0/2/3), supports `--offline` and `--json`, and never writes to either project. Forge still copies neither project's version.
+- `PLAN.md` replaced with the current plan; completed per-release plans remain in Git history. No dead Python modules, no tracked caches; `__pycache__` removed from the working tree.
+- Measured, not changed: `forge version` 168 ms, `forge doctor` 556 ms, MCP `initialize` 175 ms on this machine. No optimization was warranted.
+
 ## 6.7.0 (2026-10-31)
 
 - Audio containers are now a typed Forge subsystem (`skyrim_forge/audio.py`): `audio-inspect`, `audio-extract-fuz`, `audio-create-fuz` and `voice-path-validate`. FUZE headers, RIFF/XWMA facts, WAV voice readiness (16-bit, 44100 Hz, mono/stereo), byte-verified split and pack inside the workspace, and `Sound/Voice/<plugin>/<voice type>/` layout checks. Codec work stays external and hash-pinned: new tool-vault capabilities `audio.xwma.encode` (xWMAEncode) and `audio.lip.generate` (FaceFXWrapper/LipGen).

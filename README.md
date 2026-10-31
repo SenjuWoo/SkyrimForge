@@ -1,4 +1,4 @@
-# Skyrim Forge 6.7.0
+# Skyrim Forge 6.7.1
 
 > Skyrim Forge is the authoritative repository for the Skyrim SE/AE AI modding
 > stack: the typed Forge MCP/CLI/GUI workbench, the **50-skill Skyrim SE/AE
@@ -252,6 +252,8 @@ Forge selects tools by an exact capability and a valid SHA-256 pin. It will not 
 ## Companion ownership
 
 Ownership across Forge, the [Ultimate AI Starter Bundle](https://github.com/SenjuWoo/Ultimate-AI-Starter-Bundle) and [Reverse THIS!](https://github.com/SenjuWoo/reverse-this) is stated once, in the [bundle README](https://github.com/SenjuWoo/Ultimate-AI-Starter-Bundle#ownership). Forge's part: Skyrim-specific tools and the optional skill pack. Updates retain personal skill edits and last-good backups outside provider indexes; the bundle never retires Forge-owned skills.
+
+Forge does not sync either project. A weekly **Ecosystem contract check** workflow runs `python scripts/check_ecosystem.py`, which verifies the bundle's `skyrim-forge` catalog entry (repository, `min_version` floor, asset template, installer checksum step), the published Forge release assets, and Reverse THIS!'s `kit.json`/`installed.json` receipt shape. It reports `PASS`, `DRIFT` or `UNKNOWN` and never writes to either project.
 
 Skill installation diagnostics: `%LOCALAPPDATA%/Skyrim-Forge/logs/skill-install.log` (`SKYRIM_FORGE_DEBUG=1` for successful-operation detail). HouseCARL failures: `%LOCALAPPDATA%/Skyrim-Forge/logs/housecarl-install.log`.
 
