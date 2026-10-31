@@ -80,3 +80,36 @@ tool, prompt, and resource inventories are fixed for an installed version and
 identical for every caller, so they are `public`. Sanitized configuration is
 `private` with a zero TTL: it reflects local machine state and `forge_config_set`
 can change it.
+
+## Tool annotations
+
+`tools/list` attaches the standard hints to every tool:
+
+- read-only tools (`forge_doctor`, `forge_capabilities`, `forge_papyrus_analyze`, `forge_audio_inspect`, `forge_skse_inspect_pe`, `forge_fomod_validate`, `forge_nexus_audit`, …) are `readOnlyHint: true`, `idempotentHint: true`;
+- staged workspace builders (`forge_fomod_build`, `forge_papyrus_compile`, `forge_audio_create_fuz`, …) are `destructiveHint: false`;
+- approval-gated actions (`forge_automation_run`, `forge_tool_import`, `forge_config_set`, …) are `destructiveHint: true`.
+
+The hints describe the tool, not a permission: every mutating call still requires `approved: true`.
+
+## Bounded output
+
+A host that truncates a large JSON payload hands the agent invalid input. `tools/call` serializes the result, and when it exceeds `SKYRIM_FORGE_MAX_CHARS` (default 24000, minimum 1000) it writes the complete payload atomically to `<workspace>/.forge/spills/<tool>_<utc>_<sha8>.json` and returns:
+
+```json
+{"result": "PARTIAL_SPILL", "max_chars_overrun": true, "total_chars": 184320,
+ "artifact_path": "<workspace>/.forge/spills/forge_capabilities_...json",
+ "summary": {"capabilities": 40, "result": "PASS"}}
+```
+
+Read the artifact for the full data; the envelope is never truncated JSON.
+
+## Compact surface
+
+For hosts near a server or schema-token ceiling:
+
+```text
+python -m skyrim_forge mcp --surface compact
+SKYRIM_FORGE_MCP_SURFACE=compact python -m skyrim_forge mcp
+```
+
+Compact mode registers four orthogonal meta-tools — `skyrim_forge_inspect`, `skyrim_forge_validate`, `skyrim_forge_execute`, `skyrim_forge_release` — each taking `operation` (the underlying tool name), `arguments`, and optional `approved`. Every full-surface tool belongs to exactly one group, and the underlying tool keeps its own schema and approval rule. `--surface full` (the default) is unchanged and backward compatible.

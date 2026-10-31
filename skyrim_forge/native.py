@@ -298,11 +298,12 @@ def audit_binary(path: Path) -> dict[str, Any]:
     if not characteristics & 0x2000:
         errors.append("PE file is not marked as a DLL")
     imports: list[str] = []
-    tool = shutil.which("objdump") or shutil.which("llvm-objdump")
-    if tool:
-        process = run_process(Path(tool), ["-p", str(target)], cwd=target.parent, timeout_seconds=120)
-        if process["returncode"] == 0:
-            imports = sorted(set(re.findall(r"DLL Name:\s*([^\r\n]+)", process["stdout"], flags=re.I)))
+    try:
+        # Pure-Python import table; objdump is not guaranteed on a modder's machine.
+        from .skse_pe import PEImage
+        imports = sorted({row["dll"].casefold() for row in PEImage(data).imports()})
+    except ValidationError:
+        imports = []
     return {"result": "PASS" if not errors else "FAIL", "path": str(target), "sha256": sha256_file(target), "size": len(data), "machine": f"0x{machine:04X}", "architecture": "PE32+" if optional_magic == 0x20B else "unknown", "sections": sections, "timestamp": timestamp, "dll_characteristic": bool(characteristics & 0x2000), "imports": imports, "errors": errors, "limitations": ["Static PE inspection does not prove SKSE loadability or coexistence with other native plugins."]}
 
 

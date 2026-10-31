@@ -5,6 +5,7 @@ from pathlib import Path
 from typing import Any
 
 from .archive import inspect_archive
+from .audio import create_fuz as audio_create_fuz, extract_fuz as audio_extract_fuz, inspect as audio_inspect, validate_voice_tree
 from .automation import run_job, validate_job
 from .capabilities import get_capability, registry as capability_registry
 from .config import ForgeConfig, configure_value, load_config, save_config
@@ -25,10 +26,13 @@ from .plugin_writer import build_plugin, validate_plan
 from .records import query_records
 from .release import build_release, validate_release_tree
 from .sdk import sdk_install, sdk_status
+from .skse_pe import audit_imports as pe_audit_imports, inspect as pe_inspect, verify_reproducible as pe_verify_reproducible
 from .strictjson import load
+from .telemetry import correlate as correlate_framework_logs
 from .tools import tool_status, resolve_tool
 from .toolchain import scan_tool_source, import_tool, import_all_tools, configure_existing_tool, resolve_capability, toolchain_status, reuse_reverse_tools
 from .tool_adapters import bsarch_info, bsarch_unpack, bsarch_pack, deadmesh_scan, champollion_decompile, synthesis_run
+from .vfs_sandbox import test_install as sandbox_test_install
 from .version import VERSION
 from .safety import require_approval, require_read, require_within
 from .util import atomic_write_text
@@ -302,6 +306,37 @@ class ForgeService:
 
     def automation_run(self, path: str, approved: bool, keep_transaction: bool = True) -> dict[str, Any]:
         return run_job(self.config, Path(path), approved=approved, keep_transaction=keep_transaction)
+
+    def audio_inspect(self, path: str) -> dict[str, Any]:
+        return audio_inspect(self._read(path))
+
+    def audio_extract_fuz(self, fuz: str, output_dir: str, approved: bool) -> dict[str, Any]:
+        return audio_extract_fuz(self._read(fuz), Path(output_dir), self.config.workspace_root, approved=approved)
+
+    def audio_create_fuz(self, xwm: str, output: str, approved: bool, lip: str | None = None) -> dict[str, Any]:
+        return audio_create_fuz(self._read(xwm), Path(output), self.config.workspace_root,
+                                lip_path=self._read(lip) if lip else None, approved=approved)
+
+    def voice_path_validate(self, root: str) -> dict[str, Any]:
+        return validate_voice_tree(self._read(root))
+
+    def skse_inspect_pe(self, dll: str) -> dict[str, Any]:
+        return pe_inspect(self._read(dll))
+
+    def skse_audit_imports(self, dll: str) -> dict[str, Any]:
+        return pe_audit_imports(self._read(dll))
+
+    def skse_verify_reproducible(self, built: str, reference: str) -> dict[str, Any]:
+        return pe_verify_reproducible(self._read(built), self._read(reference))
+
+    def framework_correlate_logs(self, mod_root: str, log_dir: str) -> dict[str, Any]:
+        return correlate_framework_logs(self._read(mod_root), self._read(log_dir))
+
+    def fomod_test_install(self, plan: str, source_root: str, approved: bool, selections: str | None = None,
+                           state: str | None = None, all_branches: bool = False) -> dict[str, Any]:
+        return sandbox_test_install(self._read(plan), self._read(source_root), self.config.workspace_root, approved=approved,
+                                    selections=load(self._read(selections)) if selections else None,
+                                    state=load(self._read(state)) if state else None, all_branches=all_branches)
 
     def self_test(self) -> dict[str, Any]:
         from .selftest import run_all

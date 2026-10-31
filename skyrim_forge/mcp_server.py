@@ -1,6 +1,8 @@
 from __future__ import annotations
 
+import hashlib
 import json
+import os
 import sys
 from pathlib import Path
 from typing import Any, Callable
@@ -8,6 +10,7 @@ from typing import Any, Callable
 from .config import load_config
 from .service import ForgeService
 from .strictjson import loads
+from .util import atomic_write_text, utc_now
 from .version import VERSION
 
 MODERN_PROTOCOL = "2026-07-28"
@@ -105,7 +108,120 @@ TOOL_SPECS: dict[str, dict[str, Any]] = {
     "forge_plugin_build": {"description": "Build KYWD, GLOB, FLST, or OTFT plugin from typed plan.", "inputSchema": _schema({"path": _string(), "output_dir": _string(), "approved": _boolean()}, ["path", "output_dir", "approved"])},
     "forge_automation_validate": {"description": "Validate a typed Automation Fabric job.", "inputSchema": _schema({"path": _string()}, ["path"])},
     "forge_automation_run": {"description": "Execute a typed transactional automation job.", "inputSchema": _schema({"path": _string(), "approved": _boolean(), "keep_transaction": _boolean()}, ["path", "approved"])},
+    "forge_audio_inspect": {"description": "Inspect a FUZ, XWM, WAV or LIP container: FUZE header, RIFF/WMA format, sample rate and voice readiness.", "inputSchema": _schema({"path": _string()}, ["path"])},
+    "forge_audio_extract_fuz": {"description": "Split a FUZ into its .lip and .xwm payloads inside Forge workspace staging.", "inputSchema": _schema({"fuz": _string(), "output_dir": _string(), "approved": _boolean()}, ["fuz", "output_dir", "approved"])},
+    "forge_audio_create_fuz": {"description": "Pack an .xwm (and optional .lip) into a FUZ container inside Forge workspace staging.", "inputSchema": _schema({"xwm": _string(), "output": _string(), "lip": _string(), "approved": _boolean()}, ["xwm", "output", "approved"])},
+    "forge_voice_path_validate": {"description": "Check a staged mod keeps voice files at Sound/Voice/<plugin>/<voice type>/<file>.", "inputSchema": _schema({"root": _string()}, ["root"])},
+    "forge_skse_inspect_pe": {"description": "Read an x64 SKSE DLL without loading it: PE32+ headers, exports, PluginVersionData and file version.", "inputSchema": _schema({"dll": _string()}, ["dll"])},
+    "forge_skse_audit_imports": {"description": "Inventory a DLL's imported DLLs and functions and flag network, process-execution and DirectStorage use.", "inputSchema": _schema({"dll": _string()}, ["dll"])},
+    "forge_skse_verify_reproducible": {"description": "Compare a built DLL with a reference DLL byte-for-byte, then with linker timestamps normalised.", "inputSchema": _schema({"built": _string(), "reference": _string()}, ["built", "reference"])},
+    "forge_framework_correlate_logs": {"description": "Match static framework-lint findings against SKSE framework logs and report which rows runtime evidence proves.", "inputSchema": _schema({"mod_root": _string(), "log_dir": _string()}, ["mod_root", "log_dir"])},
+    "forge_fomod_test_install": {"description": "Extract a FOMOD branch into MO2- and Vortex-shaped folders in the workspace sandbox and write an install receipt.", "inputSchema": _schema({"plan": _string(), "source_root": _string(), "selections": _string(), "state": _string(), "all_branches": _boolean(), "approved": _boolean()}, ["plan", "source_root", "approved"])},
 }
+
+
+# Tool annotations are advisory hints the MCP revision defines so a host can
+# auto-approve reads and pause before destructive calls. Forge classifies every
+# tool exactly once; the compact surface reuses the same classification.
+READ_ONLY_TOOLS = {
+    "forge_version", "forge_doctor", "forge_self_test", "forge_config_show", "forge_discover_tools",
+    "forge_tool_status", "forge_tool_scan", "forge_tool_resolve", "forge_toolchain_status",
+    "forge_capabilities", "forge_plugin_info", "forge_record_query", "forge_plugins", "forge_load_order",
+    "forge_record_conflicts", "forge_archive_info", "forge_mod_tree", "forge_bsarch_info",
+    "forge_audio_inspect", "forge_voice_path_validate", "forge_skse_inspect_pe", "forge_skse_audit_imports",
+    "forge_skse_verify_reproducible", "forge_framework_correlate_logs", "forge_fomod_simulate",
+    "forge_nexus_policy_status", "forge_lint_frameworks", "forge_framework_plan_validate", "forge_fomod_validate",
+    "forge_fomod_plan_validate", "forge_release_validate", "forge_nexus_plan_validate", "forge_nexus_audit",
+    "forge_native_plan_validate", "forge_native_audit", "forge_native_binary_audit", "forge_plugin_plan_validate",
+    "forge_automation_validate",
+}
+DESTRUCTIVE_TOOLS = {
+    "forge_config_set", "forge_tool_import", "forge_tool_import_all", "forge_tool_configure",
+    "forge_tool_reuse_reverse", "forge_automation_run",
+}
+COMPACT_GROUPS: dict[str, set[str]] = {
+    "inspect": {
+        "forge_version", "forge_doctor", "forge_self_test", "forge_config_show", "forge_discover_tools",
+        "forge_tool_status", "forge_tool_scan", "forge_tool_resolve", "forge_toolchain_status",
+        "forge_capabilities", "forge_papyrus_analyze", "forge_plugin_info", "forge_record_query", "forge_plugins", "forge_load_order",
+        "forge_record_conflicts", "forge_archive_info", "forge_mod_tree", "forge_bsarch_info",
+        "forge_audio_inspect", "forge_voice_path_validate", "forge_skse_inspect_pe", "forge_skse_audit_imports",
+        "forge_skse_verify_reproducible", "forge_framework_correlate_logs", "forge_fomod_simulate",
+        "forge_nexus_policy_status",
+    },
+    "validate": {
+        "forge_lint_frameworks", "forge_framework_plan_validate", "forge_fomod_validate", "forge_fomod_plan_validate",
+        "forge_release_validate", "forge_nexus_plan_validate", "forge_nexus_audit", "forge_native_plan_validate",
+        "forge_native_audit", "forge_native_binary_audit", "forge_plugin_plan_validate", "forge_automation_validate",
+    },
+    "execute": {
+        "forge_config_set", "forge_tool_import", "forge_tool_import_all", "forge_tool_configure",
+        "forge_tool_reuse_reverse", "forge_bsarch_unpack", "forge_bsarch_pack",
+        "forge_deadmesh_scan", "forge_champollion_decompile", "forge_synthesis_run", "forge_seq_build",
+        "forge_framework_build", "forge_papyrus_compile", "forge_native_scaffold", "forge_native_build",
+        "forge_fomod_scaffold", "forge_fomod_build", "forge_fomod_test_install", "forge_plugin_build",
+        "forge_automation_run", "forge_audio_extract_fuz", "forge_audio_create_fuz",
+    },
+    "release": {"forge_release_build", "forge_nexus_scaffold", "forge_nexus_build", "forge_nexus_page_render"},
+}
+
+
+def _annotations(name: str) -> dict[str, bool]:
+    if name in READ_ONLY_TOOLS:
+        return {"readOnlyHint": True, "destructiveHint": False, "idempotentHint": True, "openWorldHint": False}
+    if name in DESTRUCTIVE_TOOLS:
+        return {"readOnlyHint": False, "destructiveHint": True, "idempotentHint": False, "openWorldHint": False}
+    return {"readOnlyHint": False, "destructiveHint": False, "idempotentHint": True, "openWorldHint": False}
+
+
+def _compact_specs() -> dict[str, dict[str, Any]]:
+    """Expose four orthogonal meta-tools instead of every schema, for hosts with a server-slot or token ceiling."""
+    covered = [member for members in COMPACT_GROUPS.values() for member in members]
+    assert sorted(covered) == sorted(TOOL_SPECS), "compact surface must cover every tool exactly once"
+    specs = {}
+    for group, members in COMPACT_GROUPS.items():
+        specs[f"skyrim_forge_{group}"] = {
+            "description": f"{group.capitalize()} through one typed Forge entry point. Name an operation and pass its arguments; the underlying tool and its approval rules are unchanged.",
+            "inputSchema": _schema({
+                "operation": {"type": "string", "enum": sorted(members), "description": "Underlying Forge tool to run."},
+                "arguments": {"type": "object", "description": "Arguments for that tool, exactly as its own schema defines them.", "additionalProperties": True},
+                "approved": _boolean("Explicit approval, forwarded to the underlying tool."),
+            }, ["operation"]),
+            "annotations": {"readOnlyHint": group in {"inspect", "validate"}, "destructiveHint": False,
+                            "idempotentHint": True, "openWorldHint": False},
+        }
+    return specs
+
+
+COMPACT_TOOLS = _compact_specs()
+
+# A host that silently truncates a large JSON payload leaves the agent with
+# invalid input. Forge spills the complete result to a workspace artifact and
+# returns a bounded envelope naming the file instead.
+MAX_CHARS_DEFAULT = 24000
+
+
+def _max_chars() -> int:
+    try:
+        value = int(os.environ.get("SKYRIM_FORGE_MAX_CHARS", ""))
+    except ValueError:
+        value = 0
+    return value if value >= 1000 else MAX_CHARS_DEFAULT
+
+
+def _bounded(service: ForgeService, name: str, value: Any) -> dict[str, Any]:
+    text = json.dumps(value, indent=2, ensure_ascii=False, sort_keys=True, default=str)
+    if len(text) <= _max_chars():
+        return {"content": [{"type": "text", "text": text}], "isError": False}
+    directory = Path(service.config.workspace_root) / ".forge" / "spills"
+    digest = hashlib.sha256(text.encode("utf-8")).hexdigest()[:8]
+    artifact = directory / f"{name}_{utc_now().replace(':', '').replace('-', '')}_{digest}.json"
+    atomic_write_text(artifact, text + "\n")
+    summary = ({key: (len(item) if isinstance(item, (list, dict)) else item[:200] if isinstance(item, str) else item)
+                for key, item in value.items()} if isinstance(value, dict) else {"type": type(value).__name__})
+    envelope = {"result": "PARTIAL_SPILL", "max_chars_overrun": True, "total_chars": len(text),
+                "artifact_path": str(artifact), "summary": summary}
+    return {"content": [{"type": "text", "text": json.dumps(envelope, indent=2, sort_keys=True, default=str)}], "isError": False}
 
 
 def _call(service: ForgeService, name: str, args: dict[str, Any]) -> Any:
@@ -169,11 +285,16 @@ def _call(service: ForgeService, name: str, args: dict[str, Any]) -> Any:
         case "forge_plugin_build": return service.plugin_build(args["path"], args["output_dir"], approved)
         case "forge_automation_validate": return service.automation_validate(args["path"])
         case "forge_automation_run": return service.automation_run(args["path"], approved, bool(args.get("keep_transaction", True)))
+        case "forge_audio_inspect": return service.audio_inspect(args["path"])
+        case "forge_audio_extract_fuz": return service.audio_extract_fuz(args["fuz"], args["output_dir"], approved)
+        case "forge_audio_create_fuz": return service.audio_create_fuz(args["xwm"], args["output"], approved, args.get("lip") or None)
+        case "forge_voice_path_validate": return service.voice_path_validate(args["root"])
+        case "forge_skse_inspect_pe": return service.skse_inspect_pe(args["dll"])
+        case "forge_skse_audit_imports": return service.skse_audit_imports(args["dll"])
+        case "forge_skse_verify_reproducible": return service.skse_verify_reproducible(args["built"], args["reference"])
+        case "forge_framework_correlate_logs": return service.framework_correlate_logs(args["mod_root"], args["log_dir"])
+        case "forge_fomod_test_install": return service.fomod_test_install(args["plan"], args["source_root"], approved, args.get("selections") or None, args.get("state") or None, bool(args.get("all_branches", False)))
         case _: raise KeyError(name)
-
-
-def _text(value: Any) -> dict[str, Any]:
-    return {"content": [{"type": "text", "text": json.dumps(value, indent=2, ensure_ascii=False, sort_keys=True, default=str)}], "isError": False}
 
 
 def _error(exc: Exception) -> dict[str, Any]:
@@ -211,7 +332,22 @@ def _complete(result: dict[str, Any]) -> dict[str, Any]:
     return {**result, "resultType": "complete"}
 
 
-def handle(service: ForgeService, request: dict[str, Any]) -> dict[str, Any] | None:
+def _call_compact(service: ForgeService, name: str, args: dict[str, Any]) -> Any:
+    """Route one compact meta-tool call to the underlying Forge tool and its own approval rules."""
+    group = name.removeprefix("skyrim_forge_")
+    operation = args.get("operation")
+    if operation not in COMPACT_GROUPS.get(group, set()):
+        raise ValueError(f"{operation!r} is not an operation of {name}")
+    inner = args.get("arguments") or {}
+    if not isinstance(inner, dict):
+        raise ValueError("arguments must be an object")
+    inner = dict(inner)
+    if "approved" in args:
+        inner["approved"] = args["approved"]
+    return _call(service, operation, inner)
+
+
+def handle(service: ForgeService, request: dict[str, Any], surface: str = "full") -> dict[str, Any] | None:
     if request.get("jsonrpc") != "2.0":
         raise ValueError("JSON-RPC 2.0 required")
     method = request.get("method")
@@ -239,15 +375,20 @@ def handle(service: ForgeService, request: dict[str, Any]) -> dict[str, Any] | N
     elif method == "ping":
         result = _complete({})
     elif method == "tools/list":
-        result = cache({"tools": [{"name": name, **spec} for name, spec in sorted(TOOL_SPECS.items())]})
+        if surface == "compact":
+            result = cache({"tools": [{"name": name, **spec} for name, spec in sorted(COMPACT_TOOLS.items())]})
+        else:
+            result = cache({"tools": [{"name": name, "annotations": _annotations(name), **spec} for name, spec in sorted(TOOL_SPECS.items())]})
     elif method == "tools/call":
         params = request.get("params", {})
         name = params.get("name")
         args = params.get("arguments", {})
-        if name not in TOOL_SPECS or not isinstance(args, dict):
+        known = COMPACT_TOOLS if surface == "compact" else TOOL_SPECS
+        if name not in known or not isinstance(args, dict):
             raise ValueError("Unknown tool or invalid arguments")
         try:
-            result = _complete(_text(_call(service, name, args)))
+            value = _call_compact(service, name, args) if surface == "compact" else _call(service, name, args)
+            result = _complete(_bounded(service, name, value))
         except Exception as exc:
             result = _complete(_error(exc))
     elif method == "resources/list":
@@ -370,7 +511,7 @@ def handle(service: ForgeService, request: dict[str, Any]) -> dict[str, Any] | N
     return {"jsonrpc": "2.0", "id": request_id, "result": result}
 
 
-def serve(config_path: str | None = None) -> None:
+def serve(config_path: str | None = None, surface: str = "full") -> None:
     service = ForgeService(load_config(config_path))
     for raw in sys.stdin:
         if not raw.strip():
@@ -379,7 +520,7 @@ def serve(config_path: str | None = None) -> None:
         try:
             request = loads(raw)
             request_id = request.get("id") if isinstance(request, dict) else None
-            response = handle(service, request)
+            response = handle(service, request, surface)
             if response is not None:
                 sys.stdout.write(json.dumps(response, ensure_ascii=False, separators=(",", ":"), default=str) + "\n")
                 sys.stdout.flush()

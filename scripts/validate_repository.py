@@ -487,6 +487,7 @@ def validate_version_sources(errors: list[str]) -> dict[str, Any]:
     capture("pyproject.toml", r'^version\s*=\s*"([^"]+)"')
     capture("CURRENT.txt", r"^\s*([0-9]+\.[0-9]+\.[0-9]+)\s*$")
     capture("VERSION.txt", r"^Skyrim Forge ([0-9]+\.[0-9]+\.[0-9]+)")
+    capture("server.json", r'"version":\s*"([0-9]+\.[0-9]+\.[0-9]+)"')
     # The first line a user sees on Windows, and the first to look abandoned.
     capture("START-HERE.bat", r"^title Skyrim Forge ([0-9]+\.[0-9]+\.[0-9]+)")
     capture("README.md", r"^# Skyrim Forge ([0-9]+\.[0-9]+\.[0-9]+)")

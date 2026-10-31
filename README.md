@@ -1,4 +1,4 @@
-# Skyrim Forge 6.6.0
+# Skyrim Forge 6.7.0
 
 > Skyrim Forge is the authoritative repository for the Skyrim SE/AE AI modding
 > stack: the typed Forge MCP/CLI/GUI workbench, the **50-skill Skyrim SE/AE
@@ -104,7 +104,10 @@ External tool execution is disabled by default. UI Automation is separately disa
 - Traverse normal and compressed plugin records and query signatures, raw FormIDs, local FormIDs, origins, and EditorIDs.
 - Create narrowly typed KYWD, GLOB, FLST, and OTFT plugins transactionally.
 - Validate SPID, KID, BOS, SkyPatcher placement, and CDF configuration.
-- Generate, simulate, and strictly validate complete FOMOD 5.0 installers from typed plans.
+- Correlate those static findings with SKSE framework logs and mark the rows runtime evidence proves.
+- Inspect, split, and pack FUZ voice containers and check `Sound/Voice` layout.
+- Read an x64 SKSE DLL without loading it: exports, `SKSEPlugin_Version`, imports, and timestamp-normalised reproducibility.
+- Generate, simulate, and strictly validate complete FOMOD 5.0 installers from typed plans, then extract every branch into an MO2- and Vortex-shaped sandbox with a receipt.
 - Compile Papyrus through the official compiler and reject stale PEX output.
 - Inspect archives and release trees.
 - Build deterministic private release archives.
@@ -143,6 +146,10 @@ Use `docs/NEXUS-PUBLICATION.md`. Forge never treats credit as a substitute for p
 Forge includes a typed FOMOD generator (since 5.0) rather than only detecting an existing installer. It covers the bounded standard ModuleConfig XML surface: install steps, all standard group types, informational and file-bearing options, images and descriptions, required and conditional files, condition flags, nested dependencies, dynamic option types, priorities, module metadata, UTF-8/UTF-16 output, and branch simulation. Strict validation rejects omitted payload files, unsafe source paths, temporal or undefined flag references, malformed XML order, invalid condition blocks, and unresolved destination collisions.
 
 C# scripted FOMOD installers are deliberately unsupported because they permit arbitrary code execution. See `docs/FOMOD-ENGINEERING.md`.
+
+## Audio and voice
+
+Forge reads and writes Skyrim voice containers with the standard library. `audio-inspect` reports FUZE headers, RIFF/XWMA format, PCM voice readiness and lip size; `audio-extract-fuz` and `audio-create-fuz` split and assemble containers inside the workspace and read the bytes back; `voice-path-validate` checks `Sound/Voice/<plugin>/<voice type>/`. WAV-to-XWM transcoding and lip-sync generation need the hash-pinned `xWMAEncode` and `FaceFXWrapper` tools in the tool vault (`audio.xwma.encode`, `audio.lip.generate`). See `docs/AUDIO-ENGINEERING.md`.
 
 ## xEdit automation
 

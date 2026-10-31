@@ -150,6 +150,26 @@ if (-not $Python) {
 
 if ($BootstrapPython) { Update-SharedPython $Python }
 
+# A provider-cached interpreter (Codex, Claude, uv, pipx, Temp) disappears when
+# that cache is pruned, and every registered MCP client then fails to spawn
+# Forge. Refuse to build the venv on one.
+function Test-EphemeralPythonPath([string]$Candidate) {
+    if (-not $Candidate) { return $false }
+    $Normalized = $Candidate.Replace('/','\').ToLowerInvariant()
+    foreach ($Marker in @('\.cache\','codex-runtimes','claude-code','appdata\local\temp','pipx\venvs','\uv\cache\')) {
+        if ($Normalized.Contains($Marker)) { return $true }
+    }
+    return $false
+}
+if (Test-EphemeralPythonPath $Python.Exe) {
+    $StableLauncher = Get-Command py -ErrorAction SilentlyContinue
+    if (-not $StableLauncher) {
+        throw "The selected Python is a provider-cached runtime that will be pruned: $($Python.Exe). Install Python 3.11+ or set UABS_PYTHON to a stable interpreter."
+    }
+    Write-Warning "Selected Python is provider-cached ($($Python.Exe)); rebuilding the venv from the Windows Python Launcher instead."
+    $Python = [pscustomobject]@{Exe=$StableLauncher.Source;Args=@('-3');Source='PATH:py (stable fallback)'}
+}
+
 $env:SKYRIM_FORGE_BOOTSTRAP_ROOT = $Root
 $ExpectedVersion = (& $Python.Exe @($Python.Args) -c "import os,sys; sys.path.insert(0, os.environ['SKYRIM_FORGE_BOOTSTRAP_ROOT']); from skyrim_forge.version import VERSION; print(VERSION)").Trim()
 if (-not $ExpectedVersion) { throw 'Could not read the bundled Forge version.' }
@@ -186,6 +206,17 @@ if (Test-Path -LiteralPath $VenvPython -PathType Leaf) {
         $VenvHealthy = ($LASTEXITCODE -eq 0)
     } catch {
         $VenvHealthy = $false
+    }
+}
+$VenvCfg = Join-Path $Venv 'pyvenv.cfg'
+if ($VenvHealthy -and (Test-Path -LiteralPath $VenvCfg -PathType Leaf)) {
+    $HomeLine = Get-Content -LiteralPath $VenvCfg | Where-Object { $_ -match '^\s*home\s*=' } | Select-Object -First 1
+    if ($HomeLine) {
+        $HomeValue = ($HomeLine -replace '^\s*home\s*=\s*', '').Trim()
+        if ((Test-EphemeralPythonPath $HomeValue) -or -not (Test-Path -LiteralPath (Join-Path $HomeValue 'python.exe') -PathType Leaf)) {
+            Write-Warning "Forge virtual environment base is not durable: $HomeValue. Rebuilding $Venv from $($Python.Exe)."
+            $VenvHealthy = $false
+        }
     }
 }
 if (-not $VenvHealthy) {

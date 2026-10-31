@@ -22,7 +22,7 @@ class V41CompletionTests(unittest.TestCase):
     def test_all_built_in_self_tests_are_integrated(self):
         report = run_all()
         self.assertEqual(report["result"], "PASS", report)
-        self.assertEqual(set(report["checks"]), {"framework_lint", "framework_builder", "fomod", "papyrus", "native", "nexus", "capabilities", "toolchain"})
+        self.assertEqual(set(report["checks"]), {"framework_lint", "framework_builder", "fomod", "papyrus", "native", "skse_pe", "audio", "telemetry", "vfs_sandbox", "nexus", "capabilities", "toolchain"})
 
     def test_papyrus_compile_uses_pinned_python_mock_and_manifest(self):
         with tempfile.TemporaryDirectory() as td:

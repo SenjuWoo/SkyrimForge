@@ -1,3 +1,10 @@
+# Forge 6.7.0 audio, SKSE PE, runtime evidence, sandbox install, MCP surface (2026-10-31)
+
+- Goal: apply the reviewed v6.1 roadmap to the 6.6.0 tree — take only the gaps that are still real after 6.0.1, with no new runtime dependency.
+- Done: audio containers (`audio-inspect`, `audio-extract-fuz`, `audio-create-fuz`, `voice-path-validate`) plus tool-vault capabilities `audio.xwma.encode` and `audio.lip.generate`; SKSE PE workbench (`skse-inspect-pe`, `skse-audit-imports`, `skse-verify-reproducible`) and pure-Python imports in `native-binary-audit`; `framework-correlate-logs`; `fomod-test-install` with `install_verification_receipt.json`; MCP tool annotations, bounded-output spill and `--surface compact`; venv ephemeral-base rejection in `doctor` and `Install-or-Update.ps1`; `server.json` + `glama.json`; docs, capability registry, CHANGELOG.
+- Verified: local full gate PASS at 6.7.0 (files, powershell, python 300 tests, native, go, packaging, mcp, version), zero errors, one pre-existing PowerShell screening warning; `forge self-test` 12/12; Go helper rebuilt and reports `SkyrimForge.Native 6.7.0 go`; the delivery test builds the product ZIP from tracked files and runs its CLI outside Git.
+- Not done / limits: nothing pushed — no CI, tag or release, because `release.yml` publishes on a main push. No Skyrim, SKSE load, MO2/Vortex or USVFS run; the sandbox install test is a folder simulation. Log correlation matches file/line text only. houseCARL evidence ingest was deliberately not added; the independent `load-order`/`record-conflicts` tools supersede it.
+
 # Forge 6.6.0 MCM Helper skill, data frameworks, houseCARL fallback (2026-10-29)
 
 - Goal: the AI should know MCM Helper and the other installed SKSE data frameworks without checking online, and Forge must not depend on houseCARL alone.

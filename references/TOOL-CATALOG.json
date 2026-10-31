@@ -46,9 +46,9 @@
       "tool": "deadmesh_gui"
     },
     {
-      "tool": "clibdt",
+      "sha256": "4cbed885fee669bc7a731ba64de714d2b4fa2fd55f6b3c9eaddd8f4516273776",
       "source_label": "Supplied CLibDT (Windows)/ClibDT.exe; PE version 6.0.0",
-      "sha256": "4cbed885fee669bc7a731ba64de714d2b4fa2fd55f6b3c9eaddd8f4516273776"
+      "tool": "clibdt"
     }
   ],
   "policy": {
@@ -812,25 +812,70 @@
       "source": "https://www.nexusmods.com/site/mods/631/"
     },
     {
-      "id": "clibdt",
-      "config_key": "clibdt",
-      "names": [
-        "ClibDT.exe"
-      ],
-      "path_hints": [
-        "clibdt",
-        "clibdt (windows)"
-      ],
       "automation": "human_gate",
       "capabilities": [
         "skse.project.gui"
       ],
+      "config_key": "clibdt",
+      "id": "clibdt",
       "import_mode": "configure_only",
       "license": "GPL-3.0-only (supplied LICENSE/third-party notices)",
-      "public_bundle_allowed": false,
+      "names": [
+        "ClibDT.exe"
+      ],
+      "notes": "Supplied native GUI identifies itself as 6.0.0. The older public Python toolkit is not proven to produce these bytes. Discover/configure in place; no automatic replacement, public binary copy or fabricated headless runner.",
+      "path_hints": [
+        "clibdt",
+        "clibdt (windows)"
+      ],
       "priority": 20,
-      "source": "https://github.com/Supertron42/ClibDT_CommonLibSSE_NG_VR_Toolkit",
-      "notes": "Supplied native GUI identifies itself as 6.0.0. The older public Python toolkit is not proven to produce these bytes. Discover/configure in place; no automatic replacement, public binary copy or fabricated headless runner."
+      "public_bundle_allowed": false,
+      "source": "https://github.com/Supertron42/ClibDT_CommonLibSSE_NG_VR_Toolkit"
+    },
+    {
+      "automation": "direct",
+      "capabilities": [
+        "audio.xwma.encode"
+      ],
+      "config_key": "audio_xwma_encode",
+      "id": "audio_xwma_encode",
+      "import_mode": "configure_only",
+      "license": "Microsoft SDK component; not redistributable",
+      "names": [
+        "xWMAEncode.exe"
+      ],
+      "notes": "Converts PCM WAV to XWM for Skyrim voice. Configure it from the user's legal SDK installation; Forge pins the hash and never bundles it.",
+      "path_hints": [
+        "xwmaencode",
+        "directx sdk",
+        "windows sdk"
+      ],
+      "priority": 80,
+      "public_bundle_allowed": false,
+      "source": "Microsoft DirectX SDK"
+    },
+    {
+      "automation": "direct",
+      "capabilities": [
+        "audio.lip.generate"
+      ],
+      "config_key": "audio_lip_generate",
+      "id": "audio_lip_generate",
+      "import_mode": "single",
+      "license": "third-party; verify the upstream licence before use",
+      "names": [
+        "FaceFXWrapper.exe",
+        "LipGen.exe"
+      ],
+      "notes": "Generates FaceFX .lip tracks from mono PCM WAV plus response text. Verify the exact build and licence with its author; Forge pins the hash and never redistributes it.",
+      "path_hints": [
+        "facefx",
+        "lipgen",
+        "lip sync"
+      ],
+      "priority": 80,
+      "public_bundle_allowed": false,
+      "source": "FaceFXWrapper/LipGen upstream release"
     }
   ]
 }

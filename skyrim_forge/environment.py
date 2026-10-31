@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import os
+import sys
 from pathlib import Path
 from typing import Any
 
@@ -9,11 +10,65 @@ from .tools import discover_executable, tool_status
 from .toolchain import toolchain_status
 from .version import VERSION
 
+# A venv built from a provider's cached interpreter dies when that cache is
+# pruned, taking every registered MCP client with it. These are the paths that
+# have been observed to disappear; a stable system or Python-install-manager
+# base never matches.
+EPHEMERAL_BASE_MARKERS = (
+    "\\.cache\\", "/.cache/", "codex-runtimes", "claude-code", "appdata\\local\\temp",
+    "appdata/local/temp", "pipx\\venvs", "/pipx/venvs/", "\\uv\\cache\\", "/uv/cache/",
+)
+
+
+def _parse_pyvenv(cfg: Path) -> dict[str, str]:
+    values: dict[str, str] = {}
+    for line in cfg.read_text(encoding="utf-8-sig", errors="replace").splitlines():
+        key, sep, value = line.partition("=")
+        if sep:
+            values[key.strip().casefold()] = value.strip()
+    return values
+
+
+def virtualenv_status() -> dict[str, Any]:
+    """Report whether Forge runs inside a venv whose base interpreter will still exist tomorrow."""
+    prefix = Path(sys.prefix)
+    inside = sys.prefix != sys.base_prefix
+    report: dict[str, Any] = {"check": "virtualenv", "in_venv": inside, "prefix": str(prefix),
+                              "base_python": sys.base_prefix, "python": sys.executable}
+    if not inside:
+        report.update({"status": "PASS", "note": "Forge is running on an interpreter directly; no venv base to lose."})
+        return report
+    cfg = prefix / "pyvenv.cfg"
+    if not cfg.is_file():
+        report.update({"status": "FAIL", "code": "VENV_NO_PYVENV_CFG", "note": "sys.prefix reports a venv but pyvenv.cfg is missing."})
+        return report
+    values = _parse_pyvenv(cfg)
+    home = values.get("home", "")
+    executable = values.get("executable", "")
+    base = home or executable
+    normalized = base.replace("/", "\\").casefold()
+    ephemeral = next((marker for marker in EPHEMERAL_BASE_MARKERS if marker in normalized), "")
+    base_python = Path(home) / "python.exe" if home else Path(sys.base_prefix) / "python.exe"
+    report.update({"pyvenv_cfg": str(cfg), "home": home, "executable": executable,
+                   "base_exists": base_python.is_file()})
+    if ephemeral:
+        report.update({"status": "FAIL", "code": "VENV_EPHEMERAL_BASE_PYTHON", "marker": ephemeral,
+                       "note": "The venv base lives in a provider cache. Rebuild with py -3.12 -m venv <root>/.venv."})
+    elif not base_python.is_file():
+        report.update({"status": "FAIL", "code": "VENV_BASE_MISSING",
+                       "note": "The base interpreter recorded in pyvenv.cfg no longer exists on disk."})
+    else:
+        report.update({"status": "PASS", "code": ""})
+    return report
+
 
 def doctor(config: ForgeConfig) -> dict[str, Any]:
     core = []
     core.append({"check": "workspace_root", "status": "PASS" if config.workspace_root.is_dir() else "FAIL", "path": str(config.workspace_root)})
     core.append({"check": "config", "status": "PASS" if config.config_path.is_file() else "FAIL", "path": str(config.config_path)})
+    virtualenv = virtualenv_status()
+    if virtualenv["status"] == "FAIL":
+        core.append({"check": "virtualenv", "status": "FAIL", "code": virtualenv.get("code", ""), "path": virtualenv.get("prefix", "")})
     skyrim_ok = bool(config.skyrim_data and config.skyrim_data.is_dir())
     tools = {name: tool_status(config, name) for name in config.tools}
     xedit_ready = bool(tools["xedit"].get("exists") and tools["xedit"].get("hash_match", True))
@@ -31,6 +86,7 @@ def doctor(config: ForgeConfig) -> dict[str, Any]:
         "mo2_automation_ready": config.allow_external_processes and mo2_ready,
         "external_processes_enabled": config.allow_external_processes,
         "ui_automation_enabled": config.allow_ui_automation,
+        "virtualenv": virtualenv,
         "tools": tools,
         "toolchain": toolchain_status(config),
         "warnings": config.load_warnings,
@@ -54,6 +110,8 @@ def discover_tools(config: ForgeConfig) -> dict[str, str]:
         "synthesis_gui": ["Synthesis.exe"],
         "deadmesh_cli": ["dmscan.exe"],
         "deadmesh_gui": ["DeadMesh.exe"],
+        "audio_xwma_encode": ["xWMAEncode.exe"],
+        "audio_lip_generate": ["FaceFXWrapper.exe", "LipGen.exe"],
         "resaverpp_cli": ["resaverpp-cli.exe"],
         "resaverpp_gui": ["ReSaverPP.exe"],
         "pgpatcher": ["PGPatcher.exe"],

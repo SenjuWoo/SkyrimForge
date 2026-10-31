@@ -119,6 +119,20 @@ Forge checks:
 
 `forge release-validate` automatically invokes the strict FOMOD gate whenever a release root contains a `fomod` directory.
 
+## Sandbox install test
+
+`forge fomod-test-install <plan> <source-root> [--selections <json>] [--state <json>] [--all-branches] --approve` resolves the branch, extracts every payload file into an MO2-shaped and a Vortex-shaped folder under `<workspace>/.forge/vfs-sandbox/`, and writes `install_verification_receipt.json`. It checks:
+
+- no destination begins with `Data/` (double-nested payload);
+- no two sources install to the same destination;
+- no unsafe or absolute destination path;
+- no SKSE DLL installs twice;
+- every payload file exists and hashes cleanly.
+
+Without `--all-branches` it tests the default (Required/Recommended) branch. With it, every `SelectExactlyOne`/`SelectAtMostOne` combination is tested, up to 64 branches; beyond that it refuses rather than sampling silently.
+
+The receipt is evidence for the mechanical half of a real install test. No MO2, Vortex, USVFS or game process runs, so plugin loading, record resolution and in-game behaviour remain separate.
+
 ## Evidence boundary
 
 A Forge PASS proves the XML and payload model are internally coherent against the pinned standard XML format. It does not prove that every Vortex or MO2 presentation detail looks ideal, that a manager-specific extension behaves identically, or that arbitrary C# installer code is safe. The final archive still needs one actual installation in Vortex and one in MO2 when it uses complex conditional branches.

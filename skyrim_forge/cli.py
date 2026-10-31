@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import argparse
+import os
 import sys
 from pathlib import Path
 from typing import Any
@@ -76,7 +77,16 @@ def parser() -> argparse.ArgumentParser:
     pb = sub.add_parser("plugin-build"); pb.add_argument("path"); pb.add_argument("output_dir"); pb.add_argument("--approve", action="store_true")
     av = sub.add_parser("automation-validate"); av.add_argument("path")
     ar = sub.add_parser("automation-run"); ar.add_argument("path"); ar.add_argument("--approve", action="store_true"); ar.add_argument("--discard-transaction", action="store_true")
-    mcp = sub.add_parser("mcp")
+    ai = sub.add_parser("audio-inspect"); ai.add_argument("path")
+    ax = sub.add_parser("audio-extract-fuz"); ax.add_argument("fuz"); ax.add_argument("output_dir"); ax.add_argument("--approve", action="store_true")
+    ac = sub.add_parser("audio-create-fuz"); ac.add_argument("xwm"); ac.add_argument("output"); ac.add_argument("--lip"); ac.add_argument("--approve", action="store_true")
+    vp = sub.add_parser("voice-path-validate"); vp.add_argument("root")
+    sip = sub.add_parser("skse-inspect-pe"); sip.add_argument("dll")
+    sai = sub.add_parser("skse-audit-imports"); sai.add_argument("dll")
+    svr = sub.add_parser("skse-verify-reproducible"); svr.add_argument("built"); svr.add_argument("reference")
+    fcl = sub.add_parser("framework-correlate-logs"); fcl.add_argument("mod_root"); fcl.add_argument("log_dir")
+    fti = sub.add_parser("fomod-test-install"); fti.add_argument("plan"); fti.add_argument("source_root"); fti.add_argument("--selections"); fti.add_argument("--state"); fti.add_argument("--all-branches", action="store_true"); fti.add_argument("--approve", action="store_true")
+    mcp = sub.add_parser("mcp"); mcp.add_argument("--surface", choices=["full", "compact"], default=None)
     gui = sub.add_parser("gui")
     return root
 
@@ -101,7 +111,7 @@ def main(argv: list[str] | None = None) -> int:
         return _exit_code(value)
     if args.command == "mcp":
         from .mcp_server import serve
-        serve(args.config)
+        serve(args.config, args.surface or os.environ.get("SKYRIM_FORGE_MCP_SURFACE", "full"))
         return 0
     if args.command == "gui":
         from .gui import run_gui
@@ -167,6 +177,15 @@ def main(argv: list[str] | None = None) -> int:
             case "plugin-build": value = service.plugin_build(args.path, args.output_dir, args.approve)
             case "automation-validate": value = service.automation_validate(args.path)
             case "automation-run": value = service.automation_run(args.path, args.approve, not args.discard_transaction)
+            case "audio-inspect": value = service.audio_inspect(args.path)
+            case "audio-extract-fuz": value = service.audio_extract_fuz(args.fuz, args.output_dir, args.approve)
+            case "audio-create-fuz": value = service.audio_create_fuz(args.xwm, args.output, args.approve, args.lip)
+            case "voice-path-validate": value = service.voice_path_validate(args.root)
+            case "skse-inspect-pe": value = service.skse_inspect_pe(args.dll)
+            case "skse-audit-imports": value = service.skse_audit_imports(args.dll)
+            case "skse-verify-reproducible": value = service.skse_verify_reproducible(args.built, args.reference)
+            case "framework-correlate-logs": value = service.framework_correlate_logs(args.mod_root, args.log_dir)
+            case "fomod-test-install": value = service.fomod_test_install(args.plan, args.source_root, args.approve, args.selections, args.state, args.all_branches)
             case _: raise AssertionError(args.command)
         print(dumps(value))
         return _exit_code(value)

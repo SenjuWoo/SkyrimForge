@@ -1464,10 +1464,31 @@ def simulate_plan(plan_data: Any, selections: dict[str, Any] | None = None, stat
         "skipped_steps": skipped_steps,
         "flags": flags,
         "mapping_count": len(mappings),
+        "mappings": mappings,
         "file_analysis": file_analysis,
         "errors": errors,
         "evidence": "Deterministic FOMOD branch simulation against explicit selections, flags, file states, and version state. Manager UI behavior remains external.",
     }
+
+
+def expand_branch(plan_data: Any, selections: dict[str, Any] | None = None, state: dict[str, Any] | None = None, source_root: Path | None = None) -> dict[str, Any]:
+    """Resolve one simulated branch to concrete source/destination file pairs without writing anything."""
+    if source_root is None:
+        raise ValidationError("expand_branch needs a source_root")
+    root = Path(source_root).resolve(strict=True)
+    simulation = simulate_plan(plan_data, selections, state, root)
+    entries = _mapping_objects({"required_files": simulation["mappings"], "steps": [], "conditional_files": []})
+    files: list[dict[str, Any]] = []
+    problems: list[str] = []
+    for entry in entries:
+        rows, problem = _expand_mapping(root, entry)
+        if problem:
+            problems.append(problem)
+            continue
+        for source, destination, priority, owner, always_install, install_if_usable in rows:
+            files.append({"source": source, "destination": destination, "priority": priority, "owner": owner,
+                          "always_install": always_install, "install_if_usable": install_if_usable})
+    return {"simulation": simulation, "files": files, "problems": problems}
 
 
 def self_test() -> dict[str, Any]:

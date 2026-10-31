@@ -4,6 +4,8 @@ Extract the entire release, run `START-HERE.bat`, install Forge, configure core 
 
 The installer creates a local virtual environment and a `.pth` pointer to the extracted source. No package-index download is required.
 
+The venv base must be durable. `Install-or-Update.ps1` reads `.venv\pyvenv.cfg` and rebuilds from the Windows Python Launcher when `home` points into a provider cache (`codex-runtimes`, `.cache`, `AppData\Local\Temp`, `pipx`, uv cache) or no longer exists. `forge doctor` reports the same check as `virtualenv`; a cached base fails with `VENV_EPHEMERAL_BASE_PYTHON`, because that interpreter disappears when the provider prunes its runtime and every registered MCP client then fails to start.
+
 Replace the whole Forge directory when changing major versions. Do not copy isolated scripts between versions.
 
 ## One live install, under Skyrim tools
