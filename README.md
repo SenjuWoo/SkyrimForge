@@ -4,7 +4,7 @@
 
 <div align="center">
 
-# Skyrim Forge
+# Skyrim Forge 6.7.3
 
 <p>
   <a href="https://github.com/SenjuWoo/SkyrimForge/actions/workflows/ci.yml"><img src="https://github.com/SenjuWoo/SkyrimForge/actions/workflows/ci.yml/badge.svg" alt="CI"></a>
