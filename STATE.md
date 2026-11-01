@@ -1,3 +1,11 @@
+# Forge 6.8.1 free procedural textures and the free-tool map (2026-10-31)
+
+- Goal: close the missing-asset gap with 100% free, offline generation and point agents at the typed tool.
+- Done: `texture-generate`/`texture-inspect` — deterministic BC1/BC3/A8R8G8B8 DDS with full mip chains, six kinds (solid, checker, gradient, seeded noise, bricks, tangent-space normal), PNG previews, workspace-only writes behind `approved`; `asset.texture` is direct, `asset.mesh` stays a free-Blender worker boundary; `docs/ASSET-GENERATION.md` maps every remaining gap to a free tool and licence; README section; router, tooling-stack, assets and Forge skills route to the typed tool; 67 MCP tools, 13 self-tests.
+- Verified: local gate PASS at 6.8.0 and 6.8.1; exact-SHA CI 15/15 on `4632ef1` and `785cf51`; releases v6.8.0 and v6.8.1 (8 assets, downloaded ZIPs match SHA256SUMS); live install 6.8.1 is 569/569 byte-identical, doctor PASS with 0 warnings, self-test 13/13, MCP serves 67 tools including `forge_texture_generate`/`forge_texture_inspect`, and generated previews were inspected as pixels (bricks show mortar and per-brick tint; the normal map has usable relief).
+- Fixed during review: 6.8.0 scaled normal slopes per pixel, so maps were nearly flat and changed with size; 6.8.1 scales per texture unit and defaults to `strength 0.12`. One 6.8.1 install attempt hit a transient `File.Replace` lock, rolled back to 6.8.0, and succeeded on retry.
+- Not done: DDS output is proven by Forge's own header/payload checks and the PNG preview, not by an external DDS loader or an in-game render. Mesh/NIF, BC7 and hand art remain free-tool or human work (Blender, texconv, GIMP/Krita).
+
 # Forge 6.7.3 install audit and backup retention (2026-10-31)
 
 - Goal: prove the live install is exactly what the release published, and fix the installer where it is not.
