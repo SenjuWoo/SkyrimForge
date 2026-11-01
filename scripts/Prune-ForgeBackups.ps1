@@ -15,7 +15,7 @@
 
   Anything else in the parent directory is left untouched, including legacy
   "Skyrim-Forge.backup-*" copies and the live install. Failed stage directories
-  older than -StageDays are removed, keeping the newest one for diagnosis.
+  older than -StageDays are removed; a younger one is kept for diagnosis.
 
   -WhatIf prints the plan without deleting anything.
 #>
@@ -47,19 +47,19 @@ foreach ($dir in @($backups | Select-Object -Skip $Retain)) {
     if ($PSCmdlet.ShouldProcess($dir.FullName, 'Remove old Forge backup')) {
         try { Remove-Item -LiteralPath $dir.FullName -Recurse -Force; $removed.Add($dir.FullName) }
         catch { Write-Warning "Could not remove $($dir.FullName): $($_.Exception.Message)" }
-    } else { $removed.Add("would remove $($dir.FullName)") }
+    }
 }
 
 $cutoff = (Get-Date).AddDays(-$StageDays)
 $stages = @(Get-ChildItem -LiteralPath $Parent -Directory -Force -ErrorAction SilentlyContinue |
     Where-Object { $_.Name -cmatch '^\.forge-stage-[0-9a-f]+-failed$' } |
     Where-Object { ($_.Attributes -band [IO.FileAttributes]::ReparsePoint) -eq 0 -and $_.LastWriteTime -lt $cutoff } |
-    Sort-Object LastWriteTime -Descending | Select-Object -Skip 1)
+    Sort-Object LastWriteTime -Descending)
 foreach ($dir in $stages) {
     if ($PSCmdlet.ShouldProcess($dir.FullName, 'Remove abandoned Forge stage')) {
         try { Remove-Item -LiteralPath $dir.FullName -Recurse -Force; $removed.Add($dir.FullName) }
         catch { Write-Warning "Could not remove $($dir.FullName): $($_.Exception.Message)" }
-    } else { $removed.Add("would remove $($dir.FullName)") }
+    }
 }
 
 $removed

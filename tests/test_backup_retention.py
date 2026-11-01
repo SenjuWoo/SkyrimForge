@@ -61,7 +61,7 @@ class BackupRetentionTests(unittest.TestCase):
                 self.assertFalse(path.exists(), path)
             self.assertTrue(foreign.is_dir(), "a directory without a Forge VERSION.txt must survive")
             self.assertTrue(legacy.is_dir(), "legacy backups are not Forge-owned and must survive")
-            self.assertEqual(sum(1 for path in old_stages if path.is_dir()), 1, "the newest failed stage is kept for diagnosis")
+            self.assertEqual(sum(1 for path in old_stages if path.is_dir()), 0, "failed stages past the window are removed")
             self.assertTrue(recent_stage.is_dir(), "a recent failed stage is kept")
 
     def test_what_if_deletes_nothing(self):

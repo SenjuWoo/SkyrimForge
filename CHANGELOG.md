@@ -1,3 +1,6 @@
+## 6.7.3 (2026-10-31)
+
+- `Prune-ForgeBackups.ps1`: `-WhatIf` no longer prints each target twice (PowerShell's own WhatIf line is the plan), and a failed stage directory now ages out after seven days instead of the newest one being kept forever. From 6.7.2 onward the update prunes automatically and the owner-update log records `pruned=<n>`.
 ## 6.7.2 (2026-10-31)
 
 - `Update-Forge.ps1` now prunes Forge-owned backups after a successful update. `scripts/Prune-ForgeBackups.ps1` keeps the newest two `.forge-backup-<32 hex>` copies, each proven by a `VERSION.txt` first line and a `MANIFEST.json`; removes failed stage directories older than seven days while keeping the newest for diagnosis; refuses reparse points and drive roots; and leaves legacy or foreign directories untouched. `-WhatIf` prints the plan, and the owner-update log now records `pruned=<n>`.
