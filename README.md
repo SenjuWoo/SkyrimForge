@@ -7,8 +7,9 @@
 # Skyrim Forge
 
 <p>
-  <a href="https://github.com/SenjuWoo/SkyrimForge/releases/latest"><img src="https://img.shields.io/github/v/release/SenjuWoo/SkyrimForge?label=release&color=8EC8E8&labelColor=0d1117" alt="latest release"></a>
+  <a href="https://github.com/SenjuWoo/SkyrimForge/actions/workflows/ci.yml"><img src="https://github.com/SenjuWoo/SkyrimForge/actions/workflows/ci.yml/badge.svg" alt="CI"></a>
   <a href="LICENSE"><img src="https://img.shields.io/badge/license-MIT-8EC8E8?labelColor=0d1117" alt="MIT License"></a>
+  <a href="https://github.com/SenjuWoo/SkyrimForge/releases/latest"><img src="https://img.shields.io/github/v/release/SenjuWoo/SkyrimForge?label=release&color=8EC8E8&labelColor=0d1117" alt="latest release"></a>
 </p>
 
 </div>
