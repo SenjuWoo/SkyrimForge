@@ -17,6 +17,7 @@ Forge owns this specialist index. The general `ai-tooling-stack` skill belongs t
 | Start Game Enabled quest SEQ file | houseCARL `write_seq`, or `forge seq-build` (checked against 257 shipped SEQ files) |
 | Offline plugin headers/queries, bounded typed writes, framework lint, FOMOD, release gates | Forge CLI; exact capability comes from `forge capabilities` |
 | Papyrus compile/decompile, xEdit, BSA operations | Forge's configured hash-pinned adapters; inspect `tool-resolve` first |
+| Missing or placeholder texture, normal map | Forge `texture-generate` (deterministic DDS, workspace-only); real meshes/audio stay with free Blender/GIMP/Audacity per `docs/ASSET-GENERATION.md` |
 | Native SKSE project builds | Forge scaffold/build plus installed CMake/vcpkg/VS; project pins stay intact |
 | Collision report | Existing configured DeadMesh dmscan; static findings need runtime review |
 | Other editor, mesh, LOD, animation or save workflow | Discover the actual tool, then its exact worker/API; catalog presence is not a runner |

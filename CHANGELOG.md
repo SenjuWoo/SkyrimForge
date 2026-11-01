@@ -1,3 +1,9 @@
+## 6.8.0 (2026-10-31)
+
+- `texture-generate` and `texture-inspect`: deterministic DDS output with the standard library — BC1, BC3 or A8R8G8B8, full mip chains, six procedural kinds (solid, checker, gradient, seeded noise, bricks, tangent-space normal), PNG previews, workspace-only writes behind `approved`. No paid tool and no new dependency; identical seeds produce identical bytes.
+- `asset.texture` is a direct capability; `asset.mesh` is recorded as a free-Blender worker contract rather than pretended. `docs/ASSET-GENERATION.md` maps every remaining asset gap to a free tool and its licence.
+- The router, tooling-stack, assets and Forge skills now send agents to `forge texture-generate` for a missing asset instead of hand-written DDS bytes.
+- Tests: DDS header, mip count and payload consistency, BC1 block decoding, determinism by seed, flat normal field, PNG preview, workspace and approval refusals.
 ## 6.7.3 (2026-10-31)
 
 - `Prune-ForgeBackups.ps1`: `-WhatIf` no longer prints each target twice (PowerShell's own WhatIf line is the plan), and a failed stage directory now ages out after seven days instead of the newest one being kept forever. From 6.7.2 onward the update prunes automatically and the owner-update log records `pruned=<n>`.

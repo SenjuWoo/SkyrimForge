@@ -112,6 +112,14 @@ TOOL_SPECS: dict[str, dict[str, Any]] = {
     "forge_audio_extract_fuz": {"description": "Split a FUZ into its .lip and .xwm payloads inside Forge workspace staging.", "inputSchema": _schema({"fuz": _string(), "output_dir": _string(), "approved": _boolean()}, ["fuz", "output_dir", "approved"])},
     "forge_audio_create_fuz": {"description": "Pack an .xwm (and optional .lip) into a FUZ container inside Forge workspace staging.", "inputSchema": _schema({"xwm": _string(), "output": _string(), "lip": _string(), "approved": _boolean()}, ["xwm", "output", "approved"])},
     "forge_voice_path_validate": {"description": "Check a staged mod keeps voice files at Sound/Voice/<plugin>/<voice type>/<file>.", "inputSchema": _schema({"root": _string()}, ["root"])},
+    "forge_texture_inspect": {"description": "Read a DDS header: format (BC1/BC3/A8R8G8B8), dimensions, mip chain and payload consistency.", "inputSchema": _schema({"path": _string()}, ["path"])},
+    "forge_texture_generate": {"description": "Generate a deterministic procedural DDS texture inside the workspace: solid, checker, gradient, noise, bricks or a tangent-space normal map, with full mip chains and an optional PNG preview.", "inputSchema": _schema({
+        "kind": {"type": "string", "enum": ["solid", "checker", "gradient", "noise", "bricks", "normal"]},
+        "output": _string(), "size": _integer(), "format": {"type": "string", "enum": ["bc1", "bc3", "rgba"]},
+        "seed": _integer(), "primary": _string(), "secondary": _string(), "octaves": _integer(),
+        "frequency": {"type": "number"}, "cells": _integer(), "strength": {"type": "number"},
+        "flip_green": _boolean(), "preview": _string(), "approved": _boolean(),
+    }, ["kind", "output", "approved"])},
     "forge_skse_inspect_pe": {"description": "Read an x64 SKSE DLL without loading it: PE32+ headers, exports, PluginVersionData and file version.", "inputSchema": _schema({"dll": _string()}, ["dll"])},
     "forge_skse_audit_imports": {"description": "Inventory a DLL's imported DLLs and functions and flag network, process-execution and DirectStorage use.", "inputSchema": _schema({"dll": _string()}, ["dll"])},
     "forge_skse_verify_reproducible": {"description": "Compare a built DLL with a reference DLL byte-for-byte, then with linker timestamps normalised.", "inputSchema": _schema({"built": _string(), "reference": _string()}, ["built", "reference"])},
@@ -128,7 +136,7 @@ READ_ONLY_TOOLS = {
     "forge_tool_status", "forge_tool_scan", "forge_tool_resolve", "forge_toolchain_status",
     "forge_capabilities", "forge_plugin_info", "forge_record_query", "forge_plugins", "forge_load_order",
     "forge_record_conflicts", "forge_archive_info", "forge_mod_tree", "forge_bsarch_info",
-    "forge_audio_inspect", "forge_voice_path_validate", "forge_skse_inspect_pe", "forge_skse_audit_imports",
+    "forge_audio_inspect", "forge_voice_path_validate", "forge_texture_inspect", "forge_skse_inspect_pe", "forge_skse_audit_imports",
     "forge_skse_verify_reproducible", "forge_framework_correlate_logs", "forge_fomod_simulate",
     "forge_nexus_policy_status", "forge_lint_frameworks", "forge_framework_plan_validate", "forge_fomod_validate",
     "forge_fomod_plan_validate", "forge_release_validate", "forge_nexus_plan_validate", "forge_nexus_audit",
@@ -145,7 +153,7 @@ COMPACT_GROUPS: dict[str, set[str]] = {
         "forge_tool_status", "forge_tool_scan", "forge_tool_resolve", "forge_toolchain_status",
         "forge_capabilities", "forge_papyrus_analyze", "forge_plugin_info", "forge_record_query", "forge_plugins", "forge_load_order",
         "forge_record_conflicts", "forge_archive_info", "forge_mod_tree", "forge_bsarch_info",
-        "forge_audio_inspect", "forge_voice_path_validate", "forge_skse_inspect_pe", "forge_skse_audit_imports",
+        "forge_audio_inspect", "forge_voice_path_validate", "forge_texture_inspect", "forge_skse_inspect_pe", "forge_skse_audit_imports",
         "forge_skse_verify_reproducible", "forge_framework_correlate_logs", "forge_fomod_simulate",
         "forge_nexus_policy_status",
     },
@@ -160,7 +168,7 @@ COMPACT_GROUPS: dict[str, set[str]] = {
         "forge_deadmesh_scan", "forge_champollion_decompile", "forge_synthesis_run", "forge_seq_build",
         "forge_framework_build", "forge_papyrus_compile", "forge_native_scaffold", "forge_native_build",
         "forge_fomod_scaffold", "forge_fomod_build", "forge_fomod_test_install", "forge_plugin_build",
-        "forge_automation_run", "forge_audio_extract_fuz", "forge_audio_create_fuz",
+        "forge_automation_run", "forge_audio_extract_fuz", "forge_audio_create_fuz", "forge_texture_generate",
     },
     "release": {"forge_release_build", "forge_nexus_scaffold", "forge_nexus_build", "forge_nexus_page_render"},
 }
@@ -289,6 +297,8 @@ def _call(service: ForgeService, name: str, args: dict[str, Any]) -> Any:
         case "forge_audio_extract_fuz": return service.audio_extract_fuz(args["fuz"], args["output_dir"], approved)
         case "forge_audio_create_fuz": return service.audio_create_fuz(args["xwm"], args["output"], approved, args.get("lip") or None)
         case "forge_voice_path_validate": return service.voice_path_validate(args["root"])
+        case "forge_texture_inspect": return service.texture_inspect(args["path"])
+        case "forge_texture_generate": return service.texture_generate(args["kind"], args["output"], size=int(args.get("size", 512)), fmt=args.get("format", "bc1"), seed=int(args.get("seed", 0)), primary=args.get("primary", "#808080"), secondary=args.get("secondary", "#303030"), octaves=int(args.get("octaves", 5)), frequency=float(args.get("frequency", 4.0)), cells=int(args.get("cells", 8)), strength=float(args.get("strength", 2.0)), flip_green=bool(args.get("flip_green", False)), preview=args.get("preview") or None, approved=approved)
         case "forge_skse_inspect_pe": return service.skse_inspect_pe(args["dll"])
         case "forge_skse_audit_imports": return service.skse_audit_imports(args["dll"])
         case "forge_skse_verify_reproducible": return service.skse_verify_reproducible(args["built"], args["reference"])

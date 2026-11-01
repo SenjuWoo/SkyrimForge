@@ -86,6 +86,8 @@ def parser() -> argparse.ArgumentParser:
     svr = sub.add_parser("skse-verify-reproducible"); svr.add_argument("built"); svr.add_argument("reference")
     fcl = sub.add_parser("framework-correlate-logs"); fcl.add_argument("mod_root"); fcl.add_argument("log_dir")
     fti = sub.add_parser("fomod-test-install"); fti.add_argument("plan"); fti.add_argument("source_root"); fti.add_argument("--selections"); fti.add_argument("--state"); fti.add_argument("--all-branches", action="store_true"); fti.add_argument("--approve", action="store_true")
+    tg = sub.add_parser("texture-generate"); tg.add_argument("kind"); tg.add_argument("output"); tg.add_argument("--size", type=int, default=512); tg.add_argument("--format", choices=["bc1", "bc3", "rgba"], default="bc1"); tg.add_argument("--seed", type=int, default=0); tg.add_argument("--primary", default="#808080"); tg.add_argument("--secondary", default="#303030"); tg.add_argument("--octaves", type=int, default=5); tg.add_argument("--frequency", type=float, default=4.0); tg.add_argument("--cells", type=int, default=8); tg.add_argument("--strength", type=float, default=2.0); tg.add_argument("--flip-green", action="store_true"); tg.add_argument("--preview"); tg.add_argument("--approve", action="store_true")
+    ti = sub.add_parser("texture-inspect"); ti.add_argument("path")
     mcp = sub.add_parser("mcp"); mcp.add_argument("--surface", choices=["full", "compact"], default=None)
     gui = sub.add_parser("gui")
     return root
@@ -186,6 +188,8 @@ def main(argv: list[str] | None = None) -> int:
             case "skse-verify-reproducible": value = service.skse_verify_reproducible(args.built, args.reference)
             case "framework-correlate-logs": value = service.framework_correlate_logs(args.mod_root, args.log_dir)
             case "fomod-test-install": value = service.fomod_test_install(args.plan, args.source_root, args.approve, args.selections, args.state, args.all_branches)
+            case "texture-inspect": value = service.texture_inspect(args.path)
+            case "texture-generate": value = service.texture_generate(args.kind, args.output, size=args.size, fmt=args.format, seed=args.seed, primary=args.primary, secondary=args.secondary, octaves=args.octaves, frequency=args.frequency, cells=args.cells, strength=args.strength, flip_green=args.flip_green, preview=args.preview, approved=args.approve)
             case _: raise AssertionError(args.command)
         print(dumps(value))
         return _exit_code(value)

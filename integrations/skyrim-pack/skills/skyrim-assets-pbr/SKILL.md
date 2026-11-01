@@ -31,6 +31,18 @@ metadata:
 7. Check seams, tiling, tangent-space normals, alpha artifacts, wetness/snow interactions, and fallback behavior.
 8. Package only assets the mod owns or has permission to redistribute.
 
+## Generation when the asset does not exist
+
+If a NIF or plugin points at a texture nobody has, do not invent a binary DDS by hand and do not reach for a paid converter. Forge writes a deterministic placeholder with a full mip chain:
+
+```powershell
+forge texture-generate bricks Textures/Stone.dds --size 512 --format bc1 --preview Stone.png --approve
+forge texture-generate normal Textures/Stone_n.dds --strength 2.5 --flip-green --approve
+forge texture-inspect Textures/Stone.dds
+```
+
+`normal` produces a tangent-space map from a seeded height field; `--flip-green` matches DirectX-style green channels, and whichever convention is chosen must be recorded in the mod notes. Generated maps are approximations: never present them as physically derived PBR channels. Meshes, rigs and hand art stay with the free tools listed in `docs/ASSET-GENERATION.md` (Blender, GIMP/Krita, Materialize), and a texture that loads is not proof it looks right in game.
+
 ## Boundaries
 
 - Do not infer a PBR map from a filename alone.

@@ -98,6 +98,14 @@ package to a new version
 report remaining in-game tests
 ```
 
+## Procedural textures
+
+When an asset is missing, `forge texture-generate` writes a deterministic DDS
+(solid, checker, gradient, noise, bricks, tangent-space normal) with a full mip
+chain, and `forge texture-inspect` reads any DDS header. It is free, offline and
+workspace-only; `docs/ASSET-GENERATION.md` maps the remaining mesh/audio/BC7 gaps
+to free tools. Do not hand-write DDS bytes and do not use a paid converter.
+
 ## Player-facing quality gate
 
 When a mod has a menu, HUD, preview, visual asset, or interactive workflow, load `skyrim-mod-development` (or

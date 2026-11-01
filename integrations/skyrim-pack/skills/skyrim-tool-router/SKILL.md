@@ -49,6 +49,7 @@ Optional process overlays (not Skyrim-specific): `using-superpowers`, `systemati
 | Crash log or startup failure | `skyrim-crash-diagnostics` | SKSE, animation, assets, or reworking after diagnosis |
 | Read-only code/config review | `skyrim-code-review` | domain specialist; optional `ponytail-review` for bloat |
 | DDS, NIF, parallax, PBR | `skyrim-assets-pbr` | `skyrim-nif`; houseCARL mesh tools (`housecarl_nif_inspect`, `housecarl_nif_set`) when MCP up |
+| Missing texture, placeholder map, normal map from nothing | Forge `texture-generate` | `skyrim-assets-pbr` for the real asset rules; free-tool map in `docs/ASSET-GENERATION.md` |
 | BSA/BA2 archive work | Forge `bsarch` tools | houseCARL BSA tools (`housecarl_bsa_list`, `housecarl_bsa_extract`, `housecarl_bsa_repack`); `skyrim-fomod-packaging` for installers |
 | Audio FUZ/XWM/WAV | `skyrim-audio` | `skyrim-voiced-dialogue` |
 | Player-facing menu, HUD, preview, or visual polish | `skyrim-mod-development` or `skyrim-mod-reworking` | `visual-verification`; exact UI-framework docs/tools |

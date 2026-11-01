@@ -15,6 +15,7 @@ Forge distinguishes evidence levels so an AI cannot turn a configured adapter in
 | Papyrus compile | Adapter | Implemented | Pinned official compiler; fresh PEX is not runtime proof |
 | CommonLibSSE-NG scaffold | Profiled | Implemented | Source-locked project generation |
 | SKSE PE inspection | Direct | Implemented | Exports, `SKSEPlugin_Version`, imports, timestamp-normalised reproducibility; not a load or hook proof |
+| Procedural textures | Direct | Implemented | DDS BC1/BC3/A8R8G8B8 with mip chains, six procedural kinds, tangent-space normals, PNG preview; placeholders, not art direction |
 | Audio containers | Direct | Implemented | FUZ/XWM/WAV/LIP inspect, split, pack, voice layout; codec and lip generation stay external |
 | Framework runtime correlation | Direct | Implemented | Log text matched to file and row; static errors are never cleared |
 | Native build | Adapter | Implemented | Pinned local build tools; workspace staging only |
