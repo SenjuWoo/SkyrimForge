@@ -1,4 +1,17 @@
-# Skyrim Forge 6.7.3
+<p align="center">
+  <img src="assets/mark.svg" width="72" height="72" alt="Skyrim Forge">
+</p>
+
+<div align="center">
+
+# Skyrim Forge
+
+<p>
+  <a href="https://github.com/SenjuWoo/SkyrimForge/releases/latest"><img src="https://img.shields.io/github/v/release/SenjuWoo/SkyrimForge?label=release&color=8EC8E8&labelColor=0d1117" alt="latest release"></a>
+  <a href="LICENSE"><img src="https://img.shields.io/badge/license-MIT-8EC8E8?labelColor=0d1117" alt="MIT License"></a>
+</p>
+
+</div>
 
 > Skyrim Forge is the authoritative repository for the Skyrim SE/AE AI modding
 > stack: the typed Forge MCP/CLI/GUI workbench, the **50-skill Skyrim SE/AE
