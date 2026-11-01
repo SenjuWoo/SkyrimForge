@@ -26,7 +26,7 @@ reports the header, mip count and payload consistency of any DDS.
 
 ```powershell
 forge texture-generate bricks mod/Textures/Architecture/stone.dds --size 512 --format bc1 --primary "#8a7f6a" --secondary "#3a352c" --preview mod/stone.png --approve
-forge texture-generate normal mod/Textures/Architecture/stone_n.dds --size 512 --format bc1 --strength 2.5 --flip-green --approve
+forge texture-generate normal mod/Textures/Architecture/stone_n.dds --size 512 --format bc1 --strength 0.12 --flip-green --approve
 forge texture-inspect mod/Textures/Architecture/stone.dds
 ```
 

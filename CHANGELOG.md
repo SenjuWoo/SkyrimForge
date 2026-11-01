@@ -1,3 +1,6 @@
+## 6.8.1 (2026-10-31)
+
+- Normal maps are slope-scaled per texture unit, so one `--strength` value looks the same at 256 and 2048 pixels. 6.8.0 scaled per pixel, which produced nearly flat maps; a pixel review of the previews caught it. The default strength is now 0.12 (visible relief, no clipping) and the examples in the README, `docs/ASSET-GENERATION.md` and the assets skill use it.
 ## 6.8.0 (2026-10-31)
 
 - `texture-generate` and `texture-inspect`: deterministic DDS output with the standard library — BC1, BC3 or A8R8G8B8, full mip chains, six procedural kinds (solid, checker, gradient, seeded noise, bricks, tangent-space normal), PNG previews, workspace-only writes behind `approved`. No paid tool and no new dependency; identical seeds produce identical bytes.

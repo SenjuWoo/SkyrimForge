@@ -4,7 +4,7 @@
 
 <div align="center">
 
-# Skyrim Forge 6.8.0
+# Skyrim Forge 6.8.1
 
 <p>
   <a href="https://github.com/SenjuWoo/SkyrimForge/actions/workflows/ci.yml"><img src="https://github.com/SenjuWoo/SkyrimForge/actions/workflows/ci.yml/badge.svg" alt="CI"></a>
@@ -171,7 +171,7 @@ A missing texture stops an AI-built mod, and no paid tool is needed to fix that.
 
 ```powershell
 forge texture-generate bricks mod/Textures/Stone.dds --size 512 --format bc1 --preview mod/Stone.png --approve
-forge texture-generate normal mod/Textures/Stone_n.dds --strength 2.5 --flip-green --approve
+forge texture-generate normal mod/Textures/Stone_n.dds --strength 0.12 --flip-green --approve
 ```
 
 That is the placeholder layer, not art direction. Meshes stay with Blender, hand art with GIMP or Krita, BC7 with `texconv`; `docs/ASSET-GENERATION.md` maps every remaining gap to a free tool and its licence. Forge never bundles those binaries. **Agents: start at `forge capabilities`, then use the typed tool — do not hand-write DDS headers or shell out to a paid converter.**

@@ -37,7 +37,7 @@ If a NIF or plugin points at a texture nobody has, do not invent a binary DDS by
 
 ```powershell
 forge texture-generate bricks Textures/Stone.dds --size 512 --format bc1 --preview Stone.png --approve
-forge texture-generate normal Textures/Stone_n.dds --strength 2.5 --flip-green --approve
+forge texture-generate normal Textures/Stone_n.dds --strength 0.12 --flip-green --approve
 forge texture-inspect Textures/Stone.dds
 ```
 

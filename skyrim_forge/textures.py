@@ -144,8 +144,9 @@ def _pixels(kind: str, size: int, primary: tuple[int, int, int, int], secondary:
                    for y in range(size)]
         for y in range(size):
             for x in range(size):
-                dx = (heights[y][(x + 1) % size] - heights[y][(x - 1) % size]) * 0.5
-                dy = (heights[(y + 1) % size][x] - heights[(y - 1) % size][x]) * 0.5
+                # Slope per texture unit (not per pixel) so the same strength looks the same at any size.
+                dx = (heights[y][(x + 1) % size] - heights[y][(x - 1) % size]) * 0.5 * size
+                dy = (heights[(y + 1) % size][x] - heights[(y - 1) % size][x]) * 0.5 * size
                 nx, ny, nz = -dx * strength, (dy if not flip_green else -dy) * strength, 1.0
                 inv = 1.0 / math.sqrt(nx * nx + ny * ny + nz * nz)
                 offset = (y * size + x) * 4
@@ -282,7 +283,7 @@ def _decode_bc1_colour(block: bytes) -> list[tuple[int, int, int]]:
 
 def generate(kind: str, output: Path | str, *, workspace_root: Path, size: int = 512, fmt: str = "bc1",
              seed: int = 0, primary: str = "#808080", secondary: str = "#303030", octaves: int = 5,
-             frequency: float = 4.0, cells: int = 8, strength: float = 2.0, flip_green: bool = False,
+             frequency: float = 4.0, cells: int = 8, strength: float = 0.12, flip_green: bool = False,
              preview: Path | str | None = None, approved: bool = False) -> dict[str, Any]:
     """Write one procedural DDS (and optional PNG preview) inside the workspace."""
     if kind not in KINDS:

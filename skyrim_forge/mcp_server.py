@@ -298,7 +298,7 @@ def _call(service: ForgeService, name: str, args: dict[str, Any]) -> Any:
         case "forge_audio_create_fuz": return service.audio_create_fuz(args["xwm"], args["output"], approved, args.get("lip") or None)
         case "forge_voice_path_validate": return service.voice_path_validate(args["root"])
         case "forge_texture_inspect": return service.texture_inspect(args["path"])
-        case "forge_texture_generate": return service.texture_generate(args["kind"], args["output"], size=int(args.get("size", 512)), fmt=args.get("format", "bc1"), seed=int(args.get("seed", 0)), primary=args.get("primary", "#808080"), secondary=args.get("secondary", "#303030"), octaves=int(args.get("octaves", 5)), frequency=float(args.get("frequency", 4.0)), cells=int(args.get("cells", 8)), strength=float(args.get("strength", 2.0)), flip_green=bool(args.get("flip_green", False)), preview=args.get("preview") or None, approved=approved)
+        case "forge_texture_generate": return service.texture_generate(args["kind"], args["output"], size=int(args.get("size", 512)), fmt=args.get("format", "bc1"), seed=int(args.get("seed", 0)), primary=args.get("primary", "#808080"), secondary=args.get("secondary", "#303030"), octaves=int(args.get("octaves", 5)), frequency=float(args.get("frequency", 4.0)), cells=int(args.get("cells", 8)), strength=float(args.get("strength", 0.12)), flip_green=bool(args.get("flip_green", False)), preview=args.get("preview") or None, approved=approved)
         case "forge_skse_inspect_pe": return service.skse_inspect_pe(args["dll"])
         case "forge_skse_audit_imports": return service.skse_audit_imports(args["dll"])
         case "forge_skse_verify_reproducible": return service.skse_verify_reproducible(args["built"], args["reference"])
