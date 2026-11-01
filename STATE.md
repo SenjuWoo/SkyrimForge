@@ -1,3 +1,10 @@
+# Forge 6.7.1 weekly ecosystem contract check, plan refresh, live update (2026-10-31)
+
+- Goal: keep Forge honest without syncing the bundle or Reverse THIS!, and remove stale planning debris.
+- Done: `scripts/check_ecosystem.py` + `.github/workflows/ecosystem.yml` verify the bundle's `skyrim-forge` catalog entry, this repository's release assets and Reverse THIS!'s `kit.json`/`installed.json` shape (`PASS`/`DRIFT`/`UNKNOWN`, exit 0/2/3, `--offline`, `--json`); `PLAN.md` replaced with the current plan; no dead Python modules or tracked caches.
+- Verified: local full gate PASS at 6.7.1; exact-SHA CI 15/15 success; v6.7.1 published (8 assets, tag on `d04432e`); downloaded ZIP matches SHA256SUMS; extracted manifest 566/566 files; the ecosystem workflow ran on `d04432e` and passed against the published release; live install updated 6.7.0 -> 6.7.1 with backup `.forge-backup-6c83bc26...`, doctor PASS with a stable venv base, 65 MCP tools all annotated and the compact surface routing; 0 open Dependabot/code-scanning/secret-scanning alerts.
+- Not done / limits: no SKSE, MO2, Vortex or in-game runtime proof for the new commands. The ecosystem check reads public GitHub and local receipts only; a renamed or private upstream reports `UNKNOWN`, which is not a pass.
+
 # Forge 6.7.0 audio, SKSE PE, runtime evidence, sandbox install, MCP surface (2026-10-31)
 
 - Goal: apply the reviewed v6.1 roadmap to the 6.6.0 tree — take only the gaps that are still real after 6.0.1, with no new runtime dependency.
