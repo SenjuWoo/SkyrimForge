@@ -1,3 +1,11 @@
+# Forge 6.7.3 install audit and backup retention (2026-10-31)
+
+- Goal: prove the live install is exactly what the release published, and fix the installer where it is not.
+- Audited the 6.7.1 and 6.7.2 live installs: every release file hash-identical (566/566, then 567/567), `MANIFEST.json` identical to the published asset, the recorded CLI and MCP argv both initialize, the native helper self-tests, 50/50 pack skills present in Claude, Codex, Grok and the Hermes `skyrim` profile, providers deferred to a bundle toolbox that lists `skyrim-forge`, `allow_external_processes`/`allow_ui_automation` still false with 50 tool pins preserved, and no lock or staging leftovers. The only defect: `Update-Forge.ps1` kept every backup forever (eleven copies, ~150 MB) plus an abandoned failed stage.
+- Fixed: `scripts/Prune-ForgeBackups.ps1` deletes only directories it can prove Forge owns (exact `.forge-backup-<32 hex>` name, a `VERSION.txt` first line, a `MANIFEST.json`, no reparse point), keeps the newest two, ages failed stages out after seven days, refuses drive roots, supports `-WhatIf`; `Update-Forge.ps1` calls it after a successful update and records `pruned=<n>` in the owner-update log; `tests/test_backup_retention.py` covers both paths on Windows.
+- Verified: the 6.7.2 update ran the pre-fix updater and kept twelve backups; the 6.7.3 update pruned automatically (`pruned=1`, two backups, log line) and the live install is 567/567 byte-identical with doctor PASS and 0 warnings. v6.7.2 was released from `684381f` (a user commit on top of mine, manifest consistent) and v6.7.3 from `1e1f89c`, eight assets each, downloaded ZIPs match SHA256SUMS, 14/14 CI checks green, 0 alerts.
+- Not done: the abandoned `.forge-stage-*-failed` (five days old) stays until the seven-day window; legacy `Skyrim-Forge.backup-*` directories are never touched. One intermediate commit (`9c95751`) shipped a CRLF test file and failed its gate; it was superseded by `1e1f89c` within minutes and never released.
+
 # Forge 6.7.1 weekly ecosystem contract check, plan refresh, live update (2026-10-31)
 
 - Goal: keep Forge honest without syncing the bundle or Reverse THIS!, and remove stale planning debris.
