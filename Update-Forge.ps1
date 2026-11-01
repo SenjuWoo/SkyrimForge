@@ -185,7 +185,15 @@ try {
             & (Join-Path $Root 'Install-AI-Bridge.ps1') -Provider All -BootstrapPython -Yes
             if ($LASTEXITCODE -ne 0) { throw "Forge setup failed with exit code $LASTEXITCODE" }
         }
-        Add-Content -LiteralPath (Join-Path $logs 'owner-update.log') -Value ("$(Get-Date -Format o) version=$ReleaseVersion root=$Root backup=$backup result=PASS")
+        $pruned=@()
+        $retention=Join-Path $PSScriptRoot 'scripts\Prune-ForgeBackups.ps1'
+        if (Test-Path -LiteralPath $retention -PathType Leaf) {
+            # Keep the backup just made plus the previous one; anything older is
+            # Forge-owned and prunable, so weekly updates cannot grow forever.
+            try { $pruned=@(& $retention -Parent (Split-Path -Parent $Root) -Retain 2 -Confirm:$false) }
+            catch { Write-Warning "Backup retention skipped: $($_.Exception.Message)" }
+        }
+        Add-Content -LiteralPath (Join-Path $logs 'owner-update.log') -Value ("$(Get-Date -Format o) version=$ReleaseVersion root=$Root backup=$backup pruned=$($pruned.Count) result=PASS")
         Write-Host "Forge $ReleaseVersion installed. Last good release: $backup"
     } catch {
         $cause=$_.Exception.Message

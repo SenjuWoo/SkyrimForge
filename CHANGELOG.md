@@ -1,3 +1,7 @@
+## 6.7.2 (2026-10-31)
+
+- `Update-Forge.ps1` now prunes Forge-owned backups after a successful update. `scripts/Prune-ForgeBackups.ps1` keeps the newest two `.forge-backup-<32 hex>` copies, each proven by a `VERSION.txt` first line and a `MANIFEST.json`; removes failed stage directories older than seven days while keeping the newest for diagnosis; refuses reparse points and drive roots; and leaves legacy or foreign directories untouched. `-WhatIf` prints the plan, and the owner-update log now records `pruned=<n>`.
+- Live-install audit before this change: 566/566 release files byte-identical to the published 6.7.1 asset, manifest identical, recorded CLI and MCP argv both working, 50/50 pack skills in Claude, Codex, Grok and the Hermes `skyrim` profile, providers correctly deferred to the bundle toolbox, and the user's `allow_external_processes`/`allow_ui_automation` flags plus 50 tool pins preserved. The only defect was unbounded backup growth: eleven backups (~150 MB) and one abandoned failed stage.
 ## 6.7.1 (2026-10-31)
 
 - New weekly ecosystem contract check (`scripts/check_ecosystem.py`, `.github/workflows/ecosystem.yml`): reads the Ultimate AI Starter Bundle's `skyrim-forge` catalog entry (repository, `min_version` floor, asset template, installer checksum step), this repository's published release assets, and Reverse THIS!'s `kit.json`/`installed.json` receipt shape. It reports `PASS`/`DRIFT`/`UNKNOWN` (exit 0/2/3), supports `--offline` and `--json`, and never writes to either project. Forge still copies neither project's version.

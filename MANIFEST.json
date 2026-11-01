@@ -93,14 +93,14 @@
     {
       "executable": false,
       "path": "CHANGELOG.md",
-      "sha256": "b6ef9456842952cb1bc6fadd4e1c85473bc22a23b7ae1bfe4c2714319e6d7aac",
-      "size": 43595
+      "sha256": "2d0d864d194b783d0e28a383d07f04776cecc782aa47bad4202a910f0be7e7b0",
+      "size": 44609
     },
     {
       "executable": false,
       "path": "CHANGELOG.txt",
-      "sha256": "333cf5505f7077f8cf6402b49a02bfe70ae4c2aa66609f51fdddd85eccbdad12",
-      "size": 20834
+      "sha256": "655b4398b35b46faf4da36e671bd9f1369d80f7ee7b367f469ae0757546cb9f5",
+      "size": 21848
     },
     {
       "executable": false,
@@ -141,7 +141,7 @@
     {
       "executable": false,
       "path": "CURRENT.txt",
-      "sha256": "d3877d7768919a0cbcde1b4b8410379eaa932d98ba89998215d761fa378092ba",
+      "sha256": "0b5a6ded25d369f0ef0af869350a61bc0d5e481f9c94e255528c59c5d33b75bf",
       "size": 6
     },
     {
@@ -225,8 +225,8 @@
     {
       "executable": false,
       "path": "docs/INSTALLATION.md",
-      "sha256": "694f02e4d197cdad13dd60c6c53c2d40efa82389f35d1d9bb97f6be35e4d6671",
-      "size": 2964
+      "sha256": "bc89e7924cfff184158f6c73ba0fa400cee635842ada483f74e0c8d1b477058f",
+      "size": 3294
     },
     {
       "executable": false,
@@ -2775,13 +2775,13 @@
     {
       "executable": false,
       "path": "pyproject.toml",
-      "sha256": "7404b66f767d512f3c73111333ba242d4aba208b043ff6182246377decc404e3",
+      "sha256": "34607c54b48e62467167ae1ece4d83ec375f2622c57a55da338c4559759915a7",
       "size": 856
     },
     {
       "executable": false,
       "path": "README.md",
-      "sha256": "ae55f83ebd2cc79a318ccea4e6749051d0053299e2c343c02d95829d14da1c1d",
+      "sha256": "ccb875acafa442cb3877c7bcdc6f9bfd1191cf10ce9abe4fe0ebb46f5bd57c76",
       "size": 19485
     },
     {
@@ -2942,6 +2942,12 @@
     },
     {
       "executable": false,
+      "path": "scripts/Prune-ForgeBackups.ps1",
+      "sha256": "e7ae53d604cd521ade2be47b766f0e6edbebd86c6ef1e25328bbe50795c1028d",
+      "size": 3532
+    },
+    {
+      "executable": false,
       "path": "scripts/publish_release.py",
       "sha256": "707631f7095636b084246f43a6ba16fe5216f646a92aca8890455e6551b71f61",
       "size": 4378
@@ -2967,7 +2973,7 @@
     {
       "executable": false,
       "path": "server.json",
-      "sha256": "74941238a461dc153aebf425e8f60408c4599cfaac5502592eb1f8758c29b41a",
+      "sha256": "c6a33791404e44de54743bce09d64075e0f0138a3ebdc9f8dded53afbe46a798",
       "size": 410
     },
     {
@@ -3033,13 +3039,13 @@
     {
       "executable": false,
       "path": "skyrim_forge/bin/linux-x64/SkyrimForge.Native",
-      "sha256": "824952b6b8dd54d9251cb6a08ea8926f32accaa4a62450979751d7d17935cf1e",
+      "sha256": "d6aa169e311273017d898d89c0199c5a8287ba89761dc3eefdc20ec449b389e7",
       "size": 1839239
     },
     {
       "executable": true,
       "path": "skyrim_forge/bin/win-x64/SkyrimForge.Native.exe",
-      "sha256": "420e98b4847c5bff7f56340f2a1fa8557aed6364fd36e6e3116b92a41e7fbf89",
+      "sha256": "0b59b94713222a3baf3978d5a4a2a35a95b8796f73e14820212b0e2c8bda6e84",
       "size": 1955328
     },
     {
@@ -3075,8 +3081,8 @@
     {
       "executable": false,
       "path": "skyrim_forge/delivery.py",
-      "sha256": "c0b5ba81062231091b98d5c2ede2c3401d34b082c26d5db7fd562a9d6b4eb40f",
-      "size": 3777
+      "sha256": "563fcf083193b51f236d0ffdc14734124fc713c78a9f475f2eabc625fd60035d",
+      "size": 3811
     },
     {
       "executable": false,
@@ -3507,7 +3513,7 @@
     {
       "executable": false,
       "path": "skyrim_forge/version.py",
-      "sha256": "8bbd26f761dec5ce4d4cc04b1b6491f2c95f1120143559896bbca0f71839ad13",
+      "sha256": "a8984892c6bee54c1795838a76757a40d743d20212fccdff1932b0587a70fbe9",
       "size": 18
     },
     {
@@ -3537,7 +3543,7 @@
     {
       "executable": true,
       "path": "START-HERE.bat",
-      "sha256": "c3438ffd832bfdccb5e6051698659beb140f858a13ff093167234190bb002a5a",
+      "sha256": "1a136f5ee82845dedf996c0bef0aaab9cd90384a30c96121d582c25ecd5deb57",
       "size": 4782
     },
     {
@@ -3569,6 +3575,12 @@
       "path": "tests/test_automation.py",
       "sha256": "7c9ea76103e9fa8ad42f85f790dd394472af74fd2921837aaa11dbc31a0398e5",
       "size": 8570
+    },
+    {
+      "executable": false,
+      "path": "tests/test_backup_retention.py",
+      "sha256": "e57283955e06c64f0c625c5e7bf36eb610131d0f729bd979868d31197c557c13",
+      "size": 3330
     },
     {
       "executable": false,
@@ -3759,8 +3771,8 @@
     {
       "executable": false,
       "path": "Update-Forge.ps1",
-      "sha256": "057d015bab07222597145c1ce0ff8223a62933b5d69615987dbfe4de6b437655",
-      "size": 15856
+      "sha256": "d5d967b89b298aacc3a706fac6763f0344306eb4c7b99e961542f14da327500c",
+      "size": 16411
     },
     {
       "executable": false,
@@ -3771,7 +3783,7 @@
     {
       "executable": false,
       "path": "VERSION.txt",
-      "sha256": "5f5109b858f970ecccd80a69310dd29ec69bfbd9465e77012220bad1cddcdc18",
+      "sha256": "a436b507380a9959295129db31a0e6fcea0da7eef425e948e1f16d3d9cea6519",
       "size": 19
     },
     {
@@ -3801,7 +3813,7 @@
     {
       "executable": false,
       "path": "writer/native-go/main.go",
-      "sha256": "b9c7faef2f96c3499a5993a6d567803e0f0009022513f55048eebad8ed5b6642",
+      "sha256": "0a73cf482bb86db3c0ede8dc4bc876dae2045d5a2b013dd1f3e45cc60bf33167",
       "size": 3641
     },
     {
@@ -3813,16 +3825,16 @@
     {
       "executable": false,
       "path": "writer/published/linux-x64/SkyrimForge.Native",
-      "sha256": "824952b6b8dd54d9251cb6a08ea8926f32accaa4a62450979751d7d17935cf1e",
+      "sha256": "d6aa169e311273017d898d89c0199c5a8287ba89761dc3eefdc20ec449b389e7",
       "size": 1839239
     },
     {
       "executable": true,
       "path": "writer/published/win-x64/SkyrimForge.Native.exe",
-      "sha256": "420e98b4847c5bff7f56340f2a1fa8557aed6364fd36e6e3116b92a41e7fbf89",
+      "sha256": "0b59b94713222a3baf3978d5a4a2a35a95b8796f73e14820212b0e2c8bda6e84",
       "size": 1955328
     }
   ],
   "product": "Skyrim Forge",
-  "version": "6.7.1"
+  "version": "6.7.2"
 }
