@@ -4,6 +4,7 @@
 - Done: single-walk `discover-tools` (68 s -> 10 s) preferring the game-folder CK compiler; catalog `papyrus_compiler_fast`, `pca_se`, `hkxcmd`; observed tool inventory in `docs/LOCAL-TOOL-COVERAGE.md`; `mutagen-reference` synced to houseCARL 2.1.1 (Mutagen 0.54.4); houseCARL setup/skill on .NET 10 x64 only; GPL notice for eight houseCARL-derived skills; SkyrimForge (docs.skyrimforge.net) disambiguation in README and Forge skill.
 - Gemini note verdicts: right about houseCARL .NET 10 and the SkyrimForge name collision; wrong that this repo is frozen at 6.0.0 and that SPID `0(25)` is invalid (the parser accepts `skill(min)`). Venv trap, manifest LF and version-sync traps were already handled here; Spooky's AutoMod Toolkit is not installed.
 - Not changed: KID/SPID/SkyPatcher/OAR/SKSE skills stay Forge's (ahead of houseCARL upstream for the installed framework versions); `papyrus-reference` not resynced (contents tables only).
+- Shipped: local full gate PASS (318 tests) three times; pushed 2e4f5e0, exact-SHA CI 15/15, 0 open Dependabot/code-scanning/secret-scanning alerts; v6.9.0 published from 2e4f5e0 (8 assets, downloaded files match SHA256SUMS, ZIP carries the new catalog and NOTICE). Follow-up 5487fae writes gate reports with LF (no version change). Live install still 6.8.1: updating it needs the user's go-ahead.
 
 # Forge 6.8.1 free procedural textures and the free-tool map (2026-10-31)
 
