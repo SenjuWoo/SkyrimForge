@@ -1,3 +1,10 @@
+# Forge 6.9.0 whole-pack audit (2026-11-03)
+
+- Goal: audit the whole pack after many agent edits, cross-check the Gemini research note, document every tool in the user's Skyrim tools folder.
+- Done: single-walk `discover-tools` (68 s -> 10 s) preferring the game-folder CK compiler; catalog `papyrus_compiler_fast`, `pca_se`, `hkxcmd`; observed tool inventory in `docs/LOCAL-TOOL-COVERAGE.md`; `mutagen-reference` synced to houseCARL 2.1.1 (Mutagen 0.54.4); houseCARL setup/skill on .NET 10 x64 only; GPL notice for eight houseCARL-derived skills; SkyrimForge (docs.skyrimforge.net) disambiguation in README and Forge skill.
+- Gemini note verdicts: right about houseCARL .NET 10 and the SkyrimForge name collision; wrong that this repo is frozen at 6.0.0 and that SPID `0(25)` is invalid (the parser accepts `skill(min)`). Venv trap, manifest LF and version-sync traps were already handled here; Spooky's AutoMod Toolkit is not installed.
+- Not changed: KID/SPID/SkyPatcher/OAR/SKSE skills stay Forge's (ahead of houseCARL upstream for the installed framework versions); `papyrus-reference` not resynced (contents tables only).
+
 # Forge 6.8.1 free procedural textures and the free-tool map (2026-10-31)
 
 - Goal: close the missing-asset gap with 100% free, offline generation and point agents at the typed tool.

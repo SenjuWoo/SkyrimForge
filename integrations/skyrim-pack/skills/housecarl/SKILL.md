@@ -51,9 +51,9 @@ This skill originally targets Claude Code + houseCARL MCP. On **any** AI:
 ```text
 INSTALL houseCARL:
 1. Get the houseCARL distribution (houseCARL-Setup.exe + housecarl\ folder).
-2. Install .NET 10 Runtime (for houseCARL 2.x; or .NET 9 + ASP.NET Core 9 for 1.x):
+2. Install the .NET Runtime 10.0 (x64) (houseCARL 2.1+; ASP.NET Core is no longer needed):
    https://dotnet.microsoft.com/download/dotnet/10.0
-   winget install Microsoft.DotNet.Runtime.10
+   winget install Microsoft.DotNet.Runtime.10 --architecture x64
 3. Run houseCARL-Setup.exe (quit AI apps first when updating).
 4. Fully restart the AI application.
 5. Set MO2 instance (folder containing ModOrganizer.ini).
@@ -100,7 +100,7 @@ housecarl\scripts\Setup-HouseCarl.ps1
 ### Behavior of Setup-HouseCarl.ps1
 
 1. Finds `housecarl-mcp.exe` (env, `%LOCALAPPDATA%\houseCARL`, Claude/Codex skill trees, optional tool vaults) and selects the highest version.
-2. Checks .NET 10 Runtime (or .NET 9 + ASP.NET Core 9 for 1.x).
+2. Checks the .NET 10 runtime (exit 4 when it is missing; paths are still written).
 3. **Auto** selects MO2 if `ModOrganizer.ini` instances exist; else **Vortex** if staging is found.
 4. **MO2:** sets instance path.
 5. **Vortex:** creates `%LOCALAPPDATA%\houseCARL-Shim` and reports the resolved instance path.

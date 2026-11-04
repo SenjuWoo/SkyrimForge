@@ -5,6 +5,12 @@ description: Use when Skyrim mod development or validation can benefit from the 
 
 # Skyrim Forge
 
+Not to be confused with **SkyrimForge** (docs.skyrimforge.net, Nexus): an unrelated
+in-game framework that runs C# plugins inside Skyrim through SKSE. This skill is the
+out-of-game Python broker (`skyrim_forge`, `forge` CLI, MCP server). Never put broker files
+under `Data\SKSE\Plugins\SkyrimForge`, and never route a request about C# in-game
+plugins here.
+
 ## Resolve this installation
 
 Read `INSTALLATION.json` beside this skill before invoking Forge. It contains the

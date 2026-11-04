@@ -1,5 +1,6 @@
-# Current plan (2026-10-31)
+# Current plan (2026-11-03)
 
+0. [complete] Forge 6.9.0 — whole-pack audit: single-walk tool discovery, three catalog tools, observed tool inventory, houseCARL 2.1.1 Mutagen schema and .NET 10 setup, GPL notice for houseCARL-derived skills, SkyrimForge name disambiguation.
 1. [complete] Forge 6.8.1 — free procedural textures plus the free-tool map. `texture-generate` writes deterministic BC1/BC3/A8R8G8B8 DDS with mip chains, six kinds and normal maps; `texture-inspect` reads any DDS; agents are routed to the typed tool. Released from `785cf51`; the live install is 6.8.1, 569/569 byte-identical, doctor PASS.
 2. [complete] The contract check runs weekly (`.github/workflows/ecosystem.yml`) and on demand: bundle `skyrim-forge` catalog entry, release assets, Reverse THIS! receipts. Forge never copies either project's version.
 3. [next] After each bundle auto-update, run the ecosystem check plus `forge doctor` against the live install; a `DRIFT` row names the exact contract that changed.

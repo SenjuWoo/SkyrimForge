@@ -1,3 +1,7 @@
+# Whole-pack audit candidate 6.9.0 (2026-11-03)
+
+Baseline full gate PASS at 6.8.1 before edits. Checked: every `forge <command>` named in skills/docs exists among the 71 CLI commands; skill-relative file references resolve (only upstream houseCARL changelog paths do not); both `papyrus-reference` indexes resolve 7,345/7,345 entries to blocks containing the name; SPID skill-level grammar matches the upstream parser (`skill(min)` and `skill(min/max)` are both valid, contrary to the external research note). Discovery: new index test plus a live run (68.0 s before, 9.8 s after, same tools plus the two new ones, CK compiler preferred).
+
 # Independent releases candidate 6.5.0 (2026-10-29)
 
 Release workflow gates are asserted by tests/test_ci_validation.py; the version gate passes a version-free skill and still rejects a stated stale version. Full validator PASS twice plus the idempotence run.

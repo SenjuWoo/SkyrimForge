@@ -4,7 +4,7 @@
 
 <div align="center">
 
-# Skyrim Forge 6.8.1
+# Skyrim Forge 6.9.0
 
 <p>
   <a href="https://github.com/SenjuWoo/SkyrimForge/actions/workflows/ci.yml"><img src="https://github.com/SenjuWoo/SkyrimForge/actions/workflows/ci.yml/badge.svg" alt="CI"></a>
@@ -23,6 +23,8 @@
 > digest-verified release for its opt-in Skyrim pack, keeping any newer local
 > Forge install. Forge releases on its own; who owns what across the three
 > repositories is stated once, in the [bundle README](https://github.com/SenjuWoo/Ultimate-AI-Starter-Bundle#ownership).
+
+Not the same project as **SkyrimForge** at [docs.skyrimforge.net](https://docs.skyrimforge.net/), an in-game SKSE framework for C# plugins. This Forge runs outside the game and never installs into `Data`.
 
 Skyrim Forge is a local, safety-first engineering workbench and MCP server for Skyrim Special Edition and Anniversary Edition mod development.
 

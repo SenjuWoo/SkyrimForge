@@ -42,10 +42,10 @@ powershell -NoProfile -ExecutionPolicy Bypass -File .\Setup-HouseCarl.ps1
 1. **houseCARL installed** so `housecarl-mcp.exe` exists  
    - Official: run `houseCARL-Setup.exe`  
    - Or portable folder containing `server\housecarl-mcp.exe`
-2. **.NET 9 Runtime** and **ASP.NET Core 9 Runtime**  
-   https://dotnet.microsoft.com/download/dotnet/9.0  
-   `winget install Microsoft.DotNet.Runtime.9`  
-   `winget install Microsoft.DotNet.AspNetCore.9`
+2. **.NET Runtime 10.0 (x64)** (houseCARL 2.1+; the ASP.NET Core runtime is no longer needed)  
+   https://dotnet.microsoft.com/download/dotnet/10.0  
+   `winget install Microsoft.DotNet.Runtime.10 --architecture x64`  
+   On Windows on ARM, install the x64 runtime: an arm64 runtime alone makes setup open and close with no output.
 3. **Skyrim SE** install (for Vortex shim `gamePath`)
 4. **plugins.txt** under `%LOCALAPPDATA%\Skyrim Special Edition` (launch game or Vortex once)
 

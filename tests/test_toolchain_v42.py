@@ -135,3 +135,18 @@ class ToolchainV42Tests(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class DiscoveryIndexTests(unittest.TestCase):
+    def test_one_walk_keeps_root_order_name_order_and_shallowest_path(self):
+        from skyrim_forge.tools import discover_executable, index_executables
+        with tempfile.TemporaryDirectory() as temp:
+            first, second = Path(temp, "a"), Path(temp, "b")
+            for path in (first / "deep/x/hkxcmd.exe", first / "y/HKXCMD.EXE", second / "hkxcmd.exe", second / "PCA SE.exe"):
+                path.parent.mkdir(parents=True, exist_ok=True); path.write_bytes(b"x")
+            names = ["zz-not-on-path-hkxcmd.exe", "hkxcmd.exe", "PCA SE.exe"]
+            index = index_executables([first, second, Path(temp, "missing")], names)
+            self.assertEqual(discover_executable(names[:2], [first, second], index), (first / "y/HKXCMD.EXE").resolve())
+            self.assertEqual(discover_executable(["PCA SE.exe"], [first, second], index), (second / "PCA SE.exe").resolve())
+            self.assertIsNone(discover_executable(["absent-tool.exe"], [first, second], index))
+            self.assertEqual(discover_executable(["PCA SE.exe"], [first, second]), (second / "PCA SE.exe").resolve())

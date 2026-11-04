@@ -8,7 +8,7 @@ import struct
 import sys
 from dataclasses import asdict
 from pathlib import Path
-from typing import Any
+from typing import Any, Iterable
 
 from .config import ForgeConfig, ToolConfig
 from .errors import ConfigurationError, SafetyError, ToolError
@@ -158,16 +158,31 @@ def run_process(
     }
 
 
-def discover_executable(names: list[str], roots: list[Path]) -> Path | None:
+def discover_executable(names: list[str], roots: list[Path], index: dict[tuple[int, str], list[Path]] | None = None) -> Path | None:
     for name in names:
         found = shutil.which(name)
         if found:
             return Path(found).resolve()
-    for root in roots:
-        if not root or not root.exists():
-            continue
+    if index is None:
+        index = index_executables(roots, names)
+    for position in range(len(roots)):
         for name in names:
-            candidates = list(root.rglob(name))
+            candidates = index.get((position, name.casefold()))
             if candidates:
                 return sorted(candidates, key=lambda p: (len(p.parts), p.as_posix().casefold()))[0].resolve()
     return None
+
+
+def index_executables(roots: list[Path], names: Iterable[str]) -> dict[tuple[int, str], list[Path]]:
+    """Walk each root once for every wanted file name (case-insensitive), keyed by root position."""
+    wanted = {name.casefold() for name in names}
+    index: dict[tuple[int, str], list[Path]] = {}
+    for position, root in enumerate(roots):
+        if not root or not root.exists():
+            continue
+        for directory, _dirs, files in os.walk(root):
+            for file in files:
+                folded = file.casefold()
+                if folded in wanted:
+                    index.setdefault((position, folded), []).append(Path(directory, file))
+    return index

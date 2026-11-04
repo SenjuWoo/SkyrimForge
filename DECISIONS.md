@@ -109,3 +109,5 @@ Reverse THIS! owns generic texconv/7-Zip payloads. Forge records an approved bin
 Local filenames and documentation do not establish current upstream provenance or a headless contract. Added tools stay configure-only/worker-only until exact contracts are proven. DeadMesh's explicit no-redistribution terms remain respected; no third-party executables ship publicly.
 
 - 6.2.1: Generated __pycache__ directories encountered under public owner directories stay in the rollback tree. Unknown private directory trees (including venvs/workspaces) still move intact and are never traversed or purged.
+
+- 6.9.0: Pack skills derived from houseCARL keep their own GPL-3.0-only licence (NOTICE.md); generated data (`mutagen-reference`) is refreshed from the installed houseCARL, while hand-tuned skills that are ahead of upstream (KID 4.0.6, SPID 7.3.1 authorities) stay Forge's. `papyrus-reference` is not resynced: upstream differs only by fallback contents tables and both indexes resolve all 7,345 entries. A generic executable name (`papyrus.exe`) is never auto-discovered; it is configured explicitly.

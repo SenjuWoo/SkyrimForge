@@ -6,7 +6,7 @@ from pathlib import Path
 from typing import Any
 
 from .config import ForgeConfig
-from .tools import discover_executable, tool_status
+from .tools import discover_executable, index_executables, tool_status
 from .toolchain import toolchain_status
 from .version import VERSION
 
@@ -120,6 +120,8 @@ def discover_tools(config: ForgeConfig) -> dict[str, str]:
         "clibdt": ["ClibDT.exe"],
         "texture_analyzer": ["TextureAnalyzer.exe"],
         "bethini": ["Bethini.exe"],
+        "pca_se": ["PCA SE.exe"],
+        "hkxcmd": ["hkxcmd.exe"],
         "cmake": ["cmake.exe", "cmake"],
         "xmake": ["xmake.exe", "xmake"],
         "vcpkg": ["vcpkg.exe", "vcpkg"],
@@ -133,8 +135,14 @@ def discover_tools(config: ForgeConfig) -> dict[str, str]:
                 text=candidate.read_text(encoding="utf-8-sig")
                 if "createPlugin" in text and "mobase.IPluginTool" in text and "NifAnalyzer" in text:
                     found["nif_analyzer_mo2_plugin"]=str(candidate.parent)
+    index = index_executables(roots, [name for group in names.values() for name in group])
     for name, executable_names in names.items():
-        path = discover_executable(executable_names, roots)
+        path = discover_executable(executable_names, roots, index)
         if path:
             found[name] = str(path)
+    # The Creation Kit's own compiler beside the game is the authority; copies elsewhere are older or unknown.
+    game = config.skyrim_data.parent if config.skyrim_data else None
+    for name, relative in (("creation_kit", "CreationKit.exe"), ("papyrus_compiler", "Papyrus Compiler/PapyrusCompiler.exe")):
+        if game and (game / relative).is_file():
+            found[name] = str((game / relative).resolve())
     return found

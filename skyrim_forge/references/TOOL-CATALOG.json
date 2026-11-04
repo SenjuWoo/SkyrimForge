@@ -876,6 +876,68 @@
       "priority": 80,
       "public_bundle_allowed": false,
       "source": "FaceFXWrapper/LipGen upstream release"
+    },
+    {
+      "automation": "worker_contract",
+      "capabilities": [
+        "papyrus.compile.fast",
+        "papyrus.pex.disassemble"
+      ],
+      "config_key": "papyrus_compiler_fast",
+      "id": "papyrus_compiler_fast",
+      "import_mode": "configure_only",
+      "license": "MIT",
+      "names": [
+        "papyrus.exe"
+      ],
+      "notes": "russo-2025 open-source Papyrus compiler written in V (`papyrus compile -i <src> -o <out> -h <headers>`, `-check` syntax-only, `read`/`disassembly` for PEX). Faster than the Bethesda compiler but not the official authority: `papyrus-compile` still uses papyrus.compile.official. Discover/configure existing installation only. No public binary bundling; worker-contract entries have no direct Forge runner.",
+      "path_hints": [
+        "papyrus-compiler"
+      ],
+      "priority": 10,
+      "public_bundle_allowed": false,
+      "source": "https://github.com/russo-2025/papyrus-compiler"
+    },
+    {
+      "automation": "human_gate",
+      "capabilities": [
+        "papyrus.compile.gui"
+      ],
+      "config_key": "pca_se",
+      "id": "pca_se",
+      "import_mode": "directory_runtime",
+      "license": "Unknown; verify upstream",
+      "names": [
+        "PCA SE.exe"
+      ],
+      "notes": "Papyrus Compiler App SE, an Electron GUI front end. Human-operated only; Forge compiles through papyrus-compile. Discover/configure existing installation only. No public binary bundling; worker-contract entries have no direct Forge runner.",
+      "path_hints": [
+        "papy compiler app"
+      ],
+      "priority": 10,
+      "public_bundle_allowed": false,
+      "source": "Local installation; upstream not source-locked."
+    },
+    {
+      "automation": "worker_contract",
+      "capabilities": [
+        "animation.hkx.convert"
+      ],
+      "config_key": "hkxcmd",
+      "id": "hkxcmd",
+      "import_mode": "configure_only",
+      "license": "Unknown; ships inside Cathedral Assets Optimizer",
+      "names": [
+        "hkxcmd.exe"
+      ],
+      "notes": "Havok command line tool (HKX convert/inspect) shipped in Cathedral Assets Optimizer's bin folder. Discover/configure existing installation only. No public binary bundling; worker-contract entries have no direct Forge runner.",
+      "path_hints": [
+        "cathedral",
+        "hkxcmd"
+      ],
+      "priority": 20,
+      "public_bundle_allowed": false,
+      "source": "Cathedral Assets Optimizer distribution"
     }
   ]
 }

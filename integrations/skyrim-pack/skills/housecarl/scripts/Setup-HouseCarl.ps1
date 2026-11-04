@@ -575,17 +575,13 @@ if (-not $ShimRoot) { $ShimRoot = Join-Path $env:LOCALAPPDATA 'houseCARL-Shim' }
 if (-not $SkipDotNetCheck) {
   Write-Step "Checking .NET runtimes"
   $dn = Test-DotNet9
+  # houseCARL 2.1+ needs only the x64 .NET 10 runtime; ASP.NET Core and .NET 9 are no longer used.
   if ($dn.net10) {
-    Write-Ok ".NET 10 runtime present (houseCARL 2.x)"
-  } elseif ($dn.net9 -and $dn.asp9) {
-    Write-Ok ".NET 9 + ASP.NET Core 9 runtimes present (houseCARL 1.x)"
+    Write-Ok ".NET 10 runtime present (houseCARL 2.1+)"
   } else {
-    if (-not $dn.net) { Write-Bad ".NET 10 Runtime MISSING - winget install Microsoft.DotNet.Runtime.10 (or Microsoft.DotNet.Runtime.9 for houseCARL 1.x)" }
-    if (-not $dn.asp) { Write-Bad "ASP.NET Core 9 Runtime MISSING - winget install Microsoft.DotNet.AspNetCore.9" }
+    Write-Bad ".NET Runtime 10.0 (x64) MISSING - winget install Microsoft.DotNet.Runtime.10 --architecture x64"
   }
   $script:Report['dotnet10'] = $dn.net10
-  $script:Report['dotnet9'] = $dn.net
-  $script:Report['aspnet9'] = $dn.asp
 }
 
 Write-Step "Locating housecarl-mcp.exe"
@@ -775,8 +771,8 @@ if (-not $Quiet) {
 }
 
 # exit non-zero if critical runtimes missing (still wrote shim)
-if (-not $SkipDotNetCheck -and (-not $script:Report['dotnet10'] -and (-not $script:Report['dotnet9'] -or -not $script:Report['aspnet9']))) {
-  Write-Warn2 "Setup wrote paths but .NET 9 pair is incomplete - houseCARL MCP may fail until installed."
+if (-not $SkipDotNetCheck -and -not $script:Report['dotnet10']) {
+  Write-Warn2 "Setup wrote paths but the .NET 10 runtime is missing - houseCARL MCP will not start until it is installed."
   exit 4
 }
 exit 0

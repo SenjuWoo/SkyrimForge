@@ -1,3 +1,11 @@
+## 6.9.0 (2026-11-03)
+
+- `discover-tools` walks each search root once for every executable name instead of once per name: about 68 s to 10 s on a real machine, same choices (PATH first, root order, name order, shallowest path). It now prefers the Creation Kit's own `PapyrusCompiler.exe` and `CreationKit.exe` beside the game over copies elsewhere.
+- Tool catalog: `papyrus_compiler_fast` (russo-2025 open-source V compiler, MIT, worker contract, never auto-discovered because `papyrus.exe` is a generic name), `pca_se` (Papyrus Compiler App SE GUI, human gate) and `hkxcmd` (Havok CLI from Cathedral Assets Optimizer, worker contract). `docs/LOCAL-TOOL-COVERAGE.md` adds an observed inventory of every folder in a real Skyrim tools root, the grass-cache and output-rerun workflows, and the tool settings files.
+- `mutagen-reference` now carries the schema houseCARL 2.1.1 ships (Mutagen 0.54.4) instead of 0.53.1; the compact pack description is kept.
+- The houseCARL skill, its setup guide and `Setup-HouseCarl.ps1` require only the x64 .NET 10 runtime (houseCARL 2.1+); the stale .NET 9 / ASP.NET Core 9 instructions and the false "OK" for a .NET 9 machine are gone. Exit 4 now means .NET 10 is missing.
+- `NOTICE.md` states that eight pack skills derive from houseCARL's GPL-3.0-only skills and stay under that licence.
+- README and the Forge skill tell agents this project is not SkyrimForge (docs.skyrimforge.net), the unrelated in-game C# plugin framework.
 ## 6.8.1 (2026-10-31)
 
 - Normal maps are slope-scaled per texture unit, so one `--strength` value looks the same at 256 and 2048 pixels. 6.8.0 scaled per pixel, which produced nearly flat maps; a pixel review of the previews caught it. The default strength is now 0.12 (visible relief, no clipping) and the examples in the README, `docs/ASSET-GENERATION.md` and the assets skill use it.
