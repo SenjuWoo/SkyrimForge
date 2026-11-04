@@ -1,3 +1,8 @@
+## 6.9.1 (2026-11-04)
+
+- `skyrim-memory` gains the settled-results ledgers that lived in the Ultimate AI Starter Bundle's `project-intel` cards: `references/SETTLED-RESULTS.md` (crash triage, FOMOD/Vortex, FormID, headpart and conflict results) and `references/RELEASE-RESULTS.md` (Nexus pages, permissions, releases). The skill's start list reads them after `GLOBAL-LESSONS.md`.
+- `docs/prompts/` holds the four Skyrim prompt packs and `docs/WHICH-AI-SHOULD-I-USE.md` the assistant/task guide, also moved from the bundle so Skyrim knowledge has one owner.
+
 ## 6.9.0 (2026-11-03)
 
 - `discover-tools` walks each search root once for every executable name instead of once per name: about 68 s to 10 s on a real machine, same choices (PATH first, root order, name order, shallowest path). It now prefers the Creation Kit's own `PapyrusCompiler.exe` and `CreationKit.exe` beside the game over copies elsewhere.

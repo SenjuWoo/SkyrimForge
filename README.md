@@ -4,7 +4,7 @@
 
 <div align="center">
 
-# Skyrim Forge 6.9.0
+# Skyrim Forge 6.9.1
 
 <p>
   <a href="https://github.com/SenjuWoo/SkyrimForge/actions/workflows/ci.yml"><img src="https://github.com/SenjuWoo/SkyrimForge/actions/workflows/ci.yml/badge.svg" alt="CI"></a>
@@ -47,6 +47,8 @@ forge nexus-build NEXUS-PUBLICATION-PLAN.json <release-root> <workspace-output> 
 ```
 
 The gate maps every bundled file to its origin, author, licence or permission basis, credit, redistribution rights, Donation Points status, content classification, AI disclosure, and local evidence. Credit alone is never treated as permission. Forge blocks ambiguous rights, missing licence obligations, original game files, unsupported public claims, and incomplete uploader attestations. It cannot authenticate legal ownership or replace the uploader's final responsibility.
+
+Skyrim prompt packs for any AI: [docs/prompts](docs/prompts/README.md). Which assistant for which task: [docs/WHICH-AI-SHOULD-I-USE.md](docs/WHICH-AI-SHOULD-I-USE.md).
 
 ## Install
 

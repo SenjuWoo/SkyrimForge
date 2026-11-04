@@ -1,4 +1,13 @@
-# Forge 6.9.0 whole-pack audit (2026-11-03)
+# Forge 6.9.1 Skyrim knowledge consolidation (2026-11-04)
+
+## 6.9.1 candidate (2026-11-04)
+
+- Skyrim knowledge consolidated here from the Ultimate AI Starter Bundle: two settled-results ledgers in
+  `skyrim-memory/references/`, four prompt packs in `docs/prompts/`, the assistant/task guide in
+  `docs/WHICH-AI-SHOULD-I-USE.md`. No code change; version bumped so the release carries the skill files.
+- Gate: native helpers rebuilt, repository validator with `--write-reports` twice, then once without.
+
+## 6.9.0 whole-pack audit (2026-11-03)
 
 - Goal: audit the whole pack after many agent edits, cross-check the Gemini research note, document every tool in the user's Skyrim tools folder.
 - Done: single-walk `discover-tools` (68 s -> 10 s) preferring the game-folder CK compiler; catalog `papyrus_compiler_fast`, `pca_se`, `hkxcmd`; observed tool inventory in `docs/LOCAL-TOOL-COVERAGE.md`; `mutagen-reference` synced to houseCARL 2.1.1 (Mutagen 0.54.4); houseCARL setup/skill on .NET 10 x64 only; GPL notice for eight houseCARL-derived skills; SkyrimForge (docs.skyrimforge.net) disambiguation in README and Forge skill.

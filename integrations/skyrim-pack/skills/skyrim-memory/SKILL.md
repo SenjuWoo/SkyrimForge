@@ -27,6 +27,8 @@ There is no separate memory directory to install.
 ## Start
 
 1. Read `references/GLOBAL-LESSONS.md`.
+   Then the settled-results ledgers: `references/SETTLED-RESULTS.md` (authoring, crashes, conflicts,
+   FOMOD, assets) and `references/RELEASE-RESULTS.md` (Nexus pages, releases, permissions).
 2. Search `references/ERROR-REGISTRY.json` by task tags and symptoms.
 3. Read only matching entries and the relevant validation sections.
 4. Check the active project's `CURRENT.txt`, `CHANGELOG`, `STATE.md`, and known-good records.
