@@ -447,19 +447,19 @@ def manifest() -> dict[str, Any]:
 
 def write_manifest() -> dict[str, Any]:
     result=manifest()
-    (ROOT/"MANIFEST.json").write_text(json.dumps(result,indent=2,sort_keys=True)+"\n",encoding="utf-8")
+    (ROOT/"MANIFEST.json").write_text(json.dumps(result,indent=2,sort_keys=True)+"\n",encoding="utf-8",newline="\n")
     return result
 
 
 def write_reports(report: dict[str, Any]) -> None:
-    report=portable(report); (ROOT/"VALIDATION.json").write_text(json.dumps(report,indent=2,sort_keys=True)+"\n",encoding="utf-8")
+    report=portable(report); (ROOT/"VALIDATION.json").write_text(json.dumps(report,indent=2,sort_keys=True)+"\n",encoding="utf-8",newline="\n")
     man=write_manifest()
     binaries=[ROOT/"writer"/"published"/"linux-x64"/"SkyrimForge.Native",ROOT/"writer"/"published"/"win-x64"/"SkyrimForge.Native.exe"]
-    (ROOT/"CHECKSUMS-SHA256.txt").write_text("\n".join(f"{sha256(p)}  {p.relative_to(ROOT).as_posix()}" for p in binaries)+"\n",encoding="utf-8")
+    (ROOT/"CHECKSUMS-SHA256.txt").write_text("\n".join(f"{sha256(p)}  {p.relative_to(ROOT).as_posix()}" for p in binaries)+"\n",encoding="utf-8",newline="\n")
     receipt={"product":"Skyrim Forge","version":VERSION,"result":report["result"],"native":report["checks"]["native"],"go":report["checks"]["go"],"mcp":report["checks"]["mcp"],"limitations":["Windows native helper and PowerShell installers require Windows execution; GitHub CI performs that gate.","Third-party modding tools are not bundled. Their legal local installations may be discovered, imported into the private tool vault when allowed, SHA-256 pinned, and selected only for exact catalog capabilities.","No Skyrim runtime, save, visual, navmesh, animation, or gameplay validation was performed in this environment.","Nexus publication checks validate declared evidence and machine-checkable policy gates; they do not authenticate legal ownership or replace the uploader's responsibility."]}
-    (ROOT/"BUILD-RECEIPT.json").write_text(json.dumps(portable(receipt),indent=2,sort_keys=True)+"\n",encoding="utf-8")
+    (ROOT/"BUILD-RECEIPT.json").write_text(json.dumps(portable(receipt),indent=2,sort_keys=True)+"\n",encoding="utf-8",newline="\n")
     sbom={"spdxVersion":"SPDX-2.3","dataLicense":"CC0-1.0","SPDXID":"SPDXRef-DOCUMENT","name":f"Skyrim-Forge-{VERSION}","documentNamespace":f"https://example.invalid/skyrim-forge/{VERSION}/spdx","creationInfo":{"created":"2026-07-24T00:00:00Z","creators":[f"Tool: Skyrim Forge validator {VERSION}"]},"packages":[{"name":"Skyrim Forge","SPDXID":"SPDXRef-Package","versionInfo":VERSION,"downloadLocation":"NOASSERTION","filesAnalyzed":True,"licenseConcluded":"MIT","licenseDeclared":"MIT","copyrightText":"NOASSERTION"}],"files":[{"fileName":"./"+f["path"],"SPDXID":"SPDXRef-File-"+re.sub(r"[^A-Za-z0-9.-]","-",f["path"]),"checksums":[{"algorithm":"SHA256","checksumValue":f["sha256"]}],"licenseConcluded":"NOASSERTION","licenseInfoInFiles":["NOASSERTION"],"copyrightText":"NOASSERTION"} for f in man["files"]]}
-    (ROOT/"SBOM.spdx.json").write_text(json.dumps(sbom,indent=2,sort_keys=True)+"\n",encoding="utf-8")
+    (ROOT/"SBOM.spdx.json").write_text(json.dumps(sbom,indent=2,sort_keys=True)+"\n",encoding="utf-8",newline="\n")
 
 
 def validate_version_sources(errors: list[str]) -> dict[str, Any]:

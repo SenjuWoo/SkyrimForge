@@ -2967,8 +2967,8 @@
     {
       "executable": false,
       "path": "scripts/validate_repository.py",
-      "sha256": "32a678217f37f5e927b14a4a9ca1c4ea08c250b2cebf273c5cd4352e25613e8d",
-      "size": 39260
+      "sha256": "a0c50e3b04e1b4d8060a8bb81c82c154fb8c8d5b908786e410db7d493614fbd0",
+      "size": 39325
     },
     {
       "executable": false,
