@@ -730,6 +730,81 @@
       ]
     },
     {
+      "SPDXID": "SPDXRef-File-docs-prompts-README.md",
+      "checksums": [
+        {
+          "algorithm": "SHA256",
+          "checksumValue": "b80e87ca7e47b1b1fcc1b7f32cc50847ae39f4fb059bdbd8cd089677d8460d92"
+        }
+      ],
+      "copyrightText": "NOASSERTION",
+      "fileName": "./docs/prompts/README.md",
+      "licenseConcluded": "NOASSERTION",
+      "licenseInfoInFiles": [
+        "NOASSERTION"
+      ]
+    },
+    {
+      "SPDXID": "SPDXRef-File-docs-prompts-SKYRIM-MODERNIZATION-MASTER-PROMPT.md",
+      "checksums": [
+        {
+          "algorithm": "SHA256",
+          "checksumValue": "2846e114476451cda0f080d314b233b2f17d090e503c7a7b78b03b3a5162c238"
+        }
+      ],
+      "copyrightText": "NOASSERTION",
+      "fileName": "./docs/prompts/SKYRIM-MODERNIZATION-MASTER-PROMPT.md",
+      "licenseConcluded": "NOASSERTION",
+      "licenseInfoInFiles": [
+        "NOASSERTION"
+      ]
+    },
+    {
+      "SPDXID": "SPDXRef-File-docs-prompts-SKYRIM-MODPACK-CONFLICT-SOLVER.md",
+      "checksums": [
+        {
+          "algorithm": "SHA256",
+          "checksumValue": "cc5086a17c382ceca1003a9a15b8aca8decebcb66d2625926a7fdbe09c4f1291"
+        }
+      ],
+      "copyrightText": "NOASSERTION",
+      "fileName": "./docs/prompts/SKYRIM-MODPACK-CONFLICT-SOLVER.md",
+      "licenseConcluded": "NOASSERTION",
+      "licenseInfoInFiles": [
+        "NOASSERTION"
+      ]
+    },
+    {
+      "SPDXID": "SPDXRef-File-docs-prompts-SKYRIM-QUICK-MODERNIZE.md",
+      "checksums": [
+        {
+          "algorithm": "SHA256",
+          "checksumValue": "c6b9d53959cdf26bfb6eaf1be01183cb362b6d0e0c3868b4c146d0f7a6abaddc"
+        }
+      ],
+      "copyrightText": "NOASSERTION",
+      "fileName": "./docs/prompts/SKYRIM-QUICK-MODERNIZE.md",
+      "licenseConcluded": "NOASSERTION",
+      "licenseInfoInFiles": [
+        "NOASSERTION"
+      ]
+    },
+    {
+      "SPDXID": "SPDXRef-File-docs-prompts-ULTIMATE-GENERALIZED-SKYRIM-PROMPTS-v3.md",
+      "checksums": [
+        {
+          "algorithm": "SHA256",
+          "checksumValue": "54a0af8d6bbcc4046d4f5cc165ad3c52dab64b12d763abf40f65bad68670aea9"
+        }
+      ],
+      "copyrightText": "NOASSERTION",
+      "fileName": "./docs/prompts/ULTIMATE-GENERALIZED-SKYRIM-PROMPTS-v3.md",
+      "licenseConcluded": "NOASSERTION",
+      "licenseInfoInFiles": [
+        "NOASSERTION"
+      ]
+    },
+    {
       "SPDXID": "SPDXRef-File-docs-PUBLICATION-COMPLIANCE.md",
       "checksums": [
         {
@@ -814,6 +889,21 @@
       ],
       "copyrightText": "NOASSERTION",
       "fileName": "./docs/UI-AUTOMATION.md",
+      "licenseConcluded": "NOASSERTION",
+      "licenseInfoInFiles": [
+        "NOASSERTION"
+      ]
+    },
+    {
+      "SPDXID": "SPDXRef-File-docs-WHICH-AI-SHOULD-I-USE.md",
+      "checksums": [
+        {
+          "algorithm": "SHA256",
+          "checksumValue": "486594f617dd224055c734582f96eaabe6841c33d9f7b581bf9076535c069b02"
+        }
+      ],
+      "copyrightText": "NOASSERTION",
+      "fileName": "./docs/WHICH-AI-SHOULD-I-USE.md",
       "licenseConcluded": "NOASSERTION",
       "licenseInfoInFiles": [
         "NOASSERTION"
@@ -6109,6 +6199,36 @@
       ],
       "copyrightText": "NOASSERTION",
       "fileName": "./integrations/skyrim-pack/skills/skyrim-memory/references/README.md",
+      "licenseConcluded": "NOASSERTION",
+      "licenseInfoInFiles": [
+        "NOASSERTION"
+      ]
+    },
+    {
+      "SPDXID": "SPDXRef-File-integrations-skyrim-pack-skills-skyrim-memory-references-RELEASE-RESULTS.md",
+      "checksums": [
+        {
+          "algorithm": "SHA256",
+          "checksumValue": "19968718a50ce0af55794638fa44bf534f918dc5bb6e2b5896a51a546435dc18"
+        }
+      ],
+      "copyrightText": "NOASSERTION",
+      "fileName": "./integrations/skyrim-pack/skills/skyrim-memory/references/RELEASE-RESULTS.md",
+      "licenseConcluded": "NOASSERTION",
+      "licenseInfoInFiles": [
+        "NOASSERTION"
+      ]
+    },
+    {
+      "SPDXID": "SPDXRef-File-integrations-skyrim-pack-skills-skyrim-memory-references-SETTLED-RESULTS.md",
+      "checksums": [
+        {
+          "algorithm": "SHA256",
+          "checksumValue": "79e864349bf9360eef1b82dc6cd04ff07f656e04bdcdef1aaddc579c72a25a20"
+        }
+      ],
+      "copyrightText": "NOASSERTION",
+      "fileName": "./integrations/skyrim-pack/skills/skyrim-memory/references/SETTLED-RESULTS.md",
       "licenseConcluded": "NOASSERTION",
       "licenseInfoInFiles": [
         "NOASSERTION"

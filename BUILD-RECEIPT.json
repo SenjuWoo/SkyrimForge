@@ -21,11 +21,11 @@
             "<HOME>\\AppData\\Local\\Ultimate-AI-Starter-Bundle\\toolchains\\go1.27.3\\go\\bin\\go.EXE",
             "version",
             "-m",
-            "<HOME>\\AppData\\Local\\Temp\\tmpr5mlox2k\\linux-a"
+            "<HOME>\\AppData\\Local\\Temp\\tmp8w2w260q\\linux-a"
           ],
           "returncode": 0,
           "stderr": "",
-          "stdout": "<HOME>\\AppData\\Local\\Temp\\tmpr5mlox2k\\linux-a: go1.23.2\n\tpath\tskyrimforge/native\n\tmod\tskyrimforge/native\t(devel)\t\n\tbuild\t-buildmode=exe\n\tbuild\t-compiler=gc\n\tbuild\t-trimpath=true\n\tbuild\tCGO_ENABLED=0\n\tbuild\tGOARCH=amd64\n\tbuild\tGOOS=linux\n\tbuild\tGOAMD64=v1\n"
+          "stdout": "<HOME>\\AppData\\Local\\Temp\\tmp8w2w260q\\linux-a: go1.23.2\n\tpath\tskyrimforge/native\n\tmod\tskyrimforge/native\t(devel)\t\n\tbuild\t-buildmode=exe\n\tbuild\t-compiler=gc\n\tbuild\t-trimpath=true\n\tbuild\tCGO_ENABLED=0\n\tbuild\tGOARCH=amd64\n\tbuild\tGOOS=linux\n\tbuild\tGOAMD64=v1\n"
         },
         "result": "PASS",
         "second": "9cdd1e0de57806e5bdfcf8dde90833e23f2d165a71d28225e49b0d28ed23d788"
@@ -50,11 +50,11 @@
             "<HOME>\\AppData\\Local\\Ultimate-AI-Starter-Bundle\\toolchains\\go1.27.3\\go\\bin\\go.EXE",
             "version",
             "-m",
-            "<HOME>\\AppData\\Local\\Temp\\tmpr5mlox2k\\windows-a.exe"
+            "<HOME>\\AppData\\Local\\Temp\\tmp8w2w260q\\windows-a.exe"
           ],
           "returncode": 0,
           "stderr": "",
-          "stdout": "<HOME>\\AppData\\Local\\Temp\\tmpr5mlox2k\\windows-a.exe: go1.23.2\n\tpath\tskyrimforge/native\n\tmod\tskyrimforge/native\t(devel)\t\n\tbuild\t-buildmode=exe\n\tbuild\t-compiler=gc\n\tbuild\t-trimpath=true\n\tbuild\tCGO_ENABLED=0\n\tbuild\tGOARCH=amd64\n\tbuild\tGOOS=windows\n\tbuild\tGOAMD64=v1\n"
+          "stdout": "<HOME>\\AppData\\Local\\Temp\\tmp8w2w260q\\windows-a.exe: go1.23.2\n\tpath\tskyrimforge/native\n\tmod\tskyrimforge/native\t(devel)\t\n\tbuild\t-buildmode=exe\n\tbuild\t-compiler=gc\n\tbuild\t-trimpath=true\n\tbuild\tCGO_ENABLED=0\n\tbuild\tGOARCH=amd64\n\tbuild\tGOOS=windows\n\tbuild\tGOAMD64=v1\n"
         },
         "result": "PASS",
         "second": "f3b97bcb9713b5b7e9068fbda215bdafe14976bf3b2b59bf3fe9ffe8723d2ead"

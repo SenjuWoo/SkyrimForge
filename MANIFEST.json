@@ -290,6 +290,36 @@
     },
     {
       "executable": false,
+      "path": "docs/prompts/README.md",
+      "sha256": "b80e87ca7e47b1b1fcc1b7f32cc50847ae39f4fb059bdbd8cd089677d8460d92",
+      "size": 564
+    },
+    {
+      "executable": false,
+      "path": "docs/prompts/SKYRIM-MODERNIZATION-MASTER-PROMPT.md",
+      "sha256": "2846e114476451cda0f080d314b233b2f17d090e503c7a7b78b03b3a5162c238",
+      "size": 1159
+    },
+    {
+      "executable": false,
+      "path": "docs/prompts/SKYRIM-MODPACK-CONFLICT-SOLVER.md",
+      "sha256": "cc5086a17c382ceca1003a9a15b8aca8decebcb66d2625926a7fdbe09c4f1291",
+      "size": 1007
+    },
+    {
+      "executable": false,
+      "path": "docs/prompts/SKYRIM-QUICK-MODERNIZE.md",
+      "sha256": "c6b9d53959cdf26bfb6eaf1be01183cb362b6d0e0c3868b4c146d0f7a6abaddc",
+      "size": 741
+    },
+    {
+      "executable": false,
+      "path": "docs/prompts/ULTIMATE-GENERALIZED-SKYRIM-PROMPTS-v3.md",
+      "sha256": "54a0af8d6bbcc4046d4f5cc165ad3c52dab64b12d763abf40f65bad68670aea9",
+      "size": 23302
+    },
+    {
+      "executable": false,
       "path": "docs/PUBLICATION-COMPLIANCE.md",
       "sha256": "ea1a28c2821ad871cbd31ad1d5774c2a0579960ae83fbcdeca1ee7d9a1847adb",
       "size": 1331
@@ -323,6 +353,12 @@
       "path": "docs/UI-AUTOMATION.md",
       "sha256": "8688257921fe0b79cdce376aa57874290c96a4f13aa983813bf07d25776505f3",
       "size": 501
+    },
+    {
+      "executable": false,
+      "path": "docs/WHICH-AI-SHOULD-I-USE.md",
+      "sha256": "486594f617dd224055c734582f96eaabe6841c33d9f7b581bf9076535c069b02",
+      "size": 3848
     },
     {
       "executable": false,
@@ -2441,6 +2477,18 @@
       "path": "integrations/skyrim-pack/skills/skyrim-memory/references/README.md",
       "sha256": "0ead018236f78128bb5724441ad0315d94bb368f61e7f7f3ffe0387d4889ce99",
       "size": 260
+    },
+    {
+      "executable": false,
+      "path": "integrations/skyrim-pack/skills/skyrim-memory/references/RELEASE-RESULTS.md",
+      "sha256": "19968718a50ce0af55794638fa44bf534f918dc5bb6e2b5896a51a546435dc18",
+      "size": 1904
+    },
+    {
+      "executable": false,
+      "path": "integrations/skyrim-pack/skills/skyrim-memory/references/SETTLED-RESULTS.md",
+      "sha256": "79e864349bf9360eef1b82dc6cd04ff07f656e04bdcdef1aaddc579c72a25a20",
+      "size": 4158
     },
     {
       "executable": false,
