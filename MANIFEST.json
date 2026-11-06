@@ -3009,8 +3009,8 @@
     {
       "executable": false,
       "path": "scripts/check_freshness.py",
-      "sha256": "a8f3f883c38e4b202e1af1c7e90b74476bd4f35c96f96aedc43e0ec19801a2ba",
-      "size": 5551
+      "sha256": "01833f5363b424118f2f5ec00b4add0dcbd56341ab41376f94f2901b7b5697bd",
+      "size": 5604
     },
     {
       "executable": false,
