@@ -26,7 +26,14 @@ EXACT_GROUP_TYPES = {"SelectExactlyOne", "SelectAtMostOne"}
 
 
 def _branch_selections(plan: dict[str, Any], selections: dict[str, Any] | None, everything: bool) -> list[dict[str, Any]]:
-    """Return the selection sets to test: one explicit/default branch, or every exact/at-most choice."""
+    """Return the selection sets to test: one explicit/default branch, or every exact/at-most choice.
+
+    "Select none" is an explicit empty array. An omitted key means "use the
+    FOMOD defaults", which can select a Recommended plugin, so dropping the
+    empty choice silently replaced the zero-selection branch with Red.
+    """
+    if selections is not None and everything:
+        raise ValidationError("pass explicit selections or all_branches=True, not both")
     if selections is not None:
         return [selections]
     if not everything:
@@ -44,7 +51,10 @@ def _branch_selections(plan: dict[str, Any], selections: dict[str, Any] | None, 
         raise ValidationError(f"{combinations} exact/at-most branches exceed the {MAX_BRANCHES}-branch cap; pass explicit selections instead")
     result = []
     for choice in itertools.product(*(values for _, values in axes)) if axes else [()]:
-        result.append({key: value for (key, _), value in zip(axes, choice) if value is not None})
+        branch: dict[str, Any] = {}
+        for (key, _), value in zip(axes, choice):
+            branch[key] = [] if value is None else value
+        result.append(branch)
     return result
 
 
@@ -120,9 +130,6 @@ def test_install(plan_path: Path, source_root: Path, workspace_root: Path, *, ap
     # expand_branch re-validates the raw plan; the validated copy carries file_analysis, which is not a plan field.
     raw_plan = load(plan_path)
     source = source_root.resolve(strict=True)
-    sandbox = require_within(Path(workspace_root) / ".forge" / "vfs-sandbox", workspace_root)
-    sandbox.mkdir(parents=True, exist_ok=True)
-    run = _create_run_dir(sandbox)
     branches = _branch_selections(plan, selections, all_branches)
     expanded_all = [expand_branch(raw_plan, branch, state, source) for branch in branches]
 
@@ -133,12 +140,14 @@ def test_install(plan_path: Path, source_root: Path, workspace_root: Path, *, ap
             origin = source.joinpath(*PurePosixPath(row["source"]).parts)
             planned_bytes += (origin.stat().st_size if origin.is_file() else 0) * 2
     if planned_files > MAX_FILES or planned_bytes > MAX_BYTES:
-        shutil.rmtree(run, ignore_errors=True)
         raise SafetyError(
             f"Sandbox install would copy {planned_files} files / {planned_bytes} bytes; "
             f"the budget is {MAX_FILES} files / {MAX_BYTES} bytes"
         )
 
+    sandbox = require_within(Path(workspace_root) / ".forge" / "vfs-sandbox", workspace_root)
+    sandbox.mkdir(parents=True, exist_ok=True)
+    run = _create_run_dir(sandbox)
     coverage = _coverage(plan, all_branches)
     reports = []
     total_files = total_bytes = 0
@@ -146,8 +155,17 @@ def test_install(plan_path: Path, source_root: Path, workspace_root: Path, *, ap
     try:
         for index, expanded in enumerate(expanded_all):
             branch = branches[index]
-            errors, warnings = _layout_checks(expanded["files"])
-            errors.extend(expanded["problems"])
+            simulation = expanded["simulation"]
+            simulation_errors = list(simulation.get("errors", []))
+            layout_errors, warnings = _layout_checks(expanded["files"])
+            problems = list(expanded["problems"])
+            errors = [*simulation_errors, *layout_errors, *problems]
+            # In an all-branches sweep every plugin name is real, so a simulation
+            # rejection means the combination is impossible (e.g. a Required
+            # plugin plus an explicit choice in SelectExactlyOne), not a broken
+            # installation.
+            infeasible = bool(all_branches and simulation.get("result") != "PASS"
+                              and not layout_errors and not problems)
             if all_branches and coverage["group_types_uncovered"]:
                 warnings.append("not enumerated by --all-branches: " + ", ".join(coverage["group_types_uncovered"]))
             label = safe_name(f"branch-{index + 1:02d}", fallback="branch")
@@ -170,10 +188,17 @@ def test_install(plan_path: Path, source_root: Path, workspace_root: Path, *, ap
                         if layout == "mo2":
                             copied.append((row["destination"], sha256_file(destination)))
                 total_bytes += size
+            if infeasible:
+                result = "INFEASIBLE"
+            elif errors:
+                result = "FAIL"
+            else:
+                result = "PASS"
             reports.append({
-                "branch": label, "selections": branch, "selected_plugins": expanded["simulation"]["selected_plugins"],
-                "file_count": len(expanded["files"]), "tree_sha256": _tree_digest(copied),
-                "result": "PASS" if not errors else "FAIL", "errors": errors, "warnings": warnings,
+                "branch": label, "selections": branch, "selected_plugins": simulation["selected_plugins"],
+                "simulation_result": simulation.get("result"), "file_count": len(expanded["files"]),
+                "tree_sha256": _tree_digest(copied), "result": result,
+                "errors": errors, "warnings": warnings,
             })
     except Exception:
         partial = True
@@ -185,11 +210,18 @@ def test_install(plan_path: Path, source_root: Path, workspace_root: Path, *, ap
                 "sandbox": str(run), "result": "FAIL", "partial": True,
                 "evidence": "The run was interrupted by a resource or copy failure; the directory holds only this run's files.",
             })
+    counts = {
+        "total": len(reports),
+        "passed": sum(item["result"] == "PASS" for item in reports),
+        "failed": sum(item["result"] == "FAIL" for item in reports),
+        "infeasible": sum(item["result"] == "INFEASIBLE" for item in reports),
+    }
     receipt = {
         "schema": "skyrim-forge-install-verification/1", "generated_utc": utc_now(),
         "plan": str(plan_path.resolve()), "source_root": str(source), "sandbox": str(run),
         "module": {"name": plan["module"]["name"], "version": plan["module"]["version"]},
-        "result": "PASS" if all(item["result"] == "PASS" for item in reports) else "FAIL",
+        "result": "FAIL" if counts["failed"] else "PASS",
+        "branch_counts": counts,
         "branches": reports, "file_copies": total_files, "bytes_copied": total_bytes,
         "coverage": coverage,
         "budget": {"max_files": MAX_FILES, "max_bytes": MAX_BYTES,

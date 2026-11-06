@@ -96,6 +96,36 @@ def validate_plan(data: Any) -> dict[str, Any]:
     }
 
 
+BACKSLASH = chr(92)
+
+
+def _cpp_string(value: str) -> str:
+    """Quote one value as a C++ string literal. Used for every generated literal."""
+    escaped = (value.replace(BACKSLASH, BACKSLASH * 2).replace('"', BACKSLASH + '"')
+                    .replace(chr(10), BACKSLASH + 'n').replace(chr(13), BACKSLASH + 'r')
+                    .replace(chr(9), BACKSLASH + 't'))
+    return '"' + escaped + '"'
+
+
+def _cmake_string(value: str) -> str:
+    """Quote one value as a CMake argument.
+
+    Backslash, quote and dollar need escaping; a semicolon is escaped so CMake
+    cannot split the quoted value into a list. Newlines are already rejected.
+    """
+    escaped = (value.replace(BACKSLASH, BACKSLASH * 2).replace('"', BACKSLASH + '"')
+                    .replace('$', BACKSLASH + '$').replace(';', BACKSLASH + ';'))
+    return '"' + escaped + '"'
+
+
+def _cmake_version(version: str) -> str:
+    """CMake's project(VERSION) takes numeric components only; SemVer prerelease does not fit."""
+    match = re.match(r"^(\d+)\.(\d+)\.(\d+)", version)
+    if not match:
+        raise ValidationError(f"version cannot be expressed as a CMake project version: {version!r}")
+    return ".".join(match.groups())
+
+
 def _cmake(plan: dict[str, Any]) -> str:
     opts = []
     strategy = plan["runtime_strategy"]
@@ -108,11 +138,11 @@ def _cmake(plan: dict[str, Any]) -> str:
     if plan["struct_dependent"]:
         opts.append("STRUCT_DEPENDENT")
     opts.extend([
-        f'NAME "{plan["display_name"]}"',
-        f'AUTHOR "{plan["author"]}"',
-        f'EMAIL "{plan["email"]}"',
-        f'VERSION "{plan["version"]}"',
-        f'MINIMUM_SKSE_VERSION "{plan["minimum_skse_version"]}"',
+        f'NAME {_cmake_string(plan["display_name"])}',
+        f'AUTHOR {_cmake_string(plan["author"])}',
+        f'EMAIL {_cmake_string(plan["email"])}',
+        f'VERSION {_cmake_string(plan["version"])}',
+        f'MINIMUM_SKSE_VERSION {_cmake_string(plan["minimum_skse_version"])}',
         "SOURCES src/plugin.cpp",
     ])
     options_block = "\n    ".join(opts)
@@ -122,7 +152,7 @@ def _cmake(plan: dict[str, Any]) -> str:
 set(VCPKG_TARGET_TRIPLET "{COMMONLIB["vcpkg_triplet"]}" CACHE STRING "")
 set(VCPKG_HOST_TRIPLET "{COMMONLIB["vcpkg_triplet"]}" CACHE STRING "")
 
-project({plan["project"]} VERSION {plan["version"]} LANGUAGES CXX)
+project({plan["project"]} VERSION {_cmake_version(plan["version"])} LANGUAGES CXX)
 
 # CommonLibSSE-NG (alandtse ng) is consumed as a source subdirectory pinned in the Forge SDK vault.
 set(COMMONLIBSSE_NG_ROOT "" CACHE PATH "CommonLibSSE-NG source tree; run: forge sdk-install commonlibsse_ng --approve")
@@ -178,7 +208,7 @@ SKSEPluginLoad(const SKSE::LoadInterface* skse)
     if (!path) {{
         return false;
     }}
-    *path /= "{plan['log_name']}.log";
+    *path /= {_cpp_string(plan['log_name'] + ".log")};
     auto sink = std::make_shared<spdlog::sinks::basic_file_sink_mt>(path->string(), true);
     auto log = std::make_shared<spdlog::logger>("global log", std::move(sink));
     spdlog::set_default_logger(std::move(log));
@@ -191,7 +221,7 @@ SKSEPluginLoad(const SKSE::LoadInterface* skse)
         logger::critical("Failed to register SKSE messaging listener");
         return false;
     }}
-    logger::info("{plan['display_name']} {plan['version']} loaded");
+    logger::info({_cpp_string(plan['display_name'] + " " + plan['version'] + " loaded")});
     return true;
 }}
 '''

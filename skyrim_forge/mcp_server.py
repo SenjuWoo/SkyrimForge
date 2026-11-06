@@ -196,8 +196,14 @@ def _compact_specs() -> dict[str, dict[str, Any]]:
                 "arguments": {"type": "object", "description": "Arguments for that tool, exactly as its own schema defines them.", "additionalProperties": True},
                 "approved": _boolean("Explicit approval, forwarded to the underlying tool."),
             }, ["operation"]),
-            "annotations": {"readOnlyHint": group in {"inspect", "validate"}, "destructiveHint": False,
-                            "idempotentHint": True, "openWorldHint": False},
+            # A group is only as safe as its riskiest member: the host sees one
+            # annotation, so one destructive operation makes the whole group so.
+            "annotations": {
+                "readOnlyHint": all(member in READ_ONLY_TOOLS for member in members),
+                "destructiveHint": any(member in DESTRUCTIVE_TOOLS for member in members),
+                "idempotentHint": all(member in READ_ONLY_TOOLS for member in members),
+                "openWorldHint": False,
+            },
         }
     return specs
 

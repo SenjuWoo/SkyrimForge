@@ -157,12 +157,34 @@ def _integer(value: Any, label: str, default: int = 0) -> int:
     return value
 
 
+WINDOWS_RESERVED = {"con", "prn", "aux", "nul"} | {f"com{index}" for index in range(1, 10)} | {f"lpt{index}" for index in range(1, 10)}
+WINDOWS_FORBIDDEN = set('<>:"|?*')
+
+
+def _windows_path_problem(part: str) -> str:
+    """Return why one path component is unusable on Windows, or "".
+
+    A colon is an NTFS alternate-data-stream separator here, reserved device
+    names are still special with an extension, and Windows silently strips a
+    trailing dot or space, which turns two mod paths into one.
+    """
+    if any(character in WINDOWS_FORBIDDEN or ord(character) < 32 for character in part):
+        return "forbidden character"
+    if part.endswith((" ", ".")):
+        return "trailing space or dot"
+    if part.split(".", 1)[0].casefold() in WINDOWS_RESERVED:
+        return "reserved device name"
+    return ""
+
+
 def _relative_path(value: Any, label: str, *, allow_empty: bool = False) -> str:
     if value is None and allow_empty:
         return ""
     if not isinstance(value, str):
         raise ValidationError(f"{label} must be a string")
-    text = value.strip().replace("\\", "/")
+    text = value.replace("\\", "/")
+    if text != text.strip():
+        raise ValidationError(f"{label} has leading or trailing whitespace: {value!r}")
     if not text and allow_empty:
         return ""
     if not text:
@@ -172,6 +194,10 @@ def _relative_path(value: Any, label: str, *, allow_empty: bool = False) -> str:
         raise ValidationError(f"{label} must be a relative archive path: {value!r}")
     if any(part in {"", ".", ".."} for part in path.parts):
         raise ValidationError(f"{label} contains unsafe path components: {value!r}")
+    for part in path.parts:
+        problem = _windows_path_problem(part)
+        if problem:
+            raise ValidationError(f"{label} is not a Windows-safe path ({problem}): {value!r}")
     return path.as_posix()
 
 

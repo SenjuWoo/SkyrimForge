@@ -8,11 +8,11 @@ from pathlib import Path
 from unittest import mock
 
 from skyrim_forge import vfs_sandbox
-from skyrim_forge.errors import SafetyError
+from skyrim_forge.errors import SafetyError, ValidationError
 
 
-def _plugin(name: str, folder: str, destination: str) -> dict:
-    return {"name": name, "description": name,
+def _plugin(name: str, folder: str, destination: str, kind: str = "Optional") -> dict:
+    return {"name": name, "description": name, "type": kind,
             "files": [{"kind": "folder", "source": folder, "destination": destination}]}
 
 
@@ -21,7 +21,7 @@ def _plan(*, with_select_any: bool = False) -> dict:
         "name": "Visuals",
         "groups": [{
             "name": "Style", "type": "SelectExactlyOne",
-            "plugins": [_plugin("Red", "10 Red", "red"), _plugin("Blue", "20 Blue", "blue")],
+            "plugins": [_plugin("Red", "10 Red", "red", "Recommended"), _plugin("Blue", "20 Blue", "blue")],
         }],
     }]
     if with_select_any:
@@ -85,12 +85,46 @@ class SandboxTests(unittest.TestCase):
         self.assertEqual(single["group_types_uncovered"], ["SelectAny", "SelectExactlyOne"])
         self.assertTrue(vfs_sandbox._coverage(_plan(), all_branches=False)["group_types_uncovered"])
 
+    def test_unknown_selection_cannot_pass(self) -> None:
+        plan = self._write(_plan())
+        receipt = vfs_sandbox.test_install(plan, self.source, self.workspace, approved=True,
+                                           selections={"Visuals/Style": "DoesNotExist"})
+        self.assertEqual(receipt["result"], "FAIL")
+        self.assertEqual(receipt["branch_counts"]["failed"], 1)
+        self.assertTrue(any("unknown plugin" in error for error in receipt["branches"][0]["errors"]))
+        self.assertEqual(receipt["file_copies"], 0)
+
+    def test_all_branches_tests_the_real_empty_choice(self) -> None:
+        plan_data = _plan()
+        plan_data["steps"][0]["groups"][0]["type"] = "SelectAtMostOne"
+        plan_data["steps"][0]["groups"][0]["plugins"][0]["type"] = "Recommended"
+        plan = self._write(plan_data)
+        receipt = vfs_sandbox.test_install(plan, self.source, self.workspace, approved=True, all_branches=True)
+        self.assertEqual(receipt["result"], "PASS", receipt["branches"])
+        self.assertEqual([row["selected_plugins"] for row in receipt["branches"]],
+                         [["Visuals/Style/Red"], ["Visuals/Style/Blue"], []])
+
+    def test_required_plugin_makes_a_combination_infeasible_not_failed(self) -> None:
+        plan_data = _plan()
+        plan_data["steps"][0]["groups"][0]["plugins"][0]["type"] = "Required"
+        plan = self._write(plan_data)
+        receipt = vfs_sandbox.test_install(plan, self.source, self.workspace, approved=True, all_branches=True)
+        self.assertEqual(receipt["result"], "PASS")
+        self.assertEqual(receipt["branch_counts"]["infeasible"], 1)
+        self.assertEqual(receipt["branch_counts"]["failed"], 0)
+
+    def test_selections_and_all_branches_together_are_rejected(self) -> None:
+        plan = self._write(_plan())
+        with self.assertRaises(ValidationError):
+            vfs_sandbox.test_install(plan, self.source, self.workspace, approved=True,
+                                     selections={"Visuals/Style": "Red"}, all_branches=True)
+
     def test_single_branch_receipt_counts_planned_bytes(self) -> None:
         plan = self._write(_plan())
         receipt = vfs_sandbox.test_install(plan, self.source, self.workspace, approved=True)
         self.assertEqual(receipt["result"], "PASS")
-        self.assertEqual(receipt["budget"]["planned_files"], 2)
-        self.assertEqual(receipt["file_copies"], 2)
+        self.assertEqual(receipt["budget"]["planned_files"], 4)
+        self.assertEqual(receipt["file_copies"], 4)
 
 
 if __name__ == "__main__":

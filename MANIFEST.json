@@ -93,14 +93,14 @@
     {
       "executable": false,
       "path": "CHANGELOG.md",
-      "sha256": "a700d0b50e762786535567498bb8054831f06f120eed21ac9395aeea3694987e",
-      "size": 52607
+      "sha256": "096a9456727c049a718744fd9ea1f3afe482aaeb654dceb394f1844969a16043",
+      "size": 54758
     },
     {
       "executable": false,
       "path": "CHANGELOG.txt",
-      "sha256": "3e1ad1e9d936cd81c2cfa25c4e07c31c9b9d5d10e9305158f0dcc28635f42826",
-      "size": 29846
+      "sha256": "2ffd7b8ef9152f1b845b3e94f9bdf094a5d76936a8bdafc9f41971039fb8293b",
+      "size": 31997
     },
     {
       "executable": false,
@@ -141,14 +141,14 @@
     {
       "executable": false,
       "path": "CURRENT.txt",
-      "sha256": "a992b143165638eece83de1bda54b1fe5c0358e645fb6b1ba44789db5d49d0cd",
+      "sha256": "a3919b6e99dc05252d0aebc0230a485a0af02effbaad4e0698b526a6a89fb643",
       "size": 7
     },
     {
       "executable": false,
       "path": "DECISIONS.md",
-      "sha256": "2e3f7f603eb47871f5ebb6e503828c4c0d1d9e3bc572b844bb84a13a2701da5f",
-      "size": 11743
+      "sha256": "87cf5df761547d2c8dd55f8637b90ce6c2169f1eb1219272effb83e8ae743b83",
+      "size": 12461
     },
     {
       "executable": false,
@@ -231,8 +231,8 @@
     {
       "executable": false,
       "path": "docs/INSTALLATION.md",
-      "sha256": "b09cccc5415f0c85a58508288ee6db993018df16e3259641d83ba15e79015d89",
-      "size": 3500
+      "sha256": "e287ff847658ef5a4ee5e8fa3d3adc7bb6642c116a439f7e99bedf3e6d21226f",
+      "size": 3592
     },
     {
       "executable": false,
@@ -255,8 +255,8 @@
     {
       "executable": false,
       "path": "docs/MAINTENANCE.md",
-      "sha256": "b31d8c1cccea9edaccd5bdfdea1fd26e9c0be3d4f003afeab418389ebecee042",
-      "size": 3899
+      "sha256": "03e2eca1dd0e0edba379808c748913e7167a32718d6382f3ef31ea95b6f1e784",
+      "size": 4193
     },
     {
       "executable": false,
@@ -2829,8 +2829,8 @@
     {
       "executable": false,
       "path": "PLAN.md",
-      "sha256": "d2f0b05989185870124b55ec7531d114d3fb96199e68c97ef6bd51b6834e8bef",
-      "size": 2074
+      "sha256": "89e2b91233c3fa37d5d08fdae3afdf936a803b9f7b0b3e29134fd5925bd89ed5",
+      "size": 2278
     },
     {
       "executable": false,
@@ -2847,14 +2847,14 @@
     {
       "executable": false,
       "path": "pyproject.toml",
-      "sha256": "c27ae4473dfef16336350de02b3f892480b0f5ab77c73071623a31e309b15150",
+      "sha256": "f21d80fdf01b0e6d2c2f55fc41b13dfc2dfe09570cea12d81b848768c878dc03",
       "size": 857
     },
     {
       "executable": false,
       "path": "README.md",
-      "sha256": "79897276545083ba1b8da74e79f533eee2d8d982d7ac7a613c92dcb03f2e2e20",
-      "size": 10686
+      "sha256": "b533a35b230531a0311228be319848ec84bee34d2623d3342bc483a3edb5cb77",
+      "size": 10691
     },
     {
       "executable": false,
@@ -3008,6 +3008,12 @@
     },
     {
       "executable": false,
+      "path": "scripts/check_freshness.py",
+      "sha256": "a8f3f883c38e4b202e1af1c7e90b74476bd4f35c96f96aedc43e0ec19801a2ba",
+      "size": 5551
+    },
+    {
+      "executable": false,
       "path": "scripts/Provider-Skills.ps1",
       "sha256": "1501841245714b5f1dea049728db3b01ebf5dc34ce07961c03f63d9b8f0ff207",
       "size": 13030
@@ -3045,7 +3051,7 @@
     {
       "executable": false,
       "path": "server.json",
-      "sha256": "a1b006410b1870359ce538c36e63ed182654295313f15eda4edf81a18f58ecc4",
+      "sha256": "d2eec9eec4cd734b6cfcccc3eced1c722b9380afce978b266f6c73343f2c9d34",
       "size": 411
     },
     {
@@ -3111,13 +3117,13 @@
     {
       "executable": false,
       "path": "skyrim_forge/bin/linux-x64/SkyrimForge.Native",
-      "sha256": "0200b963614b5e626aba210ee18e0bc43390a389d7072541f6a5709bc1b72fdb",
+      "sha256": "928e5e4d405d379d96b423340b3b495975118f16bf2d58cefb5d3a3f048fd772",
       "size": 2920572
     },
     {
       "executable": true,
       "path": "skyrim_forge/bin/win-x64/SkyrimForge.Native.exe",
-      "sha256": "a85a429718ce122ea52362ef047c134c9a29ac6c46a06281819a95c3cf725184",
+      "sha256": "ce03ccb381a4a0c059875ec79ee69e3253e6024766c0b0a81bd62a6a6429a4cb",
       "size": 3024384
     },
     {
@@ -3267,8 +3273,8 @@
     {
       "executable": false,
       "path": "skyrim_forge/fomod.py",
-      "sha256": "d6da6868589743edcee5998722cc95a4b010eacce1ea9a0d57b03cba9efe854f",
-      "size": 87062
+      "sha256": "4d86fa7f5257200804a83e3aa4682d6767d023195831af30b34c71b71c2f078e",
+      "size": 88187
     },
     {
       "executable": false,
@@ -3303,14 +3309,14 @@
     {
       "executable": false,
       "path": "skyrim_forge/maintenance.py",
-      "sha256": "a6430a32db772489b8f7848a50d27940e45c52c167a12fae126cef3b75ccb928",
-      "size": 15994
+      "sha256": "98b13298c682678a69f32b67aa2931352e4ec487c0b8e1d01c9cb11ffca67407",
+      "size": 19070
     },
     {
       "executable": false,
       "path": "skyrim_forge/mcp_server.py",
-      "sha256": "313ece179f7ebd2915efc929d3ca5ef7d1946e71eed2e5f6b2843ea7c0c6ef16",
-      "size": 51835
+      "sha256": "b08ad1a40b8ca50b4b29f954675e8ab1441669f30ee0541a44a15cd7e932488a",
+      "size": 52164
     },
     {
       "executable": false,
@@ -3327,8 +3333,8 @@
     {
       "executable": false,
       "path": "skyrim_forge/native.py",
-      "sha256": "455b75216d8f4196c78f42aace720a7ded6ab2ce7ec0a1e9098ad2d9dd3aaf90",
-      "size": 20569
+      "sha256": "b736f86ce43a31fb5b99fd3b43e6383ba29085ca7e8e165eafba22cb8eacd8be",
+      "size": 21893
     },
     {
       "executable": false,
@@ -3597,14 +3603,14 @@
     {
       "executable": false,
       "path": "skyrim_forge/version.py",
-      "sha256": "8d616e7b25eccf9aada5f4458d9f664bcdcef3812a47568834dad33b1eb736e3",
+      "sha256": "866e62ac45904db760e715dd96feb9b156b15d07e190ed36cce72f54a85625aa",
       "size": 19
     },
     {
       "executable": false,
       "path": "skyrim_forge/vfs_sandbox.py",
-      "sha256": "100a1be63549f230cdb51d58318cb237eb541e7cc7cb98f60397fc0e10fc9371",
-      "size": 12419
+      "sha256": "cf2b8034b2a1e09e8788652926a4b25dcef27b881c91ebd3fb1612d2d08c83a9",
+      "size": 13889
     },
     {
       "executable": false,
@@ -3627,14 +3633,14 @@
     {
       "executable": true,
       "path": "START-HERE.bat",
-      "sha256": "5b7a694b7a684f00fc1b274a6b43ad05518158043f27c632d7975a41ae41407b",
+      "sha256": "26abe86b02375033cc4e4d7a29ddbe14c1e6cdfdc3d48b9ce01a29076bc5a8ff",
       "size": 4785
     },
     {
       "executable": false,
       "path": "STATE.md",
-      "sha256": "d2c7a0b7db559b79e587e95f570ad51ef290ac3d69c0859fd9b25f7833a527e6",
-      "size": 27312
+      "sha256": "48fd89903775b6aca888529a3d87bb12bcb94c203a8249136f30fb748f8da574",
+      "size": 27319
     },
     {
       "executable": false,
@@ -3722,6 +3728,12 @@
     },
     {
       "executable": false,
+      "path": "tests/test_freshness.py",
+      "sha256": "a0dd80909183421ec6b117ef809b5302db3b27aefc2cf34b732eee03a5abd928",
+      "size": 1029
+    },
+    {
+      "executable": false,
       "path": "tests/test_housecarl_pin.py",
       "sha256": "a6c1b6216eda879bf5ab8aa64e2047c67b1ea850e0d22776f26df2ef813603de",
       "size": 2796
@@ -3747,14 +3759,20 @@
     {
       "executable": false,
       "path": "tests/test_mcp_surface.py",
-      "sha256": "716dcd44c8fb5562fbe9ca6b5fb2065a96b2a41bfba67a4817924e9eaf011830",
-      "size": 4051
+      "sha256": "08ae408d6309b57b369c9ea31dc7f93fba2252c720e67feb6f8a29bb16e42b6f",
+      "size": 4963
     },
     {
       "executable": false,
       "path": "tests/test_modular_installers.py",
       "sha256": "71259f8e6286f062d7ed92611a9c58dd2367aaa49e85dfa73fac894a1f3d5a4a",
       "size": 2753
+    },
+    {
+      "executable": false,
+      "path": "tests/test_native_escaping.py",
+      "sha256": "611551f1be4cc068dd60e45b4f2ac69cbe8c845fbc768020edda92ae23baa16a",
+      "size": 2094
     },
     {
       "executable": false,
@@ -3873,8 +3891,14 @@
     {
       "executable": false,
       "path": "tests/test_vfs_sandbox.py",
-      "sha256": "4dfe7d597629064555647c5fc6f001350c0bd8e8164e87da58115a1fd2c544c7",
-      "size": 4354
+      "sha256": "681f29db8260d4abc620d28edca86321c5d356a3fdfa8cf46b9b1843fda2d63a",
+      "size": 6476
+    },
+    {
+      "executable": false,
+      "path": "tests/test_windows_paths.py",
+      "sha256": "683c3e88149cff93fab266e73a859b98c1f39c5f2af6c9c8c032873115876c24",
+      "size": 2957
     },
     {
       "executable": false,
@@ -3903,7 +3927,7 @@
     {
       "executable": false,
       "path": "VERSION.txt",
-      "sha256": "d8b8dc89c5f8b1e6ab7cc2d56620214db59df2e371ccde8c4a13ff417298081d",
+      "sha256": "3a90ade617cc2f11b513dc6c8b369d82d87545909f512f8be51a2de899d01c56",
       "size": 20
     },
     {
@@ -3933,7 +3957,7 @@
     {
       "executable": false,
       "path": "writer/native-go/main.go",
-      "sha256": "06bed3bbc4ea8def52bbc44a8868bcc605c0a9feec759c502e87521c07f3ad3a",
+      "sha256": "edb4cd00898e1afacd90891e77d3b637332c48cee258bafe13e7abda916455b1",
       "size": 4475
     },
     {
@@ -3945,16 +3969,16 @@
     {
       "executable": false,
       "path": "writer/published/linux-x64/SkyrimForge.Native",
-      "sha256": "0200b963614b5e626aba210ee18e0bc43390a389d7072541f6a5709bc1b72fdb",
+      "sha256": "928e5e4d405d379d96b423340b3b495975118f16bf2d58cefb5d3a3f048fd772",
       "size": 2920572
     },
     {
       "executable": true,
       "path": "writer/published/win-x64/SkyrimForge.Native.exe",
-      "sha256": "a85a429718ce122ea52362ef047c134c9a29ac6c46a06281819a95c3cf725184",
+      "sha256": "ce03ccb381a4a0c059875ec79ee69e3253e6024766c0b0a81bd62a6a6429a4cb",
       "size": 3024384
     }
   ],
   "product": "Skyrim Forge",
-  "version": "6.11.1"
+  "version": "6.11.2"
 }

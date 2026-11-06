@@ -36,6 +36,17 @@ class CompactSurfaceTests(unittest.TestCase):
                 "name": "skyrim_forge_inspect", "arguments": {"operation": "forge_nexus_build"}}}, "compact")
             self.assertTrue(refused["result"]["isError"])
 
+    def test_compact_annotations_reflect_the_riskiest_member(self) -> None:
+        for group, members in mcp_server.COMPACT_GROUPS.items():
+            annotations = mcp_server.COMPACT_TOOLS[f"skyrim_forge_{group}"]["annotations"]
+            self.assertEqual(annotations["readOnlyHint"], all(item in mcp_server.READ_ONLY_TOOLS for item in members), group)
+            self.assertEqual(annotations["destructiveHint"], any(item in mcp_server.DESTRUCTIVE_TOOLS for item in members), group)
+            self.assertEqual(annotations["idempotentHint"], all(item in mcp_server.READ_ONLY_TOOLS for item in members), group)
+        execute = mcp_server.COMPACT_TOOLS["skyrim_forge_execute"]["annotations"]
+        self.assertTrue(execute["destructiveHint"])
+        self.assertFalse(execute["idempotentHint"])
+        self.assertFalse(mcp_server.COMPACT_TOOLS["skyrim_forge_release"]["annotations"]["idempotentHint"])
+
     def test_annotations_split_reads_from_destructive_tools(self):
         with tempfile.TemporaryDirectory() as td:
             service = _service(Path(td))

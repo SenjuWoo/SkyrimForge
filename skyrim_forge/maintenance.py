@@ -16,6 +16,7 @@ Nothing outside those patterns is ever deleted.
 """
 from __future__ import annotations
 
+import json
 import os
 import re
 import subprocess
@@ -133,65 +134,136 @@ def root_report(config: ForgeConfig, steam_roots: Iterable[Path] | None = None) 
 
 
 SCHEDULE_TASK = "SkyrimForge-Maintain"
+SCHEDULE_MARKER = "Skyrim Forge check-only maintenance"
+DAYS = {"SUN": "Sunday", "MON": "Monday", "TUE": "Tuesday", "WED": "Wednesday",
+        "THU": "Thursday", "FRI": "Friday", "SAT": "Saturday"}
 
 
-def _task_definition() -> str:
-    """The task's action line, or "" when it does not exist. Used only to prove ownership."""
-    proc = subprocess.run(["schtasks", "/Query", "/TN", SCHEDULE_TASK, "/V", "/FO", "LIST"],
-                          capture_output=True, text=True, timeout=30)
+def _ps(script: str) -> subprocess.CompletedProcess:
+    return subprocess.run(["powershell.exe", "-NoLogo", "-NoProfile", "-NonInteractive", "-Command", script],
+                          capture_output=True, text=True, timeout=60)
+
+
+def _ps_quote(value: str) -> str:
+    return "'" + value.replace("'", "''") + "'"
+
+
+def _task_info() -> dict[str, Any] | None:
+    """Machine-readable task state, or None when it does not exist.
+
+    Get-ScheduledTask returns objects, so this does not depend on localized
+    column labels the way `schtasks /V /FO LIST` did.
+    """
+    script = (
+        "$ErrorActionPreference='Stop';"
+        f"$t=Get-ScheduledTask -TaskName {_ps_quote(SCHEDULE_TASK)} -ErrorAction SilentlyContinue;"
+        "if($null -eq $t){'null'}else{$t|Select-Object TaskName,Description,"
+        "@{n='Execute';e={$_.Actions[0].Execute}},@{n='Arguments';e={$_.Actions[0].Arguments}}"
+        "|ConvertTo-Json -Compress}"
+    )
+    proc = _ps(script)
     if proc.returncode != 0:
-        return ""
-    return "\n".join(line for line in proc.stdout.splitlines() if "Task To Run" in line)
+        raise SafetyError("Task Scheduler query failed: " + (proc.stderr or proc.stdout).strip())
+    text = proc.stdout.strip()
+    if not text or text.casefold() == "null":
+        return None
+    try:
+        info = json.loads(text)
+    except json.JSONDecodeError as exc:
+        raise SafetyError("Task Scheduler returned an unreadable definition") from exc
+    return info if isinstance(info, dict) else None
 
 
-def _task_owned() -> bool:
-    definition = _task_definition()
-    # forge.cmd is the launcher now; older installs called python -m skyrim_forge.
-    return "maintain --no-self-test" in definition and (
-        "forge.cmd" in definition or "skyrim_forge" in definition)
+def _check_only(arguments: str) -> bool:
+    return "maintain --no-self-test" in arguments and "--apply" not in arguments and "--fix-roots" not in arguments
+
+
+def _task_owned(info: dict[str, Any] | None, launcher: Path) -> bool:
+    """Owned only when the action is a check-only Forge maintain call.
+
+    The description marker is written at registration; a legacy task created by
+    the old schtasks path is recognized by its exact python action.
+    """
+    if not info:
+        return False
+    arguments = str(info.get("Arguments") or "")
+    execute = str(info.get("Execute") or "")
+    if not _check_only(arguments):
+        return False
+    if SCHEDULE_MARKER in str(info.get("Description") or ""):
+        return str(launcher) in arguments
+    return execute.casefold().endswith("python.exe") and arguments.strip() == "-m skyrim_forge maintain --no-self-test"
+
+
+def _task_healthy(info: dict[str, Any] | None, launcher: Path) -> bool:
+    if not _task_owned(info, launcher):
+        return False
+    return str(launcher) in str(info.get("Arguments") or "") and "forge.cmd" in str(info.get("Arguments") or "")
 
 
 def schedule_status() -> dict[str, Any]:
-    """Report whether the optional weekly check task exists. Never creates anything."""
+    """Report exists/owned/healthy without creating anything."""
     if os.name != "nt":
         return {"supported": False, "installed": False, "task": SCHEDULE_TASK}
-    installed = bool(_task_definition())
-    return {"supported": True, "installed": installed, "task": SCHEDULE_TASK,
-            "owned": installed and _task_owned()}
+    launcher = Path(__file__).resolve().parents[1] / "forge.cmd"
+    try:
+        info = _task_info()
+    except SafetyError as exc:
+        return {"supported": True, "installed": False, "owned": False, "healthy": False,
+                "task": SCHEDULE_TASK, "reason": str(exc)}
+    if info is None:
+        return {"supported": True, "installed": False, "owned": False, "healthy": False, "task": SCHEDULE_TASK}
+    owned = _task_owned(info, launcher)
+    healthy = _task_healthy(info, launcher)
+    reason = "" if healthy else ("legacy action; reinstall to refresh" if owned else "task exists but was not created by Forge")
+    return {"supported": True, "installed": True, "owned": owned, "healthy": healthy,
+            "task": SCHEDULE_TASK, "reason": reason}
 
 
 def install_schedule(*, log_path: Path, day: str = "SUN", time: str = "12:00") -> dict[str, Any]:
     """Create a weekly CHECK-ONLY task. It never passes --apply or --fix-roots."""
     if os.name != "nt":
         raise SafetyError("Scheduled maintenance is Windows-only")
-    if _task_definition() and not _task_owned():
+    launcher = Path(__file__).resolve().parents[1] / "forge.cmd"
+    existing = _task_info()
+    if existing is not None and not _task_owned(existing, launcher):
         raise SafetyError(f"A task named {SCHEDULE_TASK} already exists and was not created by Forge; refusing to overwrite it")
+    week_day = DAYS.get(day.upper())
+    if week_day is None:
+        raise SafetyError(f"day must be one of {sorted(DAYS)}")
     log_path = Path(log_path)
     log_path.parent.mkdir(parents=True, exist_ok=True)
-    # Task Scheduler runs /TR through CreateProcess, not a shell: redirection only
-    # works inside cmd.exe. forge.cmd sets PYTHONPATH, so the task does not depend
-    # on a .pth file or on the caller's working directory.
-    launcher = Path(__file__).resolve().parents[1] / "forge.cmd"
     entry = f'"{launcher}" maintain --no-self-test' if launcher.is_file() else f'"{sys.executable}" -m skyrim_forge maintain --no-self-test'
-    command = f'cmd.exe /c "{entry} >> "{log_path}" 2>&1"'
-    proc = subprocess.run(["schtasks", "/Create", "/TN", SCHEDULE_TASK, "/SC", "WEEKLY",
-                           "/D", day, "/ST", time, "/TR", command, "/F"],
-                          capture_output=True, text=True, timeout=60)
-    if proc.returncode != 0:
-        raise SafetyError(f"schtasks /Create failed: {(proc.stderr or proc.stdout).strip()}")
-    return {"installed": True, "task": SCHEDULE_TASK, "day": day, "time": time,
+    # Task Scheduler runs an action through CreateProcess, so redirection needs
+    # cmd.exe; forge.cmd also puts the install root on PYTHONPATH.
+    command = f'/c "{entry} >> "{log_path}" 2>&1"'
+    script = (
+        "$ErrorActionPreference='Stop';"
+        f"$a=New-ScheduledTaskAction -Execute 'cmd.exe' -Argument {_ps_quote(command)};"
+        f"$t=New-ScheduledTaskTrigger -Weekly -DaysOfWeek {week_day} -At {_ps_quote(time)};"
+        f"Register-ScheduledTask -TaskName {_ps_quote(SCHEDULE_TASK)} -Action $a -Trigger $t "
+        f"-Description {_ps_quote(SCHEDULE_MARKER)} -Force | Out-Null;'ok'"
+    )
+    proc = _ps(script)
+    if proc.returncode != 0 or "ok" not in proc.stdout:
+        raise SafetyError("Task registration failed: " + (proc.stderr or proc.stdout).strip())
+    return {"installed": True, "task": SCHEDULE_TASK, "day": week_day, "time": time,
             "log": str(log_path), "mode": "check-only", "command": command}
 
 
 def remove_schedule() -> dict[str, Any]:
     if os.name != "nt":
         raise SafetyError("Scheduled maintenance is Windows-only")
-    if _task_definition() and not _task_owned():
+    launcher = Path(__file__).resolve().parents[1] / "forge.cmd"
+    info = _task_info()
+    if info is None:
+        return {"installed": False, "task": SCHEDULE_TASK}
+    if not _task_owned(info, launcher):
         raise SafetyError(f"Task {SCHEDULE_TASK} was not created by Forge; refusing to delete it")
-    proc = subprocess.run(["schtasks", "/Delete", "/TN", SCHEDULE_TASK, "/F"],
-                          capture_output=True, text=True, timeout=30)
-    if proc.returncode != 0 and _task_definition():
-        raise SafetyError(f"schtasks /Delete failed: {(proc.stderr or proc.stdout).strip()}")
+    script = f"Unregister-ScheduledTask -TaskName {_ps_quote(SCHEDULE_TASK)} -Confirm:$false;'ok'"
+    proc = _ps(script)
+    if proc.returncode != 0 or "ok" not in proc.stdout:
+        raise SafetyError("Task removal failed: " + (proc.stderr or proc.stdout).strip())
     return {"installed": False, "task": SCHEDULE_TASK}
 
 

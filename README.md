@@ -4,7 +4,7 @@
 
 <div align="center">
 
-# Skyrim Forge 6.11.1
+# Skyrim Forge 6.11.2
 
 **Typed, safety-first Skyrim SE/AE mod engineering for AI agents — offline, free, MCP-ready.**
 
@@ -81,8 +81,8 @@ Setup bootstraps a durable Python runtime, installs the Forge skill and the 50-s
 `texture-generate` writes deterministic DDS files — BC1, BC3 or A8R8G8B8, full mip chains — from solid, checker, gradient, seeded-noise, brick and tangent-space-normal patterns, with an optional PNG preview. No paid tool, no network, no new dependency.
 
 ```powershell
-forge texture-generate bricks mod/Textures/Stone.dds --size 512 --preview mod/Stone.png --approve
-forge texture-generate normal mod/Textures/Stone_n.dds --strength 0.12 --flip-green --approve
+.orge texture-generate bricks mod/Textures/Stone.dds --size 512 --preview mod/Stone.png --approve
+.orge texture-generate normal mod/Textures/Stone_n.dds --strength 0.12 --flip-green --approve
 ```
 
 Meshes stay with Blender, hand art with GIMP or Krita, BC7 with `texconv`. [docs/ASSET-GENERATION.md](docs/ASSET-GENERATION.md) maps every remaining gap to a free tool and its licence.
@@ -100,9 +100,9 @@ The pack's `skyrim-tooling-stack` decides between Forge, houseCARL and external 
 ## Maintenance and updates
 
 ```powershell
-forge maintain                    # report stale Forge-owned files and moved roots
-forge maintain --apply --approve  # delete the reported leftovers
-forge maintain --fix-roots --approve  # write a discovered Skyrim/Vortex path into config
+.orge maintain                    # report stale Forge-owned files and moved roots
+.orge maintain --apply --approve  # delete the reported leftovers
+.orge maintain --fix-roots --approve  # write a discovered Skyrim/Vortex path into config
 ```
 
 `maintain` removes only paths Forge can prove it owns: spill files and sandbox runs older than a week under `<workspace>\.forge`, and provider skill backups beyond the newest two. It reports the self-test, flags configured roots that moved with the discovered replacement, and never touches a mod, a tool install or a user file. See [docs/MAINTENANCE.md](docs/MAINTENANCE.md).

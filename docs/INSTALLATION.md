@@ -10,11 +10,11 @@ Weekly upkeep: `forge maintain` prunes Forge-owned leftovers and reports moved r
 
 Each successful update keeps the newest two Forge-owned backups beside the install root and prunes older `.forge-backup-*` copies it can prove it owns. `scripts/Prune-ForgeBackups.ps1 -Parent <dir> -WhatIf` prints the plan; the owner-update log records `pruned=<n>`. Legacy `Skyrim-Forge.backup-*` directories are never touched.
 
-Replace the whole Forge directory when changing major versions. Do not copy isolated scripts between versions.
+Updates replace files in the same install root and keep the newest two backups. Keep the last good release ZIP as rollback; do not copy isolated scripts between versions.
 
 ## One live install, under Skyrim tools
 
-Forge is a Skyrim tool. The live product is a versioned folder next to xEdit
+Forge is a Skyrim tool. The live product is the release you extracted, kept at one stable path next to xEdit
 and the rest of your tools:
 
 ```text
