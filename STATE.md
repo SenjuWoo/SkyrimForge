@@ -1,3 +1,10 @@
+# Forge 6.11.0 confinement, approval and installer hardening (2026-11-06)
+
+- Goal: apply the independently reported defects only after reproducing them, close each with a regression test, modernize the toolchain where evidence allowed, and publish a single reviewed release.
+- Done: `require_within` rejects dangling symlinks and junctions; `maintain --fix-roots` requires approval and refuses ambiguous Steam libraries; sandbox runs get unique directories, a preflighted budget and explicit FOMOD coverage; the native helper publishes through a unique temp file and hard link; `forge.cmd` ships; README/INSTALLATION statements now match the standalone installer and the GPL-3.0 houseCARL-derived skills are called out; Go moves to 1.27.3; houseCARL's installer pin moves to 2.1.2; `maintain --schedule` adds an opt-in check-only weekly task.
+- Verified: 337 Python tests and 14 self-tests, full local gate PASS; CI 15/15 on `e87add7`; v6.11.0 has 8 assets, tag on `e87add7`, and the downloaded ZIP matches `SHA256SUMS`; a clean extraction of the release ZIP ran `forge.cmd version`, `doctor` (PASS) and an MCP `2026-07-28` handshake with 68 tools from an unrelated working directory; the live install is 6.11.0, 580/580 byte-identical to the release manifest, doctor PASS, and `maintain` pruned 8 post-install skill backups to 0 planned with all roots OK. Ecosystem check PASS 9/9.
+- Not done: no in-game or Creation Kit run for any subsystem; CommonLibSSE-NG stays at v14.1.0 because v15.7.0 has no representative native build here; the scheduled task is not registered unless the user asks; the bundled houseCARL skill snapshot is still 2.1.1 even though the installer now fetches 2.1.2.
+
 # Forge 6.10.0 maintenance, moved roots and README reset (2026-11-04)
 
 - Goal: make Forge self-sustaining after the repository move to `Z:\Backup\Ai documentation\Tools\Ai tools\Skyrim-Forge`, and cut the README back to one story.
