@@ -1,3 +1,10 @@
+# Forge 6.11.2 evidence, escaping and task ownership (2026-11-06)
+
+- Goal: close the second audit's P1/P2 findings without reopening v6.11.0/v6.11.1 work.
+- Done: FOMOD simulation errors fail a branch and the CLI status; the zero-selection branch is explicit; impossible all-branch combinations are `INFEASIBLE`; selections plus all-branches is rejected; branch cap is checked before a run directory exists. Native metadata uses `_cpp_string`/`_cmake_string`, and CMake gets numeric project versions. Task ownership uses `Get-ScheduledTask` objects plus a marker and exact check-only action, with exists/owned/healthy/reason. Compact MCP groups inherit the riskiest member's annotations. FOMOD paths reject ADS colons, reserved device names and trailing dots/spaces. PowerShell examples use `.orge`; a read-only freshness report was added.
+- Verified: full local gate PASS (`VALIDATION.json` records the suite; 7 skipped locally for symlink privilege and machine-specific houseCARL discovery); native self-test PASS; scheduled task created, executed (last result 0), log parsed (`PASS`, `applied:false`), and removed on a path containing spaces; a spoofed same-name task was refused for install and remove; CI 15/15 on `d808f3d`; v6.11.2 has 8 assets, tag on that SHA, ZIP `2c3e06c0…` matches `SHA256SUMS`; clean extraction runs `forge.cmd version`, doctor PASS and MCP 2026-07-28 with 68 tools from outside the install root; live install 6.11.2 is 581/581 byte-identical, doctor PASS, self-test 14/14, 4 post-install backups pruned to 0.
+- Not done: no in-game, CK, MO2 or Vortex run. CommonLibSSE-NG stays v14.1.0; v15.7.1 is named by the freshness report as an untested candidate. houseCARL skill snapshot stays 2.1.1 while the installer pin is 2.1.2. Go 1.27.3 remains the pinned toolchain.
+
 # Forge 6.11.1 houseCARL checksum and working scheduled check (2026-11-06)
 
 - Goal: fix the confirmed follow-up defects from the second review without reopening the v6.11.0 hardening.
