@@ -136,3 +136,8 @@ The receipt is evidence for the mechanical half of a real install test. No MO2, 
 ## Evidence boundary
 
 A Forge PASS proves the XML and payload model are internally coherent against the pinned standard XML format. It does not prove that every Vortex or MO2 presentation detail looks ideal, that a manager-specific extension behaves identically, or that arbitrary C# installer code is safe. The final archive still needs one actual installation in Vortex and one in MO2 when it uses complex conditional branches.
+
+
+## Coverage is explicit
+
+`fomod-test-install --all-branches` enumerates every `SelectExactlyOne` and `SelectAtMostOne` choice, up to `MAX_BRANCHES`. `SelectAny`, `SelectAtLeastOne` and `SelectAll` groups are not enumerated; the receipt's `coverage.group_types_uncovered` names them and a warning is attached to each branch. An empty `group_types_uncovered` list is the only case where the receipt can be read as exhaustive.

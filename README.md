@@ -4,7 +4,7 @@
 
 <div align="center">
 
-# Skyrim Forge 6.10.0
+# Skyrim Forge 6.11.0
 
 **Typed, safety-first Skyrim SE/AE mod engineering for AI agents — offline, free, MCP-ready.**
 
@@ -43,17 +43,17 @@ It runs **outside** the game and never installs into `Data`. Live game files, sa
 
 | Path | What happens |
 |---|---|
-| **Standalone** | Download `Skyrim-Forge-<version>.zip` from [Releases](https://github.com/SenjuWoo/SkyrimForge/releases/latest), check it against `SHA256SUMS.txt`, extract, run `START-HERE.bat`. |
-| **With the bundle** | The [Ultimate AI Starter Bundle](https://github.com/SenjuWoo/Ultimate-AI-Starter-Bundle) installs the latest digest-verified Forge release for its Skyrim pack and never downgrades a newer local install. |
+| **Standalone** | Download `Skyrim-Forge-<version>.zip` from [Releases](https://github.com/SenjuWoo/SkyrimForge/releases/latest), check it against `SHA256SUMS.txt`, extract it, rename the folder to something stable such as `SkyrimForge`, then run `START-HERE.bat` inside it. That folder **is** the install root. |
+| **With the bundle** | The [Ultimate AI Starter Bundle](https://github.com/SenjuWoo/Ultimate-AI-Starter-Bundle) extracts the latest digest-verified release to `%LOCALAPPDATA%\Skyrim-Tools\Skyrim-Forge` and never downgrades a newer local install. |
 
-Setup bootstraps a durable Python runtime, installs the Forge skill and the 50-skill Skyrim pack into every detected AI app, and registers the MCP server. It needs no admin rights and defaults to `%LOCALAPPDATA%\Skyrim-Tools\Skyrim-Forge` unless `SKYRIM_FORGE_ROOT` or `INSTALL-AIO.ps1 -ForgeRoot` says otherwise.
-
-The install folder carries **no version suffix**. Every AI client stores the MCP command as an absolute path, so a version-stamped folder renames itself out from under those configs on the next update. The installed version lives in `VERSION.txt`.
+Setup bootstraps a durable Python runtime, installs the Forge skill and the 50-skill Skyrim pack into every detected AI app, and registers the MCP server. It needs no admin rights. Re-running `START-HERE.bat`, `Update Forge.bat` or `Install-or-Update.ps1` updates that same folder in place, so a version-stamped extraction folder is safe as long as you keep its name: every AI client stores the MCP command as an absolute path. `SKYRIM_FORGE_ROOT` records the folder for other processes.
 
 ```powershell
-forge doctor            # core health, venv durability, tool readiness
-forge capabilities      # direct / profiled / adapter / worker / human gate
+.\forge doctor            # core health, venv durability, tool readiness
+.\forge capabilities      # direct / profiled / adapter / worker / human gate
 ```
+
+`forge.cmd` beside the install runs the bundled interpreter, so no PATH edit or venv activation is needed. `Forge Doctor.bat` opens the same report.
 
 ## What it does
 
@@ -64,7 +64,7 @@ forge capabilities      # direct / profiled / adapter / worker / human gate
 | Papyrus analysis and compile | `papyrus-analyze`, `papyrus-compile` | Official compiler; fresh PEX verified, not runtime |
 | SPID / KID / BOS / SkyPatcher / CDF lint and build | `lint`, `framework-plan-validate`, `framework-build` | Source-locked grammar; unknown tokens stay unverified |
 | Static findings vs framework logs | `framework-correlate-logs` | `RUNTIME_VERIFIED_PASS` only for a named file and row |
-| FOMOD 5.0 generation and simulation | `fomod-*` | Every branch extracted into an MO2/Vortex-shaped sandbox with a receipt |
+| FOMOD 5.0 generation and simulation | `fomod-*` | Every `SelectExactlyOne`/`SelectAtMostOne` branch extracted into an MO2/Vortex-shaped sandbox; other group types are reported as uncovered, never claimed as tested |
 | Archives, release trees, deterministic ZIPs | `bsarch-*`, `release-*` | Payload hashes and manifest |
 | Nexus publication gate | `nexus-*` | File-level rights, credits, licences, AI disclosure; the uploader signs |
 | Voice containers (FUZ/XWM/WAV/LIP) | `audio-*`, `voice-path-validate` | Container bytes; codec and lip-sync stay external |
@@ -95,14 +95,14 @@ Forge owns the **50-skill Skyrim SE/AE pack** (`integrations/skyrim-pack/`): rou
 .\Install-Skyrim-Pack.ps1 -Provider All -WithHouseCarl
 ```
 
-The pack's `skyrim-tooling-stack` decides between Forge, houseCARL and external tools. `houseCARL 2.1.1` setup and the Vortex load-order shim live at `integrations/skyrim-pack/skills/housecarl/scripts/Setup-HouseCarl.ps1`.
+The pack's `skyrim-tooling-stack` decides between Forge, houseCARL and external tools. `houseCARL 2.1.2` setup and the Vortex load-order shim live at `integrations/skyrim-pack/skills/housecarl/scripts/Setup-HouseCarl.ps1`.
 
 ## Maintenance and updates
 
 ```powershell
 forge maintain                    # report stale Forge-owned files and moved roots
 forge maintain --apply --approve  # delete the reported leftovers
-forge maintain --fix-roots        # write a discovered Skyrim/Vortex path into config
+forge maintain --fix-roots --approve  # write a discovered Skyrim/Vortex path into config
 ```
 
 `maintain` removes only paths Forge can prove it owns: spill files and sandbox runs older than a week under `<workspace>\.forge`, and provider skill backups beyond the newest two. It reports the self-test, flags configured roots that moved with the discovered replacement, and never touches a mod, a tool install or a user file. See [docs/MAINTENANCE.md](docs/MAINTENANCE.md).
@@ -144,4 +144,4 @@ CI runs Python 3.11/3.13/3.14 on Windows and Ubuntu, the native writer on both, 
 
 Not claimed: gameplay results, in-game visuals, or that any static check replaces a real Skyrim session. The [CHANGELOG](CHANGELOG.md) and [STATE](STATE.md) record what each release actually verified.
 
-MIT licensed. Ownership across Forge, the bundle and Reverse THIS! is stated once in the [bundle README](https://github.com/SenjuWoo/Ultimate-AI-Starter-Bundle#ownership).
+Forge is MIT licensed. The bundled houseCARL-derived skills keep their own GPL-3.0 licence and notices (`integrations/skyrim-pack/skills/housecarl/LICENSE`, `THIRD-PARTY-NOTICES.txt`). Ownership across Forge, the bundle and Reverse THIS! is stated once in the [bundle README](https://github.com/SenjuWoo/Ultimate-AI-Starter-Bundle#ownership).

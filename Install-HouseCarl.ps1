@@ -2,7 +2,7 @@
 [CmdletBinding()]
 param([string]$SourceZip, [switch]$SkipSetup, [switch]$CheckOnly)
 $ErrorActionPreference='Stop'
-$version=[version]'2.1.1'
+$version=[version]'2.1.2'
 $digest='1cb9fda834590d367e9907c35e5053624be050c316424d1f917f74e004c4816c'
 function Get-HouseCarlCandidates([string[]]$McpPaths,[string[]]$Roots) {
     $all=@($McpPaths)
@@ -33,8 +33,8 @@ try {
 
         New-Item -ItemType Directory -Force -Path $work | Out-Null
         if (-not $SourceZip) {
-            $SourceZip=Join-Path $work 'houseCARL-2.1.1.zip'
-            Invoke-WebRequest 'https://github.com/Avick3110/houseCARL/releases/download/v2.1.1/houseCARL-2.1.1.zip' -OutFile $SourceZip -UseBasicParsing
+            $SourceZip=Join-Path $work 'houseCARL-2.1.2.zip'
+            Invoke-WebRequest 'https://github.com/Avick3110/houseCARL/releases/download/v2.1.2/houseCARL-2.1.2.zip' -OutFile $SourceZip -UseBasicParsing
         }
         if ((Get-FileHash -LiteralPath $SourceZip -Algorithm SHA256).Hash -ine $digest) { throw 'houseCARL archive checksum mismatch.' }
         $extract=Join-Path $work 'extract'

@@ -11,7 +11,7 @@ import (
 	"path/filepath"
 )
 
-const version = "6.10.0"
+const version = "6.11.0"
 
 type receipt struct {
 	Result string `json:"result"`
@@ -50,14 +50,18 @@ func atomicCopy(source, target string) (receipt, error) {
 	if err := os.MkdirAll(filepath.Dir(target), 0o755); err != nil {
 		return receipt{}, err
 	}
-	tmp := target + ".forge.tmp"
-	_ = os.Remove(tmp)
-	out, err := os.OpenFile(tmp, os.O_CREATE|os.O_EXCL|os.O_WRONLY, 0o644)
+	// A unique temp file in the destination directory: never reuse a fixed
+	// "<target>.forge.tmp" name, which would delete a file this run does not own.
+	out, err := os.CreateTemp(filepath.Dir(target), ".forge-*.tmp")
 	if err != nil {
 		return receipt{}, err
 	}
+	tmp := out.Name()
 	_, copyErr := io.Copy(out, src)
 	syncErr := out.Sync()
+	if copyErr == nil && syncErr == nil {
+		copyErr = out.Chmod(0o644)
+	}
 	closeErr := out.Close()
 	if copyErr != nil || syncErr != nil || closeErr != nil {
 		_ = os.Remove(tmp)
@@ -69,10 +73,13 @@ func atomicCopy(source, target string) (receipt, error) {
 		}
 		return receipt{}, closeErr
 	}
-	if err := os.Rename(tmp, target); err != nil {
+	// Hard-link instead of rename: link fails atomically when the target exists,
+	// so the no-overwrite contract survives two writers racing for one path.
+	if err := os.Link(tmp, target); err != nil {
 		_ = os.Remove(tmp)
 		return receipt{}, err
 	}
+	_ = os.Remove(tmp)
 	digest, size, err := hashFile(target)
 	if err != nil {
 		return receipt{}, err
@@ -91,6 +98,11 @@ func selfTest() error {
 	if err := os.WriteFile(source, []byte("Skyrim Forge "+version+" native self-test\n"), 0o644); err != nil {
 		return err
 	}
+	// A pre-existing file with the old fixed temp name must survive untouched.
+	decoy := target + ".forge.tmp"
+	if err := os.WriteFile(decoy, []byte("not yours"), 0o644); err != nil {
+		return err
+	}
 	r, err := atomicCopy(source, target)
 	if err != nil {
 		return err
@@ -102,6 +114,12 @@ func selfTest() error {
 	b, _, _ := hashFile(target)
 	if a != b {
 		return errors.New("copy hash mismatch")
+	}
+	if kept, err := os.ReadFile(decoy); err != nil || string(kept) != "not yours" {
+		return errors.New("atomic copy touched a temp file it does not own")
+	}
+	if _, err := atomicCopy(source, target); err == nil {
+		return errors.New("atomic copy overwrote an existing target")
 	}
 	return nil
 }

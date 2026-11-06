@@ -5,7 +5,7 @@ description: Read and manipulate NIF 3D mesh files. Use when the user wants to i
 
 # Skyrim NIF Module
 
-Read and manipulate Skyrim SE/AE NIF (`NetImmerse Format`, version `20.2.0.7`, BS version `100`) 3D mesh files using **houseCARL 2.1.1** (`housecarl_nif_inspect`, `housecarl_nif_set`) and **Skyrim Forge** (`dmscan`, `NIF Optimizer`, `NIFAnalyzer`, `NifSkope`).
+Read and manipulate Skyrim SE/AE NIF (`NetImmerse Format`, version `20.2.0.7`, BS version `100`) 3D mesh files using **houseCARL 2.1.2** (`housecarl_nif_inspect`, `housecarl_nif_set`) and **Skyrim Forge** (`dmscan`, `NIF Optimizer`, `NIFAnalyzer`, `NifSkope`).
 
 ## Tool Routing
 

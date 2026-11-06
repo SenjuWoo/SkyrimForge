@@ -434,7 +434,7 @@ def git_normalized(path: Path) -> bytes:
     suffix (e.g. the suffix-less Linux ELF helper).
     """
     b = path.read_bytes()
-    if b"\r\n" not in b or path.suffix.lower() in {".ps1", ".bat"} | BINARY_SUFFIXES:
+    if b"\r\n" not in b or path.suffix.lower() in {".ps1", ".bat", ".cmd"} | BINARY_SUFFIXES:
         return b
     if b[:4] == b"\x7fELF" or b[:2] == b"MZ" or b"\x00" in b[:1024]:
         return b

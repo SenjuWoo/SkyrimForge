@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import os
+import stat
 from pathlib import Path
 from typing import Iterable
 
@@ -36,6 +37,32 @@ def is_within(path: Path, roots: Iterable[Path]) -> bool:
     return False
 
 
+def _is_reparse_link(item: Path) -> bool:
+    """True for symlinks (including dangling ones) and Windows junctions.
+
+    `exists() and is_symlink()` misses a dangling link, because exists() follows the
+    target and returns False when the target is gone. is_symlink() itself uses lstat,
+    so it answers for the link even when the target is missing.
+    """
+    try:
+        if item.is_symlink():
+            return True
+    except OSError:
+        pass
+    is_junction = getattr(item, "is_junction", None)
+    if is_junction is not None:
+        try:
+            if is_junction():
+                return True
+        except OSError:
+            pass
+    try:
+        attributes = item.lstat().st_file_attributes
+    except (AttributeError, OSError):
+        return False
+    return bool(attributes & stat.FILE_ATTRIBUTE_REPARSE_POINT)
+
+
 def reject_symlink_chain(path: Path, *, stop: Path | None = None) -> None:
     candidate = path.expanduser().absolute()
     stop_resolved = stop.expanduser().absolute() if stop else None
@@ -49,7 +76,7 @@ def reject_symlink_chain(path: Path, *, stop: Path | None = None) -> None:
             break
         current = current.parent
     for item in chain:
-        if item.exists() and item.is_symlink():
+        if _is_reparse_link(item):
             raise SafetyError(f"Symlink/reparse-point path is not allowed for writes: {item}")
 
 

@@ -35,9 +35,10 @@ so a fresh install stages jobs under the live folder. If you run the installer
 from Documents it warns. MCP must point at
 `<SKYRIM_FORGE_ROOT>\.venv\Scripts\python.exe -m skyrim_forge mcp`.
 
-Keep the last known-good release as rollback. Do not edit an installed
-output in place when a git clone exists; edit the clone, then install into a
-new `Skyrim-Forge-<version>` folder.
+Keep the last known-good release ZIP as rollback. Do not edit an installed
+output in place when a git clone exists; edit the clone, then install into that
+same folder (or a second folder for side-by-side testing, remembering that MCP
+registration points at one absolute path).
 
 ## Claude Code 2026-07-28
 

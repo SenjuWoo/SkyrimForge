@@ -53,7 +53,7 @@ class CIValidationScopeTests(unittest.TestCase):
     def test_embedded_validator_resolves_root_go_toolchain(self):
         self.assertEqual(
             self.module.GO_TOOLCHAIN,
-            "go1.23.2",
+            "go1.27.3",
             "embedded Forge validator lost the repository-root Go pin",
         )
 
@@ -65,7 +65,7 @@ class CIValidationScopeTests(unittest.TestCase):
         spec.loader.exec_module(module)
         self.assertEqual(
             module.TOOLCHAIN,
-            "go1.23.2",
+            "go1.27.3",
             "embedded Forge rebuild helper lost the repository-root Go pin",
         )
 

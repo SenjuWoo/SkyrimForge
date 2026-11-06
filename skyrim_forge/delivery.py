@@ -9,7 +9,7 @@ REPORTS = {"VALIDATION.json", "BUILD-RECEIPT.json", "MANIFEST.json", "SBOM.spdx.
 PRODUCT_FILES = {
     "VERSION.txt", "README.md", "LICENSE", "NOTICE.md", "config.example.toml",
     "pyproject.toml", "forge_build_backend.py", "START-HERE.bat",
-    "Forge Doctor.bat", "Skyrim Forge GUI.bat", "Skyrim Forge MCP.bat",
+    "forge.cmd", "Forge Doctor.bat", "Skyrim Forge GUI.bat", "Skyrim Forge MCP.bat",
     "Skyrim Forge.bat", "Update Forge.bat", "Configure-Automation.ps1",
     "Configure-Forge.ps1", "Configure-Toolchain.ps1", "Install-AI-Bridge.ps1",
     "Install-Forge-Skill.ps1", "Install-HouseCarl.ps1", "Install-Skyrim-Pack.ps1",

@@ -11,6 +11,7 @@ import itertools
 import shutil
 from pathlib import Path, PurePosixPath
 from typing import Any
+from uuid import uuid4
 
 from .errors import SafetyError, ValidationError
 from .fomod import expand_branch, validate_plan
@@ -45,6 +46,16 @@ def _branch_selections(plan: dict[str, Any], selections: dict[str, Any] | None, 
     for choice in itertools.product(*(values for _, values in axes)) if axes else [()]:
         result.append({key: value for (key, _), value in zip(axes, choice) if value is not None})
     return result
+
+
+def _coverage(plan: dict[str, Any], all_branches: bool) -> dict[str, Any]:
+    """Name the group types a run actually enumerated, and the ones it did not."""
+    present = {group["type"] for step in plan.get("steps", []) for group in step.get("groups", [])}
+    return {
+        "mode": "all-branches" if all_branches else "single",
+        "group_types_tested": sorted(present & EXACT_GROUP_TYPES) if all_branches else [],
+        "group_types_uncovered": sorted(present - EXACT_GROUP_TYPES),
+    }
 
 
 def _layout_checks(files: list[dict[str, Any]]) -> tuple[list[str], list[str]]:
@@ -82,6 +93,24 @@ def _tree_digest(rows: list[tuple[str, str]]) -> str:
     return digest.hexdigest()
 
 
+def _create_run_dir(sandbox: Path) -> Path:
+    """Create a unique run directory with an exclusive mkdir.
+
+    The timestamp alone has one-second resolution, so two runs started in the same
+    second used to share a directory. The random suffix makes collisions
+    vanishingly unlikely; mkdir(exist_ok=False) makes the check atomic anyway.
+    """
+    stamp = utc_now().replace(":", "").replace("-", "")
+    for _ in range(8):
+        candidate = sandbox / f"{stamp}-{uuid4().hex[:8]}"
+        try:
+            candidate.mkdir(parents=True, exist_ok=False)
+            return candidate
+        except FileExistsError:
+            continue
+    raise SafetyError("Could not create a unique sandbox run directory")
+
+
 def test_install(plan_path: Path, source_root: Path, workspace_root: Path, *, approved: bool,
                  selections: dict[str, Any] | None = None, state: dict[str, Any] | None = None,
                  all_branches: bool = False) -> dict[str, Any]:
@@ -92,50 +121,83 @@ def test_install(plan_path: Path, source_root: Path, workspace_root: Path, *, ap
     raw_plan = load(plan_path)
     source = source_root.resolve(strict=True)
     sandbox = require_within(Path(workspace_root) / ".forge" / "vfs-sandbox", workspace_root)
-    run = sandbox / utc_now().replace(":", "").replace("-", "")
+    sandbox.mkdir(parents=True, exist_ok=True)
+    run = _create_run_dir(sandbox)
     branches = _branch_selections(plan, selections, all_branches)
+    expanded_all = [expand_branch(raw_plan, branch, state, source) for branch in branches]
+
+    planned_files = sum(len(item["files"]) for item in expanded_all) * 2
+    planned_bytes = 0
+    for item in expanded_all:
+        for row in item["files"]:
+            origin = source.joinpath(*PurePosixPath(row["source"]).parts)
+            planned_bytes += (origin.stat().st_size if origin.is_file() else 0) * 2
+    if planned_files > MAX_FILES or planned_bytes > MAX_BYTES:
+        shutil.rmtree(run, ignore_errors=True)
+        raise SafetyError(
+            f"Sandbox install would copy {planned_files} files / {planned_bytes} bytes; "
+            f"the budget is {MAX_FILES} files / {MAX_BYTES} bytes"
+        )
+
+    coverage = _coverage(plan, all_branches)
     reports = []
     total_files = total_bytes = 0
-    for index, branch in enumerate(branches):
-        expanded = expand_branch(raw_plan, branch, state, source)
-        errors, warnings = _layout_checks(expanded["files"])
-        errors.extend(expanded["problems"])
-        label = safe_name(f"branch-{index + 1:02d}", fallback="branch")
-        copied: list[tuple[str, str]] = []
-        size = 0
-        if not errors:
-            for layout in ("mo2", "vortex"):
-                for row in expanded["files"]:
-                    origin = source.joinpath(*PurePosixPath(row["source"]).parts)
-                    if not origin.is_file():
-                        errors.append(f"missing payload: {row['source']}")
-                        break
-                    destination = run / label / layout / safe_name(plan["module"]["name"], fallback="mod") / PurePosixPath(row["destination"].replace("\\", "/").lstrip("/"))
-                    destination.parent.mkdir(parents=True, exist_ok=True)
-                    shutil.copyfile(origin, destination)
-                    total_files += 1
-                    size += destination.stat().st_size
-                    if layout == "mo2":
-                        copied.append((row["destination"], sha256_file(destination)))
-            total_bytes += size
-        if total_files > MAX_FILES or total_bytes > MAX_BYTES:
-            raise SafetyError(f"Sandbox install exceeds the {MAX_FILES}-file / {MAX_BYTES}-byte budget")
-        reports.append({
-            "branch": label, "selections": branch, "selected_plugins": expanded["simulation"]["selected_plugins"],
-            "file_count": len(expanded["files"]), "tree_sha256": _tree_digest(copied),
-            "result": "PASS" if not errors else "FAIL", "errors": errors, "warnings": warnings,
-        })
+    partial = False
+    try:
+        for index, expanded in enumerate(expanded_all):
+            branch = branches[index]
+            errors, warnings = _layout_checks(expanded["files"])
+            errors.extend(expanded["problems"])
+            if all_branches and coverage["group_types_uncovered"]:
+                warnings.append("not enumerated by --all-branches: " + ", ".join(coverage["group_types_uncovered"]))
+            label = safe_name(f"branch-{index + 1:02d}", fallback="branch")
+            copied: list[tuple[str, str]] = []
+            size = 0
+            if not errors:
+                for layout in ("mo2", "vortex"):
+                    for row in expanded["files"]:
+                        origin = source.joinpath(*PurePosixPath(row["source"]).parts)
+                        if not origin.is_file():
+                            errors.append(f"missing payload: {row['source']}")
+                            break
+                        destination = run / label / layout / safe_name(plan["module"]["name"], fallback="mod") / PurePosixPath(row["destination"].replace("\\", "/").lstrip("/"))
+                        destination.parent.mkdir(parents=True, exist_ok=True)
+                        shutil.copyfile(origin, destination)
+                        total_files += 1
+                        size += destination.stat().st_size
+                        if total_files > MAX_FILES or total_bytes + size > MAX_BYTES:
+                            raise SafetyError(f"Sandbox install exceeded the {MAX_FILES}-file / {MAX_BYTES}-byte budget while copying")
+                        if layout == "mo2":
+                            copied.append((row["destination"], sha256_file(destination)))
+                total_bytes += size
+            reports.append({
+                "branch": label, "selections": branch, "selected_plugins": expanded["simulation"]["selected_plugins"],
+                "file_count": len(expanded["files"]), "tree_sha256": _tree_digest(copied),
+                "result": "PASS" if not errors else "FAIL", "errors": errors, "warnings": warnings,
+            })
+    except Exception:
+        partial = True
+        raise
+    finally:
+        if partial:
+            json_dump(run / "install_verification_receipt.json", {
+                "schema": "skyrim-forge-install-verification/1", "generated_utc": utc_now(),
+                "sandbox": str(run), "result": "FAIL", "partial": True,
+                "evidence": "The run was interrupted by a resource or copy failure; the directory holds only this run's files.",
+            })
     receipt = {
         "schema": "skyrim-forge-install-verification/1", "generated_utc": utc_now(),
         "plan": str(plan_path.resolve()), "source_root": str(source), "sandbox": str(run),
         "module": {"name": plan["module"]["name"], "version": plan["module"]["version"]},
         "result": "PASS" if all(item["result"] == "PASS" for item in reports) else "FAIL",
         "branches": reports, "file_copies": total_files, "bytes_copied": total_bytes,
+        "coverage": coverage,
+        "budget": {"max_files": MAX_FILES, "max_bytes": MAX_BYTES,
+                   "planned_files": planned_files, "planned_bytes": planned_bytes},
         "checks": ["no Data/Data nesting", "no destination collision", "no duplicate SKSE DLL", "payload present and hashed"],
         "evidence": "Branch extraction into MO2- and Vortex-shaped folders only. No MO2, Vortex, USVFS or game process was started; plugin loading and in-game behaviour are not tested.",
     }
-    sandbox.mkdir(parents=True, exist_ok=True)
-    receipt_path = sandbox / "install_verification_receipt.json"
+    receipt_path = run / "install_verification_receipt.json"
     json_dump(receipt_path, receipt)
     receipt["receipt"] = str(receipt_path)
     return receipt

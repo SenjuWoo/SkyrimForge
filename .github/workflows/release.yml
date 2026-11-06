@@ -46,7 +46,7 @@ jobs:
           python-version: "3.13"
       - uses: actions/setup-go@b7ad1dad31e06c5925ef5d2fc7ad053ef454303e # v7.0.0
         with:
-          go-version: "1.23.2"
+          go-version: "1.27.3"
           cache: false
 
       - name: Decide whether this SHA is a release
@@ -57,7 +57,7 @@ jobs:
           set -euo pipefail
           if [ "$CI_GREEN" != "true" ]; then echo "CI on $SHA did not pass on a push: nothing to publish"; echo "publish=false" >> "$GITHUB_OUTPUT"; exit 0; fi
           test "$(git rev-parse HEAD)" = "$SHA"
-          test "$(go env GOVERSION)" = "go1.23.2"
+          test "$(go env GOVERSION)" = "go1.27.3"
           version=$(python -c "from skyrim_forge.version import VERSION; print(VERSION)")
           tag="v$version"
           main=$(gh api "repos/$REPO/commits/main" --jq .sha)

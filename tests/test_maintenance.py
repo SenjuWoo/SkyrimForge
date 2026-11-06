@@ -11,6 +11,16 @@ from skyrim_forge.config import ForgeConfig
 from skyrim_forge.errors import SafetyError
 
 
+def _write_vdf(steam: Path, libraries: list[Path]) -> None:
+    """Write the minimal libraryfolders.vdf Steam actually produces."""
+    (steam / "steamapps").mkdir(parents=True, exist_ok=True)
+    lines = ['"libraryfolders"', "{"]
+    for index, library in enumerate(libraries, start=1):
+        lines += [f'	"{index}"', "	{", f'		"path"		"{str(library).replace(chr(92), chr(92) * 2)}"', "	}"]
+    lines.append("}")
+    (steam / "steamapps" / "libraryfolders.vdf").write_text("\n".join(lines) + "\n", encoding="utf-8")
+
+
 def _age(path: Path, days: float) -> None:
     stamp = time.time() - days * 86400
     os.utime(path, (stamp, stamp))
@@ -70,6 +80,7 @@ class MaintenanceTests(unittest.TestCase):
         library = self.root / "SteamLibrary"
         data = library / "steamapps" / "common" / "Skyrim Special Edition" / "Data"
         data.mkdir(parents=True)
+        (data / "Skyrim.esm").write_bytes(b"TES4")
         steam = self.root / "Steam"
         (steam / "steamapps").mkdir(parents=True)
         (steam / "steamapps" / "libraryfolders.vdf").write_text(
@@ -85,6 +96,44 @@ class MaintenanceTests(unittest.TestCase):
         self.assertTrue((self.root / "config.toml").read_text(encoding="utf-8").count("SteamLibrary") >= 1)
         backup = Path(changed["backup"])
         self.assertTrue(backup.is_file() and backup.name.startswith("config.toml.bak-maintain-"))
+
+    def test_add_roots_without_approval_refuses_and_leaves_config_alone(self):
+        library = self.root / "SteamLibrary"
+        data = library / "steamapps" / "common" / "Skyrim Special Edition" / "Data"
+        data.mkdir(parents=True)
+        (data / "Skyrim.esm").write_bytes(b"TES4")
+        steam = self.root / "Steam"
+        _write_vdf(steam, [library])
+        self.config.skyrim_data = self.root / "gone" / "Data"
+        before = self.config.config_path.read_text(encoding="utf-8")
+        with self.assertRaises(SafetyError):
+            maintenance.run(self.config, provider_homes=[self.provider], include_health=False,
+                            steam_roots=[steam], add_roots=True, approved=False)
+        self.assertEqual(self.config.config_path.read_text(encoding="utf-8"), before)
+        self.assertEqual(self.config.skyrim_data, self.root / "gone" / "Data")
+
+    def test_two_libraries_are_ambiguous_and_are_not_written(self):
+        libraries = []
+        for name in ("LibraryA", "LibraryB"):
+            data = self.root / name / "steamapps" / "common" / "Skyrim Special Edition" / "Data"
+            data.mkdir(parents=True)
+            (data / "Skyrim.esm").write_bytes(b"TES4")
+            libraries.append(self.root / name)
+        steam = self.root / "Steam"
+        _write_vdf(steam, libraries)
+        self.config.skyrim_data = self.root / "gone" / "Data"
+        rows = maintenance.root_report(self.config, steam_roots=[steam])
+        row = next(item for item in rows if item["key"] == "skyrim_data")
+        self.assertEqual(row["status"], "AMBIGUOUS")
+        self.assertEqual(len(row["candidates"]), 2)
+        before = self.config.config_path.read_text(encoding="utf-8")
+        changed = maintenance.fix_roots(self.config, rows)
+        self.assertEqual(changed["changed"], [])
+        self.assertEqual(self.config.config_path.read_text(encoding="utf-8"), before)
+        report = maintenance.run(self.config, provider_homes=[self.provider], include_health=False,
+                                 steam_roots=[steam], add_roots=True, approved=True)
+        self.assertEqual(report["result"], "WARN")
+        self.assertEqual(report["roots_changed"], [])
 
     def test_missing_root_without_candidate_is_warn(self):
         self.config.skyrim_data = self.root / "gone" / "Data"

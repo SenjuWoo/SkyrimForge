@@ -18,6 +18,8 @@ from __future__ import annotations
 
 import os
 import re
+import subprocess
+import sys
 import shutil
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
@@ -90,23 +92,29 @@ def _steam_libraries(steam_roots: Iterable[Path] | None = None) -> list[Path]:
     return found
 
 
-def _candidate_roots(steam_roots: Iterable[Path] | None = None) -> dict[str, Path]:
+def _candidate_options(steam_roots: Iterable[Path] | None = None) -> dict[str, list[Path]]:
+    """Every plausible replacement per root.
+
+    More than one option is reported as ambiguous rather than silently taking the
+    first Steam library, which is how a multi-library machine ends up pointed at
+    the wrong Data folder.
+    """
     appdata = Path(os.environ.get("APPDATA", ""))
-    candidates: dict[str, Path] = {}
-    steam = _steam_libraries(steam_roots)
+    options: dict[str, list[Path]] = {}
+    steam = [path for path in _steam_libraries(steam_roots) if (path / "Skyrim.esm").is_file()]
     if steam:
-        candidates["skyrim_data"] = steam[0]
+        options["skyrim_data"] = steam
     vortex = appdata / "Vortex" / "skyrimse" / "mods"
     if vortex.is_dir():
-        candidates["vortex_staging"] = vortex
+        options["vortex_staging"] = [vortex]
     workspace = Path(__file__).resolve().parents[1] / "Workspaces"
     if workspace.is_dir():
-        candidates["workspace_root"] = workspace
-    return candidates
+        options["workspace_root"] = [workspace]
+    return options
 
 
 def root_report(config: ForgeConfig, steam_roots: Iterable[Path] | None = None) -> list[dict[str, Any]]:
-    candidates = _candidate_roots(steam_roots)
+    options = _candidate_options(steam_roots)
     rows = []
     for key in ROOT_KEYS:
         current = getattr(config, key, None)
@@ -114,10 +122,52 @@ def root_report(config: ForgeConfig, steam_roots: Iterable[Path] | None = None) 
             continue
         path = Path(current)
         row = {"key": key, "configured": str(path), "status": "OK" if path.exists() else "MISSING"}
-        if row["status"] == "MISSING" and key in candidates:
-            row.update(status="MOVED", candidate=str(candidates[key]))
+        if row["status"] == "MISSING":
+            found = options.get(key, [])
+            if len(found) == 1:
+                row.update(status="MOVED", candidate=str(found[0]))
+            elif len(found) > 1:
+                row.update(status="AMBIGUOUS", candidates=[str(item) for item in found])
         rows.append(row)
     return rows
+
+
+SCHEDULE_TASK = "SkyrimForge-Maintain"
+
+
+def schedule_status() -> dict[str, Any]:
+    """Report whether the optional weekly check task exists. Never creates anything."""
+    if os.name != "nt":
+        return {"supported": False, "installed": False, "task": SCHEDULE_TASK}
+    proc = subprocess.run(["schtasks", "/Query", "/TN", SCHEDULE_TASK],
+                          capture_output=True, text=True, timeout=30)
+    return {"supported": True, "installed": proc.returncode == 0, "task": SCHEDULE_TASK}
+
+
+def install_schedule(*, log_path: Path, day: str = "SUN", time: str = "12:00") -> dict[str, Any]:
+    """Create a weekly CHECK-ONLY task. It never passes --apply or --fix-roots."""
+    if os.name != "nt":
+        raise SafetyError("Scheduled maintenance is Windows-only")
+    log_path = Path(log_path)
+    log_path.parent.mkdir(parents=True, exist_ok=True)
+    command = f'"{sys.executable}" -m skyrim_forge maintain --no-self-test >> "{log_path}" 2>&1'
+    proc = subprocess.run(["schtasks", "/Create", "/TN", SCHEDULE_TASK, "/SC", "WEEKLY",
+                           "/D", day, "/ST", time, "/TR", command, "/F"],
+                          capture_output=True, text=True, timeout=60)
+    if proc.returncode != 0:
+        raise SafetyError(f"schtasks /Create failed: {(proc.stderr or proc.stdout).strip()}")
+    return {"installed": True, "task": SCHEDULE_TASK, "day": day, "time": time,
+            "log": str(log_path), "mode": "check-only", "command": command}
+
+
+def remove_schedule() -> dict[str, Any]:
+    if os.name != "nt":
+        raise SafetyError("Scheduled maintenance is Windows-only")
+    proc = subprocess.run(["schtasks", "/Delete", "/TN", SCHEDULE_TASK, "/F"],
+                          capture_output=True, text=True, timeout=30)
+    if proc.returncode != 0:
+        raise SafetyError(f"schtasks /Delete failed: {(proc.stderr or proc.stdout).strip()}")
+    return {"installed": False, "task": SCHEDULE_TASK}
 
 
 def inspect(config: ForgeConfig, *, days: int = 7, keep_backups: int = 2,
@@ -167,7 +217,7 @@ def fix_roots(config: ForgeConfig, rows: list[dict[str, Any]]) -> dict[str, Any]
     changed = []
     backup = ""
     for row in rows:
-        if row["status"] == "MOVED":
+        if row["status"] == "MOVED" and Path(row["candidate"]).is_dir():
             setattr(config, row["key"], Path(row["candidate"]))
             changed.append({"key": row["key"], "value": row["candidate"]})
     if changed:
@@ -183,6 +233,8 @@ def run(config: ForgeConfig, *, days: int = 7, keep_backups: int = 2, apply_chan
     """Dry-run by default. apply_changes and add_roots are separate, explicit steps."""
     if apply_changes and not approved:
         raise SafetyError("Removing leftovers needs an explicit approval")
+    if add_roots and not approved:
+        raise SafetyError("Writing discovered roots into the configuration needs an explicit approval")
     found = inspect(config, days=days, keep_backups=keep_backups, provider_homes=provider_homes)
     rows = root_report(config, steam_roots)
     result: dict[str, Any] = {
@@ -207,7 +259,7 @@ def run(config: ForgeConfig, *, days: int = 7, keep_backups: int = 2, apply_chan
         result["health"] = {"result": health["result"], "failed": health["failed"], "checks": len(health["checks"])}
         if health["result"] != "PASS":
             result["result"] = "FAIL"
-    if any(row["status"] in {"MISSING", "MOVED"} for row in result["roots"]):
+    if any(row["status"] in {"MISSING", "MOVED", "AMBIGUOUS"} for row in result["roots"]):
         result["result"] = "WARN" if result["result"] == "PASS" else result["result"]
     return result
 

@@ -7,7 +7,7 @@ from typing import Any
 from .archive import inspect_archive
 from .audio import create_fuz as audio_create_fuz, extract_fuz as audio_extract_fuz, inspect as audio_inspect, validate_voice_tree
 from .textures import generate as texture_generate, inspect as texture_inspect
-from .maintenance import run as maintenance_run
+from .maintenance import install_schedule, remove_schedule, run as maintenance_run, schedule_status
 from .automation import run_job, validate_job
 from .capabilities import get_capability, registry as capability_registry
 from .config import ForgeConfig, configure_value, load_config, save_config
@@ -16,7 +16,7 @@ from .frameworks import lint_paths, self_test as framework_self_test
 from .framework_builder import build as build_framework, validate_plan as validate_framework_plan
 from .fomod import build_fomod, self_test as fomod_self_test, simulate_plan, validate_fomod, validate_plan as validate_fomod_plan, write_scaffold
 from .conflicts import find_records, mo2_sources, resolve_load_order
-from .errors import ValidationError
+from .errors import ApprovalError, ValidationError
 from .loadorder import parse_plugins_file
 from .seq import build_seq
 from .modtree import inspect_mod_directory
@@ -326,6 +326,19 @@ class ForgeService:
                  include_health: bool, approved: bool) -> dict[str, Any]:
         return maintenance_run(self.config, days=days, keep_backups=keep_backups, apply_changes=apply_changes,
                                add_roots=add_roots, include_health=include_health, approved=approved)
+
+    def maintain_schedule(self, action: str, *, day: str = "SUN", time: str = "12:00",
+                          approved: bool = False) -> dict[str, Any]:
+        if action == "status":
+            return schedule_status()
+        if not approved:
+            raise ApprovalError("Changing the scheduled maintenance task needs an explicit approval")
+        if action == "install":
+            return install_schedule(log_path=self.config.config_path.with_name("logs") / "maintain.log",
+                                    day=day, time=time)
+        if action == "remove":
+            return remove_schedule()
+        raise ValueError(f"Unknown schedule action: {action}")
 
     def texture_inspect(self, path: str) -> dict[str, Any]:
         return texture_inspect(self._read(path))
