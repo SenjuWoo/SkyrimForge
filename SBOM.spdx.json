@@ -1,13 +1,13 @@
 {
   "SPDXID": "SPDXRef-DOCUMENT",
   "creationInfo": {
-    "created": "2026-11-06T18:03:04Z",
+    "created": "2026-11-06T18:38:28Z",
     "creators": [
       "Tool: Skyrim Forge validator 6.11.4"
     ]
   },
   "dataLicense": "CC0-1.0",
-  "documentNamespace": "https://github.com/SenjuWoo/SkyrimForge/spdx/6.11.4/f4504ffdea48",
+  "documentNamespace": "https://github.com/SenjuWoo/SkyrimForge/spdx/6.11.4/03aa84853277",
   "files": [
     {
       "SPDXID": "SPDXRef-File-.editorconfig",
@@ -7559,7 +7559,7 @@
       "checksums": [
         {
           "algorithm": "SHA256",
-          "checksumValue": "ffd177a8e60e33319e22e7334849f0790fc79682372447660e2a224fa719debb"
+          "checksumValue": "a755c7712f8621346bf31b993f7c625f976974ce40bd78be7c3ed96117850452"
         }
       ],
       "copyrightText": "NOASSERTION",
@@ -7624,6 +7624,21 @@
       ],
       "copyrightText": "NOASSERTION",
       "fileName": "./scripts/rebuild_native_helpers.py",
+      "licenseConcluded": "MIT",
+      "licenseInfoInFiles": [
+        "MIT"
+      ]
+    },
+    {
+      "SPDXID": "SPDXRef-File-scripts-release-decision.py",
+      "checksums": [
+        {
+          "algorithm": "SHA256",
+          "checksumValue": "dec057adb64c4694f95fff5e1aa554161c9dafbb64d4c36b33a0846c75978b8a"
+        }
+      ],
+      "copyrightText": "NOASSERTION",
+      "fileName": "./scripts/release_decision.py",
       "licenseConcluded": "MIT",
       "licenseInfoInFiles": [
         "MIT"
@@ -9370,6 +9385,21 @@
       ]
     },
     {
+      "SPDXID": "SPDXRef-File-tests-test-freshness-security.py",
+      "checksums": [
+        {
+          "algorithm": "SHA256",
+          "checksumValue": "02deaecfb72d9eca657b9477055448bd02ea5a0a0b60a74b26ad83c6109836d4"
+        }
+      ],
+      "copyrightText": "NOASSERTION",
+      "fileName": "./tests/test_freshness_security.py",
+      "licenseConcluded": "MIT",
+      "licenseInfoInFiles": [
+        "MIT"
+      ]
+    },
+    {
       "SPDXID": "SPDXRef-File-tests-test-housecarl-pin.py",
       "checksums": [
         {
@@ -9565,6 +9595,21 @@
       ]
     },
     {
+      "SPDXID": "SPDXRef-File-tests-test-preflight.py",
+      "checksums": [
+        {
+          "algorithm": "SHA256",
+          "checksumValue": "21f36fb51045b263be4ee06f5e501974ce9cbb567341276a81cd624173714df0"
+        }
+      ],
+      "copyrightText": "NOASSERTION",
+      "fileName": "./tests/test_preflight.py",
+      "licenseConcluded": "MIT",
+      "licenseInfoInFiles": [
+        "MIT"
+      ]
+    },
+    {
       "SPDXID": "SPDXRef-File-tests-test-process-launch.py",
       "checksums": [
         {
@@ -9589,6 +9634,21 @@
       ],
       "copyrightText": "NOASSERTION",
       "fileName": "./tests/test_publish_release.py",
+      "licenseConcluded": "MIT",
+      "licenseInfoInFiles": [
+        "MIT"
+      ]
+    },
+    {
+      "SPDXID": "SPDXRef-File-tests-test-release-decision.py",
+      "checksums": [
+        {
+          "algorithm": "SHA256",
+          "checksumValue": "6679597c6da27de212696f0b4640ed68f9c4baa98b1c3c8ec985558bbe7aa29c"
+        }
+      ],
+      "copyrightText": "NOASSERTION",
+      "fileName": "./tests/test_release_decision.py",
       "licenseConcluded": "MIT",
       "licenseInfoInFiles": [
         "MIT"
@@ -9634,6 +9694,21 @@
       ],
       "copyrightText": "NOASSERTION",
       "fileName": "./tests/test_safety_links.py",
+      "licenseConcluded": "MIT",
+      "licenseInfoInFiles": [
+        "MIT"
+      ]
+    },
+    {
+      "SPDXID": "SPDXRef-File-tests-test-sbom.py",
+      "checksums": [
+        {
+          "algorithm": "SHA256",
+          "checksumValue": "3916df62d4856253aeba454540fb68c33cecca2a8a3d50948d896b826c982514"
+        }
+      ],
+      "copyrightText": "NOASSERTION",
+      "fileName": "./tests/test_sbom.py",
       "licenseConcluded": "MIT",
       "licenseInfoInFiles": [
         "MIT"
@@ -10029,7 +10104,7 @@
       ],
       "name": "Skyrim Forge",
       "packageVerificationCode": {
-        "packageVerificationCodeValue": "ecdfda6ab8a65266dfda7888042586ea344e95dc"
+        "packageVerificationCodeValue": "229bdfed05c0ef5f6c77694c694d0963d4705d48"
       },
       "versionInfo": "6.11.4"
     },
@@ -12602,6 +12677,11 @@
       "spdxElementId": "SPDXRef-Package-Forge"
     },
     {
+      "relatedSpdxElement": "SPDXRef-File-scripts-release-decision.py",
+      "relationshipType": "CONTAINS",
+      "spdxElementId": "SPDXRef-Package-Forge"
+    },
+    {
       "relatedSpdxElement": "SPDXRef-File-scripts-validate-repository.py",
       "relationshipType": "CONTAINS",
       "spdxElementId": "SPDXRef-Package-Forge"
@@ -13182,6 +13262,11 @@
       "spdxElementId": "SPDXRef-Package-Forge"
     },
     {
+      "relatedSpdxElement": "SPDXRef-File-tests-test-freshness-security.py",
+      "relationshipType": "CONTAINS",
+      "spdxElementId": "SPDXRef-Package-Forge"
+    },
+    {
       "relatedSpdxElement": "SPDXRef-File-tests-test-housecarl-pin.py",
       "relationshipType": "CONTAINS",
       "spdxElementId": "SPDXRef-Package-Forge"
@@ -13247,12 +13332,22 @@
       "spdxElementId": "SPDXRef-Package-Forge"
     },
     {
+      "relatedSpdxElement": "SPDXRef-File-tests-test-preflight.py",
+      "relationshipType": "CONTAINS",
+      "spdxElementId": "SPDXRef-Package-Forge"
+    },
+    {
       "relatedSpdxElement": "SPDXRef-File-tests-test-process-launch.py",
       "relationshipType": "CONTAINS",
       "spdxElementId": "SPDXRef-Package-Forge"
     },
     {
       "relatedSpdxElement": "SPDXRef-File-tests-test-publish-release.py",
+      "relationshipType": "CONTAINS",
+      "spdxElementId": "SPDXRef-Package-Forge"
+    },
+    {
+      "relatedSpdxElement": "SPDXRef-File-tests-test-release-decision.py",
       "relationshipType": "CONTAINS",
       "spdxElementId": "SPDXRef-Package-Forge"
     },
@@ -13268,6 +13363,11 @@
     },
     {
       "relatedSpdxElement": "SPDXRef-File-tests-test-safety-links.py",
+      "relationshipType": "CONTAINS",
+      "spdxElementId": "SPDXRef-Package-Forge"
+    },
+    {
+      "relatedSpdxElement": "SPDXRef-File-tests-test-sbom.py",
       "relationshipType": "CONTAINS",
       "spdxElementId": "SPDXRef-Package-Forge"
     },

@@ -46,6 +46,7 @@ def version_sources(root: Path = ROOT) -> dict[str, str]:
 
 
 def control_offenders(root: Path = ROOT) -> list[str]:
+    root = root.resolve()
     from skyrim_forge.delivery import source_files
     from scripts.validate_repository import control_characters
     skip = {".exe", ".dll", ".png", ".ico", ".zip", ".nif", ".dds", ".wav", ".fuz"}
@@ -64,6 +65,7 @@ def control_offenders(root: Path = ROOT) -> list[str]:
 
 def manifest_report(root: Path = ROOT) -> dict:
     """Compare the complete canonical file set and hashes with MANIFEST.json."""
+    root = root.resolve()
     manifest = root / "MANIFEST.json"
     if not manifest.is_file():
         return {"error": "missing"}

@@ -3021,8 +3021,8 @@
     {
       "executable": false,
       "path": "scripts/preflight.py",
-      "sha256": "ffd177a8e60e33319e22e7334849f0790fc79682372447660e2a224fa719debb",
-      "size": 6597
+      "sha256": "a755c7712f8621346bf31b993f7c625f976974ce40bd78be7c3ed96117850452",
+      "size": 6649
     },
     {
       "executable": false,
@@ -3047,6 +3047,12 @@
       "path": "scripts/rebuild_native_helpers.py",
       "sha256": "68e06fa6c05ffcdccacffa37fc6d1769c944a21cbd327157447916235e8126ac",
       "size": 3248
+    },
+    {
+      "executable": false,
+      "path": "scripts/release_decision.py",
+      "sha256": "dec057adb64c4694f95fff5e1aa554161c9dafbb64d4c36b33a0846c75978b8a",
+      "size": 1871
     },
     {
       "executable": false,
@@ -3746,6 +3752,12 @@
     },
     {
       "executable": false,
+      "path": "tests/test_freshness_security.py",
+      "sha256": "02deaecfb72d9eca657b9477055448bd02ea5a0a0b60a74b26ad83c6109836d4",
+      "size": 4311
+    },
+    {
+      "executable": false,
       "path": "tests/test_housecarl_pin.py",
       "sha256": "a6c1b6216eda879bf5ab8aa64e2047c67b1ea850e0d22776f26df2ef813603de",
       "size": 2796
@@ -3824,6 +3836,12 @@
     },
     {
       "executable": false,
+      "path": "tests/test_preflight.py",
+      "sha256": "21f36fb51045b263be4ee06f5e501974ce9cbb567341276a81cd624173714df0",
+      "size": 5129
+    },
+    {
+      "executable": false,
       "path": "tests/test_process_launch.py",
       "sha256": "c5a39df2a2335c7c11d6160a03dbef5679e4cdc2b881a4e1ce4faa6230434c9d",
       "size": 1426
@@ -3833,6 +3851,12 @@
       "path": "tests/test_publish_release.py",
       "sha256": "287355c98e2353bc71ecd110e61a49d767f6430bdf5a5f6ea623e74c40ed7991",
       "size": 10174
+    },
+    {
+      "executable": false,
+      "path": "tests/test_release_decision.py",
+      "sha256": "6679597c6da27de212696f0b4640ed68f9c4baa98b1c3c8ec985558bbe7aa29c",
+      "size": 1640
     },
     {
       "executable": false,
@@ -3851,6 +3875,12 @@
       "path": "tests/test_safety_links.py",
       "sha256": "5065a2e53dd7f1214409d16067b471fdd73d231bb4c23a54483973daac5dab1b",
       "size": 2565
+    },
+    {
+      "executable": false,
+      "path": "tests/test_sbom.py",
+      "sha256": "3916df62d4856253aeba454540fb68c33cecca2a8a3d50948d896b826c982514",
+      "size": 2654
     },
     {
       "executable": false,
