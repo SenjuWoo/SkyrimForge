@@ -1,3 +1,10 @@
+# Forge 6.10.0 maintenance, moved roots and README reset (2026-11-04)
+
+- Goal: make Forge self-sustaining after the repository move to `Z:\Backup\Ai documentation\Tools\Ai tools\Skyrim-Forge`, and cut the README back to one story.
+- Done: `forge maintain` (dry-run, `--apply --approve`, `--fix-roots`, self-test) with `forge_maintain` over MCP and an `maintenance` capability; it prunes only Forge-owned spills, sandbox runs and provider skill backups, reports MISSING/MOVED roots with a discovered Steam/Vortex/workspace candidate and can write one back with a config backup. README rewritten around install, capabilities, assets, skills, maintenance, MCP, safety and docs; the duplicated Nexus/FOMOD/evidence sections collapse into their guides. `docs/MAINTENANCE.md` added, plus a pointer in the Forge skill and installation guide.
+- Verified: local gate PASS at 6.10.0 (324 tests, 14 self-tests, 68 MCP tools); exact-SHA CI 15/15 on `1d01c41`; v6.10.0 published with 8 assets and the downloaded ZIP matches SHA256SUMS; live install 6.10.0 is 579/579 byte-identical, doctor PASS with 0 warnings, self-test 14/14, and `maintain` reported then pruned 4 post-install skill backups down to 0 planned. The Python 3.14.10 venv still runs from the moved repository path. Ecosystem check PASS 9/9 (bundle catalog 8.35.1, release v6.10.0, Reverse THIS! kit 1.13.3).
+- Not done: no in-game proof for any subsystem; `maintain` deliberately refuses to judge non-Forge folders; automatic updates stay off (the documented weekly task runs cleanup only, because swapping a running install on a schedule is how an MCP server disappears).
+
 # Forge 6.9.1 Skyrim knowledge consolidation (2026-11-04)
 
 ## 6.9.1 candidate (2026-11-04)
