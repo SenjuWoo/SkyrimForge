@@ -6,12 +6,12 @@
         "json": 66,
         "pascal": 4,
         "powershell": 18,
-        "python": 130,
+        "python": 131,
         "toml": 2,
         "xml": 1,
         "yaml": 8
       },
-      "file_count": 674,
+      "file_count": 676,
       "result": "PASS",
       "third_party_binary_bundling": "disabled"
     },
@@ -125,8 +125,8 @@
       "result": "PASS",
       "sdist": {
         "result": "PASS",
-        "sha256": "cc4450a84370432aecbd1f0ca9d993839653aa3a9eaf308460885187bff96e33",
-        "size": 6866210
+        "sha256": "e065f579f5faa235b3d93cfcc57854d8f6878bf2988013f24535d9952e979db7",
+        "size": 6867917
       },
       "wheel": {
         "result": "PASS",
@@ -180,8 +180,8 @@
       }
     },
     "sbom": {
-      "files": 674,
-      "relationships": 677,
+      "files": 676,
+      "relationships": 679,
       "result": "PASS",
       "schema": "SPDX-2.3",
       "violations": 0

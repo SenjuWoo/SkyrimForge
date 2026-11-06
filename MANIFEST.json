@@ -182,6 +182,12 @@
     },
     {
       "executable": false,
+      "path": "docs/BUNDLE-HANDOFF-SPDX-JSONSCHEMA.md",
+      "sha256": "672fbe77944d2e9a5d58f68cc24c7c7410e964680384d58be08d252884568c2d",
+      "size": 1765
+    },
+    {
+      "executable": false,
       "path": "docs/CAPABILITY-MATRIX.md",
       "sha256": "6705fc4acedef40d565430232b2da1a838d495fac361953aeee4c9d8e5492ef5",
       "size": 2874
@@ -3705,8 +3711,8 @@
     {
       "executable": false,
       "path": "tests/test_ci_validation.py",
-      "sha256": "b80685274523364319c34eaced50637fe3930039024665d10f60ce11e08f5274",
-      "size": 9602
+      "sha256": "cc376de66e9f4d4cfc691ab0b690dddf63dc8cfd4192129bfd4a5e6c832e6eb6",
+      "size": 9509
     },
     {
       "executable": false,
@@ -3875,6 +3881,12 @@
       "path": "tests/test_release_payload.py",
       "sha256": "e08cdff74645e59312b49101ccd898db7899761faf270275c55d40361e488627",
       "size": 3576
+    },
+    {
+      "executable": false,
+      "path": "tests/test_report_determinism.py",
+      "sha256": "360c370a8dd4e31203034d646863d73e7b66724e9cf0b17bfa1f81bb97b6da10",
+      "size": 4145
     },
     {
       "executable": false,

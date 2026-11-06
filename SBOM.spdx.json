@@ -1,13 +1,13 @@
 {
   "SPDXID": "SPDXRef-DOCUMENT",
   "creationInfo": {
-    "created": "2026-11-06T19:26:14Z",
+    "created": "2026-11-06T21:10:18Z",
     "creators": [
       "Tool: Skyrim Forge validator 6.11.6"
     ]
   },
   "dataLicense": "CC0-1.0",
-  "documentNamespace": "https://github.com/SenjuWoo/SkyrimForge/spdx/6.11.6/16f14765b1b6",
+  "documentNamespace": "https://github.com/SenjuWoo/SkyrimForge/spdx/6.11.6/afe3b2d2dff9",
   "files": [
     {
       "SPDXID": "SPDXRef-File-.editorconfig",
@@ -454,6 +454,21 @@
       ],
       "copyrightText": "NOASSERTION",
       "fileName": "./docs/AUTOMATION-FABRIC.md",
+      "licenseConcluded": "MIT",
+      "licenseInfoInFiles": [
+        "MIT"
+      ]
+    },
+    {
+      "SPDXID": "SPDXRef-File-docs-BUNDLE-HANDOFF-SPDX-JSONSCHEMA.md",
+      "checksums": [
+        {
+          "algorithm": "SHA256",
+          "checksumValue": "672fbe77944d2e9a5d58f68cc24c7c7410e964680384d58be08d252884568c2d"
+        }
+      ],
+      "copyrightText": "NOASSERTION",
+      "fileName": "./docs/BUNDLE-HANDOFF-SPDX-JSONSCHEMA.md",
       "licenseConcluded": "MIT",
       "licenseInfoInFiles": [
         "MIT"
@@ -9269,7 +9284,7 @@
       "checksums": [
         {
           "algorithm": "SHA256",
-          "checksumValue": "b80685274523364319c34eaced50637fe3930039024665d10f60ce11e08f5274"
+          "checksumValue": "cc376de66e9f4d4cfc691ab0b690dddf63dc8cfd4192129bfd4a5e6c832e6eb6"
         }
       ],
       "copyrightText": "NOASSERTION",
@@ -9694,6 +9709,21 @@
       ],
       "copyrightText": "NOASSERTION",
       "fileName": "./tests/test_release_payload.py",
+      "licenseConcluded": "MIT",
+      "licenseInfoInFiles": [
+        "MIT"
+      ]
+    },
+    {
+      "SPDXID": "SPDXRef-File-tests-test-report-determinism.py",
+      "checksums": [
+        {
+          "algorithm": "SHA256",
+          "checksumValue": "360c370a8dd4e31203034d646863d73e7b66724e9cf0b17bfa1f81bb97b6da10"
+        }
+      ],
+      "copyrightText": "NOASSERTION",
+      "fileName": "./tests/test_report_determinism.py",
       "licenseConcluded": "MIT",
       "licenseInfoInFiles": [
         "MIT"
@@ -10134,7 +10164,7 @@
       ],
       "name": "Skyrim Forge",
       "packageVerificationCode": {
-        "packageVerificationCodeValue": "6cf8d248f65be40f508c48c90e5459b6593972d1"
+        "packageVerificationCodeValue": "ae49672e0eba23cce20c1ce2dd1c2a61c1be2f28"
       },
       "versionInfo": "6.11.6"
     },
@@ -10334,6 +10364,11 @@
     },
     {
       "relatedSpdxElement": "SPDXRef-File-docs-AUTOMATION-FABRIC.md",
+      "relationshipType": "CONTAINS",
+      "spdxElementId": "SPDXRef-Package-Forge"
+    },
+    {
+      "relatedSpdxElement": "SPDXRef-File-docs-BUNDLE-HANDOFF-SPDX-JSONSCHEMA.md",
       "relationshipType": "CONTAINS",
       "spdxElementId": "SPDXRef-Package-Forge"
     },
@@ -13414,6 +13449,11 @@
     },
     {
       "relatedSpdxElement": "SPDXRef-File-tests-test-release-payload.py",
+      "relationshipType": "CONTAINS",
+      "spdxElementId": "SPDXRef-Package-Forge"
+    },
+    {
+      "relatedSpdxElement": "SPDXRef-File-tests-test-report-determinism.py",
       "relationshipType": "CONTAINS",
       "spdxElementId": "SPDXRef-Package-Forge"
     },

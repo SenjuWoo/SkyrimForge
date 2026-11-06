@@ -142,20 +142,18 @@ class WorkflowPinningTests(unittest.TestCase):
         self.assertEqual(workflow.count('|| {'), 2)
         self.assertIn("scripts/preflight.py --release", workflow)
         # The guarded form really aborts: command substitution in `if` does not.
-        import shutil, subprocess, tempfile
+        import shutil, subprocess
         bash = shutil.which("bash")
         if not bash:
             self.skipTest("bash unavailable for the shell regression")
-        with tempfile.TemporaryDirectory() as tmp:
-            stub = Path(tmp) / "git"
-            stub.write_text("#!/bin/sh\nexit 128\n", encoding="utf-8")
-            stub.chmod(0o755)
-            script = ('set -e; tag_refs=$(git ls-remote --tags origin x) || '
-                      '{ echo cannot >&2; exit 1; }; echo continued')
-            result = subprocess.run([bash, "-c", script], capture_output=True, text=True,
-                                    env={"PATH": tmp + ":/usr/bin:/bin"})
-            self.assertEqual(result.returncode, 1)
-            self.assertNotIn("continued", result.stdout)
+        # A shell function named git exercises the exact guarded form without
+        # depending on PATH lookup, which differs between Git Bash and Linux.
+        script = ('git() { return 128; }; set -e; '
+                  'tag_refs=$(git ls-remote --tags origin x) || '
+                  '{ echo cannot >&2; exit 1; }; echo continued')
+        result = subprocess.run([bash, "-c", script], capture_output=True, text=True)
+        self.assertEqual(result.returncode, 1)
+        self.assertNotIn("continued", result.stdout)
 
     def test_release_publish_is_idempotent(self):
         # Reruns must verify existing bytes before recovering missing uploads.
