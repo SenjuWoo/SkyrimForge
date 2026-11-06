@@ -99,14 +99,17 @@ class PEImage:
         start = self.offset(rva)
         if start is None:
             return []
-        _, _, _, name_rva, _, count, names, functions, ordinals = _unpack("<IIHHIIIII", self.data, start)
+        _, _, _, _, name_rva, _, function_count, name_count, functions, names, ordinals = _unpack(
+            "<IIHHIIIIIII", self.data, start)
         rows = []
         names_offset = self.offset(names) if names else None
         ordinals_offset = self.offset(ordinals) if ordinals else None
         functions_offset = self.offset(functions) if functions else None
-        for index in range(min(count, 4096)):
+        for index in range(min(name_count, 4096)):
             name_offset = self.offset(_unpack("<I", self.data, names_offset + index * 4)[0]) if names_offset is not None else None
             ordinal = _unpack("<H", self.data, ordinals_offset + index * 2)[0] if ordinals_offset is not None else index
+            if ordinal >= function_count:
+                raise ValidationError(f"Export name ordinal {ordinal} is outside the function table")
             function_rva = _unpack("<I", self.data, functions_offset + ordinal * 4)[0] if functions_offset is not None else 0
             rows.append({"name": _text(self.data, name_offset, 512) if name_offset is not None else f"ordinal_{ordinal}",
                          "rva": function_rva})
@@ -281,7 +284,7 @@ def self_test() -> dict[str, Any]:
     # One section at RVA 0x1000 / raw 0x200. Export directory and 0x350-byte version data live in it.
     section = bytearray(0x600)
     export_rva, version_rva = 0x1000, 0x1100
-    struct.pack_into("<IIHHIIIII", section, 0x00, 0, 0, 0, 0x1040, 1, 2, 0x1050, 0x1060, 0x1070)
+    struct.pack_into("<IIHHIIIIIII", section, 0x00, 0, 0, 0, 0, 0x1040, 1, 1, 1, 0x1060, 0x1050, 0x1070)
     struct.pack_into("<I", section, 0x40, 0x1080)                       # DLL name RVA
     struct.pack_into("<I", section, 0x50, 0x1090)                       # addressOfNames[0]
     struct.pack_into("<I", section, 0x60, version_rva)                  # addressOfFunctions[0]

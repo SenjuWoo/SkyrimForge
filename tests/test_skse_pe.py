@@ -17,7 +17,7 @@ class SksePeTests(unittest.TestCase):
         from skyrim_forge import skse_pe
         # Build the same minimal image the self-test validates, with an import descriptor added.
         section = bytearray(0x600)
-        struct.pack_into("<IIHHIIIII", section, 0x00, 0, 0, 0, 0x1040, 1, 2, 0x1050, 0x1060, 0x1070)
+        struct.pack_into("<IIHHIIIIIII", section, 0x00, 0, 0, 0, 0, 0x1040, 1, 1, 1, 0x1060, 0x1050, 0x1070)
         struct.pack_into("<I", section, 0x40, 0x1080)
         struct.pack_into("<I", section, 0x50, 0x1090)
         struct.pack_into("<I", section, 0x60, 0x1100)

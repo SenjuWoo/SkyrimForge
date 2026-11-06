@@ -1,3 +1,6 @@
+## 6.11.7 (2026-11-06)
+
+- Fixed `skse-inspect-pe` export parsing. The PE export directory was decoded with a short field layout, so a real MSVC-built SKSE plugin lost its export names and reported bogus RVAs: a valid DLL with `SKSEPlugin_Load`, `SKSEPlugin_Query` and `SKSEPlugin_Version` was marked FAIL. The parser now reads the complete `IMAGE_EXPORT_DIRECTORY`, uses `NumberOfNames`, bounds name ordinals against `NumberOfFunctions`, and the fixture matches the real layout. Verified against a freshly built CommonLibSSE-NG v14.1.0 plugin: all three exports found, `skse-inspect-pe` PASS, `native-binary-audit` PASS.
 ## 6.11.6 (2026-11-06)
 
 - Release evidence is deterministic. `VALIDATION.json` and `BUILD-RECEIPT.json` now keep only stable category results, test/failure/skip counts and content hashes; raw unittest/Go/MCP transcripts, elapsed times, temp paths and runner details stay in CI logs. That makes an interrupted release reproducible from its original tag.
