@@ -129,3 +129,5 @@ Local filenames and documentation do not establish current upstream provenance o
 - 6.11.4: Release resumability is independent of `main` for an existing tag that names the validated SHA. New releases still require current `main`.
 - 6.11.4: The SBOM reports per-package licences from the notices, with CONTAINS relationships and commit-specific metadata; MIT is not declared for GPL-derived skills.
 - 6.11.4: FOMOD coverage may honestly be PARTIAL. `SelectAtLeastOne`, `SelectAny` and `SelectAll` are not enumerated and never counted as tested.
+
+- 6.11.5: Ship the SPDX schema as project data, not the validator. `jsonschema` is a general test-only dependency declared in `[project.optional-dependencies]`; CI enforces it, the runtime does not need it.

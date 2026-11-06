@@ -1,3 +1,8 @@
+## 6.11.5 (2026-11-06)
+
+- Vendored the official SPDX 2.3 JSON schema (`references/spdx-2.3.schema.json`, CC-BY-3.0, provenance recorded) and declared `jsonschema>=4.18` as the `test` extra. CI installs it in the Python matrix, repository gate and Windows jobs; `tests/test_sbom.py` validates the generated SBOM against the schema, fails in CI when the library is missing and skips locally with an install hint.
+- The SBOM now models the schema as its own CC-BY-3.0 package instead of mislabelling it MIT.
+- Handoff written to the Ultimate AI Starter Bundle recommending `jsonschema` as general shared tooling; the SPDX schema stays with Forge.
 ## 6.11.4 (2026-11-06)
 
 - `scripts/preflight.py` now separates release states instead of treating every tag as a conflict: UNRELEASED, TAGGED, POST_RELEASE, STALE_VERSION and FOREIGN_TAG. A docs/evidence commit after a release passes; product code changed after the tag without a bump fails. `--release` adds a clean-tree and taggable-state requirement.

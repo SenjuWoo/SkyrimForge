@@ -462,6 +462,15 @@ def write_manifest() -> dict[str, Any]:
 GPL_SKILLS = ("housecarl", "kid-authoring", "spid-authoring", "skypatcher-authoring",
               "papyrus-reference", "mutagen-reference", "skse-plugin-authoring", "oar-authoring")
 GPL_PREFIXES = tuple(f"integrations/skyrim-pack/skills/{name}/" for name in GPL_SKILLS)
+SPDX_SCHEMA_PATH = "references/spdx-2.3.schema.json"
+
+
+def _license_for(path: str) -> str:
+    if path.startswith(GPL_PREFIXES):
+        return "GPL-3.0-only"
+    if path == SPDX_SCHEMA_PATH:
+        return "CC-BY-3.0"
+    return "MIT"
 
 
 def _spdx_file_id(path: str) -> str:
@@ -490,8 +499,9 @@ def _spdx_created() -> str:
 
 def build_sbom(man: dict[str, Any]) -> dict[str, Any]:
     """SPDX 2.3 for the real mixed-license distribution, not a blanket MIT claim."""
-    gpl_files = [row for row in man["files"] if row["path"].startswith(GPL_PREFIXES)]
-    mit_files = [row for row in man["files"] if not row["path"].startswith(GPL_PREFIXES)]
+    gpl_files = [row for row in man["files"] if _license_for(row["path"]) == "GPL-3.0-only"]
+    schema_files = [row for row in man["files"] if _license_for(row["path"]) == "CC-BY-3.0"]
+    mit_files = [row for row in man["files"] if _license_for(row["path"]) == "MIT"]
     commit = subprocess.run(["git", "rev-parse", "--short=12", "HEAD"], cwd=ROOT,
                             capture_output=True, text=True).stdout.strip() or VERSION
     packages = [
@@ -506,14 +516,24 @@ def build_sbom(man: dict[str, Any]) -> dict[str, Any]:
          "copyrightText": "NOASSERTION", "licenseInfoFromFiles": ["GPL-3.0-only"],
          "packageVerificationCode": {"packageVerificationCodeValue": _verification_code([r["path"] for r in gpl_files])}},
     ]
+    if schema_files:
+        packages.append({"name": "SPDX 2.3 JSON schema", "SPDXID": "SPDXRef-Package-SPDX-Schema",
+                         "versionInfo": "2.3", "downloadLocation": "NOASSERTION", "filesAnalyzed": True,
+                         "licenseConcluded": "CC-BY-3.0", "licenseDeclared": "CC-BY-3.0",
+                         "copyrightText": "NOASSERTION", "licenseInfoFromFiles": ["CC-BY-3.0"],
+                         "packageVerificationCode": {"packageVerificationCodeValue": _verification_code([r["path"] for r in schema_files])}})
     files = []
     relationships = [
         {"spdxElementId": "SPDXRef-DOCUMENT", "relationshipType": "DESCRIBES", "relatedSpdxElement": "SPDXRef-Package-Forge"},
         {"spdxElementId": "SPDXRef-DOCUMENT", "relationshipType": "DESCRIBES", "relatedSpdxElement": "SPDXRef-Package-HouseCARL-Skills"},
     ]
+    if schema_files:
+        relationships.append({"spdxElementId": "SPDXRef-DOCUMENT", "relationshipType": "DESCRIBES",
+                              "relatedSpdxElement": "SPDXRef-Package-SPDX-Schema"})
     for row in man["files"]:
-        license_id = "GPL-3.0-only" if row["path"].startswith(GPL_PREFIXES) else "MIT"
-        package = "SPDXRef-Package-HouseCARL-Skills" if license_id == "GPL-3.0-only" else "SPDXRef-Package-Forge"
+        license_id = _license_for(row["path"])
+        package = {"GPL-3.0-only": "SPDXRef-Package-HouseCARL-Skills",
+                   "CC-BY-3.0": "SPDXRef-Package-SPDX-Schema"}.get(license_id, "SPDXRef-Package-Forge")
         files.append({"fileName": "./" + row["path"], "SPDXID": _spdx_file_id(row["path"]),
                       "checksums": [{"algorithm": "SHA256", "checksumValue": row["sha256"]}],
                       "licenseConcluded": license_id, "licenseInfoInFiles": [license_id],

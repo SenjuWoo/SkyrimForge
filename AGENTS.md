@@ -31,7 +31,7 @@ Never bump a pin because a newer tag exists. Change one only with the gate named
 ```powershell
 .\forge self-test                       # seconds
 python scripts/preflight.py             # versions, control chars, manifest, critical tests
-python -m unittest discover -s tests -q
+python -m unittest discover -s tests -q   # SBOM schema test needs: pip install .[test]
 python scripts/validate_repository.py --scope full --write-reports
 ```
 
