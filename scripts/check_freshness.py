@@ -11,6 +11,7 @@ import os
 import re
 import sys
 import urllib.request
+from urllib.parse import urlparse
 from datetime import datetime, timezone
 from pathlib import Path
 
@@ -57,7 +58,7 @@ def _get_json(url: str) -> dict:
     request = urllib.request.Request(url, headers={"Accept": "application/vnd.github+json",
                                                    "User-Agent": "skyrim-forge-freshness"})
     token = os.environ.get("GITHUB_TOKEN")
-    if token and "api.github.com" in url:
+    if token and urlparse(url).hostname == "api.github.com":
         request.add_header("Authorization", f"Bearer {token}")
     with urllib.request.urlopen(request, timeout=15) as response:
         return json.loads(response.read().decode("utf-8"))
