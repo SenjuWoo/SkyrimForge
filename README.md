@@ -4,7 +4,7 @@
 
 <div align="center">
 
-# Skyrim Forge 6.11.0
+# Skyrim Forge 6.11.1
 
 **Typed, safety-first Skyrim SE/AE mod engineering for AI agents — offline, free, MCP-ready.**
 

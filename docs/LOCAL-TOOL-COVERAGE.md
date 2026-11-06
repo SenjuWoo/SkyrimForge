@@ -48,7 +48,7 @@ What one maintainer's tools root actually held, by folder, with PE version or th
 | EasyNPC's | EasyNPC.exe (0.9.6) | GUI | `easynpc` |
 | ESLifier | ESLifier.exe, bsarch\BSArch.exe | GUI + CLI | `eslifier`, `bsarch` |
 | Grass Cache Generator 1.0.0 | Generate Grass Cache.bat, grass_cache_generator.py | live-state workflow | none (documented above) |
-| houseCARL | houseCARL-Setup.exe, housecarl\server\housecarl-mcp.exe (2.1.1, needs .NET 10 x64) | MCP server | `housecarl` skill; parity in `HOUSECARL-PARITY.md` |
+| houseCARL | houseCARL-Setup.exe, housecarl\server\housecarl-mcp.exe (2.1.2 install pin, needs .NET 10 x64; bundled skill snapshot 2.1.1) | MCP server | `housecarl` skill; parity in `HOUSECARL-PARITY.md` |
 | NIF Analyzer | MO2 Python plugin (`__init__.py`, mobase/PyQt6) | MO2 plugin | reported as `nif_analyzer_mo2_plugin` |
 | Output Rerun Wizard | OutputRerunWizard.ps1, config.json, run order | live-state workflow | none (documented above) |
 | Papy edits | Champollion-V1.0.1-x64\Champollion.exe (1.0.1); Papy compiler app\PCA SE.exe (5.8.0); papyrus-compiler\papyrus.exe (russo) with a copy of the CK compiler under `Original Compiler`; framework `.psc` sources (SKSE 2.2.8 / runtime 1.6.1170, po3 Papyrus Extender, PapyrusUtil, JContainers, Papyrus Tweaks, Andrealphus) | CLI + GUI + sources | `champollion`, `pca_se`, `papyrus_compiler_fast` |

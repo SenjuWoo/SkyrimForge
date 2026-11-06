@@ -51,11 +51,11 @@ def _branch_selections(plan: dict[str, Any], selections: dict[str, Any] | None, 
 def _coverage(plan: dict[str, Any], all_branches: bool) -> dict[str, Any]:
     """Name the group types a run actually enumerated, and the ones it did not."""
     present = {group["type"] for step in plan.get("steps", []) for group in step.get("groups", [])}
-    return {
-        "mode": "all-branches" if all_branches else "single",
-        "group_types_tested": sorted(present & EXACT_GROUP_TYPES) if all_branches else [],
-        "group_types_uncovered": sorted(present - EXACT_GROUP_TYPES),
-    }
+    if all_branches:
+        return {"mode": "all-branches", "group_types_tested": sorted(present & EXACT_GROUP_TYPES),
+                "group_types_uncovered": sorted(present - EXACT_GROUP_TYPES)}
+    # One branch proves the default path only; name every group it did not vary.
+    return {"mode": "single", "group_types_tested": [], "group_types_uncovered": sorted(present)}
 
 
 def _layout_checks(files: list[dict[str, Any]]) -> tuple[list[str], list[str]]:

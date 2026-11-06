@@ -1,3 +1,9 @@
+## 6.11.1 (2026-11-06)
+
+- houseCARL install fixed: v6.11.0 downloaded houseCARL 2.1.2 but verified the 2.1.1 digest, so every install failed the checksum. The digest, URL, `PACK.json` and the new `integrations/skyrim-pack/housecarl-pin.json` now agree. A unit test fails when any of them disagree, and `FORGE_HOUSECARL_ONLINE=1` downloads the official asset and checks its SHA-256 (verified here against `4e69494c…`).
+- Scheduled maintenance actually executes. Task Scheduler runs `/TR` through `CreateProcess`, not a shell, so the previous `>>` redirection was passed as arguments and no report appeared. The task now calls `forge.cmd` through `cmd /c`, writes the log and reports success; verified by creating, running and removing the task locally, parsing its report. Forge refuses to overwrite or delete a task it cannot prove it owns.
+- FOMOD coverage accounting: with `all_branches=False`, every present group type is now listed as unexercised. The old report could name neither tested nor uncovered groups.
+- Docs: `CI.md` says Go 1.27.3; the `--fix-roots` example includes `--approve`; the weekly section no longer suggests an auto-applying task; houseCARL's install pin (2.1.2) is distinguished from the bundled skill snapshot (2.1.1).
 ## 6.11.0 (2026-11-06)
 
 - Path confinement: `require_within` now rejects dangling symlinks and Windows junctions. The old `exists() and is_symlink()` test skipped a link whose target was already gone (`exists()` follows the target), so a write path through it passed. Regression tests cover junction parents, dangling links and plain paths.

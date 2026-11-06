@@ -46,7 +46,7 @@ Writing a root is a configuration change, so `--fix-roots` also requires
 forge maintain                                  # dry run, prints the plan and the self-test
 forge maintain --apply --approve                # delete the planned leftovers
 forge maintain --days 14 --keep-backups 1       # different retention
-forge maintain --fix-roots                      # accept discovered roots
+forge maintain --fix-roots --approve            # accept discovered roots
 forge maintain --no-self-test                   # skip the built-in checks
 ```
 
@@ -56,17 +56,22 @@ The JSON result carries `removals`, `removals_planned`, `roots`, `applied`,
 
 ## Weekly upkeep
 
-Windows Task Scheduler, run from the install root:
+Use the managed, check-only task:
 
 ```powershell
-schtasks /Create /TN "Skyrim Forge maintain" /SC WEEKLY /ST 12:00 ^
-  /TR "\"%LOCALAPPDATA%\Skyrim-Tools\Skyrim-Forge\.venv\Scripts\python.exe\" -m skyrim_forge maintain --apply --approve --fix-roots"
+forge maintain --schedule-status        # is it installed?
+forge maintain --schedule --approve     # install: weekly check, no changes
+forge maintain --unschedule --approve   # remove it
 ```
 
-That prunes Forge-owned leftovers and accepts discovered roots once a week. It
-does not install updates: updates stay explicit through `Update Forge.bat` or
-`Update-Forge.ps1 -CheckOnly`, because swapping a running installation on a
-schedule is how an MCP server disappears without anyone noticing.
+The task runs `maintain` without `--apply` or `--fix-roots`, so it reports
+leftovers and moved roots but cannot change the install. Repair stays a
+deliberate `forge maintain --apply --approve` from a terminal. Updates are
+separate and explicit (`Update Forge.bat`), because swapping a running
+installation on a schedule is how an MCP server disappears without anyone
+noticing.
+
+If you build your own scheduled entry instead, keep the same rule: check only.
 
 ## MCP
 

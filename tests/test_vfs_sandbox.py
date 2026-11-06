@@ -80,7 +80,10 @@ class SandboxTests(unittest.TestCase):
         coverage = vfs_sandbox._coverage(_plan(with_select_any=True), all_branches=True)
         self.assertEqual(coverage["group_types_tested"], ["SelectExactlyOne"])
         self.assertEqual(coverage["group_types_uncovered"], ["SelectAny"])
-        self.assertEqual(vfs_sandbox._coverage(_plan(with_select_any=True), all_branches=False)["group_types_tested"], [])
+        single = vfs_sandbox._coverage(_plan(with_select_any=True), all_branches=False)
+        self.assertEqual(single["group_types_tested"], [])
+        self.assertEqual(single["group_types_uncovered"], ["SelectAny", "SelectExactlyOne"])
+        self.assertTrue(vfs_sandbox._coverage(_plan(), all_branches=False)["group_types_uncovered"])
 
     def test_single_branch_receipt_counts_planned_bytes(self) -> None:
         plan = self._write(_plan())

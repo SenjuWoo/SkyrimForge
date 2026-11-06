@@ -3,7 +3,7 @@
 param([string]$SourceZip, [switch]$SkipSetup, [switch]$CheckOnly)
 $ErrorActionPreference='Stop'
 $version=[version]'2.1.2'
-$digest='1cb9fda834590d367e9907c35e5053624be050c316424d1f917f74e004c4816c'
+$digest='4e69494cc4cadd1e040a0762318d6e0ad0ac7082f68c413ffa96e8fbd879be96'
 function Get-HouseCarlCandidates([string[]]$McpPaths,[string[]]$Roots) {
     $all=@($McpPaths)
     foreach ($hint in $Roots) {

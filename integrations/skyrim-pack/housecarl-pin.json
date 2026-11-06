@@ -1,0 +1,7 @@
+{
+  "version": "2.1.2",
+  "url": "https://github.com/Avick3110/houseCARL/releases/download/v2.1.2/houseCARL-2.1.2.zip",
+  "sha256": "4e69494cc4cadd1e040a0762318d6e0ad0ac7082f68c413ffa96e8fbd879be96",
+  "snapshot_version": "2.1.1",
+  "note": "Installer/mcp pin is 2.1.2. The bundled housecarl/ skill snapshot is 2.1.1 until re-snapshotted and tested as a set."
+}

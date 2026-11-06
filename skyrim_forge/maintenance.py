@@ -135,22 +135,45 @@ def root_report(config: ForgeConfig, steam_roots: Iterable[Path] | None = None) 
 SCHEDULE_TASK = "SkyrimForge-Maintain"
 
 
+def _task_definition() -> str:
+    """The task's action line, or "" when it does not exist. Used only to prove ownership."""
+    proc = subprocess.run(["schtasks", "/Query", "/TN", SCHEDULE_TASK, "/V", "/FO", "LIST"],
+                          capture_output=True, text=True, timeout=30)
+    if proc.returncode != 0:
+        return ""
+    return "\n".join(line for line in proc.stdout.splitlines() if "Task To Run" in line)
+
+
+def _task_owned() -> bool:
+    definition = _task_definition()
+    # forge.cmd is the launcher now; older installs called python -m skyrim_forge.
+    return "maintain --no-self-test" in definition and (
+        "forge.cmd" in definition or "skyrim_forge" in definition)
+
+
 def schedule_status() -> dict[str, Any]:
     """Report whether the optional weekly check task exists. Never creates anything."""
     if os.name != "nt":
         return {"supported": False, "installed": False, "task": SCHEDULE_TASK}
-    proc = subprocess.run(["schtasks", "/Query", "/TN", SCHEDULE_TASK],
-                          capture_output=True, text=True, timeout=30)
-    return {"supported": True, "installed": proc.returncode == 0, "task": SCHEDULE_TASK}
+    installed = bool(_task_definition())
+    return {"supported": True, "installed": installed, "task": SCHEDULE_TASK,
+            "owned": installed and _task_owned()}
 
 
 def install_schedule(*, log_path: Path, day: str = "SUN", time: str = "12:00") -> dict[str, Any]:
     """Create a weekly CHECK-ONLY task. It never passes --apply or --fix-roots."""
     if os.name != "nt":
         raise SafetyError("Scheduled maintenance is Windows-only")
+    if _task_definition() and not _task_owned():
+        raise SafetyError(f"A task named {SCHEDULE_TASK} already exists and was not created by Forge; refusing to overwrite it")
     log_path = Path(log_path)
     log_path.parent.mkdir(parents=True, exist_ok=True)
-    command = f'"{sys.executable}" -m skyrim_forge maintain --no-self-test >> "{log_path}" 2>&1'
+    # Task Scheduler runs /TR through CreateProcess, not a shell: redirection only
+    # works inside cmd.exe. forge.cmd sets PYTHONPATH, so the task does not depend
+    # on a .pth file or on the caller's working directory.
+    launcher = Path(__file__).resolve().parents[1] / "forge.cmd"
+    entry = f'"{launcher}" maintain --no-self-test' if launcher.is_file() else f'"{sys.executable}" -m skyrim_forge maintain --no-self-test'
+    command = f'cmd.exe /c "{entry} >> "{log_path}" 2>&1"'
     proc = subprocess.run(["schtasks", "/Create", "/TN", SCHEDULE_TASK, "/SC", "WEEKLY",
                            "/D", day, "/ST", time, "/TR", command, "/F"],
                           capture_output=True, text=True, timeout=60)
@@ -163,9 +186,11 @@ def install_schedule(*, log_path: Path, day: str = "SUN", time: str = "12:00") -
 def remove_schedule() -> dict[str, Any]:
     if os.name != "nt":
         raise SafetyError("Scheduled maintenance is Windows-only")
+    if _task_definition() and not _task_owned():
+        raise SafetyError(f"Task {SCHEDULE_TASK} was not created by Forge; refusing to delete it")
     proc = subprocess.run(["schtasks", "/Delete", "/TN", SCHEDULE_TASK, "/F"],
                           capture_output=True, text=True, timeout=30)
-    if proc.returncode != 0:
+    if proc.returncode != 0 and _task_definition():
         raise SafetyError(f"schtasks /Delete failed: {(proc.stderr or proc.stdout).strip()}")
     return {"installed": False, "task": SCHEDULE_TASK}
 
