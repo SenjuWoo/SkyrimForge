@@ -1,3 +1,10 @@
+# Forge 6.11.1 houseCARL checksum and working scheduled check (2026-11-06)
+
+- Goal: fix the confirmed follow-up defects from the second review without reopening the v6.11.0 hardening.
+- Done: houseCARL 2.1.2 now carries its own SHA-256 in the installer, `PACK.json` and `housecarl-pin.json`; the scheduled task runs `forge.cmd` through `cmd /c`, writes a real log and refuses to touch a task Forge does not own; single-branch FOMOD runs name every unexercised group type; `docs/CI.md`, the `--fix-roots` example and the weekly-upkeep section were corrected.
+- Verified: 341 Python tests (1 network test skipped by default), full gate PASS; `FORGE_HOUSECARL_ONLINE=1` downloaded the official asset and matched `4e69494c…`; `Install-HouseCarl.ps1` updated the real install to 2.1.2 and `-CheckOnly` now verifies it (last good server retained); the task was created, executed (last result 0), its JSON log parsed, and removed, and an unrelated same-named task was refused rather than overwritten or deleted. CI 15/15 on `0895d25`; v6.11.1 has 8 assets, tag on that SHA, ZIP matches `SHA256SUMS`. Live install 6.11.1 is 581/581 byte-identical, doctor PASS, self-test 14/14, `maintain` pruned 4 post-install backups to 0.
+- Not done: no in-game run; the houseCARL skill snapshot stays 2.1.1 (install pin is 2.1.2); the scheduled task is not registered unless requested; Reverse THIS! kit lags upstream 1.14.3 and belongs to its own project.
+
 # Forge 6.11.0 confinement, approval and installer hardening (2026-11-06)
 
 - Goal: apply the independently reported defects only after reproducing them, close each with a regression test, modernize the toolchain where evidence allowed, and publish a single reviewed release.
