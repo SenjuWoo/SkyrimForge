@@ -148,7 +148,14 @@ function Sync-ForgeProviderSkills {
                 skills=@($owned.Keys | Sort-Object | ForEach-Object { @{ name=$_; digest=$owned[$_] } });
                 preserved=@($preserved.Keys | Sort-Object | ForEach-Object { @{ name=$_; digest=$preserved[$_] } }) }
             [IO.File]::WriteAllText($tempLedger, (($ledger | ConvertTo-Json -Depth 6) + "`n"), (New-Object Text.UTF8Encoding $false))
-            if ($oldBytes) { [IO.File]::Replace($tempLedger, $ledgerPath, [NullString]::Value) } else { [IO.File]::Move($tempLedger, $ledgerPath) }
+            if ($oldBytes) {
+                # Replace can lose a transient race with a scanner holding the ledger.
+                $replaced = $false
+                for ($attempt = 0; $attempt -lt 5 -and -not $replaced; $attempt++) {
+                    try { [IO.File]::Replace($tempLedger, $ledgerPath, [NullString]::Value); $replaced = $true }
+                    catch { if ($attempt -eq 4) { throw }; Start-Sleep -Milliseconds 100 }
+                }
+            } else { [IO.File]::Move($tempLedger, $ledgerPath) }
         }
         $committed = $true
         if ($env:SKYRIM_FORGE_DEBUG -eq '1') { Add-Content -LiteralPath (Join-Path $logDir 'skill-install.log') -Value ("$(Get-Date -Format o) provider=$Provider root=$skillsRoot check=$Check updated=$updated preserved=$kept") }

@@ -131,6 +131,32 @@ class WorkflowPinningTests(unittest.TestCase):
         self.assertIn("github/codeql-action", config.read_text(encoding="utf-8"),
                       "dependabot must group codeql-action so the pair cannot be split across pull requests")
 
+    def test_release_tag_lookups_fail_closed_and_strict_preflight_runs(self):
+        release = self.WORKFLOWS / "release.yml" if self.WORKFLOWS else None
+        if release is None or not release.is_file():
+            self.skipTest("no release workflow present")
+        workflow = release.read_text(encoding="utf-8")
+        self.assertNotIn('if [ -n "$(git ls-remote', workflow)
+        self.assertNotIn('if [ -z "$(git ls-remote', workflow)
+        self.assertEqual(workflow.count('tag_refs=$(git ls-remote --tags origin'), 2)
+        self.assertEqual(workflow.count('|| {'), 2)
+        self.assertIn("scripts/preflight.py --release", workflow)
+        # The guarded form really aborts: command substitution in `if` does not.
+        import shutil, subprocess, tempfile
+        bash = shutil.which("bash")
+        if not bash:
+            self.skipTest("bash unavailable for the shell regression")
+        with tempfile.TemporaryDirectory() as tmp:
+            stub = Path(tmp) / "git"
+            stub.write_text("#!/bin/sh\nexit 128\n", encoding="utf-8")
+            stub.chmod(0o755)
+            script = ('set -e; tag_refs=$(git ls-remote --tags origin x) || '
+                      '{ echo cannot >&2; exit 1; }; echo continued')
+            result = subprocess.run([bash, "-c", script], capture_output=True, text=True,
+                                    env={"PATH": tmp + ":/usr/bin:/bin"})
+            self.assertEqual(result.returncode, 1)
+            self.assertNotIn("continued", result.stdout)
+
     def test_release_publish_is_idempotent(self):
         # Reruns must verify existing bytes before recovering missing uploads.
         # Never replace assets that downstream consumers may already have pinned.

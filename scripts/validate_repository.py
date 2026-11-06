@@ -304,6 +304,33 @@ def validate_packaging(errors: list[str]) -> dict[str, Any]:
     return {"wheel":{"result":"PASS" if wheel_equal and not crc and required.issubset(members) else "FAIL","sha256":wheel_hash,"size":wheel_size},"sdist":{"result":"PASS" if sdist_equal else "FAIL","sha256":sdist_hash,"size":sdist_size}}
 
 
+def validate_sbom(errors: list[str]) -> dict[str, Any]:
+    """Full-scope gate: the SBOM that will ship must validate against the official schema."""
+    try:
+        import jsonschema
+    except ImportError:
+        errors.append("full validation requires jsonschema>=4.18 for SPDX schema validation")
+        return {"result": "NOT-RUN", "reason": "jsonschema missing"}
+    schema_path = ROOT / SPDX_SCHEMA_PATH
+    if not schema_path.is_file():
+        errors.append("the vendored SPDX 2.3 schema is missing")
+        return {"result": "FAIL", "reason": "schema missing"}
+    schema = json.loads(schema_path.read_text(encoding="utf-8"))
+    document = build_sbom(manifest())
+    try:
+        jsonschema.Draft7Validator.check_schema(schema)
+    except jsonschema.SchemaError:
+        errors.append("the vendored SPDX schema is not a valid draft-07 schema")
+        return {"result": "FAIL", "reason": "schema invalid"}
+    violations = sorted(jsonschema.Draft7Validator(schema).iter_errors(document), key=str)
+    if violations:
+        errors.append(f"SBOM failed SPDX schema validation ({len(violations)} violation(s))")
+    return {"result": "PASS" if not violations else "FAIL",
+            "schema": "SPDX-2.3", "files": len(document["files"]),
+            "relationships": len(document["relationships"]),
+            "violations": len(violations)}
+
+
 def validate_mcp(errors: list[str]) -> dict[str, Any]:
     modern_meta = {"_meta": {"io.modelcontextprotocol/protocolVersion": MODERN_PROTOCOL}}
     requests = [
@@ -548,7 +575,8 @@ def build_sbom(man: dict[str, Any]) -> dict[str, Any]:
 
 
 def write_reports(report: dict[str, Any]) -> None:
-    report=portable(report); (ROOT/"VALIDATION.json").write_text(json.dumps(report,indent=2,sort_keys=True)+"\n",encoding="utf-8",newline="\n")
+    # Only deterministic evidence becomes a release asset; raw transcripts stay in CI logs.
+    report=release_evidence(report); (ROOT/"VALIDATION.json").write_text(json.dumps(report,indent=2,sort_keys=True)+"\n",encoding="utf-8",newline="\n")
     man=write_manifest()
     binaries=[ROOT/"writer"/"published"/"linux-x64"/"SkyrimForge.Native",ROOT/"writer"/"published"/"win-x64"/"SkyrimForge.Native.exe"]
     (ROOT/"CHECKSUMS-SHA256.txt").write_text("\n".join(f"{sha256(p)}  {p.relative_to(ROOT).as_posix()}" for p in binaries)+"\n",encoding="utf-8",newline="\n")
@@ -657,7 +685,7 @@ def validate_version_sources(errors: list[str]) -> dict[str, Any]:
 
 VALIDATION_SCOPES = {
     "python": ("files", "powershell", "python", "packaging", "mcp", "version"),
-    "full": ("files", "powershell", "python", "native", "go", "packaging", "mcp", "version"),
+    "full": ("files", "powershell", "python", "native", "go", "packaging", "sbom", "mcp", "version"),
 }
 
 
@@ -668,17 +696,86 @@ def validation_checks(scope: str) -> tuple[str, ...]:
         raise ValueError(f"Unknown validation scope: {scope}") from exc
 
 
+def required_failures(scope: str, checks: dict[str, Any]) -> list[str]:
+    """A full release is green only when every required category ran and passed."""
+    if scope != "full":
+        return []
+    missing = []
+    for name in VALIDATION_SCOPES["full"]:
+        result = checks.get(name, {}).get("result", "MISSING")
+        if result != "PASS":
+            missing.append(f"{name} validation did not pass ({result})")
+    return missing
+
+
+def _unittest_counts(text: str) -> dict[str, Any]:
+    ran = re.search(r"Ran (\d+) tests", text)
+    skipped = re.search(r"skipped=(\d+)", text)
+    failures = re.search(r"failures=(\d+)", text)
+    errors = re.search(r"errors=(\d+)", text)
+    return {"tests": int(ran.group(1)) if ran else None,
+            "skipped": int(skipped.group(1)) if skipped else 0,
+            "failures": int(failures.group(1)) if failures else 0,
+            "errors": int(errors.group(1)) if errors else 0}
+
+
+def _stable_run(result: dict[str, Any], *, text: bool = False) -> dict[str, Any]:
+    if text:
+        return {"returncode": result.get("returncode"),
+                **_unittest_counts(str(result.get("stderr", "")) + str(result.get("stdout", "")))}
+    return {"returncode": result.get("returncode")}
+
+
+def release_evidence(report: dict[str, Any]) -> dict[str, Any]:
+    """Strip volatile execution output from evidence that ships as an asset.
+
+    Two clean checkouts of one commit must produce byte-identical reports, so
+    raw transcripts, elapsed times, temp paths and runner details stay in CI logs.
+    """
+    evidence = {"product": report["product"], "version": report["version"], "scope": report["scope"],
+                "result": report["result"], "errors": sorted(set(report["errors"])),
+                "warnings": sorted(set(report["warnings"])), "checks": {}}
+    for name, check in report["checks"].items():
+        if name == "python":
+            evidence["checks"][name] = {
+                "compile": _stable_run(check["compile"]),
+                "tests": _stable_run(check["tests"], text=True),
+                "self_test": _stable_run(check["self_test"]),
+                "test_count": check.get("test_count"), "result": check.get("result")}
+        elif name == "go":
+            stable = {key: _stable_run(check[key]) for key in ("format", "vet", "tests", "race") if key in check}
+            if "format" in stable:
+                stable["format"]["unformatted"] = len(str(check["format"].get("stdout", "")).splitlines())
+            stable["builds"] = {
+                target: {key: build.get(key) for key in ("first", "second", "bundled", "buildvcs", "result")}
+                for target, build in check.get("builds", {}).items()}
+            stable["result"] = check.get("result")
+            evidence["checks"][name] = stable
+        elif name == "mcp":
+            evidence["checks"][name] = {key: check.get(key) for key in
+                                        ("result", "protocols", "dual_era", "tools", "resources", "prompts")}
+        else:
+            evidence["checks"][name] = check
+    return portable(evidence)
+
+
 def validate(scope: str = "full") -> dict[str, Any]:
     errors=[]; warnings=[]; checks={}
     selected = validation_checks(scope)
-    if "files" in selected: checks["files"]=validate_files(errors,warnings)
-    if "powershell" in selected: checks["powershell"]=validate_powershell(errors,warnings)
-    if "python" in selected: checks["python"]=validate_python(errors)
-    if "native" in selected: checks["native"]=validate_native(errors,warnings)
-    if "go" in selected: checks["go"]=validate_go(errors,warnings)
-    if "packaging" in selected: checks["packaging"]=validate_packaging(errors)
-    if "mcp" in selected: checks["mcp"]=validate_mcp(errors)
-    if "version" in selected: checks["version"]=validate_version_sources(errors)
+    runners = {"files": lambda: validate_files(errors,warnings),
+               "powershell": lambda: validate_powershell(errors,warnings),
+               "python": lambda: validate_python(errors),
+               "native": lambda: validate_native(errors,warnings),
+               "go": lambda: validate_go(errors,warnings),
+               "packaging": lambda: validate_packaging(errors),
+               "sbom": lambda: validate_sbom(errors),
+               "mcp": lambda: validate_mcp(errors),
+               "version": lambda: validate_version_sources(errors)}
+    for name in selected:
+        before = len(errors)
+        checks[name] = runners[name]()
+        checks[name].setdefault("result", "PASS" if len(errors) == before else "FAIL")
+    errors.extend(required_failures(scope, checks))
     return {"product":"Skyrim Forge","version":VERSION,"scope":scope,"result":"PASS" if not errors else "FAIL","errors":sorted(set(errors)),"warnings":sorted(set(warnings)),"checks":checks}
 
 

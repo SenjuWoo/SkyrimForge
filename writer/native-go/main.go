@@ -11,7 +11,7 @@ import (
 	"path/filepath"
 )
 
-const version = "6.11.5"
+const version = "6.11.6"
 
 type receipt struct {
 	Result string `json:"result"`

@@ -131,3 +131,9 @@ Local filenames and documentation do not establish current upstream provenance o
 - 6.11.4: FOMOD coverage may honestly be PARTIAL. `SelectAtLeastOne`, `SelectAny` and `SelectAll` are not enumerated and never counted as tested.
 
 - 6.11.5: Ship the SPDX schema as project data, not the validator. `jsonschema` is a general test-only dependency declared in `[project.optional-dependencies]`; CI enforces it, the runtime does not need it.
+
+- 6.11.6: Raw execution transcripts are diagnostics, not release evidence. Checksums are computed over stable summaries (result, counts, hashes), never over timings or temp paths.
+- 6.11.6: A full gate passes only when every selected category reports PASS. NOT-RUN, FAIL and MISSING are release blockers; platform-limited checks must be proven by the job that can run them.
+- 6.11.6: The full gate validates the shipped SBOM itself, so the test-only schema dependency is mandatory for releases but not for the runtime.
+- 6.11.6: Remote tag state is captured before evaluation; a lookup failure aborts instead of being mistaken for an absent tag.
+- 6.11.6: Handoffs to other projects live under Forge docs. Skyrim Forge never edits another repository or bundle.

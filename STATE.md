@@ -2,9 +2,9 @@
 
 - Goal: close the last "not validated against the official schema" gap and record the general-tooling handoff.
 - Start/end: `7afa175` -> `5ebc3a5`; tag `v6.11.5` on `5ebc3a5`; 8 assets; ZIP `2afed08e65eebe7259f92842169b4eeb53fba4994c57e7288d12a897eb7f0359`.
-- Done: vendored the unmodified SPDX 2.3 JSON schema (`references/spdx-2.3.schema.json`, CC-BY-3.0, provenance file), declared `jsonschema>=4.18` as the `test` extra, installed it in the Python matrix, repository gate, Windows and Release jobs. `tests/test_sbom.py` validates the generated SBOM with the official schema (0 errors), fails in CI when the validator is missing and skips locally with an install hint. The SBOM now models the schema as a third CC-BY-3.0 package. Handoff written to the Ultimate AI Starter Bundle at `HANDOFF-SPDX-JSONSCHEMA.md` recommending `jsonschema` as general shared tooling.
+- Done: vendored the unmodified SPDX 2.3 JSON schema (`references/spdx-2.3.schema.json`, CC-BY-3.0, provenance file), declared `jsonschema>=4.18` as the `test` extra, installed it in the Python matrix, repository gate, Windows and Release jobs. `tests/test_sbom.py` validates the generated SBOM with the official schema (0 errors), fails in CI when the validator is missing and skips locally with an install hint. The SBOM now models the schema as a third CC-BY-3.0 package. Handoff for the bundle is kept in Forge at `docs/BUNDLE-HANDOFF-SPDX-JSONSCHEMA.md` (the bundle itself was not edited).
 - Verified: 411 tests, 7 skipped locally; full gate PASS; CI success on `5ebc3a5` (11 jobs, including Development preflight); release published; downloaded ZIP matches `SHA256SUMS.txt`, ships the schema, its SBOM validates against it with 0 errors, `forge.cmd version/doctor` PASS; live install 6.11.5 is 584/584 byte-identical.
-- Not done: no MSVC/vcpkg native build (BLOCKED); FOMOD non-enumerated group types remain PARTIAL by design; the bundle handoff is a note, not an installed dependency there.
+- Not done: no MSVC/vcpkg native build (BLOCKED); FOMOD non-enumerated group types remain PARTIAL by design; the bundle handoff is a note inside Forge, not an installed dependency.
 # Forge 6.11.4 preflight, pins, provenance and recovery (2026-11-06)
 
 - Goal: apply the v6.11.3 follow-up audit only where it reproduced, without reopening the 12-phase work.

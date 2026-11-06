@@ -60,13 +60,22 @@ jobs:
           test "$(go env GOVERSION)" = "go1.27.3"
           version=$(python -c "from skyrim_forge.version import VERSION; print(VERSION)")
           tag="v$version"
+          # A failed lookup must abort, not read as "no tag": command substitution
+          # inside an `if` would otherwise swallow the exit status.
+          tag_refs=$(git ls-remote --tags origin "refs/tags/$tag") || {
+            echo "::error::cannot determine remote tag state for $tag" >&2
+            exit 1
+          }
           tag_sha=""
-          # ls-remote fails the job on a network error instead of reading it as "no tag".
-          if [ -n "$(git ls-remote --tags origin "refs/tags/$tag")" ]; then
+          if [ -n "$tag_refs" ]; then
             tag_sha=$(gh api "repos/$REPO/commits/$tag" --jq .sha)
           fi
           main=$(gh api "repos/$REPO/commits/main" --jq .sha)
           python scripts/release_decision.py --ci-green "$CI_GREEN" --sha "$SHA" --main "$main" --tag-sha "$tag_sha" --tag "$tag" --version "$version"
+
+      - name: Strict release preflight
+        if: steps.decide.outputs.publish == 'true'
+        run: python scripts/preflight.py --release
 
       - name: Wait for every other check on this SHA
         if: steps.decide.outputs.publish == 'true'
@@ -129,7 +138,11 @@ jobs:
           TAG: ${{ steps.decide.outputs.tag }}
         run: |
           set -euo pipefail
-          if [ -z "$(git ls-remote --tags origin "refs/tags/$TAG")" ]; then
+          tag_refs=$(git ls-remote --tags origin "refs/tags/$TAG") || {
+            echo "::error::cannot determine remote tag state for $TAG" >&2
+            exit 1
+          }
+          if [ -z "$tag_refs" ]; then
             gh api "repos/$REPO/git/refs" -f ref="refs/tags/$TAG" -f sha="$SHA" > /dev/null
           fi
           python scripts/publish_release.py "$TAG" dist

@@ -1,8 +1,17 @@
+## 6.11.6 (2026-11-06)
+
+- Release evidence is deterministic. `VALIDATION.json` and `BUILD-RECEIPT.json` now keep only stable category results, test/failure/skip counts and content hashes; raw unittest/Go/MCP transcripts, elapsed times, temp paths and runner details stay in CI logs. That makes an interrupted release reproducible from its original tag.
+- `--scope full` now requires every category to report `PASS`. A missing Go toolchain (`NOT-RUN`), a missing `jsonschema` or any other absent check is a release-gate failure, while `--scope python` still works without Go.
+- Full validation includes an `sbom` gate that validates the generated SPDX document against the vendored official schema; a missing validator can no longer turn into a skipped test and a green release.
+- Both release tag lookups capture `git ls-remote` separately and abort on a non-zero exit, so a network/auth failure can never be read as "tag absent" or trigger tag creation.
+- The release workflow runs `scripts/preflight.py --release` before publication: clean tree, consistent version mirrors and a taggable state (or exact-tag recovery) are required.
+- The Windows skill-ledger replace retries a transient file lock instead of failing the provider installation.
+- The bundle handoff now lives in `docs/BUNDLE-HANDOFF-SPDX-JSONSCHEMA.md`; Skyrim Forge does not edit the bundle.
 ## 6.11.5 (2026-11-06)
 
 - Vendored the official SPDX 2.3 JSON schema (`references/spdx-2.3.schema.json`, CC-BY-3.0, provenance recorded) and declared `jsonschema>=4.18` as the `test` extra. CI installs it in the Python matrix, repository gate and Windows jobs; `tests/test_sbom.py` validates the generated SBOM against the schema, fails in CI when the library is missing and skips locally with an install hint.
 - The SBOM now models the schema as its own CC-BY-3.0 package instead of mislabelling it MIT.
-- Handoff written to the Ultimate AI Starter Bundle recommending `jsonschema` as general shared tooling; the SPDX schema stays with Forge.
+- Handoff for the bundle (`docs/BUNDLE-HANDOFF-SPDX-JSONSCHEMA.md`) recommends `jsonschema` as general shared tooling; Skyrim Forge does not edit the bundle and the SPDX schema stays with Forge.
 ## 6.11.4 (2026-11-06)
 
 - `scripts/preflight.py` now separates release states instead of treating every tag as a conflict: UNRELEASED, TAGGED, POST_RELEASE, STALE_VERSION and FOREIGN_TAG. A docs/evidence commit after a release passes; product code changed after the tag without a bump fails. `--release` adds a clean-tree and taggable-state requirement.
