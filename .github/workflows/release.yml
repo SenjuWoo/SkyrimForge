@@ -66,7 +66,7 @@ jobs:
             tag_sha=$(gh api "repos/$REPO/commits/$tag" --jq .sha)
           fi
           main=$(gh api "repos/$REPO/commits/main" --jq .sha)
-          python scripts/release_decision.py --ci-green "$CI_GREEN" --sha "$SHA" --main "$main" --tag-sha "$tag_sha" --tag "$tag" --version "$version" >> "$GITHUB_OUTPUT"
+          python scripts/release_decision.py --ci-green "$CI_GREEN" --sha "$SHA" --main "$main" --tag-sha "$tag_sha" --tag "$tag" --version "$version"
 
       - name: Wait for every other check on this SHA
         if: steps.decide.outputs.publish == 'true'

@@ -57,8 +57,8 @@
     {
       "executable": false,
       "path": ".github/workflows/release.yml",
-      "sha256": "12648047647813ea3ad76992b9b52f31dcda186cb736f089bd41db8b3973a205",
-      "size": 6215
+      "sha256": "9007ed08e5d47468e2fe2d478d97de14f9fd127512f9e64a4dda085712a57c9d",
+      "size": 6195
     },
     {
       "executable": false,
@@ -3855,8 +3855,8 @@
     {
       "executable": false,
       "path": "tests/test_release_decision.py",
-      "sha256": "6679597c6da27de212696f0b4640ed68f9c4baa98b1c3c8ec985558bbe7aa29c",
-      "size": 1640
+      "sha256": "f1867394e58ebdf7204a5eac79be46a94c7dc84901a92d4a39cca74e129397e1",
+      "size": 2501
     },
     {
       "executable": false,

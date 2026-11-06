@@ -1,7 +1,12 @@
 """Release recovery rules, tested instead of inferred from workflow YAML."""
 from __future__ import annotations
 
+import os
+import subprocess
+import sys
+import tempfile
 import unittest
+from pathlib import Path
 
 from scripts.release_decision import decide
 
@@ -33,6 +38,19 @@ class ReleaseDecisionTests(unittest.TestCase):
     def test_partial_release_recovery_is_allowed_after_main_moved(self) -> None:
         # Tag at A, assets incomplete, main now C: rerunning A must still work.
         self.assertTrue(decide(ci_green=True, sha=A, main=C, tag_sha=A)[0])
+
+    def test_cli_writes_only_valid_github_output_lines(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            output = Path(tmp) / "out"
+            env = {**os.environ, "GITHUB_OUTPUT": str(output)}
+            subprocess.run([sys.executable, "scripts/release_decision.py", "--ci-green", "true",
+                            "--sha", A, "--main", A, "--tag", "v1.2.3", "--version", "1.2.3"],
+                           check=True, capture_output=True, text=True, env=env)
+            lines = output.read_text(encoding="utf-8").splitlines()
+            self.assertTrue(all("=" in line for line in lines), lines)
+            self.assertIn("publish=true", lines)
+            self.assertIn("tag=v1.2.3", lines)
+            self.assertIn("version=1.2.3", lines)
 
     def test_failed_ci_never_publishes(self) -> None:
         self.assertFalse(decide(ci_green=False, sha=A, main=A, tag_sha=A)[0])
