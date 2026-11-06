@@ -164,8 +164,13 @@ def test_install(plan_path: Path, source_root: Path, workspace_root: Path, *, ap
             # rejection means the combination is impossible (e.g. a Required
             # plugin plus an explicit choice in SelectExactlyOne), not a broken
             # installation.
+            # Only an enumerated, fully covered selection can be called
+            # infeasible. With an unenumerated group type the simulator may be
+            # rejecting a default we never explored, which is untested, not
+            # impossible.
             infeasible = bool(all_branches and simulation.get("result") != "PASS"
-                              and not layout_errors and not problems)
+                              and not layout_errors and not problems
+                              and not coverage["group_types_uncovered"])
             if all_branches and coverage["group_types_uncovered"]:
                 warnings.append("not enumerated by --all-branches: " + ", ".join(coverage["group_types_uncovered"]))
             label = safe_name(f"branch-{index + 1:02d}", fallback="branch")
@@ -216,11 +221,22 @@ def test_install(plan_path: Path, source_root: Path, workspace_root: Path, *, ap
         "failed": sum(item["result"] == "FAIL" for item in reports),
         "infeasible": sum(item["result"] == "INFEASIBLE" for item in reports),
     }
+    if counts["failed"]:
+        overall = "FAIL"
+    elif all_branches and (coverage["group_types_uncovered"] or counts["passed"] == 0):
+        # A sweep that did not exercise every group type, or that produced no
+        # usable installation, is not a pass. Say so instead of implying
+        # exhaustive validation.
+        overall = "PARTIAL"
+    elif counts["passed"] == 0:
+        overall = "FAIL"
+    else:
+        overall = "PASS"
     receipt = {
         "schema": "skyrim-forge-install-verification/1", "generated_utc": utc_now(),
         "plan": str(plan_path.resolve()), "source_root": str(source), "sandbox": str(run),
         "module": {"name": plan["module"]["name"], "version": plan["module"]["version"]},
-        "result": "FAIL" if counts["failed"] else "PASS",
+        "result": overall,
         "branch_counts": counts,
         "branches": reports, "file_copies": total_files, "bytes_copied": total_bytes,
         "coverage": coverage,

@@ -85,6 +85,28 @@ class SandboxTests(unittest.TestCase):
         self.assertEqual(single["group_types_uncovered"], ["SelectAny", "SelectExactlyOne"])
         self.assertTrue(vfs_sandbox._coverage(_plan(), all_branches=False)["group_types_uncovered"])
 
+    def test_unenumerated_required_group_cannot_pass_with_zero_branches(self) -> None:
+        plan_data = _plan()
+        plan_data["steps"][0]["groups"][0]["type"] = "SelectAtLeastOne"
+        for plugin in plan_data["steps"][0]["groups"][0]["plugins"]:
+            plugin["type"] = "Optional"
+        plan = self._write(plan_data)
+        receipt = vfs_sandbox.test_install(plan, self.source, self.workspace, approved=True, all_branches=True)
+        self.assertNotEqual(receipt["result"], "PASS")
+        self.assertEqual(receipt["branch_counts"]["passed"], 0)
+        self.assertGreater(receipt["branch_counts"]["failed"], 0)
+        self.assertIn("SelectAtLeastOne", receipt["coverage"]["group_types_uncovered"])
+
+    def test_covered_pass_plus_unenumerated_group_is_partial(self) -> None:
+        plan_data = _plan()
+        plan_data["steps"].append({"name": "Extras", "groups": [{
+            "name": "Patch", "type": "SelectAny",
+            "plugins": [{"name": "Patch", "description": "no payload", "files": []}]}]})
+        plan = self._write(plan_data)
+        receipt = vfs_sandbox.test_install(plan, self.source, self.workspace, approved=True, all_branches=True)
+        self.assertEqual(receipt["result"], "PARTIAL")
+        self.assertGreaterEqual(receipt["branch_counts"]["passed"], 1)
+
     def test_unknown_selection_cannot_pass(self) -> None:
         plan = self._write(_plan())
         receipt = vfs_sandbox.test_install(plan, self.source, self.workspace, approved=True,

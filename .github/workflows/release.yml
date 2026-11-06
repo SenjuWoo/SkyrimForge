@@ -64,7 +64,18 @@ jobs:
           # A newer main commit gets its own CI and its own release decision.
           if [ "$main" != "$SHA" ]; then echo "main is $main, not $SHA: skip"; echo "publish=false" >> "$GITHUB_OUTPUT"; exit 0; fi
           # ls-remote fails the job on a network error instead of reading it as "no tag".
-          if [ -n "$(git ls-remote --tags origin "refs/tags/$tag")" ]; then echo "$tag exists: nothing to publish"; echo "publish=false" >> "$GITHUB_OUTPUT"; exit 0; fi
+          if [ -n "$(git ls-remote --tags origin "refs/tags/$tag")" ]; then
+            tag_sha=$(gh api "repos/$REPO/commits/$tag" --jq .sha)
+            if [ "$tag_sha" != "$SHA" ]; then
+              # Same version string, different commit: this is a post-release
+              # commit (ledger/docs). v$version is already published from
+              # $tag_sha; never retag or rebuild it from newer code.
+              echo "$tag is already published at $tag_sha; nothing to publish from $SHA"
+              echo "publish=false" >> "$GITHUB_OUTPUT"
+              exit 0
+            fi
+            echo "$tag already points at $SHA: resuming publication of missing assets"
+          fi
           { echo "publish=true"; echo "tag=$tag"; echo "version=$version"; } >> "$GITHUB_OUTPUT"
 
       - name: Wait for every other check on this SHA
@@ -124,7 +135,9 @@ jobs:
           TAG: ${{ steps.decide.outputs.tag }}
         run: |
           set -euo pipefail
-          gh api "repos/$REPO/git/refs" -f ref="refs/tags/$TAG" -f sha="$SHA" > /dev/null
+          if [ -z "$(git ls-remote --tags origin "refs/tags/$TAG")" ]; then
+            gh api "repos/$REPO/git/refs" -f ref="refs/tags/$TAG" -f sha="$SHA" > /dev/null
+          fi
           python scripts/publish_release.py "$TAG" dist
           test "$(gh api "repos/$REPO/commits/$TAG" --jq .sha)" = "$SHA"
           gh release download "$TAG" --dir published

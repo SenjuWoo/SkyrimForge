@@ -94,6 +94,11 @@ def repository_files() -> list[Path]:
     return [p for p in source_files(ROOT) if p.name not in REPORTS]
 
 
+def control_characters(text: str) -> list[str]:
+    """Unexpected control bytes that have appeared when a path escape was misread."""
+    return sorted({character for character in text if character in {chr(11), chr(12), chr(26)}})
+
+
 def validate_files(errors: list[str], warnings: list[str]) -> dict[str, Any]:
     counts = {"python":0,"json":0,"toml":0,"yaml":0,"xml":0,"powershell":0,"go":0,"pascal":0}
     seen: dict[str, str] = {}
@@ -123,6 +128,8 @@ def validate_files(errors: list[str], warnings: list[str]) -> dict[str, Any]:
         if suffix in TEXT_SUFFIXES:
             text = path.read_text(encoding="utf-8-sig", errors="replace")
             if re.search(r"[A-Za-z]:\\Users\\(?!YOU\\|<)", text, flags=re.I): errors.append(f"private Windows path in {rel}")
+            found_controls = control_characters(text)
+            if found_controls: errors.append(f"unexpected control character in {rel}: {found_controls}")
             if rel != "scripts/validate_repository.py":
                 if "/mnt/data/" in text or "/tmp/" in text: errors.append(f"build-environment path in {rel}")
                 if "SkyrimForge.Native 2." in text or "Skyrim Forge 2." in text: errors.append(f"stale major version in {rel}")

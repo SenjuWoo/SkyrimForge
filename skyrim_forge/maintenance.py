@@ -32,11 +32,20 @@ from .util import utc_now
 from .version import VERSION
 
 BACKUP_NAME = re.compile(r"^backup-.+-[0-9a-f]{32}$")
-PROVIDER_HOMES = (
-    Path.home() / ".claude", Path.home() / ".agents", Path.home() / ".grok",
-    Path.home() / ".kimi", Path.home() / ".codex", Path.home() / ".hermes",
-    Path(os.environ.get("LOCALAPPDATA", "")) / "hermes",
-)
+def default_provider_homes() -> tuple[Path, ...]:
+    """Known agent homes, with an env-derived root only when it is absolute.
+
+    An unset LOCALAPPDATA used to become the relative path "hermes", which made
+    cleanup depend on the process working directory.
+    """
+    homes = [Path.home() / name for name in (".claude", ".agents", ".grok", ".kimi", ".codex", ".hermes")]
+    local = os.environ.get("LOCALAPPDATA")
+    if local and Path(local).is_absolute():
+        homes.append(Path(local) / "hermes")
+    return tuple(homes)
+
+
+PROVIDER_HOMES = default_provider_homes()
 ROOT_KEYS = ("workspace_root", "skyrim_data", "vortex_staging", "mo2_profiles_root", "tools_root")
 
 
@@ -63,7 +72,7 @@ def _provider_backups(keep: int, homes: Iterable[Path] | None = None) -> tuple[l
     """Return provider skill backups beyond the newest `keep`, per provider."""
     removable: list[Path] = []
     kept = 0
-    for home in homes or PROVIDER_HOMES:
+    for home in (PROVIDER_HOMES if homes is None else homes):
         work = home / ".skyrim-forge-skill-work"
         if not work.is_dir():
             continue
@@ -149,16 +158,17 @@ def _ps_quote(value: str) -> str:
 
 
 def _task_info() -> dict[str, Any] | None:
-    """Machine-readable task state, or None when it does not exist.
+    """The single action of the canonical task, or None when it does not exist.
 
     Get-ScheduledTask returns objects, so this does not depend on localized
-    column labels the way `schtasks /V /FO LIST` did.
+    labels; the TaskPath is explicit because a task name alone is not unique.
     """
     script = (
         "$ErrorActionPreference='Stop';"
-        f"$t=Get-ScheduledTask -TaskName {_ps_quote(SCHEDULE_TASK)} -ErrorAction SilentlyContinue;"
+        f"$t=Get-ScheduledTask -TaskPath '\\' -TaskName {_ps_quote(SCHEDULE_TASK)} -ErrorAction SilentlyContinue;"
         "if($null -eq $t){'null'}else{$t|Select-Object TaskName,Description,"
-        "@{n='Execute';e={$_.Actions[0].Execute}},@{n='Arguments';e={$_.Actions[0].Arguments}}"
+        "@{n='ActionCount';e={@($t.Actions).Count}},"
+        "@{n='Execute';e={$t.Actions[0].Execute}},@{n='Arguments';e={$t.Actions[0].Arguments}}"
         "|ConvertTo-Json -Compress}"
     )
     proc = _ps(script)
@@ -174,31 +184,32 @@ def _task_info() -> dict[str, Any] | None:
     return info if isinstance(info, dict) else None
 
 
-def _check_only(arguments: str) -> bool:
-    return "maintain --no-self-test" in arguments and "--apply" not in arguments and "--fix-roots" not in arguments
+def _expected_command(launcher: Path, log_path: str = "") -> str:
+    entry = f'"{launcher}" maintain --no-self-test' if launcher.is_file() else f'"{sys.executable}" -m skyrim_forge maintain --no-self-test'
+    return f'/c "{entry} >> "{log_path}" 2>&1"'
+
+
+def _canonical_arguments(launcher: Path) -> re.Pattern[str]:
+    return re.compile(r'^/c ""' + re.escape(str(launcher)) + r'" maintain --no-self-test >> "[^"]+" 2>&1"$')
 
 
 def _task_owned(info: dict[str, Any] | None, launcher: Path) -> bool:
-    """Owned only when the action is a check-only Forge maintain call.
-
-    The description marker is written at registration; a legacy task created by
-    the old schtasks path is recognized by its exact python action.
-    """
-    if not info:
+    """Owned only when the whole action is the canonical check-only command."""
+    if info is None or int(info.get("ActionCount") or 0) != 1:
         return False
     arguments = str(info.get("Arguments") or "")
     execute = str(info.get("Execute") or "")
-    if not _check_only(arguments):
-        return False
-    if SCHEDULE_MARKER in str(info.get("Description") or ""):
-        return str(launcher) in arguments
+    marker = SCHEDULE_MARKER in str(info.get("Description") or "")
+    if marker:
+        return execute.casefold() == "cmd.exe" and bool(_canonical_arguments(launcher).fullmatch(arguments))
+    # Historical Forge task: exact python invocation, no marker.
     return execute.casefold().endswith("python.exe") and arguments.strip() == "-m skyrim_forge maintain --no-self-test"
 
 
 def _task_healthy(info: dict[str, Any] | None, launcher: Path) -> bool:
     if not _task_owned(info, launcher):
         return False
-    return str(launcher) in str(info.get("Arguments") or "") and "forge.cmd" in str(info.get("Arguments") or "")
+    return SCHEDULE_MARKER in str(info.get("Description") or "") and str(launcher) in str(info.get("Arguments") or "")
 
 
 def schedule_status() -> dict[str, Any]:
@@ -236,7 +247,7 @@ def install_schedule(*, log_path: Path, day: str = "SUN", time: str = "12:00") -
     entry = f'"{launcher}" maintain --no-self-test' if launcher.is_file() else f'"{sys.executable}" -m skyrim_forge maintain --no-self-test'
     # Task Scheduler runs an action through CreateProcess, so redirection needs
     # cmd.exe; forge.cmd also puts the install root on PYTHONPATH.
-    command = f'/c "{entry} >> "{log_path}" 2>&1"'
+    command = _expected_command(launcher, str(log_path))
     script = (
         "$ErrorActionPreference='Stop';"
         f"$a=New-ScheduledTaskAction -Execute 'cmd.exe' -Argument {_ps_quote(command)};"
@@ -287,8 +298,10 @@ def inspect(config: ForgeConfig, *, days: int = 7, keep_backups: int = 2,
 def _owned_bases(config: ForgeConfig, provider_homes: Iterable[Path] | None = None) -> list[Path]:
     forge = Path(config.workspace_root) / ".forge"
     bases = [forge / "spills", forge / "vfs-sandbox"]
-    for home in provider_homes or PROVIDER_HOMES:
-        bases.append(home / ".skyrim-forge-skill-work")
+    for home in (PROVIDER_HOMES if provider_homes is None else provider_homes):
+        if not Path(home).is_absolute():
+            continue
+        bases.append(Path(home) / ".skyrim-forge-skill-work")
     return bases
 
 

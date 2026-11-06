@@ -98,7 +98,7 @@ def parser() -> argparse.ArgumentParser:
 def _exit_code(value: Any) -> int:
     if isinstance(value, dict):
         status = str(value.get("result", value.get("status", ""))).upper()
-        if status in {"FAIL", "BLOCKED", "INVALID", "INCOMPLETE", "CANCELLED"}:
+        if status in {"FAIL", "BLOCKED", "INVALID", "INCOMPLETE", "CANCELLED", "PARTIAL"}:
             return 2
     return 0
 

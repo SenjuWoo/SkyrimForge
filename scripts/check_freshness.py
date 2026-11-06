@@ -48,7 +48,8 @@ def pins() -> dict[str, dict[str, str]]:
         "houseCARL": {"pinned": housecarl["version"], "kind": "installer", "sha256": housecarl["sha256"]},
         "CommonLibSSE-NG": {"pinned": commonlib.get("tag") or "unknown",
                             "commit": commonlib.get("commit", ""), "kind": "source SDK"},
-        "vcpkg": {"pinned": lock.get("vcpkg_baseline", "unknown"), "kind": "dependency baseline"},
+        "vcpkg": {"pinned": lock.get("vcpkg_baseline", "unknown"), "kind": "registry baseline commit",
+                  "latest_kind": "release tag"},
         "Go": {"pinned": _go_pin(), "kind": "toolchain"},
         "MCP": {"pinned": "2026-07-28", "kind": "protocol"},
     }
@@ -82,9 +83,38 @@ def upstream() -> dict[str, dict[str, str]]:
         found["Go"] = {"latest": stable.lstrip("go"), "published": "", "url": "https://go.dev/dl/"}
     except Exception as exc:  # noqa: BLE001
         found["Go"] = {"latest": "unknown", "error": type(exc).__name__}
-    found["forge"] = {"latest": "unknown", "url": "https://github.com/SenjuWoo/SkyrimForge/releases"}
-    found["MCP"] = {"latest": "2026-07-28", "url": "https://blog.modelcontextprotocol.io/posts/2026-07-28/"}
+    try:
+        release = _get_json(GITHUB.format(repo="SenjuWoo/SkyrimForge"))
+        if release.get("html_url", "").startswith("https://github.com/SenjuWoo/SkyrimForge/releases/"):
+            found["forge"] = {"latest": str(release.get("tag_name", "")).lstrip("v"),
+                              "published": str(release.get("published_at", ""))[:10],
+                              "url": release.get("html_url", "")}
+        else:
+            found["forge"] = {"latest": "unknown", "malformed": "release URL did not match the repository"}
+    except Exception as exc:  # noqa: BLE001
+        found["forge"] = {"latest": "unknown", "error": type(exc).__name__}
+    found["MCP"] = {"latest": "unknown", "not_checked": "no machine-readable upstream endpoint is consulted"}
     return found
+
+
+def classify(name: str, pinned: str, up: dict | None) -> tuple[str, str]:
+    """Return (status, reason) without guessing when data is missing."""
+    if name == "vcpkg":
+        return "PINNED_COMMIT", "pinned to a registry baseline commit; a release tag is not a substitute"
+    if name == "MCP":
+        return "NOT_CHECKED", "the protocol revision has no release feed this report reads"
+    if up is None:
+        return "NOT_CHECKED", "offline report"
+    if up.get("error"):
+        return "ERROR", f"upstream lookup failed: {up['error']}"
+    if up.get("malformed"):
+        return "MALFORMED", up["malformed"]
+    latest = str(up.get("latest") or "")
+    if not latest or latest == "unknown":
+        return "UNKNOWN", "upstream did not report a comparable version"
+    if latest.lstrip("v") == pinned.lstrip("v"):
+        return "CURRENT", ""
+    return "DRIFT", f"upstream {latest} differs from pin {pinned}"
 
 
 def report(online: bool) -> dict:
@@ -92,16 +122,11 @@ def report(online: bool) -> dict:
     latest = upstream() if online else {}
     items = []
     for name, pin in pinned.items():
-        up = latest.get(name, {})
-        newest = up.get("latest", "unknown")
-        if newest == "unknown":
-            status = "UNKNOWN"
-        elif newest.lstrip("v") == pin["pinned"].lstrip("v"):
-            status = "CURRENT"
-        else:
-            status = "DRIFT"
-        items.append({"name": name, "pinned": pin["pinned"], "latest": newest, "status": status,
-                      "published": up.get("published", ""), "url": up.get("url", ""),
+        up = latest.get(name)
+        status, reason = classify(name, pin["pinned"], up)
+        items.append({"name": name, "pinned": pin["pinned"], "latest": (up or {}).get("latest", "unknown"),
+                      "status": status, "reason": reason,
+                      "published": (up or {}).get("published", ""), "url": (up or {}).get("url", ""),
                       "gate": GATES.get(name, "Review the upstream change before adopting it."),
                       "kind": pin["kind"]})
     return {"schema": "skyrim-forge-freshness/1",

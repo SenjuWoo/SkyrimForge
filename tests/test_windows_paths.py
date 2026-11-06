@@ -36,6 +36,12 @@ class WindowsPathTests(unittest.TestCase):
                 with self.assertRaises(ValidationError):
                     validate_plan_data(_plan(destination), self.root / "source")
 
+    def test_noncanonical_spellings_are_rejected(self) -> None:
+        for destination in ("textures//a.dds", "textures/./a.dds", "textures/a.dds/"):
+            with self.subTest(destination=destination):
+                with self.assertRaises(ValidationError):
+                    validate_plan_data(_plan(destination), self.root / "source")
+
     def test_invalid_source_component_is_rejected(self) -> None:
         bad = self.root / "source" / "CON"
         bad.mkdir()

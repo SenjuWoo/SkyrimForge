@@ -5,6 +5,7 @@ import tempfile
 import time
 import unittest
 from pathlib import Path
+from unittest import mock
 
 from skyrim_forge import maintenance
 from skyrim_forge.config import ForgeConfig
@@ -134,6 +135,15 @@ class MaintenanceTests(unittest.TestCase):
                                  steam_roots=[steam], add_roots=True, approved=True)
         self.assertEqual(report["result"], "WARN")
         self.assertEqual(report["roots_changed"], [])
+
+    def test_relative_localappdata_cannot_create_a_relative_provider_root(self):
+        with mock.patch.dict(os.environ, {"LOCALAPPDATA": "relative-root"}, clear=False):
+            homes = maintenance.default_provider_homes()
+        self.assertTrue(all(home.is_absolute() for home in homes))
+        self.assertFalse(any(home.parts == ("hermes",) for home in homes))
+
+    def test_explicit_empty_provider_list_means_none_not_defaults(self):
+        self.assertEqual(maintenance._provider_backups(2, []), ([], 0))
 
     def test_missing_root_without_candidate_is_warn(self):
         self.config.skyrim_data = self.root / "gone" / "Data"

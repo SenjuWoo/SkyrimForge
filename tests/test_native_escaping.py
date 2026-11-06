@@ -26,18 +26,42 @@ def _plan(**overrides):
 
 
 class NativeEscapingTests(unittest.TestCase):
-    def test_display_name_cannot_break_out_of_the_cpp_literal(self) -> None:
-        cpp = _plugin_cpp(_plan(display_name=INJECTION))
-        self.assertNotIn('"MyMod"); static_assert(false, "INJECTED 1.2.3', cpp)
-        line = next(item for item in cpp.splitlines() if "INJECTED" in item)
-        self.assertIn('MyMod\\");', line)
-        self.assertIn('\\"INJECTED', line)
+    def test_hostile_display_name_is_rejected_before_generation(self) -> None:
+        with self.assertRaises(ValidationError):
+            _plan(display_name=INJECTION)
+
+    def test_safe_punctuation_is_escaped_in_forge_generated_cpp(self) -> None:
+        cpp = _plugin_cpp(_plan(display_name="Probe (SE) — 100%"))
+        self.assertIn('"Probe (SE) — 100% 1.2.3 loaded"', cpp)
 
     def test_cmake_metadata_is_a_single_quoted_argument(self) -> None:
-        cmake = _cmake(_plan(display_name='A"B\\C', author="x;y$z", email="a$b;c"))
-        for expected in (r'NAME "A\"B\\C"', r'AUTHOR "x\;y\$z"', r'EMAIL "a\$b\;c"'):
+        cmake = _cmake(_plan(display_name="A B", author="x;y$z", email="a$b;c"))
+        for expected in (r'NAME "A B"', r'AUTHOR "x\;y\$z"', r'EMAIL "a\$b\;c"'):
             self.assertIn(expected, cmake)
         self.assertEqual(cmake.count("project(Probe VERSION 1.2.3 LANGUAGES CXX)"), 1)
+
+    def test_sdk_generated_cpp_metadata_cannot_contain_quotes_or_backslashes(self) -> None:
+        for field, value in (("display_name", 'A"B'), ("author", "A\\B"), ("email", 'a"b@c')):
+            with self.subTest(field=field):
+                with self.assertRaises(ValidationError):
+                    _plan(**{field: value})
+
+    def test_struct_dependent_must_be_a_json_boolean(self) -> None:
+        with self.assertRaises(ValidationError):
+            _plan(struct_dependent="false")
+        self.assertTrue(_plan(struct_dependent=True)["struct_dependent"])
+
+    def test_sdk_version_fields_are_numeric_and_bounded(self) -> None:
+        with self.assertRaises(ValidationError):
+            _plan(minimum_skse_version="1.2.3-beta")
+        with self.assertRaises(ValidationError):
+            _plan(runtime_strategy="explicit_runtimes", compatible_runtimes=[f"1.{index}.0" for index in range(17)])
+        plan = _plan(runtime_strategy="explicit_runtimes", compatible_runtimes=["1.6.1170"])
+        self.assertEqual(plan["compatible_runtimes"], ["1.6.1170"])
+
+    def test_plugin_helper_receives_a_numeric_version(self) -> None:
+        cmake = _cmake(_plan(version="2.0.0-rc.2"))
+        self.assertIn('VERSION "2.0.0"', cmake)
 
     def test_prerelease_is_kept_for_the_plugin_but_numeric_for_cmake_project(self) -> None:
         plan = _plan(version="1.2.3-beta.1")

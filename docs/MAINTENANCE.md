@@ -43,11 +43,11 @@ Writing a root is a configuration change, so `--fix-roots` also requires
 ## Commands
 
 ```powershell
-.orge maintain                                  # dry run, prints the plan and the self-test
-.orge maintain --apply --approve                # delete the planned leftovers
-.orge maintain --days 14 --keep-backups 1       # different retention
-.orge maintain --fix-roots --approve            # accept discovered roots
-.orge maintain --no-self-test                   # skip the built-in checks
+.\forge maintain                                  # dry run, prints the plan and the self-test
+.\forge maintain --apply --approve                # delete the planned leftovers
+.\forge maintain --days 14 --keep-backups 1       # different retention
+.\forge maintain --fix-roots --approve            # accept discovered roots
+.\forge maintain --no-self-test                   # skip the built-in checks
 ```
 
 The JSON result carries `removals`, `removals_planned`, `roots`, `applied`,
@@ -59,9 +59,9 @@ The JSON result carries `removals`, `removals_planned`, `roots`, `applied`,
 Use the managed, check-only task:
 
 ```powershell
-.orge maintain --schedule-status        # is it installed?
-.orge maintain --schedule --approve     # install: weekly check, no changes
-.orge maintain --unschedule --approve   # remove it
+.\forge maintain --schedule-status        # is it installed?
+.\forge maintain --schedule --approve     # install: weekly check, no changes
+.\forge maintain --unschedule --approve   # remove it
 ```
 
 The task runs `maintain` without `--apply` or `--fix-roots`, so it reports

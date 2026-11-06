@@ -1,3 +1,15 @@
+## 6.11.3 (2026-11-06)
+
+- FOMOD all-branches no longer reports PASS with zero passing branches. A failed simulation is only `INFEASIBLE` when every group type was enumerated; an uncovered type or an empty pass set yields `PARTIAL`, and the CLI exits non-zero for it. Added regressions for `SelectAtLeastOne`, mixed covered/uncovered plans and zero-pass sweeps.
+- Native scaffold matches the pinned CommonLibSSE-NG helper, which writes NAME/AUTHOR/EMAIL into generated C++ as raw text: quotes and backslashes are now rejected before CMake, `project(VERSION)` and `add_commonlibsse_plugin(VERSION)` both receive numeric versions, `struct_dependent` must be a JSON boolean, and SDK version fields must be numeric with at most 16 runtimes.
+- Documentation was carrying 16 literal form-feed bytes where a path escape (`<U+000C>`) was misread (`.<U+000C>orge`). Repaired in README, MAINTENANCE, CHANGELOG (both), STATE; the validator and `preflight.py` now reject unexpected control characters in tracked text.
+- Release workflow resumes a partial release when the tag already points at the same SHA, and refuses to reuse a published tag from a different commit instead of silently skipping publication.
+- Scheduled-task ownership now requires the canonical task path, exactly one action, `cmd.exe` with the exact canonical check-only arguments, and the registration marker. A same-name task running another executable or merely mentioning the command is not owned, replaced or deleted.
+- Maintenance provider roots ignore a relative or unset `LOCALAPPDATA`, and an explicit empty provider list means "none" instead of "all defaults".
+- MCP: `forge_maintain` is destructive and non-idempotent; writer tools no longer advertise idempotence.
+- FOMOD paths reject duplicate separators, `.` segments and trailing separators instead of normalising them silently.
+- Freshness report: statuses are CURRENT, DRIFT, PINNED_COMMIT, NOT_CHECKED, ERROR and MALFORMED. vcpkg is reported as a pinned baseline commit, and the MCP revision is NOT_CHECKED unless a real upstream is consulted.
+- Added `scripts/preflight.py` (fast version/control/manifest/critical-test gate) and `AGENTS.md` runbook.
 ## 6.11.2 (2026-11-06)
 
 - FOMOD sandbox: simulation errors now reach the branch and cannot produce a PASS. An unknown selection, a NotUsable plugin or a broken group count fails the receipt and the CLI exit status; all-branches marks impossible combinations `INFEASIBLE` instead of a failed install. The zero-selection branch is encoded as an explicit empty array, so `SelectAtMostOne` really tests Red, Blue and none instead of Red, Blue and Red. `selections` plus `all_branches=True` is rejected, and the branch cap is checked before any sandbox directory exists.
@@ -5,7 +17,7 @@
 - Scheduled task: inspected through `Get-ScheduledTask` objects and a registration marker, not localized `schtasks` text. Status reports exists/owned/healthy/reason; Forge refuses to replace or delete a task it cannot prove it owns, recognizes the legacy python action for migration, and the task stays check-only. Verified by creating, running, logging and removing a real task with spaces in its path, and by refusing a spoofed same-name task.
 - Compact MCP surface: group annotations now take the riskiest member, so `skyrim_forge_execute` is destructive and non-idempotent and `release` is no longer advertised as idempotent.
 - FOMOD paths: every component is checked against Windows rules — ADS colons, `< > " | ? *`, control characters, reserved device names (`CON`, `LPT9`), trailing dots or spaces — for sources and destinations, and surrounding whitespace is rejected rather than silently stripped.
-- Docs: PowerShell examples use `.orge`, installation text distinguishes the archive version from the stable install path, and `scripts/check_freshness.py` reports pinned vs upstream versions without ever writing a pin. CommonLibSSE-NG stays at v14.1.0; v15.7.1 is recorded as an untested upgrade candidate, not adopted.
+- Docs: PowerShell examples use `.\forge`, installation text distinguishes the archive version from the stable install path, and `scripts/check_freshness.py` reports pinned vs upstream versions without ever writing a pin. CommonLibSSE-NG stays at v14.1.0; v15.7.1 is recorded as an untested upgrade candidate, not adopted.
 ## 6.11.1 (2026-11-06)
 
 - houseCARL install fixed: v6.11.0 downloaded houseCARL 2.1.2 but verified the 2.1.1 digest, so every install failed the checksum. The digest, URL, `PACK.json` and the new `integrations/skyrim-pack/housecarl-pin.json` now agree. A unit test fails when any of them disagree, and `FORGE_HOUSECARL_ONLINE=1` downloads the official asset and checks its SHA-256 (verified here against `4e69494c…`).

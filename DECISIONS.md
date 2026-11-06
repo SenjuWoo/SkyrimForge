@@ -118,3 +118,8 @@ Local filenames and documentation do not establish current upstream provenance o
 - 6.11.2: CommonLibSSE-NG stays pinned at v14.1.0 (`896f6d0`). v15.7.1 is a new API line and no representative scaffold was built with the pinned MSVC/vcpkg inputs in this environment, so changing the lock would be an untested claim. The freshness report names the drift and the gate instead.
 - 6.11.2: Dependency freshness is a read-only report (`scripts/check_freshness.py`). It may name an update and its required gate; it may never rewrite a pin, install a tool or trigger a release.
 - 6.11.2: Scheduled-task ownership is proven from structured task objects plus a registration marker and an exact check-only action. A task whose ownership cannot be proven is never replaced or deleted, even if its name matches.
+
+- 6.11.3: A FOMOD sweep can PASS only when at least one branch installed and every group type in the plan was enumerated. Anything less is `PARTIAL`; `INFEASIBLE` is reserved for enumerated combinations the group constraints reject.
+- 6.11.3: Native metadata containing a quote or backslash is rejected. The pinned CommonLibSSE-NG CMake helper interpolates NAME/AUTHOR/EMAIL into generated C++ raw, so Forge cannot make those characters safe by quoting CMake alone.
+- 6.11.3: A published tag is immutable. If it points at the current SHA the workflow resumes missing assets; if it points elsewhere the commit is post-release and publication is skipped, never rebuilt from newer code.
+- 6.11.3: Scheduled-task ownership is an exact structural match (task path, one action, executable, arguments), not a name or substring.

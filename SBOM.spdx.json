@@ -3,11 +3,11 @@
   "creationInfo": {
     "created": "2026-07-24T00:00:00Z",
     "creators": [
-      "Tool: Skyrim Forge validator 6.11.2"
+      "Tool: Skyrim Forge validator 6.11.3"
     ]
   },
   "dataLicense": "CC0-1.0",
-  "documentNamespace": "https://example.invalid/skyrim-forge/6.11.2/spdx",
+  "documentNamespace": "https://example.invalid/skyrim-forge/6.11.3/spdx",
   "files": [
     {
       "SPDXID": "SPDXRef-File-.editorconfig",
@@ -149,7 +149,7 @@
       "checksums": [
         {
           "algorithm": "SHA256",
-          "checksumValue": "9cfcf8c4a7ece610263806cde6addfb94d660399ef73fa55293a6d40eee1a2b6"
+          "checksumValue": "01c02560ee87b6724a923a776e57bc57cd7e1700b272c978cbbbf69ad52a2f59"
         }
       ],
       "copyrightText": "NOASSERTION",
@@ -164,7 +164,7 @@
       "checksums": [
         {
           "algorithm": "SHA256",
-          "checksumValue": "8d1fbc52fb1ea66c69cbbd7ae68e28f256bad4d2b3529b1a58065692ba9b2a09"
+          "checksumValue": "36a0b715a9ec4cdb9717bb488e4e87e206af2292edacab27349d0f0ca5b36899"
         }
       ],
       "copyrightText": "NOASSERTION",
@@ -184,6 +184,21 @@
       ],
       "copyrightText": "NOASSERTION",
       "fileName": "./.ignore",
+      "licenseConcluded": "NOASSERTION",
+      "licenseInfoInFiles": [
+        "NOASSERTION"
+      ]
+    },
+    {
+      "SPDXID": "SPDXRef-File-AGENTS.md",
+      "checksums": [
+        {
+          "algorithm": "SHA256",
+          "checksumValue": "b90f0cfb375baa56c8d3cf89dfcbc949d97e8d2a068c0f9bbc740272b86e340b"
+        }
+      ],
+      "copyrightText": "NOASSERTION",
+      "fileName": "./AGENTS.md",
       "licenseConcluded": "NOASSERTION",
       "licenseInfoInFiles": [
         "NOASSERTION"
@@ -239,7 +254,7 @@
       "checksums": [
         {
           "algorithm": "SHA256",
-          "checksumValue": "096a9456727c049a718744fd9ea1f3afe482aaeb654dceb394f1844969a16043"
+          "checksumValue": "ed07ad01180a6caf0f2981fa9411c9c874b5412d83f33b5dd296bcfb5831f91d"
         }
       ],
       "copyrightText": "NOASSERTION",
@@ -254,7 +269,7 @@
       "checksums": [
         {
           "algorithm": "SHA256",
-          "checksumValue": "2ffd7b8ef9152f1b845b3e94f9bdf094a5d76936a8bdafc9f41971039fb8293b"
+          "checksumValue": "c6f3a7ada97de150d5ee56f9b437a9ba095f7c47106db5b60eebf11060e7fe24"
         }
       ],
       "copyrightText": "NOASSERTION",
@@ -359,7 +374,7 @@
       "checksums": [
         {
           "algorithm": "SHA256",
-          "checksumValue": "a3919b6e99dc05252d0aebc0230a485a0af02effbaad4e0698b526a6a89fb643"
+          "checksumValue": "fae83484e3e80a8eab4dada5b7b45f901789fb123431cd68371661acf76b0b06"
         }
       ],
       "copyrightText": "NOASSERTION",
@@ -374,7 +389,7 @@
       "checksums": [
         {
           "algorithm": "SHA256",
-          "checksumValue": "87cf5df761547d2c8dd55f8637b90ce6c2169f1eb1219272effb83e8ae743b83"
+          "checksumValue": "58f57be96a6331f4583cdc521e61bb173512f097368958a04df6a7d1987e5055"
         }
       ],
       "copyrightText": "NOASSERTION",
@@ -644,7 +659,7 @@
       "checksums": [
         {
           "algorithm": "SHA256",
-          "checksumValue": "03e2eca1dd0e0edba379808c748913e7167a32718d6382f3ef31ea95b6f1e784"
+          "checksumValue": "04493d8cd18b81807d3a31e673239aca8238dc4ea2dcd9e4bf686d3186fcb3a4"
         }
       ],
       "copyrightText": "NOASSERTION",
@@ -7079,7 +7094,7 @@
       "checksums": [
         {
           "algorithm": "SHA256",
-          "checksumValue": "89e2b91233c3fa37d5d08fdae3afdf936a803b9f7b0b3e29134fd5925bd89ed5"
+          "checksumValue": "156f503547e128d626e3737ee9ac441718a61feb8377e1a1d0b882a3cbb98715"
         }
       ],
       "copyrightText": "NOASSERTION",
@@ -7124,7 +7139,7 @@
       "checksums": [
         {
           "algorithm": "SHA256",
-          "checksumValue": "f21d80fdf01b0e6d2c2f55fc41b13dfc2dfe09570cea12d81b848768c878dc03"
+          "checksumValue": "2cc98329375a07ccd090f0a79d6aa4b999cc0a5a4dd52058121f69d382d006d6"
         }
       ],
       "copyrightText": "NOASSERTION",
@@ -7139,7 +7154,7 @@
       "checksums": [
         {
           "algorithm": "SHA256",
-          "checksumValue": "b533a35b230531a0311228be319848ec84bee34d2623d3342bc483a3edb5cb77"
+          "checksumValue": "a8723a6b4662744ea7774b3f18393d5c4fec7852f859546a93b458b0e85cda13"
         }
       ],
       "copyrightText": "NOASSERTION",
@@ -7529,11 +7544,26 @@
       "checksums": [
         {
           "algorithm": "SHA256",
-          "checksumValue": "01833f5363b424118f2f5ec00b4add0dcbd56341ab41376f94f2901b7b5697bd"
+          "checksumValue": "0bd7d42cf5677e1f95bc9d0d8c29eaa2fd079ae0d9da8d474a5b48b4b18b798a"
         }
       ],
       "copyrightText": "NOASSERTION",
       "fileName": "./scripts/check_freshness.py",
+      "licenseConcluded": "NOASSERTION",
+      "licenseInfoInFiles": [
+        "NOASSERTION"
+      ]
+    },
+    {
+      "SPDXID": "SPDXRef-File-scripts-preflight.py",
+      "checksums": [
+        {
+          "algorithm": "SHA256",
+          "checksumValue": "052be0aae595d0693059faecb3b67795f7562b4bb458c7b2256cd7d39302d10b"
+        }
+      ],
+      "copyrightText": "NOASSERTION",
+      "fileName": "./scripts/preflight.py",
       "licenseConcluded": "NOASSERTION",
       "licenseInfoInFiles": [
         "NOASSERTION"
@@ -7604,7 +7634,7 @@
       "checksums": [
         {
           "algorithm": "SHA256",
-          "checksumValue": "91bb18a0cfdd756c5b62f70ef5503f0bb4336be4e70d50b6d6b60188c2528618"
+          "checksumValue": "8db89a894a44be374bfe77219b03bbce8a01b931213d3978115b3f4779cd4062"
         }
       ],
       "copyrightText": "NOASSERTION",
@@ -7634,7 +7664,7 @@
       "checksums": [
         {
           "algorithm": "SHA256",
-          "checksumValue": "d2eec9eec4cd734b6cfcccc3eced1c722b9380afce978b266f6c73343f2c9d34"
+          "checksumValue": "b1efda2b2df57ca49f6f52024a2e56bcc79163c71574adb5b8a9dc83a7b98fdd"
         }
       ],
       "copyrightText": "NOASSERTION",
@@ -7799,7 +7829,7 @@
       "checksums": [
         {
           "algorithm": "SHA256",
-          "checksumValue": "928e5e4d405d379d96b423340b3b495975118f16bf2d58cefb5d3a3f048fd772"
+          "checksumValue": "1c1ac6a6c51715b48f2dc2aa8d70d3ee78035f41a4a5f197a0e0d996dab36fa8"
         }
       ],
       "copyrightText": "NOASSERTION",
@@ -7814,7 +7844,7 @@
       "checksums": [
         {
           "algorithm": "SHA256",
-          "checksumValue": "ce03ccb381a4a0c059875ec79ee69e3253e6024766c0b0a81bd62a6a6429a4cb"
+          "checksumValue": "366d454ffcc621e10baadc5d3f1e6f828bcb2fae653beadc1482f0228df11a2d"
         }
       ],
       "copyrightText": "NOASSERTION",
@@ -7844,7 +7874,7 @@
       "checksums": [
         {
           "algorithm": "SHA256",
-          "checksumValue": "c1796db714d52e8bfc950044dba2cd60b96eb726dbb881fc60d8cb57af28b30e"
+          "checksumValue": "4629528f7db99c9030542bdde45426dfa1c018768249d220beab1fddf2afa656"
         }
       ],
       "copyrightText": "NOASSERTION",
@@ -8189,7 +8219,7 @@
       "checksums": [
         {
           "algorithm": "SHA256",
-          "checksumValue": "4d86fa7f5257200804a83e3aa4682d6767d023195831af30b34c71b71c2f078e"
+          "checksumValue": "872b18d8c56ad9756819f3967d29951ff226be68265e3c0e3106e4805e90e487"
         }
       ],
       "copyrightText": "NOASSERTION",
@@ -8279,7 +8309,7 @@
       "checksums": [
         {
           "algorithm": "SHA256",
-          "checksumValue": "98b13298c682678a69f32b67aa2931352e4ec487c0b8e1d01c9cb11ffca67407"
+          "checksumValue": "d5a83bc863569b184eda208f36e2488bf1ba46b4186b281893fba752dd70f6f2"
         }
       ],
       "copyrightText": "NOASSERTION",
@@ -8294,7 +8324,7 @@
       "checksums": [
         {
           "algorithm": "SHA256",
-          "checksumValue": "b08ad1a40b8ca50b4b29f954675e8ab1441669f30ee0541a44a15cd7e932488a"
+          "checksumValue": "3b5dd56923ddd786747ead72b34d67828504d150b34ce39eaf90a06b94a88d83"
         }
       ],
       "copyrightText": "NOASSERTION",
@@ -8339,7 +8369,7 @@
       "checksums": [
         {
           "algorithm": "SHA256",
-          "checksumValue": "b736f86ce43a31fb5b99fd3b43e6383ba29085ca7e8e165eafba22cb8eacd8be"
+          "checksumValue": "fd6e051b9fd8583ffdb22e8fabdb673287bb4dbafa2859731dfa271321237e5e"
         }
       ],
       "copyrightText": "NOASSERTION",
@@ -9014,7 +9044,7 @@
       "checksums": [
         {
           "algorithm": "SHA256",
-          "checksumValue": "866e62ac45904db760e715dd96feb9b156b15d07e190ed36cce72f54a85625aa"
+          "checksumValue": "145a71d833d30d100ca121ea0e6b22bb884386c926cc20b342d544362048d1f9"
         }
       ],
       "copyrightText": "NOASSERTION",
@@ -9029,7 +9059,7 @@
       "checksums": [
         {
           "algorithm": "SHA256",
-          "checksumValue": "cf2b8034b2a1e09e8788652926a4b25dcef27b881c91ebd3fb1612d2d08c83a9"
+          "checksumValue": "af8556253803a792324a0e12c52f5389932fd0e7b8c51e7103e49a0c9338a083"
         }
       ],
       "copyrightText": "NOASSERTION",
@@ -9089,7 +9119,7 @@
       "checksums": [
         {
           "algorithm": "SHA256",
-          "checksumValue": "26abe86b02375033cc4e4d7a29ddbe14c1e6cdfdc3d48b9ce01a29076bc5a8ff"
+          "checksumValue": "7650214749c7ca84842c990c69d9dcf31f7264c43e8bb220b4fc5805ec1486e7"
         }
       ],
       "copyrightText": "NOASSERTION",
@@ -9104,7 +9134,7 @@
       "checksums": [
         {
           "algorithm": "SHA256",
-          "checksumValue": "a858b759bbcaf86d428ca0718a6167f895171e925d09a1419a3b15154aa2b1a4"
+          "checksumValue": "9481991104e8d391492fd0eb297aa18a284afee36fa2e627c62ce988cc1edc20"
         }
       ],
       "copyrightText": "NOASSERTION",
@@ -9329,7 +9359,7 @@
       "checksums": [
         {
           "algorithm": "SHA256",
-          "checksumValue": "a0dd80909183421ec6b117ef809b5302db3b27aefc2cf34b732eee03a5abd928"
+          "checksumValue": "23457bbbb1ce2c03410871afc90d0e72a98b8f704ce46193abe49712be204ada"
         }
       ],
       "copyrightText": "NOASSERTION",
@@ -9359,7 +9389,7 @@
       "checksums": [
         {
           "algorithm": "SHA256",
-          "checksumValue": "86d098c7b40c8508f4011fb91d08558d6cf9416f19c3f6057072396d676dd422"
+          "checksumValue": "29b79024266899eab5e02b31f7c2f7491189af944fbb3d2b98565779d12cfa1d"
         }
       ],
       "copyrightText": "NOASSERTION",
@@ -9434,7 +9464,7 @@
       "checksums": [
         {
           "algorithm": "SHA256",
-          "checksumValue": "611551f1be4cc068dd60e45b4f2ac69cbe8c845fbc768020edda92ae23baa16a"
+          "checksumValue": "5698ad5f8147193754643163c4ff51edc260dc45959c8530fe8a2073c209db83"
         }
       ],
       "copyrightText": "NOASSERTION",
@@ -9610,6 +9640,21 @@
       ]
     },
     {
+      "SPDXID": "SPDXRef-File-tests-test-schedule-ownership.py",
+      "checksums": [
+        {
+          "algorithm": "SHA256",
+          "checksumValue": "c26c80e8048dd93d1f39dbd6c4176195c4bac42ccd4a7fbf542626a4f10feee0"
+        }
+      ],
+      "copyrightText": "NOASSERTION",
+      "fileName": "./tests/test_schedule_ownership.py",
+      "licenseConcluded": "NOASSERTION",
+      "licenseInfoInFiles": [
+        "NOASSERTION"
+      ]
+    },
+    {
       "SPDXID": "SPDXRef-File-tests-test-sdk-vault.py",
       "checksums": [
         {
@@ -9664,6 +9709,21 @@
       ],
       "copyrightText": "NOASSERTION",
       "fileName": "./tests/test_standalone_toolchain.py",
+      "licenseConcluded": "NOASSERTION",
+      "licenseInfoInFiles": [
+        "NOASSERTION"
+      ]
+    },
+    {
+      "SPDXID": "SPDXRef-File-tests-test-text-hygiene.py",
+      "checksums": [
+        {
+          "algorithm": "SHA256",
+          "checksumValue": "4aea1bcfa0e37616c042aa1f0e886e50e2cc68fae51738d2864463692a4a1470"
+        }
+      ],
+      "copyrightText": "NOASSERTION",
+      "fileName": "./tests/test_text_hygiene.py",
       "licenseConcluded": "NOASSERTION",
       "licenseInfoInFiles": [
         "NOASSERTION"
@@ -9734,7 +9794,7 @@
       "checksums": [
         {
           "algorithm": "SHA256",
-          "checksumValue": "681f29db8260d4abc620d28edca86321c5d356a3fdfa8cf46b9b1843fda2d63a"
+          "checksumValue": "e9cff26a715baf76cad4cf3226ba62ded5f0eebf2e32a4ef7130804b7b11495d"
         }
       ],
       "copyrightText": "NOASSERTION",
@@ -9749,7 +9809,7 @@
       "checksums": [
         {
           "algorithm": "SHA256",
-          "checksumValue": "683c3e88149cff93fab266e73a859b98c1f39c5f2af6c9c8c032873115876c24"
+          "checksumValue": "acd46f506a79e4a8ccc0fe3f7616da4b347ea012bd37e44b85c230577f343f12"
         }
       ],
       "copyrightText": "NOASSERTION",
@@ -9824,7 +9884,7 @@
       "checksums": [
         {
           "algorithm": "SHA256",
-          "checksumValue": "3a90ade617cc2f11b513dc6c8b369d82d87545909f512f8be51a2de899d01c56"
+          "checksumValue": "19f77fe9e16985ba6b585f42679589566071338bc6b513b114545f242995cf0c"
         }
       ],
       "copyrightText": "NOASSERTION",
@@ -9899,7 +9959,7 @@
       "checksums": [
         {
           "algorithm": "SHA256",
-          "checksumValue": "edb4cd00898e1afacd90891e77d3b637332c48cee258bafe13e7abda916455b1"
+          "checksumValue": "6d83031c169f5eed502d875b6b9a4b315e46f49762b20e6c19756e14b374248a"
         }
       ],
       "copyrightText": "NOASSERTION",
@@ -9929,7 +9989,7 @@
       "checksums": [
         {
           "algorithm": "SHA256",
-          "checksumValue": "928e5e4d405d379d96b423340b3b495975118f16bf2d58cefb5d3a3f048fd772"
+          "checksumValue": "1c1ac6a6c51715b48f2dc2aa8d70d3ee78035f41a4a5f197a0e0d996dab36fa8"
         }
       ],
       "copyrightText": "NOASSERTION",
@@ -9944,7 +10004,7 @@
       "checksums": [
         {
           "algorithm": "SHA256",
-          "checksumValue": "ce03ccb381a4a0c059875ec79ee69e3253e6024766c0b0a81bd62a6a6429a4cb"
+          "checksumValue": "366d454ffcc621e10baadc5d3f1e6f828bcb2fae653beadc1482f0228df11a2d"
         }
       ],
       "copyrightText": "NOASSERTION",
@@ -9955,7 +10015,7 @@
       ]
     }
   ],
-  "name": "Skyrim-Forge-6.11.2",
+  "name": "Skyrim-Forge-6.11.3",
   "packages": [
     {
       "SPDXID": "SPDXRef-Package",
@@ -9965,7 +10025,7 @@
       "licenseConcluded": "MIT",
       "licenseDeclared": "MIT",
       "name": "Skyrim Forge",
-      "versionInfo": "6.11.2"
+      "versionInfo": "6.11.3"
     }
   ],
   "spdxVersion": "SPDX-2.3"

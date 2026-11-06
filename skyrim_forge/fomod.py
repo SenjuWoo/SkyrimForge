@@ -189,6 +189,8 @@ def _relative_path(value: Any, label: str, *, allow_empty: bool = False) -> str:
         return ""
     if not text:
         raise ValidationError(f"{label} must not be empty")
+    if "//" in text or text.endswith("/") or any(part == "." for part in text.split("/")):
+        raise ValidationError(f"{label} must use canonical separators without '.' segments: {value!r}")
     path = PurePosixPath(text)
     if path.is_absolute() or text.startswith("/") or re.match(r"^[A-Za-z]:", text):
         raise ValidationError(f"{label} must be a relative archive path: {value!r}")

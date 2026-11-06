@@ -46,6 +46,32 @@ def _text(value: Any, label: str, *, required: bool = True) -> str:
     return text
 
 
+def _boolean(value: Any, label: str) -> bool:
+    if not isinstance(value, bool):
+        raise ValidationError(f"{label} must be a JSON boolean")
+    return value
+
+
+def _metadata_text(value: Any, label: str, *, required: bool = True) -> str:
+    """Metadata that ends up inside a CommonLibSSE-generated C++ string literal.
+
+    The pinned SDK writes NAME/AUTHOR/EMAIL into plugin.cpp as raw text inside
+    "..."; CMake quoting cannot protect that. A quote or backslash is rejected
+    here rather than producing malformed source later.
+    """
+    text = _text(value, label, required=required)
+    for character in ('"', "\\"):
+        if character in text:
+            raise ValidationError(f"{label} cannot contain {character!r}: the pinned CommonLibSSE CMake helper interpolates it into C++ source")
+    return text
+
+
+def _numeric_version(value: str, label: str) -> str:
+    if not re.fullmatch(r"\d+(\.\d+){1,3}", value):
+        raise ValidationError(f"{label} must be a dotted numeric version for CommonLibSSE: {value!r}")
+    return value
+
+
 def validate_plan(data: Any) -> dict[str, Any]:
     root = _obj(data, "native plan")
     allowed = {"schema", "project", "display_name", "version", "author", "email", "description", "minimum_skse_version", "runtime_strategy", "compatible_runtimes", "struct_dependent", "log_name", "namespace"}
@@ -59,8 +85,7 @@ def validate_plan(data: Any) -> dict[str, Any]:
         raise ValidationError("project must be a C/C++ identifier using 1-64 ASCII letters, digits, or underscores")
     version = _text(root.get("version"), "version")
     validate_semver(version)
-    minimum_skse = _text(root.get("minimum_skse_version", "0.0.0"), "minimum_skse_version")
-    validate_semver(minimum_skse)
+    minimum_skse = _numeric_version(_text(root.get("minimum_skse_version", "0.0.0"), "minimum_skse_version"), "minimum_skse_version")
     strategy = _text(root.get("runtime_strategy", "address_library"), "runtime_strategy")
     if strategy not in STRATEGIES:
         raise ValidationError(f"runtime_strategy must be one of {sorted(STRATEGIES)}")
@@ -68,8 +93,10 @@ def validate_plan(data: Any) -> dict[str, Any]:
     if not isinstance(runtimes, list) or not all(isinstance(item, str) for item in runtimes):
         raise ValidationError("compatible_runtimes must be a string array")
     runtimes = [item.strip() for item in runtimes]
+    if len(runtimes) > 16:
+        raise ValidationError("compatible_runtimes accepts at most 16 versions (CommonLibSSE limit)")
     for item in runtimes:
-        validate_semver(item)
+        _numeric_version(item, "compatible_runtimes entry")
     if len(runtimes) != len(set(runtimes)):
         raise ValidationError("compatible_runtimes contains duplicates")
     if strategy == "explicit_runtimes" and not runtimes:
@@ -82,15 +109,15 @@ def validate_plan(data: Any) -> dict[str, Any]:
     return {
         "schema": PLAN_SCHEMA,
         "project": project,
-        "display_name": _text(root.get("display_name", project), "display_name"),
+        "display_name": _metadata_text(root.get("display_name", project), "display_name"),
         "version": version,
-        "author": _text(root.get("author"), "author"),
-        "email": _text(root.get("email", ""), "email", required=False),
+        "author": _metadata_text(root.get("author"), "author"),
+        "email": _metadata_text(root.get("email", ""), "email", required=False),
         "description": _text(root.get("description"), "description"),
         "minimum_skse_version": minimum_skse,
         "runtime_strategy": strategy,
         "compatible_runtimes": runtimes,
-        "struct_dependent": bool(root.get("struct_dependent", False)),
+        "struct_dependent": _boolean(root.get("struct_dependent", False), "struct_dependent"),
         "log_name": safe_name(_text(root.get("log_name", project), "log_name"), fallback=project),
         "namespace": namespace,
     }
@@ -141,7 +168,7 @@ def _cmake(plan: dict[str, Any]) -> str:
         f'NAME {_cmake_string(plan["display_name"])}',
         f'AUTHOR {_cmake_string(plan["author"])}',
         f'EMAIL {_cmake_string(plan["email"])}',
-        f'VERSION {_cmake_string(plan["version"])}',
+        f'VERSION {_cmake_string(_cmake_version(plan["version"]))}',
         f'MINIMUM_SKSE_VERSION {_cmake_string(plan["minimum_skse_version"])}',
         "SOURCES src/plugin.cpp",
     ])

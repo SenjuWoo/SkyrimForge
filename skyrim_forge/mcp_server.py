@@ -146,7 +146,7 @@ READ_ONLY_TOOLS = {
 }
 DESTRUCTIVE_TOOLS = {
     "forge_config_set", "forge_tool_import", "forge_tool_import_all", "forge_tool_configure",
-    "forge_tool_reuse_reverse", "forge_automation_run",
+    "forge_tool_reuse_reverse", "forge_automation_run", "forge_maintain",
 }
 COMPACT_GROUPS: dict[str, set[str]] = {
     "inspect": {
@@ -180,7 +180,9 @@ def _annotations(name: str) -> dict[str, bool]:
         return {"readOnlyHint": True, "destructiveHint": False, "idempotentHint": True, "openWorldHint": False}
     if name in DESTRUCTIVE_TOOLS:
         return {"readOnlyHint": False, "destructiveHint": True, "idempotentHint": False, "openWorldHint": False}
-    return {"readOnlyHint": False, "destructiveHint": False, "idempotentHint": True, "openWorldHint": False}
+    # A writer that is not known to be destructive still creates or replaces
+    # output, so it is not idempotent. Only the read-only path may claim that.
+    return {"readOnlyHint": False, "destructiveHint": False, "idempotentHint": False, "openWorldHint": False}
 
 
 def _compact_specs() -> dict[str, dict[str, Any]]:
