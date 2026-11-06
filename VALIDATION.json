@@ -125,8 +125,8 @@
       "result": "PASS",
       "sdist": {
         "result": "PASS",
-        "sha256": "509d837d527b1b5536a2e2426012019d20e91c809af6358dcac5eee82ec82d27",
-        "size": 6868784
+        "sha256": "2c427a1662cf10cf2b6ffae02368720edbb08842019bd0f4e79abcb99849314e",
+        "size": 6869361
       },
       "wheel": {
         "result": "PASS",

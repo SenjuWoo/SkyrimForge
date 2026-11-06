@@ -1,13 +1,13 @@
 {
   "SPDXID": "SPDXRef-DOCUMENT",
   "creationInfo": {
-    "created": "2026-11-06T21:29:56Z",
+    "created": "2026-11-06T21:56:54Z",
     "creators": [
       "Tool: Skyrim Forge validator 6.11.7"
     ]
   },
   "dataLicense": "CC0-1.0",
-  "documentNamespace": "https://github.com/SenjuWoo/SkyrimForge/spdx/6.11.7/7939df7426e8",
+  "documentNamespace": "https://github.com/SenjuWoo/SkyrimForge/spdx/6.11.7/14daf915cb75",
   "files": [
     {
       "SPDXID": "SPDXRef-File-.editorconfig",
@@ -9194,7 +9194,7 @@
       "checksums": [
         {
           "algorithm": "SHA256",
-          "checksumValue": "09f9c860d9ad606a9f10046899edf3dc6b0106bd2fe9e601d16000b64c0767b3"
+          "checksumValue": "a4b154e6473e18645755e60f4fb7eb404ad86bb6373d593ff07ddd0700d8a6d5"
         }
       ],
       "copyrightText": "NOASSERTION",
@@ -10164,7 +10164,7 @@
       ],
       "name": "Skyrim Forge",
       "packageVerificationCode": {
-        "packageVerificationCodeValue": "e8dceb7c9c6f821c01a1bf70627f9a6db90c0e2c"
+        "packageVerificationCodeValue": "fda711167cb74253bc8efabe67ef62cf9d9f10e6"
       },
       "versionInfo": "6.11.7"
     },
