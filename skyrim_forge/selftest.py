@@ -13,6 +13,7 @@ from .papyrus import self_test as papyrus_self_test
 from .skse_pe import self_test as skse_pe_self_test
 from .telemetry import self_test as telemetry_self_test
 from .textures import self_test as texture_self_test
+from .maintenance import self_test as maintenance_self_test
 from .vfs_sandbox import self_test as vfs_sandbox_self_test
 from .version import VERSION
 from .toolchain import load_catalog
@@ -29,6 +30,7 @@ def run_all() -> dict[str, Any]:
         "skse_pe": skse_pe_self_test(),
         "audio": audio_self_test(),
         "textures": texture_self_test(),
+        "maintenance": maintenance_self_test(),
         "telemetry": telemetry_self_test(),
         "vfs_sandbox": vfs_sandbox_self_test(),
         "nexus": nexus_self_test(),

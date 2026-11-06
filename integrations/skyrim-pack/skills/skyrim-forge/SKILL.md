@@ -104,6 +104,10 @@ package to a new version
 report remaining in-game tests
 ```
 
+## Maintenance and moved paths
+
+`forge maintain` lists Forge-owned leftovers (spills, sandbox runs, old provider skill backups), flags configured roots that no longer exist and names a discovered replacement, then runs the self-test. It is a dry run; delete with `--apply --approve`, accept a moved root with `--fix-roots`. Never delete mods, tool installs or user files to "clean up" — the command exists so nothing else has to be touched.
+
 ## Procedural textures
 
 When an asset is missing, `forge texture-generate` writes a deterministic DDS

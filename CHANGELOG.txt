@@ -1,3 +1,7 @@
+## 6.10.0 (2026-11-04)
+
+- `forge maintain`: one command that reports or removes Forge-owned leftovers (spill files and sandbox runs older than a week, provider skill backups beyond the newest two), flags configured roots that moved and names the discovered replacement, and runs the self-test. Dry-run by default; `--apply --approve` deletes and `--fix-roots` writes a discovered path with a `config.toml` backup. MCP exposes it as `forge_maintain`.
+- README rewritten around the task instead of feature history: one install table, one capability table, one safety list, one docs index; duplicated Nexus, FOMOD and evidence sections removed in favour of their guides. Added `docs/MAINTENANCE.md`.
 ## 6.9.1 (2026-11-04)
 
 - `skyrim-memory` gains the settled-results ledgers that lived in the Ultimate AI Starter Bundle's `project-intel` cards: `references/SETTLED-RESULTS.md` (crash triage, FOMOD/Vortex, FormID, headpart and conflict results) and `references/RELEASE-RESULTS.md` (Nexus pages, permissions, releases). The skill's start list reads them after `GLOBAL-LESSONS.md`.

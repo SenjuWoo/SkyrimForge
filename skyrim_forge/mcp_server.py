@@ -112,6 +112,7 @@ TOOL_SPECS: dict[str, dict[str, Any]] = {
     "forge_audio_extract_fuz": {"description": "Split a FUZ into its .lip and .xwm payloads inside Forge workspace staging.", "inputSchema": _schema({"fuz": _string(), "output_dir": _string(), "approved": _boolean()}, ["fuz", "output_dir", "approved"])},
     "forge_audio_create_fuz": {"description": "Pack an .xwm (and optional .lip) into a FUZ container inside Forge workspace staging.", "inputSchema": _schema({"xwm": _string(), "output": _string(), "lip": _string(), "approved": _boolean()}, ["xwm", "output", "approved"])},
     "forge_voice_path_validate": {"description": "Check a staged mod keeps voice files at Sound/Voice/<plugin>/<voice type>/<file>.", "inputSchema": _schema({"root": _string()}, ["root"])},
+    "forge_maintain": {"description": "Report or remove Forge-owned leftovers (spills, sandbox runs, old provider skill backups), flag configured roots that moved and name a discovered replacement; optionally run the self-test. Dry-run unless apply is true.", "inputSchema": _schema({"days": _integer(), "keep_backups": _integer(), "apply": _boolean(), "fix_roots": _boolean(), "self_test": _boolean(), "approved": _boolean()})},
     "forge_texture_inspect": {"description": "Read a DDS header: format (BC1/BC3/A8R8G8B8), dimensions, mip chain and payload consistency.", "inputSchema": _schema({"path": _string()}, ["path"])},
     "forge_texture_generate": {"description": "Generate a deterministic procedural DDS texture inside the workspace: solid, checker, gradient, noise, bricks or a tangent-space normal map, with full mip chains and an optional PNG preview.", "inputSchema": _schema({
         "kind": {"type": "string", "enum": ["solid", "checker", "gradient", "noise", "bricks", "normal"]},
@@ -168,7 +169,7 @@ COMPACT_GROUPS: dict[str, set[str]] = {
         "forge_deadmesh_scan", "forge_champollion_decompile", "forge_synthesis_run", "forge_seq_build",
         "forge_framework_build", "forge_papyrus_compile", "forge_native_scaffold", "forge_native_build",
         "forge_fomod_scaffold", "forge_fomod_build", "forge_fomod_test_install", "forge_plugin_build",
-        "forge_automation_run", "forge_audio_extract_fuz", "forge_audio_create_fuz", "forge_texture_generate",
+        "forge_automation_run", "forge_audio_extract_fuz", "forge_audio_create_fuz", "forge_texture_generate", "forge_maintain",
     },
     "release": {"forge_release_build", "forge_nexus_scaffold", "forge_nexus_build", "forge_nexus_page_render"},
 }
@@ -298,6 +299,7 @@ def _call(service: ForgeService, name: str, args: dict[str, Any]) -> Any:
         case "forge_audio_create_fuz": return service.audio_create_fuz(args["xwm"], args["output"], approved, args.get("lip") or None)
         case "forge_voice_path_validate": return service.voice_path_validate(args["root"])
         case "forge_texture_inspect": return service.texture_inspect(args["path"])
+        case "forge_maintain": return service.maintain(int(args.get("days", 7)), int(args.get("keep_backups", 2)), bool(args.get("apply", False)), bool(args.get("fix_roots", False)), bool(args.get("self_test", True)), approved)
         case "forge_texture_generate": return service.texture_generate(args["kind"], args["output"], size=int(args.get("size", 512)), fmt=args.get("format", "bc1"), seed=int(args.get("seed", 0)), primary=args.get("primary", "#808080"), secondary=args.get("secondary", "#303030"), octaves=int(args.get("octaves", 5)), frequency=float(args.get("frequency", 4.0)), cells=int(args.get("cells", 8)), strength=float(args.get("strength", 0.12)), flip_green=bool(args.get("flip_green", False)), preview=args.get("preview") or None, approved=approved)
         case "forge_skse_inspect_pe": return service.skse_inspect_pe(args["dll"])
         case "forge_skse_audit_imports": return service.skse_audit_imports(args["dll"])

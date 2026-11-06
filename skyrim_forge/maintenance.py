@@ -1,0 +1,259 @@
+"""Keep a Forge installation healthy: prune Forge-owned leftovers, detect moved
+game/manager roots, and report the self-test.
+
+The installer and updater create backups, spill files and sandbox runs that are
+useful for a week and pure clutter afterwards. This module removes only paths
+Forge itself can prove it owns:
+
+  * <workspace>/.forge/spills/*.json older than -days
+  * <workspace>/.forge/vfs-sandbox/* older than -days
+  * <provider>/.skyrim-forge-skill-work/backup-<name>-<32 hex>, all but the newest -keep
+
+It also compares the configured paths with the machine: a missing Skyrim Data,
+Vortex staging, MO2 instance or workspace is reported with a discovered
+candidate, and --fix-roots can write that candidate back (with a config backup).
+Nothing outside those patterns is ever deleted.
+"""
+from __future__ import annotations
+
+import os
+import re
+import shutil
+from datetime import datetime, timedelta, timezone
+from pathlib import Path
+from typing import Any, Iterable
+
+from .config import ForgeConfig, save_config
+from .errors import SafetyError, ValidationError
+from .util import utc_now
+from .version import VERSION
+
+BACKUP_NAME = re.compile(r"^backup-.+-[0-9a-f]{32}$")
+PROVIDER_HOMES = (
+    Path.home() / ".claude", Path.home() / ".agents", Path.home() / ".grok",
+    Path.home() / ".kimi", Path.home() / ".codex", Path.home() / ".hermes",
+    Path(os.environ.get("LOCALAPPDATA", "")) / "hermes",
+)
+ROOT_KEYS = ("workspace_root", "skyrim_data", "vortex_staging", "mo2_profiles_root", "tools_root")
+
+
+def _age_days(path: Path) -> float:
+    return (datetime.now(timezone.utc) - datetime.fromtimestamp(path.stat().st_mtime, timezone.utc)).total_seconds() / 86400
+
+
+def _owned(path: Path, parent: Path) -> bool:
+    try:
+        resolved, base = path.resolve(), parent.resolve()
+    except OSError:
+        return False
+    return resolved != base and resolved.is_relative_to(base) and not path.is_symlink()
+
+
+def _stale_children(parent: Path, days: int, pattern: str = "*") -> list[Path]:
+    if not parent.is_dir():
+        return []
+    return sorted((p for p in parent.glob(pattern) if _owned(p, parent) and _age_days(p) >= days),
+                  key=lambda p: p.stat().st_mtime)
+
+
+def _provider_backups(keep: int, homes: Iterable[Path] | None = None) -> tuple[list[Path], int]:
+    """Return provider skill backups beyond the newest `keep`, per provider."""
+    removable: list[Path] = []
+    kept = 0
+    for home in homes or PROVIDER_HOMES:
+        work = home / ".skyrim-forge-skill-work"
+        if not work.is_dir():
+            continue
+        backups = sorted((p for p in work.iterdir() if p.is_dir() and BACKUP_NAME.match(p.name)),
+                         key=lambda p: p.stat().st_mtime, reverse=True)
+        kept += min(keep, len(backups))
+        for old in backups[keep:]:
+            if _owned(old, work):
+                removable.append(old)
+    return removable, kept
+
+
+def _steam_libraries(steam_roots: Iterable[Path] | None = None) -> list[Path]:
+    """Every Steam library folder that holds a Skyrim Special Edition Data dir."""
+    found: list[Path] = []
+    roots = list(steam_roots or (Path("C:/Program Files (x86)/Steam"), Path("C:/Program Files/Steam")))
+    for root in roots:
+        vdf = root / "steamapps" / "libraryfolders.vdf"
+        libraries = [root]
+        if vdf.is_file():
+            text = vdf.read_text(encoding="utf-8", errors="replace")
+            libraries += [Path(match) for match in re.findall(r'"path"\s+"([^"]+)"', text)]
+        for library in libraries:
+            data = library / "steamapps" / "common" / "Skyrim Special Edition" / "Data"
+            if data.is_dir():
+                found.append(data)
+    return found
+
+
+def _candidate_roots(steam_roots: Iterable[Path] | None = None) -> dict[str, Path]:
+    appdata = Path(os.environ.get("APPDATA", ""))
+    candidates: dict[str, Path] = {}
+    steam = _steam_libraries(steam_roots)
+    if steam:
+        candidates["skyrim_data"] = steam[0]
+    vortex = appdata / "Vortex" / "skyrimse" / "mods"
+    if vortex.is_dir():
+        candidates["vortex_staging"] = vortex
+    workspace = Path(__file__).resolve().parents[1] / "Workspaces"
+    if workspace.is_dir():
+        candidates["workspace_root"] = workspace
+    return candidates
+
+
+def root_report(config: ForgeConfig, steam_roots: Iterable[Path] | None = None) -> list[dict[str, Any]]:
+    candidates = _candidate_roots(steam_roots)
+    rows = []
+    for key in ROOT_KEYS:
+        current = getattr(config, key, None)
+        if current is None:
+            continue
+        path = Path(current)
+        row = {"key": key, "configured": str(path), "status": "OK" if path.exists() else "MISSING"}
+        if row["status"] == "MISSING" and key in candidates:
+            row.update(status="MOVED", candidate=str(candidates[key]))
+        rows.append(row)
+    return rows
+
+
+def inspect(config: ForgeConfig, *, days: int = 7, keep_backups: int = 2,
+            provider_homes: Iterable[Path] | None = None) -> dict[str, Any]:
+    """List every Forge-owned path old enough to remove, without touching it."""
+    if days < 1 or keep_backups < 0:
+        raise ValidationError("days must be >= 1 and keep_backups >= 0")
+    forge = Path(config.workspace_root) / ".forge"
+    spills = _stale_children(forge / "spills", days, "*.json")
+    sandboxes = _stale_children(forge / "vfs-sandbox", days)
+    backups, kept = _provider_backups(keep_backups, provider_homes)
+    removals: list[dict[str, Any]] = []
+    for kind, paths in (("spill", spills), ("sandbox", sandboxes), ("skill-backup", backups)):
+        for path in paths:
+            size = sum(f.stat().st_size for f in path.rglob("*") if f.is_file()) if path.is_dir() else path.stat().st_size
+            removals.append({"kind": kind, "path": str(path), "files": 1 if path.is_file() else sum(1 for f in path.rglob("*") if f.is_file()), "bytes": size})
+    return {"removals": removals, "kept_skill_backups": kept}
+
+
+def _owned_bases(config: ForgeConfig, provider_homes: Iterable[Path] | None = None) -> list[Path]:
+    forge = Path(config.workspace_root) / ".forge"
+    bases = [forge / "spills", forge / "vfs-sandbox"]
+    for home in provider_homes or PROVIDER_HOMES:
+        bases.append(home / ".skyrim-forge-skill-work")
+    return bases
+
+
+def apply(config: ForgeConfig, report: dict[str, Any], provider_homes: Iterable[Path] | None = None) -> dict[str, Any]:
+    """Delete exactly the paths inspect named, and only when they sit under a Forge-owned base."""
+    bases = [base.resolve() for base in _owned_bases(config, provider_homes)]
+    removed = []
+    for item in report["removals"]:
+        path = Path(item["path"])
+        resolved = path.resolve()
+        if resolved in bases or not any(resolved.is_relative_to(base) for base in bases):
+            raise SafetyError(f"Refusing to remove a path outside Forge-owned storage: {path}")
+        if path.is_dir():
+            shutil.rmtree(path)
+        else:
+            path.unlink()
+        removed.append(item["path"])
+    return {"removed": removed, "count": len(removed)}
+
+
+def fix_roots(config: ForgeConfig, rows: list[dict[str, Any]]) -> dict[str, Any]:
+    """Write discovered replacements for MISSING/MOVED roots, keeping a config backup."""
+    changed = []
+    backup = ""
+    for row in rows:
+        if row["status"] == "MOVED":
+            setattr(config, row["key"], Path(row["candidate"]))
+            changed.append({"key": row["key"], "value": row["candidate"]})
+    if changed:
+        backup = config.config_path.with_name(config.config_path.name + ".bak-maintain-" + utc_now().replace(":", "").replace("-", ""))
+        shutil.copy2(config.config_path, backup)
+        save_config(config)
+    return {"changed": changed, "backup": str(backup) if changed else ""}
+
+
+def run(config: ForgeConfig, *, days: int = 7, keep_backups: int = 2, apply_changes: bool = False,
+        add_roots: bool = False, include_health: bool = True, provider_homes: Iterable[Path] | None = None,
+        steam_roots: Iterable[Path] | None = None, approved: bool = False) -> dict[str, Any]:
+    """Dry-run by default. apply_changes and add_roots are separate, explicit steps."""
+    if apply_changes and not approved:
+        raise SafetyError("Removing leftovers needs an explicit approval")
+    found = inspect(config, days=days, keep_backups=keep_backups, provider_homes=provider_homes)
+    rows = root_report(config, steam_roots)
+    result: dict[str, Any] = {
+        "result": "PASS",
+        "version": VERSION,
+        "removals_planned": len(found["removals"]),
+        "removals": found["removals"],
+        "kept_skill_backups": found["kept_skill_backups"],
+        "roots": rows,
+        "applied": False,
+        "roots_changed": [],
+    }
+    if add_roots:
+        result["roots_changed"] = fix_roots(config, rows)["changed"]
+        result["roots"] = root_report(config, steam_roots)
+    if apply_changes:
+        result["applied"] = apply(config, found, provider_homes)
+    if include_health:
+        from .selftest import run_all
+        health = run_all()
+        result["version"] = health["version"]
+        result["health"] = {"result": health["result"], "failed": health["failed"], "checks": len(health["checks"])}
+        if health["result"] != "PASS":
+            result["result"] = "FAIL"
+    if any(row["status"] in {"MISSING", "MOVED"} for row in result["roots"]):
+        result["result"] = "WARN" if result["result"] == "PASS" else result["result"]
+    return result
+
+
+def self_test() -> dict[str, Any]:
+    """Fixture: old files are found and removed, new files and unknown dirs survive."""
+    import tempfile
+
+    with tempfile.TemporaryDirectory() as td:
+        root = Path(td)
+        workspace = root / "Workspaces"
+        spills = workspace / ".forge" / "spills"
+        sandbox = workspace / ".forge" / "vfs-sandbox"
+        provider = root / "provider"
+        backups = provider / ".skyrim-forge-skill-work"
+        for path in (spills, sandbox / "old-run", sandbox / "new-run", backups / f"backup-skill-{1:032x}", backups / f"backup-skill-{2:032x}"):
+            path.mkdir(parents=True, exist_ok=True)
+            (path / "payload").write_text("x", encoding="utf-8")
+        import os as _os
+        def age(path: Path, days: int) -> None:
+            stamp = datetime.now().timestamp() - days * 86400
+            _os.utime(path, (stamp, stamp))
+        (spills / "old.json").write_text("{}", encoding="utf-8")
+        (spills / "new.json").write_text("{}", encoding="utf-8")
+        age(spills / "old.json", 10)
+        age(sandbox / "old-run", 10)
+        age(backups / f"backup-skill-{2:032x}", 10)
+        foreign = sandbox / "keep-me"
+        foreign.mkdir()
+
+        config = ForgeConfig(config_path=root / "config.toml", workspace_root=workspace, audit_log=root / "audit.log")
+        config.config_path.write_text("[paths]\n", encoding="utf-8")
+        report = run(config, provider_homes=[provider], include_health=False, days=7, keep_backups=1)
+        planned = {Path(item["path"]).name for item in report["removals"]}
+        checks = {
+            "finds_old_spill": "old.json" in planned,
+            "finds_old_sandbox": "old-run" in planned,
+            "finds_old_backup": f"backup-skill-{2:032x}" in planned,
+            "keeps_new": "new.json" not in planned and "new-run" not in planned,
+            "refuses_unapproved_apply": False,
+        }
+        try:
+            run(config, provider_homes=[provider], include_health=False, apply_changes=True)
+        except SafetyError:
+            checks["refuses_unapproved_apply"] = True
+        applied = run(config, provider_homes=[provider], include_health=False, days=7, keep_backups=1, apply_changes=True, approved=True)
+        checks["deletes_planned"] = len(applied["applied"]["removed"]) == len(report["removals"])
+        checks["keeps_foreign"] = foreign.is_dir() and (spills / "new.json").is_file()
+        return {"result": "PASS" if all(checks.values()) else "FAIL", "checks": checks}

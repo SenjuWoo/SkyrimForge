@@ -6,6 +6,8 @@ The installer creates a local virtual environment and a `.pth` pointer to the ex
 
 The venv base must be durable. `Install-or-Update.ps1` reads `.venv\pyvenv.cfg` and rebuilds from the Windows Python Launcher when `home` points into a provider cache (`codex-runtimes`, `.cache`, `AppData\Local\Temp`, `pipx`, uv cache) or no longer exists. `forge doctor` reports the same check as `virtualenv`; a cached base fails with `VENV_EPHEMERAL_BASE_PYTHON`, because that interpreter disappears when the provider prunes its runtime and every registered MCP client then fails to start.
 
+Weekly upkeep: `forge maintain` prunes Forge-owned leftovers and reports moved roots; see `docs/MAINTENANCE.md`.
+
 Each successful update keeps the newest two Forge-owned backups beside the install root and prunes older `.forge-backup-*` copies it can prove it owns. `scripts/Prune-ForgeBackups.ps1 -Parent <dir> -WhatIf` prints the plan; the owner-update log records `pruned=<n>`. Legacy `Skyrim-Forge.backup-*` directories are never touched.
 
 Replace the whole Forge directory when changing major versions. Do not copy isolated scripts between versions.

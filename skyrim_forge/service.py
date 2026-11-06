@@ -7,6 +7,7 @@ from typing import Any
 from .archive import inspect_archive
 from .audio import create_fuz as audio_create_fuz, extract_fuz as audio_extract_fuz, inspect as audio_inspect, validate_voice_tree
 from .textures import generate as texture_generate, inspect as texture_inspect
+from .maintenance import run as maintenance_run
 from .automation import run_job, validate_job
 from .capabilities import get_capability, registry as capability_registry
 from .config import ForgeConfig, configure_value, load_config, save_config
@@ -320,6 +321,11 @@ class ForgeService:
 
     def voice_path_validate(self, root: str) -> dict[str, Any]:
         return validate_voice_tree(self._read(root))
+
+    def maintain(self, days: int, keep_backups: int, apply_changes: bool, add_roots: bool,
+                 include_health: bool, approved: bool) -> dict[str, Any]:
+        return maintenance_run(self.config, days=days, keep_backups=keep_backups, apply_changes=apply_changes,
+                               add_roots=add_roots, include_health=include_health, approved=approved)
 
     def texture_inspect(self, path: str) -> dict[str, Any]:
         return texture_inspect(self._read(path))

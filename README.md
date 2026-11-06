@@ -4,286 +4,144 @@
 
 <div align="center">
 
-# Skyrim Forge 6.9.1
+# Skyrim Forge 6.10.0
+
+**Typed, safety-first Skyrim SE/AE mod engineering for AI agents — offline, free, MCP-ready.**
 
 <p>
   <a href="https://github.com/SenjuWoo/SkyrimForge/actions/workflows/ci.yml"><img src="https://github.com/SenjuWoo/SkyrimForge/actions/workflows/ci.yml/badge.svg" alt="CI"></a>
   <a href="LICENSE"><img src="https://img.shields.io/badge/license-MIT-8EC8E8?labelColor=0d1117" alt="MIT License"></a>
   <a href="https://github.com/SenjuWoo/SkyrimForge/releases/latest"><img src="https://img.shields.io/github/v/release/SenjuWoo/SkyrimForge?label=release&color=8EC8E8&labelColor=0d1117" alt="latest release"></a>
+  <img src="https://img.shields.io/badge/python-%3E%3D3.11-8EC8E8?labelColor=0d1117" alt="Python 3.11+">
+</p>
+
+<p>
+  <a href="#install">Install</a>
+  ·
+  <a href="#what-it-does">Capabilities</a>
+  ·
+  <a href="#free-assets">Free assets</a>
+  ·
+  <a href="#skill-pack">Skill pack</a>
+  ·
+  <a href="#maintenance">Maintenance</a>
+  ·
+  <a href="CHANGELOG.md">Changelog</a>
 </p>
 
 </div>
 
-> Skyrim Forge is the authoritative repository for the Skyrim SE/AE AI modding
-> stack: the typed Forge MCP/CLI/GUI workbench, the **50-skill Skyrim SE/AE
-> pack** (`integrations/skyrim-pack/`), the `houseCARL 2.1.1` load-order shim
-> (`Setup-HouseCarl.ps1`), and Skyrim tool discovery (`discover_tools.ps1`).
-> The [Ultimate AI Starter Bundle](https://github.com/SenjuWoo/Ultimate-AI-Starter-Bundle)
-> focuses on general AI boost and token efficiency and installs Forge's latest
-> digest-verified release for its opt-in Skyrim pack, keeping any newer local
-> Forge install. Forge releases on its own; who owns what across the three
-> repositories is stated once, in the [bundle README](https://github.com/SenjuWoo/Ultimate-AI-Starter-Bundle#ownership).
+<p align="center">
+  <img src="assets/hero.svg" alt="Skyrim Forge workbench" width="100%">
+</p>
 
-Not the same project as **SkyrimForge** at [docs.skyrimforge.net](https://docs.skyrimforge.net/), an in-game SKSE framework for C# plugins. This Forge runs outside the game and never installs into `Data`.
+Skyrim Forge is a local workbench and MCP server that lets an AI build Skyrim mods without clicking through SSEEdit, Creation Kit, Wrye Bash, LOOT or Mod Organizer 2. A job is typed JSON: Forge validates it, runs only hash-pinned adapters, reopens what it can verify, and reports exactly what was and was not proven.
 
-Skyrim Forge is a local, safety-first engineering workbench and MCP server for Skyrim Special Edition and Anniversary Edition mod development.
-
-Forge speaks the current **MCP `2026-07-28`** revision (since 5.0), which replaced the
-`initialize` handshake with per-request metadata, while still serving the
-handshake era every installed AI client uses today. Both eras run from the same
-process and expose the same tools, so existing Codex, Claude, and Grok
-registrations need no change. See [docs/MCP.md](docs/MCP.md).
-
-Forge includes the **Automation Fabric** plus a mandatory rights-and-publication gate for shareable releases. An AI does not click around SSEEdit, Creation Kit, Wrye Bash, LOOT, or Mod Organizer 2. It submits a typed JSON job. Forge validates the job, snapshots inputs, runs only the configured adapter, captures logs and outputs, reopens what it can verify, and writes an audit receipt.
-
-## Public and Nexus releases
-
-Private packaging and public distribution are different trust levels. When the user or AI states that a mod is **shareable**, **public**, **for Nexus**, or otherwise intended for redistribution, Forge requires a typed Nexus publication plan and the Nexus target release gate. A normal ZIP is not called share-ready.
-
-```text
-forge nexus-scaffold <release-root> NEXUS-PUBLICATION-PLAN.json --mod-name "My Mod" --mod-version 1.0.0 --uploader "Author" --approve
-forge nexus-audit NEXUS-PUBLICATION-PLAN.json <release-root>
-forge nexus-build NEXUS-PUBLICATION-PLAN.json <release-root> <workspace-output> --approve
-```
-
-The gate maps every bundled file to its origin, author, licence or permission basis, credit, redistribution rights, Donation Points status, content classification, AI disclosure, and local evidence. Credit alone is never treated as permission. Forge blocks ambiguous rights, missing licence obligations, original game files, unsupported public claims, and incomplete uploader attestations. It cannot authenticate legal ownership or replace the uploader's final responsibility.
-
-Skyrim prompt packs for any AI: [docs/prompts](docs/prompts/README.md). Which assistant for which task: [docs/WHICH-AI-SHOULD-I-USE.md](docs/WHICH-AI-SHOULD-I-USE.md).
+It runs **outside** the game and never installs into `Data`. Live game files, saves, MO2/Vortex staging and profiles are read-only inputs; every write lands in a Forge workspace behind an explicit approval. It is not the in-game SKSE C# framework at [docs.skyrimforge.net](https://docs.skyrimforge.net/).
 
 ## Install
 
-Either let the Ultimate AI Starter Bundle install it (`START-HERE.bat`, Skyrim pack), or download
-`Skyrim-Forge-<version>.zip` from this repository's Releases, check it against `SHA256SUMS.txt`, extract it and run
-`START-HERE.bat` from the extracted folder. Setup copies this
-directory to your install root, bootstraps the virtualenv, installs the Forge
-skill into every detected AI app, and registers the MCP server with each one.
+| Path | What happens |
+|---|---|
+| **Standalone** | Download `Skyrim-Forge-<version>.zip` from [Releases](https://github.com/SenjuWoo/SkyrimForge/releases/latest), check it against `SHA256SUMS.txt`, extract, run `START-HERE.bat`. |
+| **With the bundle** | The [Ultimate AI Starter Bundle](https://github.com/SenjuWoo/Ultimate-AI-Starter-Bundle) installs the latest digest-verified Forge release for its Skyrim pack and never downgrades a newer local install. |
 
-The install directory carries **no version suffix** -- it is `Skyrim-Forge`,
-next to xEdit and houseCARL, never `Skyrim-Forge-6.1.1`. Every AI
-provider stores the MCP command as an absolute path, so a version-stamped folder
-renames itself out from under all six configs on the next upgrade, and the
-failure is silent: a provider that cannot spawn its server simply shows no
-tools. The installed version is in `VERSION.txt`. The installer migrates an
-existing version-stamped install onto the versionless name rather than leaving
-two copies behind.
+Setup bootstraps a durable Python runtime, installs the Forge skill and the 50-skill Skyrim pack into every detected AI app, and registers the MCP server. It needs no admin rights and defaults to `%LOCALAPPDATA%\Skyrim-Tools\Skyrim-Forge` unless `SKYRIM_FORGE_ROOT` or `INSTALL-AIO.ps1 -ForgeRoot` says otherwise.
 
-### Skyrim Skill Pack, houseCARL & Parallel Development with the General Bundle
+The install folder carries **no version suffix**. Every AI client stores the MCP command as an absolute path, so a version-stamped folder renames itself out from under those configs on the next update. The installed version lives in `VERSION.txt`.
 
-Skyrim Forge owns the complete Skyrim AI modding ecosystem:
+```powershell
+forge doctor            # core health, venv durability, tool readiness
+forge capabilities      # direct / profiled / adapter / worker / human gate
+```
 
-- **50-skill Skyrim SE/AE pack** (`integrations/skyrim-pack/skills/*`, `PACK.json`, `INSTRUCTIONS.md`): `skyrim-tool-router`, `skyrim-memory`, `skyrim-versioned-workspace`, `skyrim-forge`, `housecarl`, `mcm-helper-authoring`, `skyrim-data-frameworks`, `spid-authoring`, `kid-authoring`, `skypatcher-authoring`, `skyrim-base-object-swapper`, `oar-authoring`, `skyrim-nif`, `skyrim-audio`, `skyrim-fomod-packaging`, `skyrim-nexus-publishing`, `skyrim-ship-gate`, and all specialist skills.
-- **`houseCARL 2.1.1` setup & Vortex load-order shim** (`integrations/skyrim-pack/skills/housecarl/scripts/Setup-HouseCarl.ps1`): finds external installations through `HOUSECARL_ROOT`, `HOUSECARL_MCP` or `UABS_TOOL_ROOTS`, compares versions before upgrading with backup, filters `.bak*` folders from the Vortex shim, and respects user roots.
-- **Skyrim tool discovery** (`integrations/skyrim-pack/skills/tool-discovery/scripts/discover_tools.ps1`).
-- **Parallel development with `Ultimate-AI-Starter-Bundle`**:
-  - Running `START-HERE.bat` or `.\Install-AI-Bridge.ps1 -Provider All -Yes` installs the Forge runtime, the `skyrim-forge` skill, and all 50 Skyrim pack skills across Claude, Codex (`~/.agents/skills`), Grok, Kimi, Hermes, and Antigravity, and maintains Forge's independent ownership ledger without rewriting the bundle's ledger.
-  - Conversely, when `Ultimate-AI-Starter-Bundle` runs `INSTALL-AIO.ps1`, its `Install-SkyrimForge.ps1` compares semantic versions and **never downgrades** a newer local `Skyrim-Forge` installation or overwrites newer Forge-owned Skyrim skills.
+## What it does
+
+| Capability | Command surface | Evidence |
+|---|---|---|
+| Plugin headers, records, FormIDs, load order, conflicts | `plugin-info`, `record-query`, `load-order`, `record-conflicts` | Forge parser; not xEdit |
+| Typed plugin output (KYWD/GLOB/FLST/OTFT) | `plugin-plan-validate`, `plugin-build` | Transactional workspace writes |
+| Papyrus analysis and compile | `papyrus-analyze`, `papyrus-compile` | Official compiler; fresh PEX verified, not runtime |
+| SPID / KID / BOS / SkyPatcher / CDF lint and build | `lint`, `framework-plan-validate`, `framework-build` | Source-locked grammar; unknown tokens stay unverified |
+| Static findings vs framework logs | `framework-correlate-logs` | `RUNTIME_VERIFIED_PASS` only for a named file and row |
+| FOMOD 5.0 generation and simulation | `fomod-*` | Every branch extracted into an MO2/Vortex-shaped sandbox with a receipt |
+| Archives, release trees, deterministic ZIPs | `bsarch-*`, `release-*` | Payload hashes and manifest |
+| Nexus publication gate | `nexus-*` | File-level rights, credits, licences, AI disclosure; the uploader signs |
+| Voice containers (FUZ/XWM/WAV/LIP) | `audio-*`, `voice-path-validate` | Container bytes; codec and lip-sync stay external |
+| SKSE DLL inspection | `skse-inspect-pe`, `skse-audit-imports`, `skse-verify-reproducible` | PE32+ bytes; never loaded |
+| Native CommonLibSSE-NG projects | `native-scaffold`, `native-build`, `native-audit` | Source-locked scaffold, pinned tools |
+| xEdit fixed scripts, LOOT, Wrye Bash, Creation Kit | `automation-*` | Allowlisted scripts or pinned workers; completion markers required |
+| Procedural textures | `texture-generate`, `texture-inspect` | DDS bytes and a PNG preview |
+| Cleanup and drift detection | `maintain` | Forge-owned paths only; dry-run by default |
+
+`forge doctor` reports separate readiness levels: `read_only_ready`, `plugin_write_ready`, `xedit_automation_ready`, `mo2_automation_ready`. A missing external tool does not make the core install broken.
+
+## Free assets
+
+`texture-generate` writes deterministic DDS files — BC1, BC3 or A8R8G8B8, full mip chains — from solid, checker, gradient, seeded-noise, brick and tangent-space-normal patterns, with an optional PNG preview. No paid tool, no network, no new dependency.
+
+```powershell
+forge texture-generate bricks mod/Textures/Stone.dds --size 512 --preview mod/Stone.png --approve
+forge texture-generate normal mod/Textures/Stone_n.dds --strength 0.12 --flip-green --approve
+```
+
+Meshes stay with Blender, hand art with GIMP or Krita, BC7 with `texconv`. [docs/ASSET-GENERATION.md](docs/ASSET-GENERATION.md) maps every remaining gap to a free tool and its licence.
+
+## Skill pack
+
+Forge owns the **50-skill Skyrim SE/AE pack** (`integrations/skyrim-pack/`): router, memory, versioned workspace, SPID/KID/SkyPatcher/OAR/CDF grammar, Papyrus, NIF/DDS, FOMOD, Nexus publishing, diagnostics and houseCARL. It ships **inside this repository**, so a standalone Forge install gets the whole pack without the bundle.
 
 ```powershell
 .\Install-Skyrim-Pack.ps1 -Provider All -WithHouseCarl
 ```
 
-Choose the install root with `INSTALL-AIO.ps1 -ForgeRoot '<your tools folder>\Skyrim-Forge'`
-(or set `SKYRIM_FORGE_ROOT`). Without either it goes to
-`%LOCALAPPDATA%\Skyrim-Tools\Skyrim-Forge`, which needs no admin rights and
-makes no assumption about your drive letters.
+The pack's `skyrim-tooling-stack` decides between Forge, houseCARL and external tools. `houseCARL 2.1.1` setup and the Vortex load-order shim live at `integrations/skyrim-pack/skills/housecarl/scripts/Setup-HouseCarl.ps1`.
 
-Then, from the install root:
-
-1. Run `START-HERE.bat`.
-2. Configure core paths. Job staging defaults to `<this install>\Workspaces`.
-3. Configure only the external tools actually installed on the machine.
-
-Every current release carries `resultType` on `tools/call`, which Claude Code
-2026-07-28 requires (since Forge 5.1.5). Grok wedges at 8 running MCP servers; `Register-MCP.ps1`
-will skip Grok rather than take the last slot. See [docs/INSTALLATION.md](docs/INSTALLATION.md)
-and [docs/MCP.md](docs/MCP.md).
-
-Setup prefers `UABS_PYTHON` (process, then user), then a healthy existing Forge runtime and installed Python 3.11+. Healthy app virtual environments stay intact. With `-BootstrapPython` (the default launcher), a manager-owned shared base receives patch updates on its existing major/minor and architecture; manual bases are preserved and reported as update-unverified. When none qualifies, setup installs the official Python install manager and its shared default runtime. It never downloads a separate pinned base interpreter. See [standalone setup and updates](docs/STANDALONE-TOOLCHAIN.md).
-
-The same setup installs the Forge skill for Codex, Claude, Grok, Kimi, and
-Hermes. It registers the same stdio MCP server with every installed client;
-Kimi receives a preserving merge into `mcp.json`, while Hermes is registered
-and connection-tested through its supported MCP CLI. Every provider skill
-receives an `INSTALLATION.json` containing the exact shared CLI and MCP command
-arrays. Missing clients are reported without breaking installed providers.
-
-For unattended setup with an already selected Python executable:
+## Maintenance and updates
 
 ```powershell
-$env:SKYRIM_FORGE_PYTHON = 'C:\Path\To\python.exe'
-.\Install-AI-Bridge.ps1 -Provider All -Yes
+forge maintain                    # report stale Forge-owned files and moved roots
+forge maintain --apply --approve  # delete the reported leftovers
+forge maintain --fix-roots        # write a discovered Skyrim/Vortex path into config
 ```
 
-External tool execution is disabled by default. UI Automation is separately disabled by default.
+`maintain` removes only paths Forge can prove it owns: spill files and sandbox runs older than a week under `<workspace>\.forge`, and provider skill backups beyond the newest two. It reports the self-test, flags configured roots that moved with the discovered replacement, and never touches a mod, a tool install or a user file. See [docs/MAINTENANCE.md](docs/MAINTENANCE.md).
 
-## What Forge can do directly
+Updates are explicit: `Update Forge.bat` or `Update-Forge.ps1 -CheckOnly`. The updater verifies the release digest, keeps the newest two backups and rolls back on any failure. A weekly **Ecosystem contract check** verifies the bundle's `skyrim-forge` catalog entry, this repository's release assets and Reverse THIS!'s receipt shape without copying either project's version.
 
-- Inspect plugin headers, masters, flags, and hashes.
-- Traverse normal and compressed plugin records and query signatures, raw FormIDs, local FormIDs, origins, and EditorIDs.
-- Create narrowly typed KYWD, GLOB, FLST, and OTFT plugins transactionally.
-- Validate SPID, KID, BOS, SkyPatcher placement, and CDF configuration.
-- Correlate those static findings with SKSE framework logs and mark the rows runtime evidence proves.
-- Inspect, split, and pack FUZ voice containers and check `Sound/Voice` layout.
-- Read an x64 SKSE DLL without loading it: exports, `SKSEPlugin_Version`, imports, and timestamp-normalised reproducibility.
-- Generate, simulate, and strictly validate complete FOMOD 5.0 installers from typed plans, then extract every branch into an MO2- and Vortex-shaped sandbox with a receipt.
-- Compile Papyrus through the official compiler and reject stale PEX output.
-- Inspect archives and release trees.
-- Build deterministic private release archives.
-- Audit and build Nexus Mods publication bundles with file-level rights mapping, permission evidence, credits, licensing, content classification, claim evidence, uploader attestation, and generated mod-page BBCode.
-- Snapshot MO2 profiles.
-- Run fixed, allowlisted xEdit scripts unattended.
-- Execute version-pinned JSON workers for LOOT, Wrye Bash, and Creation Kit.
-- Run narrowly calibrated, coordinate-free Windows UI Automation jobs when no headless worker exists.
-- Expose the workbench over CLI, GUI, and MCP.
+## MCP
 
+Forge serves the current **MCP `2026-07-28`** revision and the `initialize` handshake older clients still use, from one process. The full surface exposes 68 tools with annotations; `--surface compact` exposes four orthogonal tools for hosts with a server-slot or token ceiling. Oversized results spill to a workspace artifact instead of being truncated, and Grok's 8-server limit is handled by skipping registration rather than taking the last slot. See [docs/MCP.md](docs/MCP.md).
 
-## Nexus Mods publication gate
+## Safety and evidence
 
-A private build and a public upload are not the same operation. When a user asks for a shareable, public, or Nexus-ready release, Forge requires a typed Nexus publication plan and blocks the final package until every bundled file has a rights record.
+- Live `Data`, saves, profiles, archives and manager staging are read-only; outputs stay in the workspace.
+- Writes require explicit approval; subprocesses use argument arrays and `shell=False`.
+- External tools are selected by exact capability and a SHA-256 pin; nothing third-party ships in this repository or a release.
+- Static checks, compiler acceptance, PE parsing and xEdit output are labelled separately from Skyrim runtime evidence.
+- No check in this repository claims that a mod works in game.
 
-The gate checks:
+[docs/SAFETY.md](docs/SAFETY.md) · [docs/LIMITATIONS.md](docs/LIMITATIONS.md) · [docs/CAPABILITY-MATRIX.md](docs/CAPABILITY-MATRIX.md)
 
-- original and third-party asset provenance;
-- redistribution and modification permission;
-- permission evidence, without placing private messages in the public ZIP;
-- required credits and collaborators;
-- project and asset licences;
-- Donation Points compatibility;
-- original-game and piracy-risk files;
-- executables, source availability, and network behaviour;
-- adult-content classification and event-specific rules;
-- truthful performance and capability claims;
-- AI assistance disclosure and human verification;
-- a current review of official Nexus policies;
-- an uploader attestation that the AI is forbidden to sign.
+## Docs
 
-Use `docs/NEXUS-PUBLICATION.md`. Forge never treats credit as a substitute for permission and never claims that a machine check authenticates legal ownership.
+| Doc | Contents |
+|---|---|
+| [INSTALLATION](docs/INSTALLATION.md) | install roots, venv durability, provider registration |
+| [MCP](docs/MCP.md) | surfaces, protocol eras, bounded output, registration |
+| [MAINTENANCE](docs/MAINTENANCE.md) | cleanup rules, root drift, weekly upkeep |
+| [TOOLCHAIN-BROKER](docs/TOOLCHAIN-BROKER.md) | hash-pinned tools, vault, capability matching |
+| [ASSET-GENERATION](docs/ASSET-GENERATION.md) | procedural DDS and the free-tool map |
+| [AUDIO-ENGINEERING](docs/AUDIO-ENGINEERING.md) | FUZ/XWM/WAV/LIP, voice layout |
+| [PAPYRUS-ENGINEERING](docs/PAPYRUS-ENGINEERING.md) | analysis and compile evidence |
+| [NEXUS-PUBLICATION](docs/NEXUS-PUBLICATION.md) | the rights and publication gate |
+| [WHICH-AI-SHOULD-I-USE](docs/WHICH-AI-SHOULD-I-USE.md) | task-to-assistant routing |
+| [prompts](docs/prompts/README.md) | copy-paste Skyrim prompt packs |
 
-## FOMOD engineering
+## Status
 
-Forge includes a typed FOMOD generator (since 5.0) rather than only detecting an existing installer. It covers the bounded standard ModuleConfig XML surface: install steps, all standard group types, informational and file-bearing options, images and descriptions, required and conditional files, condition flags, nested dependencies, dynamic option types, priorities, module metadata, UTF-8/UTF-16 output, and branch simulation. Strict validation rejects omitted payload files, unsafe source paths, temporal or undefined flag references, malformed XML order, invalid condition blocks, and unresolved destination collisions.
+CI runs Python 3.11/3.13/3.14 on Windows and Ubuntu, the native writer on both, a reproducible repository gate, CodeQL and the Windows installer/legacy-migration path. Releases are built from the exact commit whose checks passed and carry `MANIFEST.json`, `SBOM.spdx.json`, `BUILD-RECEIPT.json`, `VALIDATION.json` and `SHA256SUMS.txt`.
 
-C# scripted FOMOD installers are deliberately unsupported because they permit arbitrary code execution. See `docs/FOMOD-ENGINEERING.md`.
+Not claimed: gameplay results, in-game visuals, or that any static check replaces a real Skyrim session. The [CHANGELOG](CHANGELOG.md) and [STATE](STATE.md) record what each release actually verified.
 
-## Audio and voice
-
-Forge reads and writes Skyrim voice containers with the standard library. `audio-inspect` reports FUZE headers, RIFF/XWMA format, PCM voice readiness and lip size; `audio-extract-fuz` and `audio-create-fuz` split and assemble containers inside the workspace and read the bytes back; `voice-path-validate` checks `Sound/Voice/<plugin>/<voice type>/`. WAV-to-XWM transcoding and lip-sync generation need the hash-pinned `xWMAEncode` and `FaceFXWrapper` tools in the tool vault (`audio.xwma.encode`, `audio.lip.generate`). See `docs/AUDIO-ENGINEERING.md`.
-
-## Procedural textures, 100% free
-
-A missing texture stops an AI-built mod, and no paid tool is needed to fix that. `texture-generate` writes deterministic DDS files — BC1, BC3 or A8R8G8B8, full mip chains — from six procedural kinds: solid, checker, gradient, seeded noise, bricks and tangent-space normal maps. `texture-inspect` reads any DDS header. Every file is reproducible from its seed, writes only inside the workspace, and can emit a PNG preview for a human or a vision model.
-
-```powershell
-forge texture-generate bricks mod/Textures/Stone.dds --size 512 --format bc1 --preview mod/Stone.png --approve
-forge texture-generate normal mod/Textures/Stone_n.dds --strength 0.12 --flip-green --approve
-```
-
-That is the placeholder layer, not art direction. Meshes stay with Blender, hand art with GIMP or Krita, BC7 with `texconv`; `docs/ASSET-GENERATION.md` maps every remaining gap to a free tool and its licence. Forge never bundles those binaries. **Agents: start at `forge capabilities`, then use the typed tool — do not hand-write DDS headers or shell out to a paid converter.**
-
-## xEdit automation
-
-Forge includes audited scripts under `resources/xedit` and installs them into the configured xEdit `Edit Scripts` directory only after approval.
-
-A check job launches the installed xEdit executable with a selected plugin, its masters, automatic script execution, and automatic exit. Forge requires the completion marker produced by its own script. A process exit without the marker is classified as incomplete, not success.
-
-Arbitrary generated Pascal is disabled. An additional script may run only when its exact SHA-256 is present in an explicit allowlist and the script already resides in xEdit's script directory.
-
-## Creation Kit and Wrye Bash
-
-Those applications do not provide one complete, stable public headless interface for all authoring and Bashed Patch operations. Forge supports two bounded mechanisms:
-
-1. A version-pinned external worker implementing the Forge JSON worker contract.
-2. A coordinate-free Windows UI Automation fallback for a narrow, pre-calibrated dialog sequence.
-
-The fallback uses window titles, process IDs, Automation IDs, and accessible control names. Job files cannot contain coordinates, OCR instructions, or image matching.
-
-## Safety model
-
-- Live Skyrim `Data`, saves, profiles, original archives, and manager staging are read-only inputs.
-- Outputs belong to the configured Forge workspace.
-- Write operations require explicit approval.
-- External executables may be pinned by SHA-256.
-- Subprocesses are invoked with argument arrays and `shell=False`.
-- Each automation job receives a transaction directory, input snapshots, logs, outputs, and a JSON receipt.
-- Unexpected dialogs, missing completion markers, worker disagreement, missing outputs, hash mismatches, timeouts, and nonzero exits block the job.
-- Forge does not silently apply a proposed load order.
-- Forge does not claim that static checks replace Skyrim runtime testing.
-
-## Fast commands
-
-```text
-forge doctor
-forge discover-tools
-forge config-show
-forge lint <ModFolder>
-forge fomod-scaffold <PayloadRoot> <Workspace>/fomod.plan.json --module-name "My Mod" --approve
-forge fomod-plan-validate <Workspace>/fomod.plan.json --source-root <PayloadRoot>
-forge fomod-simulate <Workspace>/fomod.plan.json --selections selections.json --state state.json --source-root <PayloadRoot>
-forge fomod-build <Workspace>/fomod.plan.json <PayloadRoot> <Workspace>/BuiltFomod --approve
-forge fomod-validate <Workspace>/BuiltFomod
-forge plugin-info <Plugin.esp>
-forge record-query <Plugin.esp> --signature SPEL --editor-id Bound
-forge load-order --mo2-instance <MO2 folder>
-forge record-conflicts --mo2-instance <MO2 folder> --editor-id IronSword --signature WEAP
-forge seq-build <Plugin.esp> <Workspace>/Out --approve
-forge plugin-plan-validate examples/plugin-create.plan.json
-forge automation-validate examples/automation-xedit-check.job.json
-forge automation-run <job.json> --approve
-forge nexus-policy-status
-forge nexus-scaffold <ReleaseRoot> <Workspace>/NEXUS-PUBLICATION-PLAN.json --mod-name "My Mod" --mod-version 1.0.0 --uploader "Author" --approve
-forge nexus-audit <Workspace>/NEXUS-PUBLICATION-PLAN.json <ReleaseRoot>
-forge nexus-build <Workspace>/NEXUS-PUBLICATION-PLAN.json <ReleaseRoot> <Workspace>/NexusPublication --approve
-```
-
-## Readiness levels
-
-`doctor` reports separate states:
-
-- `read_only_ready`: inspection and static validation can run.
-- `plugin_write_ready`: the typed writer can write inside the workspace.
-- `xedit_automation_ready`: xEdit exists, hashes match when pinned, and external execution is enabled.
-- `mo2_automation_ready`: MO2 is configured and external execution is enabled.
-
-A missing external tool does not make the core installation broken.
-
-## Evidence labels
-
-Forge reports what each result actually proves:
-
-- Plugin header inspection is not semantic validation.
-- Forge record parsing is not independent xEdit evidence.
-- xEdit scripted checks are not Skyrim runtime evidence.
-- Release validation is packaging hygiene, not gameplay validation.
-- Creation Kit output still needs visual and in-game testing where appearance, navmesh, lighting, scenes, or placement matter.
-
-## Repository
-
-The repository includes deterministic packaging, CI, CodeQL, issue templates, security policy, tests, schemas, native helper source, Windows and Linux native binaries, and GitHub release automation.
-
-## Forge 4.2 evidence tiers
-
-Forge reports each subsystem as direct, profiled, adapter, worker contract, human gate or unsupported. Query `forge capabilities` before using an external-tool workflow. Static lint, compiler acceptance, native compilation, xEdit parsing and Skyrim runtime are distinct evidence levels.
-
-### Shareable and Nexus releases
-
-Public intent automatically requires the Nexus publication plan and rights gate. Every bundled file must be mapped to ownership/licence/permission evidence; credits, third-party notices, AI disclosure, permission recommendations and a private audit are generated only after the gate passes. Forge never signs the uploader attestation and does not provide legal advice.
-
-### Papyrus and native plugins
-
-`forge papyrus-analyze` reports identity/import/inheritance errors and review-only performance heuristics. `forge papyrus-compile` uses a hash-pinned compiler and verifies fresh PEX output. Native DLL projects use a source-locked CommonLibSSE-NG scaffold, exactly one compatibility strategy, pinned build tools, workspace-only staging and PE audit. Real Skyrim testing is still mandatory.
-
-## Verified external tools
-
-Forge 4.2 recursively discovers real tools in directories and ZIPs, including tools nested inside another package such as `ESLifier/bsarch/BSArch.exe`. Use `forge tool-scan`, then `forge tool-import` or `forge tool-configure`. Imported tools are copied only into the local Forge tool vault, accompanied by hashes and receipts. Third-party executables are never added to the public Forge repository or a mod release. See `docs/TOOLCHAIN-BROKER.md`.
-
-Forge selects tools by an exact capability and a valid SHA-256 pin. It will not substitute `Synthesis.exe` for `Synthesis.Bethesda.CLI.exe`, or a generic archive utility for a Skyrim SE/AE BSA operation.
-
-## Companion ownership
-
-Ownership across Forge, the [Ultimate AI Starter Bundle](https://github.com/SenjuWoo/Ultimate-AI-Starter-Bundle) and [Reverse THIS!](https://github.com/SenjuWoo/reverse-this) is stated once, in the [bundle README](https://github.com/SenjuWoo/Ultimate-AI-Starter-Bundle#ownership). Forge's part: Skyrim-specific tools and the optional skill pack. Updates retain personal skill edits and last-good backups outside provider indexes; the bundle never retires Forge-owned skills.
-
-Forge does not sync either project. A weekly **Ecosystem contract check** workflow runs `python scripts/check_ecosystem.py`, which verifies the bundle's `skyrim-forge` catalog entry (repository, `min_version` floor, asset template, installer checksum step), the published Forge release assets, and Reverse THIS!'s `kit.json`/`installed.json` receipt shape. It reports `PASS`, `DRIFT` or `UNKNOWN` and never writes to either project.
-
-Skill installation diagnostics: `%LOCALAPPDATA%/Skyrim-Forge/logs/skill-install.log` (`SKYRIM_FORGE_DEBUG=1` for successful-operation detail). HouseCARL failures: `%LOCALAPPDATA%/Skyrim-Forge/logs/housecarl-install.log`.
-
-Forge's Skyrim-specific routing index is `skyrim-tooling-stack`; the bundle owns the general `ai-tooling-stack` name. Upgrade migrates an unchanged old Forge-owned copy only when its previous Forge digest proves ownership, retaining a recoverable backup; edited/unowned copies stay intact. Run `Update Forge.bat` for the latest stable digest-verified owner release, or `Update-Forge.ps1 -CheckOnly` to inspect availability. Git checkouts and newer installations are preserved.
+MIT licensed. Ownership across Forge, the bundle and Reverse THIS! is stated once in the [bundle README](https://github.com/SenjuWoo/Ultimate-AI-Starter-Bundle#ownership).
