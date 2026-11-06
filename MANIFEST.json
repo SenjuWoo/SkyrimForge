@@ -57,8 +57,8 @@
     {
       "executable": false,
       "path": ".github/workflows/release.yml",
-      "sha256": "9007ed08e5d47468e2fe2d478d97de14f9fd127512f9e64a4dda085712a57c9d",
-      "size": 6195
+      "sha256": "56f13b54c22ec0c4cdc145f19fea4a6765127696042985615fae36c2833e3cad",
+      "size": 6342
     },
     {
       "executable": false,
