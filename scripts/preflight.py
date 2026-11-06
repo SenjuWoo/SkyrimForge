@@ -51,11 +51,12 @@ def manifest_mismatch() -> list[str]:
     manifest = ROOT / "MANIFEST.json"
     if not manifest.is_file():
         return []
+    from scripts.validate_repository import git_normalized
     rows = json.loads(manifest.read_text(encoding="utf-8"))["files"]
     bad = []
     for row in rows:
         path = ROOT / row["path"]
-        if not path.is_file() or hashlib.sha256(path.read_bytes()).hexdigest() != row["sha256"]:
+        if not path.is_file() or hashlib.sha256(git_normalized(path)).hexdigest() != row["sha256"]:
             bad.append(row["path"])
     return bad[:10]
 

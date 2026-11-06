@@ -88,6 +88,12 @@ report drift but cannot change your install. `forge maintain --schedule-status`
 prints whether the task exists, and `forge maintain --unschedule --approve`
 removes it. Nothing is registered unless you ask.
 
+Ownership is structural: Forge reads the task at the root `TaskPath`, requires
+exactly one action, and accepts only `cmd.exe` running the canonical check-only
+command with the Forge registration marker. A task with the same name but a
+different executable, extra actions or any `--apply`/`--fix-roots` argument is
+reported as unowned and is never replaced or deleted.
+
 ## Dependency freshness
 
 `python scripts/check_freshness.py` prints every pinned dependency and, with `--online`, the newest upstream release. It never writes a pin, installs anything or triggers a release; adopting a version stays a reviewed change with the gate named in the report.

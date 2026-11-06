@@ -130,6 +130,7 @@ Forge serves the current **MCP `2026-07-28`** revision and the `initialize` hand
 | [INSTALLATION](docs/INSTALLATION.md) | install roots, venv durability, provider registration |
 | [MCP](docs/MCP.md) | surfaces, protocol eras, bounded output, registration |
 | [MAINTENANCE](docs/MAINTENANCE.md) | cleanup rules, root drift, weekly upkeep |
+| [AGENTS](AGENTS.md) | preflight, edit/test loop, release runbook for AI agents |
 | [TOOLCHAIN-BROKER](docs/TOOLCHAIN-BROKER.md) | hash-pinned tools, vault, capability matching |
 | [ASSET-GENERATION](docs/ASSET-GENERATION.md) | procedural DDS and the free-tool map |
 | [AUDIO-ENGINEERING](docs/AUDIO-ENGINEERING.md) | FUZ/XWM/WAV/LIP, voice layout |
