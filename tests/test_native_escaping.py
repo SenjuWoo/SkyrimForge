@@ -59,6 +59,12 @@ class NativeEscapingTests(unittest.TestCase):
         plan = _plan(runtime_strategy="explicit_runtimes", compatible_runtimes=["1.6.1170"])
         self.assertEqual(plan["compatible_runtimes"], ["1.6.1170"])
 
+    def test_sdk_versions_reject_unicode_digits_and_oversized_components(self) -> None:
+        with self.assertRaises(ValidationError):
+            _plan(minimum_skse_version="١.٢.٣")
+        with self.assertRaises(ValidationError):
+            _plan(minimum_skse_version="1.70000")
+
     def test_plugin_helper_receives_a_numeric_version(self) -> None:
         cmake = _cmake(_plan(version="2.0.0-rc.2"))
         self.assertIn('VERSION "2.0.0"', cmake)

@@ -92,7 +92,10 @@ Ownership is structural: Forge reads the task at the root `TaskPath`, requires
 exactly one action, and accepts only `cmd.exe` running the canonical check-only
 command with the Forge registration marker. A task with the same name but a
 different executable, extra actions or any `--apply`/`--fix-roots` argument is
-reported as unowned and is never replaced or deleted.
+reported as unowned and is never replaced or deleted. An older unmarked
+`python.exe` or `cmd.exe` task is reported as a legacy candidate; remove or
+rename it yourself before installing, because a matching command line alone is
+not provenance.
 
 ## Dependency freshness
 

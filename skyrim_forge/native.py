@@ -67,8 +67,11 @@ def _metadata_text(value: Any, label: str, *, required: bool = True) -> str:
 
 
 def _numeric_version(value: str, label: str) -> str:
-    if not re.fullmatch(r"\d+(\.\d+){1,3}", value):
-        raise ValidationError(f"{label} must be a dotted numeric version for CommonLibSSE: {value!r}")
+    # ASCII only: \d also accepts Arabic-Indic digits, which the SDK cannot parse.
+    if not re.fullmatch(r"[0-9]+(\.[0-9]+){1,3}", value):
+        raise ValidationError(f"{label} must be a dotted ASCII numeric version for CommonLibSSE: {value!r}")
+    if any(int(part) > 65535 for part in value.split(".")):
+        raise ValidationError(f"{label} component exceeds the CommonLibSSE uint16 range: {value!r}")
     return value
 
 

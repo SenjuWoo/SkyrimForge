@@ -83,6 +83,16 @@ class SandboxTests(unittest.TestCase):
         single = vfs_sandbox._coverage(_plan(with_select_any=True), all_branches=False)
         self.assertEqual(single["group_types_tested"], [])
         self.assertEqual(single["group_types_uncovered"], ["SelectAny", "SelectExactlyOne"])
+        self.assertFalse(coverage["exhaustive"])
+        self.assertEqual([group["type"] for group in coverage["groups"]], ["SelectExactlyOne", "SelectAny"])
+        self.assertEqual([group["enumerated"] for group in coverage["groups"]], [True, False])
+
+    def test_exact_only_plan_reports_exhaustive_coverage(self):
+        data = _plan()
+        plan = self._write(data)
+        result = vfs_sandbox.test_install(plan, self.source, self.workspace, all_branches=True, approved=True)
+        self.assertTrue(result["coverage"]["exhaustive"])
+        self.assertEqual(result["coverage"]["groups"][0]["choices_visited"], ["Blue", "Red"])
         self.assertTrue(vfs_sandbox._coverage(_plan(), all_branches=False)["group_types_uncovered"])
 
     def test_unenumerated_required_group_cannot_pass_with_zero_branches(self) -> None:

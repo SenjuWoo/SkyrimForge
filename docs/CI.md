@@ -3,6 +3,7 @@
 Skyrim Forge separates compatibility tests from release reproducibility.
 
 - `python` matrix jobs run the `python` validation scope. They test parsing, unit tests, packaging, MCP, and repository hygiene across supported Python and operating-system combinations. They intentionally do not rebuild the native helper.
+- `preflight` fetches full history and tags and runs `scripts/preflight.py`, so version mirrors, control characters, the complete manifest and the release state are checked on every push.
 - `native` jobs run Go formatting, vet, unit tests, and the race detector with Go 1.27.3.
 - `repository-validation` is the sole byte-for-byte publication gate. It installs the exact Go 1.27.3 toolchain used for the bundled binaries and runs the full validator.
 - `windows-installer` uses an explicit setup-python interpreter and isolated temporary configuration, then tests legacy Papyrus migration and installer idempotence.

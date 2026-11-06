@@ -58,14 +58,35 @@ def _branch_selections(plan: dict[str, Any], selections: dict[str, Any] | None, 
     return result
 
 
-def _coverage(plan: dict[str, Any], all_branches: bool) -> dict[str, Any]:
-    """Name the group types a run actually enumerated, and the ones it did not."""
-    present = {group["type"] for step in plan.get("steps", []) for group in step.get("groups", [])}
-    if all_branches:
-        return {"mode": "all-branches", "group_types_tested": sorted(present & EXACT_GROUP_TYPES),
-                "group_types_uncovered": sorted(present - EXACT_GROUP_TYPES)}
-    # One branch proves the default path only; name every group it did not vary.
-    return {"mode": "single", "group_types_tested": [], "group_types_uncovered": sorted(present)}
+def _coverage(plan: dict[str, Any], all_branches: bool,
+              reports: list[dict[str, Any]] | None = None) -> dict[str, Any]:
+    """Report what was actually visited, and never call a bounded sweep exhaustive.
+
+    Only SelectExactlyOne/SelectAtMostOne are enumerated. The other group types
+    stay uncovered even when a branch happens to include one of their choices.
+    """
+    visited: dict[str, set[str]] = {}
+    for report in reports or []:
+        for key, value in (report.get("selections") or {}).items():
+            visited.setdefault(key, set()).add(value if isinstance(value, str) else "")
+    groups = []
+    present = set()
+    for step in plan.get("steps", []):
+        for group in step.get("groups", []):
+            key = f"{step['name']}/{group['name']}"
+            present.add(group["type"])
+            enumerated = all_branches and group["type"] in EXACT_GROUP_TYPES
+            groups.append({"step": step["name"], "group": group["name"], "type": group["type"],
+                           "enumerated": enumerated,
+                           "choices_visited": sorted(visited.get(key, set()))})
+    uncovered = sorted(present - EXACT_GROUP_TYPES) if all_branches else sorted(present)
+    return {"mode": "all-branches" if all_branches else "single",
+            "strategy": "bounded-cartesian" if all_branches else "default-branch",
+            "limit": MAX_BRANCHES,
+            "exhaustive": bool(all_branches and groups and not uncovered
+                               and all(item["enumerated"] for item in groups)),
+            "group_types_tested": sorted(present & EXACT_GROUP_TYPES) if all_branches else [],
+            "group_types_uncovered": uncovered, "groups": groups}
 
 
 def _layout_checks(files: list[dict[str, Any]]) -> tuple[list[str], list[str]]:
@@ -215,6 +236,7 @@ def test_install(plan_path: Path, source_root: Path, workspace_root: Path, *, ap
                 "sandbox": str(run), "result": "FAIL", "partial": True,
                 "evidence": "The run was interrupted by a resource or copy failure; the directory holds only this run's files.",
             })
+    coverage = _coverage(plan, all_branches, reports)
     counts = {
         "total": len(reports),
         "passed": sum(item["result"] == "PASS" for item in reports),

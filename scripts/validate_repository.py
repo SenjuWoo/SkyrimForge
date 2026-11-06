@@ -14,6 +14,7 @@ import tomllib
 import unittest
 import xml.etree.ElementTree as ET
 import zipfile
+from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
 
@@ -458,6 +459,74 @@ def write_manifest() -> dict[str, Any]:
     return result
 
 
+GPL_SKILLS = ("housecarl", "kid-authoring", "spid-authoring", "skypatcher-authoring",
+              "papyrus-reference", "mutagen-reference", "skse-plugin-authoring", "oar-authoring")
+GPL_PREFIXES = tuple(f"integrations/skyrim-pack/skills/{name}/" for name in GPL_SKILLS)
+
+
+def _spdx_file_id(path: str) -> str:
+    return "SPDXRef-File-" + re.sub(r"[^A-Za-z0-9.-]", "-", path)
+
+
+def _verification_code(paths: list[str]) -> str:
+    digests = []
+    for name in paths:
+        data = git_normalized(ROOT / name)
+        digests.append(hashlib.sha1(data).hexdigest())
+    return hashlib.sha1("".join(sorted(digests)).encode("ascii")).hexdigest()
+
+
+def _spdx_created() -> str:
+    epoch = os.environ.get("SOURCE_DATE_EPOCH")
+    if epoch:
+        moment = datetime.fromtimestamp(int(epoch), timezone.utc)
+        return moment.strftime("%Y-%m-%dT%H:%M:%SZ")
+    commit = subprocess.run(["git", "log", "-1", "--format=%cI"], cwd=ROOT,
+                            capture_output=True, text=True).stdout.strip()
+    if commit:
+        return datetime.fromisoformat(commit).astimezone(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
+    return "1970-01-01T00:00:00Z"
+
+
+def build_sbom(man: dict[str, Any]) -> dict[str, Any]:
+    """SPDX 2.3 for the real mixed-license distribution, not a blanket MIT claim."""
+    gpl_files = [row for row in man["files"] if row["path"].startswith(GPL_PREFIXES)]
+    mit_files = [row for row in man["files"] if not row["path"].startswith(GPL_PREFIXES)]
+    commit = subprocess.run(["git", "rev-parse", "--short=12", "HEAD"], cwd=ROOT,
+                            capture_output=True, text=True).stdout.strip() or VERSION
+    packages = [
+        {"name": "Skyrim Forge", "SPDXID": "SPDXRef-Package-Forge", "versionInfo": VERSION,
+         "downloadLocation": "NOASSERTION", "filesAnalyzed": True,
+         "licenseConcluded": "MIT", "licenseDeclared": "MIT", "copyrightText": "NOASSERTION",
+         "licenseInfoFromFiles": ["MIT"],
+         "packageVerificationCode": {"packageVerificationCodeValue": _verification_code([r["path"] for r in mit_files])}},
+        {"name": "houseCARL-derived skills", "SPDXID": "SPDXRef-Package-HouseCARL-Skills",
+         "versionInfo": VERSION, "downloadLocation": "NOASSERTION", "filesAnalyzed": True,
+         "licenseConcluded": "GPL-3.0-only", "licenseDeclared": "GPL-3.0-only",
+         "copyrightText": "NOASSERTION", "licenseInfoFromFiles": ["GPL-3.0-only"],
+         "packageVerificationCode": {"packageVerificationCodeValue": _verification_code([r["path"] for r in gpl_files])}},
+    ]
+    files = []
+    relationships = [
+        {"spdxElementId": "SPDXRef-DOCUMENT", "relationshipType": "DESCRIBES", "relatedSpdxElement": "SPDXRef-Package-Forge"},
+        {"spdxElementId": "SPDXRef-DOCUMENT", "relationshipType": "DESCRIBES", "relatedSpdxElement": "SPDXRef-Package-HouseCARL-Skills"},
+    ]
+    for row in man["files"]:
+        license_id = "GPL-3.0-only" if row["path"].startswith(GPL_PREFIXES) else "MIT"
+        package = "SPDXRef-Package-HouseCARL-Skills" if license_id == "GPL-3.0-only" else "SPDXRef-Package-Forge"
+        files.append({"fileName": "./" + row["path"], "SPDXID": _spdx_file_id(row["path"]),
+                      "checksums": [{"algorithm": "SHA256", "checksumValue": row["sha256"]}],
+                      "licenseConcluded": license_id, "licenseInfoInFiles": [license_id],
+                      "copyrightText": "NOASSERTION"})
+        relationships.append({"spdxElementId": package, "relationshipType": "CONTAINS",
+                              "relatedSpdxElement": _spdx_file_id(row["path"])})
+    return {"spdxVersion": "SPDX-2.3", "dataLicense": "CC0-1.0", "SPDXID": "SPDXRef-DOCUMENT",
+            "name": f"Skyrim-Forge-{VERSION}", "documentNamespace":
+            f"https://github.com/SenjuWoo/SkyrimForge/spdx/{VERSION}/{commit}",
+            "creationInfo": {"created": _spdx_created(), "creators": [f"Tool: Skyrim Forge validator {VERSION}"]},
+            "packages": packages, "files": files, "relationships": relationships}
+
+
 def write_reports(report: dict[str, Any]) -> None:
     report=portable(report); (ROOT/"VALIDATION.json").write_text(json.dumps(report,indent=2,sort_keys=True)+"\n",encoding="utf-8",newline="\n")
     man=write_manifest()
@@ -465,7 +534,7 @@ def write_reports(report: dict[str, Any]) -> None:
     (ROOT/"CHECKSUMS-SHA256.txt").write_text("\n".join(f"{sha256(p)}  {p.relative_to(ROOT).as_posix()}" for p in binaries)+"\n",encoding="utf-8",newline="\n")
     receipt={"product":"Skyrim Forge","version":VERSION,"result":report["result"],"native":report["checks"]["native"],"go":report["checks"]["go"],"mcp":report["checks"]["mcp"],"limitations":["Windows native helper and PowerShell installers require Windows execution; GitHub CI performs that gate.","Third-party modding tools are not bundled. Their legal local installations may be discovered, imported into the private tool vault when allowed, SHA-256 pinned, and selected only for exact catalog capabilities.","No Skyrim runtime, save, visual, navmesh, animation, or gameplay validation was performed in this environment.","Nexus publication checks validate declared evidence and machine-checkable policy gates; they do not authenticate legal ownership or replace the uploader's responsibility."]}
     (ROOT/"BUILD-RECEIPT.json").write_text(json.dumps(portable(receipt),indent=2,sort_keys=True)+"\n",encoding="utf-8",newline="\n")
-    sbom={"spdxVersion":"SPDX-2.3","dataLicense":"CC0-1.0","SPDXID":"SPDXRef-DOCUMENT","name":f"Skyrim-Forge-{VERSION}","documentNamespace":f"https://example.invalid/skyrim-forge/{VERSION}/spdx","creationInfo":{"created":"2026-07-24T00:00:00Z","creators":[f"Tool: Skyrim Forge validator {VERSION}"]},"packages":[{"name":"Skyrim Forge","SPDXID":"SPDXRef-Package","versionInfo":VERSION,"downloadLocation":"NOASSERTION","filesAnalyzed":True,"licenseConcluded":"MIT","licenseDeclared":"MIT","copyrightText":"NOASSERTION"}],"files":[{"fileName":"./"+f["path"],"SPDXID":"SPDXRef-File-"+re.sub(r"[^A-Za-z0-9.-]","-",f["path"]),"checksums":[{"algorithm":"SHA256","checksumValue":f["sha256"]}],"licenseConcluded":"NOASSERTION","licenseInfoInFiles":["NOASSERTION"],"copyrightText":"NOASSERTION"} for f in man["files"]]}
+    sbom=build_sbom(man)
     (ROOT/"SBOM.spdx.json").write_text(json.dumps(sbom,indent=2,sort_keys=True)+"\n",encoding="utf-8",newline="\n")
 
 

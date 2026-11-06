@@ -123,3 +123,9 @@ Local filenames and documentation do not establish current upstream provenance o
 - 6.11.3: Native metadata containing a quote or backslash is rejected. The pinned CommonLibSSE-NG CMake helper interpolates NAME/AUTHOR/EMAIL into generated C++ raw, so Forge cannot make those characters safe by quoting CMake alone.
 - 6.11.3: A published tag is immutable. If it points at the current SHA the workflow resumes missing assets; if it points elsewhere the commit is post-release and publication is skipped, never rebuilt from newer code.
 - 6.11.3: Scheduled-task ownership is an exact structural match (task path, one action, executable, arguments), not a name or substring.
+
+- 6.11.4: Preflight reports a release state, not a boolean tag conflict. POST_RELEASE is healthy; STALE_VERSION means product files changed after the tag without a bump.
+- 6.11.4: A scheduled task with a matching command line is still not owned. Only the canonical marker + exact action authorizes replacement or deletion; legacy shapes are candidates for a manual takeover.
+- 6.11.4: Release resumability is independent of `main` for an existing tag that names the validated SHA. New releases still require current `main`.
+- 6.11.4: The SBOM reports per-package licences from the notices, with CONTAINS relationships and commit-specific metadata; MIT is not declared for GPL-derived skills.
+- 6.11.4: FOMOD coverage may honestly be PARTIAL. `SelectAtLeastOne`, `SelectAny` and `SelectAll` are not enumerated and never counted as tested.

@@ -143,8 +143,9 @@ class WorkflowPinningTests(unittest.TestCase):
         self.assertNotIn('--clobber', workflow)
         # Self-publishing: only a green, untagged version on the exact main SHA releases,
         # and every downloaded asset must equal the build.
-        for gate in ("workflow_run:", "workflows: [CI]", "event == 'push'", 'if [ "$main" != "$SHA" ]',
-                     "git ls-remote --tags origin", 'r["name"] != "Publish release"', '-f sha="$SHA"',
+        for gate in ("workflow_run:", "workflows: [CI]", "event == 'push'",
+                     "scripts/release_decision.py --ci-green", "git ls-remote --tags origin",
+                     'r["name"] != "Publish release"', '-f sha="$SHA"',
                      "gh release download", "sha256sum -c SHA256SUMS.txt", "actions/attest-build-provenance@"):
             self.assertIn(gate, workflow)
         for forbidden in ("gh release delete", "git push --force", "git tag -f"):

@@ -194,16 +194,28 @@ def _canonical_arguments(launcher: Path) -> re.Pattern[str]:
 
 
 def _task_owned(info: dict[str, Any] | None, launcher: Path) -> bool:
-    """Owned only when the whole action is the canonical check-only command."""
+    """Owned only when the whole action is the canonical check-only command.
+
+    A matching command line is not provenance: any unrelated task could use it.
+    Legacy tasks are candidates for a user-controlled takeover, never owned.
+    """
     if info is None or int(info.get("ActionCount") or 0) != 1:
         return False
-    arguments = str(info.get("Arguments") or "")
-    execute = str(info.get("Execute") or "")
-    marker = SCHEDULE_MARKER in str(info.get("Description") or "")
-    if marker:
-        return execute.casefold() == "cmd.exe" and bool(_canonical_arguments(launcher).fullmatch(arguments))
-    # Historical Forge task: exact python invocation, no marker.
-    return execute.casefold().endswith("python.exe") and arguments.strip() == "-m skyrim_forge maintain --no-self-test"
+    if SCHEDULE_MARKER not in str(info.get("Description") or ""):
+        return False
+    return str(info.get("Execute") or "").casefold() == "cmd.exe" and bool(
+        _canonical_arguments(launcher).fullmatch(str(info.get("Arguments") or "")))
+
+
+def _task_legacy_candidate(info: dict[str, Any] | None, launcher: Path) -> bool:
+    """Recognise older Forge shapes without granting ownership."""
+    if info is None or int(info.get("ActionCount") or 0) != 1:
+        return False
+    execute = str(info.get("Execute") or "").casefold()
+    arguments = str(info.get("Arguments") or "").strip()
+    if execute.endswith("python.exe") and arguments == "-m skyrim_forge maintain --no-self-test":
+        return True
+    return execute == "cmd.exe" and str(launcher) in arguments and "maintain --no-self-test" in arguments
 
 
 def _task_healthy(info: dict[str, Any] | None, launcher: Path) -> bool:
@@ -226,9 +238,12 @@ def schedule_status() -> dict[str, Any]:
         return {"supported": True, "installed": False, "owned": False, "healthy": False, "task": SCHEDULE_TASK}
     owned = _task_owned(info, launcher)
     healthy = _task_healthy(info, launcher)
-    reason = "" if healthy else ("legacy action; reinstall to refresh" if owned else "task exists but was not created by Forge")
+    legacy = not owned and _task_legacy_candidate(info, launcher)
+    reason = "" if healthy else ("legacy action; reinstall to refresh" if owned else
+                                  ("legacy Forge task; remove or rename it before installing" if legacy
+                                   else "task exists but was not created by Forge"))
     return {"supported": True, "installed": True, "owned": owned, "healthy": healthy,
-            "task": SCHEDULE_TASK, "reason": reason}
+            "legacy": legacy, "task": SCHEDULE_TASK, "reason": reason}
 
 
 def install_schedule(*, log_path: Path, day: str = "SUN", time: str = "12:00") -> dict[str, Any]:
@@ -238,7 +253,8 @@ def install_schedule(*, log_path: Path, day: str = "SUN", time: str = "12:00") -
     launcher = Path(__file__).resolve().parents[1] / "forge.cmd"
     existing = _task_info()
     if existing is not None and not _task_owned(existing, launcher):
-        raise SafetyError(f"A task named {SCHEDULE_TASK} already exists and was not created by Forge; refusing to overwrite it")
+        legacy = " (recognised legacy action; take it over manually)" if _task_legacy_candidate(existing, launcher) else ""
+        raise SafetyError(f"A task named {SCHEDULE_TASK} already exists and was not created by Forge{legacy}; refusing to overwrite it")
     week_day = DAYS.get(day.upper())
     if week_day is None:
         raise SafetyError(f"day must be one of {sorted(DAYS)}")

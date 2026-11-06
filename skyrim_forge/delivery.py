@@ -7,7 +7,7 @@ import subprocess
 
 REPORTS = {"VALIDATION.json", "BUILD-RECEIPT.json", "MANIFEST.json", "SBOM.spdx.json", "CHECKSUMS-SHA256.txt"}
 PRODUCT_FILES = {
-    "VERSION.txt", "README.md", "LICENSE", "NOTICE.md", "config.example.toml",
+    "VERSION.txt", "README.md", "AGENTS.md", "LICENSE", "NOTICE.md", "config.example.toml",
     "pyproject.toml", "forge_build_backend.py", "START-HERE.bat",
     "forge.cmd", "Forge Doctor.bat", "Skyrim Forge GUI.bat", "Skyrim Forge MCP.bat",
     "Skyrim Forge.bat", "Update Forge.bat", "Configure-Automation.ps1",

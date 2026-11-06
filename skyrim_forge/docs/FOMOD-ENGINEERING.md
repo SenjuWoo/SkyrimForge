@@ -140,4 +140,6 @@ A Forge PASS proves the XML and payload model are internally coherent against th
 
 ## Coverage is explicit
 
-`fomod-test-install --all-branches` enumerates every `SelectExactlyOne` and `SelectAtMostOne` choice, up to `MAX_BRANCHES`. `SelectAny`, `SelectAtLeastOne` and `SelectAll` groups are not enumerated; the receipt's `coverage.group_types_uncovered` names them and a warning is attached to each branch. An empty `group_types_uncovered` list is the only case where the receipt can be read as exhaustive.
+`fomod-test-install --all-branches` enumerates every `SelectExactlyOne` and `SelectAtMostOne` choice, up to `MAX_BRANCHES`. `SelectAny`, `SelectAtLeastOne` and `SelectAll` groups are not enumerated; the receipt's `coverage.group_types_uncovered` names them and a warning is attached to each branch. `coverage.groups` lists each group's type, whether it was enumerated and which choices were visited; `coverage.exhaustive` is true only when every group was enumerated. Anything else stays `PARTIAL`.
+
+This is a deliberate bounded explorer, not a full constraint solver. Visibility conditions, plugin flags and dependency states influence the simulator's result but are not separately enumerated, so a `PASS` proves only the branches that ran.

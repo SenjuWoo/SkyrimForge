@@ -57,8 +57,10 @@ python scripts/validate_repository.py --scope full --write-reports
 1. Bump the five version mirrors together.
 2. Run the full gate; fix until `VALIDATION.json` is `PASS`.
 3. Commit, push, wait for every check on that exact SHA.
-4. The workflow tags and publishes; rerunning it resumes a partial release from the same immutable SHA and never rewrites an existing tag.
+4. The workflow tags and publishes. Rerunning it resumes a partial release when the tag names the same SHA, even if `main` has advanced; it never rebuilds an existing tag and never publishes an untagged commit that is no longer `main`.
 5. Verify the downloaded ZIP against `SHA256SUMS.txt`, extract it, and run `forge.cmd version`, `doctor` and an MCP handshake from outside the install root.
 6. Update the live install with `Update-Forge.ps1`; never assume it happened.
+
+If the original run can no longer be rerun, `gh run rerun <run-id>` is the manual recovery path for the same SHA. Do not move the tag or rebuild it from newer source.
 
 In the final report state: starting and ending SHA, version, what was verified by execution, what was skipped, and every remaining risk. Do not call a Windows, CMake or in-game test passed if it did not run.

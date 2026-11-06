@@ -1,3 +1,15 @@
+## 6.11.4 (2026-11-06)
+
+- `scripts/preflight.py` now separates release states instead of treating every tag as a conflict: UNRELEASED, TAGGED, POST_RELEASE, STALE_VERSION and FOREIGN_TAG. A docs/evidence commit after a release passes; product code changed after the tag without a bump fails. `--release` adds a clean-tree and taggable-state requirement.
+- Preflight compares the complete canonical file set and hashes with `MANIFEST.json`, so a new tracked file can no longer escape the check. CI runs the development preflight with full history.
+- Freshness reports the real vcpkg registry baseline (`00c5775…`) plus the separate SDK checkout ref/commit, and derives the MCP pin from `MODERN_PROTOCOL`. A malformed baseline is `UNKNOWN`, never `PINNED_COMMIT`.
+- The GitHub token is attached only to HTTPS `api.github.com` on port 443, and redirects are refused when the origin changes; the token is never forwarded to another host.
+- Scheduled-task ownership requires the Forge registration marker and the canonical action. Historical unmarked `python.exe`/`cmd.exe` tasks are reported as legacy candidates but are never owned, replaced or deleted.
+- Release publication is decided by `scripts/release_decision.py`: a tag at the validated SHA resumes missing assets even after `main` advanced; an untagged commit must still be current `main`; a tag at another commit is never rebuilt.
+- The SPDX SBOM now models the real mixed licence: original code is MIT, the houseCARL-derived skill directories are GPL-3.0-only, every file is CONTAINS-linked to its package, the namespace is commit-specific and the creation date comes from the commit or `SOURCE_DATE_EPOCH`.
+- FOMOD coverage lists each group's type, whether it was enumerated and which choices were visited; `exhaustive` is true only for a fully enumerated exact/at-most sweep. `SelectAtLeastOne`, `SelectAny` and `SelectAll` remain explicitly uncovered and the run stays `PARTIAL`.
+- Native numeric versions accept ASCII digits only and reject components above the SDK's uint16 range.
+- `AGENTS.md` is now part of the runtime package, so the README link resolves in a release; packaging tests check every local README link.
 ## 6.11.3 (2026-11-06)
 
 - FOMOD all-branches no longer reports PASS with zero passing branches. A failed simulation is only `INFEASIBLE` when every group type was enumerated; an uncovered type or an empty pass set yields `PARTIAL`, and the CLI exits non-zero for it. Added regressions for `SelectAtLeastOne`, mixed covered/uncovered plans and zero-pass sweeps.
