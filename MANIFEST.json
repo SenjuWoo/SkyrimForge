@@ -189,8 +189,8 @@
     {
       "executable": false,
       "path": "docs/CAPABILITY-MATRIX.md",
-      "sha256": "55a632abb52b481ed959bdd99580e27e7493b5e32aa679d284225161c58bd1a1",
-      "size": 3499
+      "sha256": "6f03743334fb2ec606216be78c69b3a1f61ea2e9f919ea960f16b5e2be8daf79",
+      "size": 3465
     },
     {
       "executable": false,
@@ -3225,8 +3225,8 @@
     {
       "executable": false,
       "path": "skyrim_forge/docs/CAPABILITY-MATRIX.md",
-      "sha256": "55a632abb52b481ed959bdd99580e27e7493b5e32aa679d284225161c58bd1a1",
-      "size": 3499
+      "sha256": "6f03743334fb2ec606216be78c69b3a1f61ea2e9f919ea960f16b5e2be8daf79",
+      "size": 3465
     },
     {
       "executable": false,

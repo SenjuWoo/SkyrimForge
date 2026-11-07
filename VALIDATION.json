@@ -125,13 +125,13 @@
       "result": "PASS",
       "sdist": {
         "result": "PASS",
-        "sha256": "a770c9e07e7851130fb02cac95aa4603ef6c4ef63496f7a450a7f82a54685c8f",
-        "size": 6907387
+        "sha256": "c547b036808a03bfed36e1fb759d1cf7dfe27f8b3f16aa3c05cbecf16052626b",
+        "size": 6907354
       },
       "wheel": {
         "result": "PASS",
-        "sha256": "8f5d858b5d1af5dd2ae7c0e6ffe89f77810955ceb6231a440f553924abee2df8",
-        "size": 2849041
+        "sha256": "d7312620b2367e6bb3d6580def42d36c905771796c9cbc2abec7283f3da08c36",
+        "size": 2849030
       }
     },
     "powershell": {
