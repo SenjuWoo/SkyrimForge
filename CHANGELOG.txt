@@ -1,3 +1,9 @@
+## 6.12.2 (2026-11-07)
+
+- Closed the forged-receipt gap: `forge-tool` evidence now requires a known Forge verifier identity, an explicit dimension binding, a hash-matching JSON artifact, and an artifact whose own result is PASS. Unknown verifiers and non-JSON artifacts (including the reproduced README receipt) cannot pass; malformed receipts become FAIL with a specific note.
+- Fixed benchmark compatibility: different PIDs across before/after sessions are accepted when the executable and other scenario fields match. PID remains provenance only.
+- Fixed PresentMon mixed-PID contamination: a filtered executable with multiple PIDs is rejected unless a specific PID is selected; explicit PID selection imports only that process.
+- Updated quality and performance documentation and the Forge skill with the distinction between artifact integrity, known verifier execution, self-reports, frame-time comparison and real runtime validation.
 ## 6.12.1 (2026-11-07)
 
 - Fixed the quality gate's false PASS: bare strings are now self-reports and return `REVIEW_REQUIRED`; an authoritative `PASS` requires a `forge-tool` receipt whose artifact exists and whose SHA-256 matches. `NOT_APPLICABLE` is limited to optional dimensions with a specific reason, and additive all-waived reports cannot pass.

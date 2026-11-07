@@ -4,6 +4,7 @@
 from __future__ import annotations
 
 import hashlib
+import json
 from pathlib import Path
 from typing import Any
 
@@ -16,6 +17,10 @@ STATUSES = {"PASS", "FAIL", "WARNING", "NOT_APPLICABLE", "NOT_RUN", "BLOCKED", "
 # A missing core outcome is never waived; optional dimensions may be waived with
 # a specific reason. This prevents an all-NOT_APPLICABLE report from passing.
 NON_WAIVABLE = {"functional", "installation", "reproducibility", "publication"}
+# Only these Forge verifier identities may establish tool-verified evidence.
+# "forge" is the generic CLI report producer; the rest are concrete checks.
+VERIFIERS = {"forge", "framework-lint", "framework-build", "fomod-validate", "papyrus-analyze",
+             "native-binary-audit", "texture-inspect", "audio-inspect", "skse-inspect-pe", "validate-release"}
 
 # Each type names only the dimensions that can actually be judged for it.
 _REQUIRED: dict[str, tuple[str, ...]] = {
@@ -59,49 +64,59 @@ def plan(mod_types: Any) -> dict[str, Any]:
     }
 
 
-def _evidence(value: Any, label: str) -> tuple[list[str], int, int]:
-    """Return display evidence, verified count and self-reported count.
+def _evidence(value: Any, label: str, dimension: str) -> tuple[list[str], int, int, str | None]:
+    """Return claims, verified/self-reported counts and an evidence error.
 
     A bare string is a useful manual claim but never machine verification. A
-    tool receipt is verified only when its artifact exists and its SHA-256
-    matches the bytes on disk.
+    tool receipt is authoritative only when its verifier is known, it is bound
+    to this dimension, its artifact exists, its SHA-256 matches and the artifact
+    is a JSON report whose own result is PASS.
     """
     if value is None:
-        return [], 0, 0
+        return [], 0, 0, None
     if not isinstance(value, list):
-        raise ValidationError(f"{label} must be a list")
+        return [], 0, 0, f"{label} must be a list"
     claims: list[str] = []
     verified = 0
     self_reported = 0
     for item in value:
         if isinstance(item, str):
             if not item.strip():
-                raise ValidationError(f"{label} must not contain empty strings")
+                return [], verified, self_reported, f"{label} must not contain empty strings"
             claims.append(item.strip())
             self_reported += 1
             continue
         if not isinstance(item, dict) or item.get("type") != "forge-tool":
-            raise ValidationError(f"{label} items must be strings or forge-tool receipts")
-        if item.get("result") != "PASS":
-            raise ValidationError(f"{label} tool receipt must record result PASS")
+            return [], verified, self_reported, f"{label} items must be strings or forge-tool receipts"
         tool = item.get("tool")
         artifact = item.get("artifact")
         digest = item.get("sha256")
-        if not isinstance(tool, str) or not tool.strip():
-            raise ValidationError(f"{label} tool receipt requires a tool name")
+        bound = item.get("dimension")
+        if not isinstance(tool, str) or tool not in VERIFIERS:
+            return [], verified, self_reported, f"{label} names an unknown verifier {tool!r}"
+        if bound != dimension:
+            return [], verified, self_reported, f"{label} receipt is bound to {bound!r}, not {dimension!r}"
+        if item.get("result") != "PASS":
+            return [], verified, self_reported, f"{label} tool receipt must record result PASS"
         if not isinstance(artifact, str) or not artifact.strip():
-            raise ValidationError(f"{label} tool receipt requires an artifact path")
+            return [], verified, self_reported, f"{label} tool receipt requires an artifact path"
         if not isinstance(digest, str) or len(digest) != 64 or any(c not in "0123456789abcdefABCDEF" for c in digest):
-            raise ValidationError(f"{label} tool receipt requires a 64-character SHA-256")
+            return [], verified, self_reported, f"{label} tool receipt requires a 64-character SHA-256"
         path = Path(artifact)
         if not path.is_file():
-            raise ValidationError(f"{label} artifact does not exist: {artifact}")
+            return [], verified, self_reported, f"{label} artifact does not exist: {artifact}"
         actual = hashlib.sha256(path.read_bytes()).hexdigest()
         if actual != digest.casefold():
-            raise ValidationError(f"{label} artifact hash does not match its receipt")
-        claims.append(f"{tool}: {path.name} (sha256 verified)")
+            return [], verified, self_reported, f"{label} artifact hash does not match its receipt"
+        try:
+            payload = json.loads(path.read_text(encoding="utf-8"))
+        except (OSError, UnicodeDecodeError, json.JSONDecodeError):
+            return [], verified, self_reported, f"{label} artifact is not a JSON verification report"
+        if not isinstance(payload, dict) or payload.get("result") != "PASS":
+            return [], verified, self_reported, f"{label} artifact's own result is not PASS"
+        claims.append(f"{tool}: {path.name} (sha256 verified, result PASS)")
         verified += 1
-    return claims, verified, self_reported
+    return claims, verified, self_reported, None
 
 
 def audit(report: dict[str, Any]) -> dict[str, Any]:
@@ -125,12 +140,18 @@ def audit(report: dict[str, Any]) -> dict[str, Any]:
         state = str(raw.get("status", "NOT_RUN")).upper()
         if state not in STATUSES:
             raise ValidationError(f"Unknown quality status for {dimension}: {state}")
-        evidence, verified_count, self_reported_count = _evidence(raw.get("evidence"), f"{dimension}.evidence")
+        evidence, verified_count, self_reported_count, evidence_error = _evidence(
+            raw.get("evidence"), f"{dimension}.evidence", dimension)
         notes = raw.get("notes", "")
         if not isinstance(notes, str):
             raise ValidationError(f"{dimension}.notes must be a string")
         notes = notes.strip()
-        if state == "PASS" and not evidence:
+        if evidence_error:
+            state = "FAIL"
+            notes = (notes + " " if notes else "") + evidence_error
+            evidence = []
+            verified_count = self_reported_count = 0
+        elif state == "PASS" and not evidence:
             state = "FAIL"
             notes = (notes + " " if notes else "") + "PASS requires at least one evidence item."
         elif state == "PASS" and not verified_count:

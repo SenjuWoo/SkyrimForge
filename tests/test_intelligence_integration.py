@@ -39,10 +39,10 @@ class IntelligenceIntegrationTests(unittest.TestCase):
         path.write_text(json.dumps(payload), encoding="utf-8")
         return path
 
-    def _receipt(self, name: str) -> dict[str, str]:
+    def _receipt(self, name: str, dimension: str = "functional") -> dict[str, str]:
         path = self.workspace / f"{name}.receipt.json"
         path.write_text(json.dumps({"result": "PASS"}), encoding="utf-8")
-        return {"type": "forge-tool", "tool": "forge", "result": "PASS",
+        return {"type": "forge-tool", "tool": "forge", "dimension": dimension, "result": "PASS",
                 "artifact": str(path), "sha256": hashlib.sha256(path.read_bytes()).hexdigest()}
 
     def test_architecture_and_quality_workflow(self):
@@ -52,7 +52,7 @@ class IntelligenceIntegrationTests(unittest.TestCase):
         plan = self.service.quality_plan(["framework"])
         self.assertIn("conflicts", plan["dimensions"])
         report = self._json("quality.json", {"mod_types": ["framework"], "checks": {
-            item: {"status": "PASS", "evidence": [self._receipt(f"quality-{item}")]} for item in plan["dimensions"]}})
+            item: {"status": "PASS", "evidence": [self._receipt(f"quality-{item}", item)]} for item in plan["dimensions"]}})
         self.assertEqual(self.service.quality_audit(str(report))["verdict"], "PASS")
 
     def test_knowledge_status_and_lookup(self):

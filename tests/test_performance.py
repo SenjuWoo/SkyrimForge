@@ -95,6 +95,31 @@ class PerformanceTests(unittest.TestCase):
             with self.assertRaises(Exception):
                 presentmon_csv(path, SCENARIO)
 
+    def test_different_process_ids_across_sessions_are_compatible(self):
+        base = report([16.0] * 200, {**SCENARIO, "process_id": "100"})
+        candidate = report([15.0] * 200, {**SCENARIO, "process_id": "101"})
+        result = compare_reports(base, candidate)
+        self.assertEqual(result["verdict"], "IMPROVEMENT")
+        self.assertEqual(result["scenario"]["metric"], "msBetweenPresents")
+
+    def test_csv_mixed_pids_for_filtered_executable_are_rejected(self):
+        with tempfile.TemporaryDirectory() as td:
+            path = Path(td) / "capture.csv"
+            path.write_text("Application,ProcessID,MsBetweenPresents\n"
+                            "SkyrimSE.exe,100,16\nSkyrimSE.exe,101,25\n", encoding="utf-8")
+            with self.assertRaises(Exception):
+                presentmon_csv(path, SCENARIO, process="SkyrimSE.exe")
+
+    def test_csv_explicit_pid_selects_one_process(self):
+        with tempfile.TemporaryDirectory() as td:
+            path = Path(td) / "capture.csv"
+            path.write_text("Application,ProcessID,MsBetweenPresents\n"
+                            "SkyrimSE.exe,100,16\nSkyrimSE.exe,101,25\n", encoding="utf-8")
+            converted = presentmon_csv(path, SCENARIO, process="101")
+            self.assertEqual(converted["sample_count"], 1)
+            self.assertEqual(converted["frames_ms"], [25.0])
+            self.assertEqual(converted["scenario"]["process_id"], "101")
+
     def test_csv_without_frame_time_column_fails(self):
         with tempfile.TemporaryDirectory() as td:
             path = Path(td) / "capture.csv"

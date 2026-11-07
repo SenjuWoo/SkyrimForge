@@ -21,10 +21,10 @@ class QualityTests(unittest.TestCase):
     def tearDown(self):
         self._temp.cleanup()
 
-    def _receipt(self, name: str, result: str = "PASS") -> dict[str, str]:
+    def _receipt(self, name: str, dimension: str = "functional", result: str = "PASS") -> dict[str, str]:
         path = self.artifacts / f"{name}.json"
         path.write_text(json.dumps({"result": result}), encoding="utf-8")
-        return {"type": "forge-tool", "tool": "forge", "result": result,
+        return {"type": "forge-tool", "tool": "forge", "dimension": dimension, "result": result,
                 "artifact": str(path), "sha256": hashlib.sha256(path.read_bytes()).hexdigest()}
 
     def test_self_test(self):
@@ -48,12 +48,12 @@ class QualityTests(unittest.TestCase):
     def test_complete_verified_report_passes(self):
         dimensions = plan(["texture"])["dimensions"]
         report = audit({"mod_types": ["texture"], "checks": {
-            "functional": {"status": "PASS", "evidence": [self._receipt("functional")]},
-            "assets": {"status": "PASS", "evidence": [self._receipt("assets")]},
+            "functional": {"status": "PASS", "evidence": [self._receipt("functional", "functional")]},
+            "assets": {"status": "PASS", "evidence": [self._receipt("assets", "assets")]},
             "performance": {"status": "NOT_APPLICABLE", "notes": "No performance-sensitive claim."},
-            "installation": {"status": "PASS", "evidence": [self._receipt("installation")]},
-            "reproducibility": {"status": "PASS", "evidence": [self._receipt("reproducibility")]},
-            "publication": {"status": "PASS", "evidence": [self._receipt("publication")]},
+            "installation": {"status": "PASS", "evidence": [self._receipt("installation", "installation")]},
+            "reproducibility": {"status": "PASS", "evidence": [self._receipt("reproducibility", "reproducibility")]},
+            "publication": {"status": "PASS", "evidence": [self._receipt("publication", "publication")]},
         }})
         self.assertEqual(report["verdict"], "PASS")
         self.assertEqual(set(report["dimensions"]), set(dimensions))
@@ -77,11 +77,29 @@ class QualityTests(unittest.TestCase):
 
     def test_tool_receipt_must_match_artifact_hash(self):
         dimensions = plan(["framework"])["dimensions"]
-        receipt = self._receipt("tampered")
+        receipt = self._receipt("tampered", "functional")
         receipt["sha256"] = "0" * 64
-        with self.assertRaises(Exception):
-            audit({"mod_types": ["framework"], "checks": {
-                item: {"status": "PASS", "evidence": [dict(receipt)]} for item in dimensions}})
+        report = audit({"mod_types": ["framework"], "checks": {
+            item: {"status": "PASS", "evidence": [dict(receipt)]} for item in dimensions}})
+        self.assertNotEqual(report["verdict"], "PASS")
+
+    def test_fabricated_readme_receipt_does_not_pass(self):
+        artifact = (ROOT / "README.md").resolve()
+        receipt = {"type": "forge-tool", "tool": "totally-invented-verifier", "dimension": "functional",
+                   "result": "PASS", "artifact": str(artifact),
+                   "sha256": hashlib.sha256(artifact.read_bytes()).hexdigest()}
+        report = audit({"mod_types": ["papyrus"], "checks": {
+            item: {"status": "PASS", "evidence": [dict(receipt)]}
+            for item in plan(["papyrus"])["dimensions"]}})
+        self.assertNotEqual(report["verdict"], "PASS")
+
+    def test_artifact_result_must_agree_with_receipt(self):
+        dimensions = plan(["framework"])["dimensions"]
+        receipt = self._receipt("failed-artifact", "functional", result="FAIL")
+        receipt["result"] = "PASS"
+        report = audit({"mod_types": ["framework"], "checks": {
+            item: {"status": "PASS", "evidence": [dict(receipt)]} for item in dimensions}})
+        self.assertNotEqual(report["verdict"], "PASS")
 
     def test_missing_dimension_is_unverified(self):
         report = audit({"mod_types": ["package"], "checks": {

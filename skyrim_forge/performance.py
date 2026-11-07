@@ -112,7 +112,7 @@ def compare_reports(baseline: dict[str, Any], candidate: dict[str, Any], toleran
                 "metric": {"baseline": base_metric, "candidate": cand_metric},
                 "verification": "METRIC_MISMATCH",
                 "evidence": f"Cannot compare {base_metric} with {cand_metric}; use the same measurement for both captures."}
-    for field in ("process", "process_id"):
+    for field in ("process",):
         base_value = baseline.get("scenario", {}).get(field)
         cand_value = candidate.get("scenario", {}).get(field)
         if (base_value or cand_value) and base_value != cand_value:
@@ -207,6 +207,9 @@ def presentmon_csv(path: Path, scenario: dict[str, Any], *, metric: str | None =
         matching_pids = {row.get(pid_column, "").strip() for row in rows
                          if row.get(app_column, "").strip().casefold() == selected_app.casefold()
                          and row.get(pid_column, "").strip()}
+        if len(matching_pids) > 1:
+            raise ValidationError(
+                f"multiple process IDs for {selected_app}; choose one PID: {', '.join(sorted(matching_pids))}")
         if len(matching_pids) == 1:
             selected_pid = matching_pids.pop()
     frames: list[float] = []

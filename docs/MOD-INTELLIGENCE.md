@@ -89,22 +89,26 @@ mesh checks and a texture mod does not require native binary analysis.
 
 Each dimension has `status`, optional `evidence` and optional `notes`. A bare
 string is a self-report and cannot produce a verified `PASS`. To establish a
-verified PASS, point at a Forge-produced artifact:
+verified PASS, provide a known Forge verifier receipt bound to that dimension:
 
 ```json
 {
   "type": "forge-tool",
-  "tool": "forge",
+  "tool": "texture-inspect",
+  "dimension": "assets",
   "result": "PASS",
-  "artifact": "Workspaces/my-mod/reports/validation.json",
+  "artifact": "Workspaces/my-mod/reports/assets.json",
   "sha256": "64 lowercase or uppercase hex characters"
 }
 ```
 
-The artifact must exist and its SHA-256 must match. `NOT_APPLICABLE` is
-permitted only for optional dimensions and needs a specific reason; functional,
-installation, reproducibility and publication are never waived. Missing
-required dimensions are `NOT_RUN`.
+The verifier name must be one of Forge's known checks, the receipt must be bound
+to the dimension being evaluated, the artifact must exist, its SHA-256 must
+match, and the artifact's own JSON `result` must be `PASS`. A hash proves
+artifact integrity, not that an unknown tool ran or that the claim is true.
+`NOT_APPLICABLE` is permitted only for optional dimensions and needs a specific
+reason; functional, installation, reproducibility and publication are never
+waived. Missing required dimensions are `NOT_RUN`.
 
 Overall verdicts: `PASS`, `WARNING`, `REVIEW_REQUIRED`, `INCOMPLETE`, `FAIL` or
 `UNVERIFIED`. Bare-string evidence returns `REVIEW_REQUIRED`; an all-waived
@@ -132,6 +136,9 @@ label is `FRAME_TIME_COMPARISON_ONLY`: the arithmetic is real, but an in-game
 performance win is not proven.
 
 Capture provenance includes the selected process and process ID when available.
+The PID is provenance, not a stable scenario identity: baseline and candidate
+sessions may have different PIDs. Within one filtered capture, multiple PIDs
+for the same executable are rejected unless one PID is selected explicitly.
 Keep the raw capture, scenario metadata and report together.
 
 ## Limits
@@ -140,8 +147,10 @@ Keep the raw capture, scenario metadata and report together.
 - Knowledge probes report presence, not API compatibility or version. The
   SKSE row names the locally observed executable (`1.6.1170`) rather than a
   permanent "current 1.6.x" range; AE is not one build.
-- Quality audit evaluates supplied evidence; only hash-verified tool receipts
-  produce a verified PASS. It cannot run the game for you.
+- Quality audit distinguishes artifact integrity from verifier execution: only
+  known, dimension-bound receipts with a hash-matching JSON artifact whose own
+  result is PASS count as verified. This is local integrity, not cryptographic
+  signing or proof that the game behaved correctly.
 - Performance comparison consumes external captures and reports frame-time
   arithmetic, not an in-game FPS win, visual quality or gameplay correctness.
 - Forge does not capture PresentMon data or profile Papyrus automatically.
