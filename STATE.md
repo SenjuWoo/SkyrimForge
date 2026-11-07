@@ -1,3 +1,13 @@
+# Forge 6.12.2 forged receipts and benchmark PID gate (2026-11-07)
+- Start/end: `dffc395` -> `ae942dd425bada6c6202e7d2c85af11e3f3c72b5`; tag `v6.12.2` on that SHA; 8 published assets; release ZIP `943d98f1e1300f013bd0148e5d985d27b8f142b14c32127b8b8ae40184f5b597`.
+- Fixed forged quality receipts: evidence now requires a known Forge verifier, an explicit dimension binding, a hash-matching JSON artifact and an artifact `result: PASS`. The reproduced README/unknown-verifier receipt returns FAIL; malformed receipts become FAIL with a specific reason.
+- Fixed benchmark PID compatibility: PIDs are provenance, not scenario identity. Different PIDs across before/after sessions are accepted; a filtered executable with multiple PIDs is rejected unless a specific PID is selected.
+- Verified: 472 tests, 7 skipped, full gate PASS; exact-SHA CI 11/11 on `ae942dd`; live install 6.12.2 is 593/593, doctor PASS, 18/18 self-tests, MCP `2026-07-28` with 75 tools; live checks show fake receipt FAIL, legitimate receipt PASS, PID change IMPROVEMENT, mixed PID ValidationError.
+- Remaining: no in-game runtime proof; no automatic profiler or texture/mesh optimizer. Protected `AGENTS.md` still contains `.orge`; not modified.
+- `AGENTS.md` protected-file status: not modified; exact two-line manual correction is `.\forge architect-recommend request.json` and `.\forge quality-plan --types papyrus,native`.
+orge architect-recommend request.json` and `.
+orge quality-plan --types papyrus,native`.
+
 # Forge 6.12.1 correctness and reliability gate (2026-11-07)
 - Start/end: `b98e39a` -> `93765f214af9e7aad149d7b76cd051161392794e`; tag `v6.12.1` on that SHA; 8 published assets; release ZIP `25392a09dd162685d88e68601559f6942208b543190a00be23e3a7be752b358d`.
 - Fixed quality false PASS: bare evidence strings are self-reports and return `REVIEW_REQUIRED`; verified PASS requires a `forge-tool` receipt whose artifact exists and whose SHA-256 matches. Non-waivable dimensions cannot be `NOT_APPLICABLE`; all-waived reports cannot pass.
@@ -6,7 +16,9 @@
 - Fixed Papyrus `;/ ... /;` block comments with line-preserving lexical blanking and explicit unterminated-comment/string diagnostics. Updated SKSE knowledge scope to the observed `1.6.1170` build and the user/agent docs.
 - Verified: 467 tests, 7 skipped, full gate PASS; exact-SHA CI 11/11 on `93765f2`; v6.12.1 published with 8 assets and every download verifies against `SHA256SUMS.txt`; live install 6.12.1 is 593/593 byte-identical, doctor PASS, 18/18 self-tests, MCP `2026-07-28` with 75 tools; live reproductions show `REVIEW_REQUIRED`, `INCOMPATIBLE` and `script.papyrus`.
 - Remaining: no in-game SKSE/FOMOD/Vortex/MO2 proof; performance is frame-time arithmetic only; no automatic profiler or texture/mesh optimizer. Protected `AGENTS.md` still has `.orge` on two example lines; correction requires user-approved edit.
-- `AGENTS.md` protected-file status: not modified; exact two-line manual correction is `.\forge architect-recommend request.json` and `.\forge quality-plan --types papyrus,native`.
+- `AGENTS.md` protected-file status: not modified; exact two-line manual correction is `.
+orge architect-recommend request.json` and `.
+orge quality-plan --types papyrus,native`.
 
 # Forge 6.12.0 architecture, knowledge, quality and performance intelligence (2026-11-07)
 - Start/end: `c67e054` -> `c969bee260311f9393752eb4477fc200a44a3076`; tag `v6.12.0` on that SHA; 8 published assets; release ZIP `3a569dc4614c3b6d524747169c849055bbe00904e1804040401231c058532dd3`.
@@ -53,7 +65,8 @@
 # Forge 6.11.2 evidence, escaping and task ownership (2026-11-06)
 
 - Goal: close the second audit's P1/P2 findings without reopening v6.11.0/v6.11.1 work.
-- Done: FOMOD simulation errors fail a branch and the CLI status; the zero-selection branch is explicit; impossible all-branch combinations are `INFEASIBLE`; selections plus all-branches is rejected; branch cap is checked before a run directory exists. Native metadata uses `_cpp_string`/`_cmake_string`, and CMake gets numeric project versions. Task ownership uses `Get-ScheduledTask` objects plus a marker and exact check-only action, with exists/owned/healthy/reason. Compact MCP groups inherit the riskiest member's annotations. FOMOD paths reject ADS colons, reserved device names and trailing dots/spaces. PowerShell examples use `.\forge`; a read-only freshness report was added.
+- Done: FOMOD simulation errors fail a branch and the CLI status; the zero-selection branch is explicit; impossible all-branch combinations are `INFEASIBLE`; selections plus all-branches is rejected; branch cap is checked before a run directory exists. Native metadata uses `_cpp_string`/`_cmake_string`, and CMake gets numeric project versions. Task ownership uses `Get-ScheduledTask` objects plus a marker and exact check-only action, with exists/owned/healthy/reason. Compact MCP groups inherit the riskiest member's annotations. FOMOD paths reject ADS colons, reserved device names and trailing dots/spaces. PowerShell examples use `.
+orge`; a read-only freshness report was added.
 - Verified: full local gate PASS (`VALIDATION.json` records the suite; 7 skipped locally for symlink privilege and machine-specific houseCARL discovery); native self-test PASS; scheduled task created, executed (last result 0), log parsed (`PASS`, `applied:false`), and removed on a path containing spaces; a spoofed same-name task was refused for install and remove; CI 15/15 on `d808f3d`; v6.11.2 has 8 assets, tag on that SHA, ZIP `2c3e06c0…` matches `SHA256SUMS`; clean extraction runs `forge.cmd version`, doctor PASS and MCP 2026-07-28 with 68 tools from outside the install root; live install 6.11.2 is 581/581 byte-identical, doctor PASS, self-test 14/14, 4 post-install backups pruned to 0.
 - Not done: no in-game, CK, MO2 or Vortex run. CommonLibSSE-NG stays v14.1.0; v15.7.1 is named by the freshness report as an untested candidate. houseCARL skill snapshot stays 2.1.1 while the installer pin is 2.1.2. Go 1.27.3 remains the pinned toolchain.
 
