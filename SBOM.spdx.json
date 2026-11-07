@@ -1,13 +1,13 @@
 {
   "SPDXID": "SPDXRef-DOCUMENT",
   "creationInfo": {
-    "created": "2026-11-07T02:34:15Z",
+    "created": "2026-11-07T02:49:41Z",
     "creators": [
       "Tool: Skyrim Forge validator 6.12.3"
     ]
   },
   "dataLicense": "CC0-1.0",
-  "documentNamespace": "https://github.com/SenjuWoo/SkyrimForge/spdx/6.12.3/b2a95cc212ce",
+  "documentNamespace": "https://github.com/SenjuWoo/SkyrimForge/spdx/6.12.3/d793c685591a",
   "files": [
     {
       "SPDXID": "SPDXRef-File-.editorconfig",
@@ -479,7 +479,7 @@
       "checksums": [
         {
           "algorithm": "SHA256",
-          "checksumValue": "6f03743334fb2ec606216be78c69b3a1f61ea2e9f919ea960f16b5e2be8daf79"
+          "checksumValue": "55a632abb52b481ed959bdd99580e27e7493b5e32aa679d284225161c58bd1a1"
         }
       ],
       "copyrightText": "NOASSERTION",
@@ -7184,7 +7184,7 @@
       "checksums": [
         {
           "algorithm": "SHA256",
-          "checksumValue": "b4f0c368f595ddc688ee847b52b8e951ad30184c0998bd0ff6b6123df6cc3be6"
+          "checksumValue": "277e0d47a3875a80c4758a8ce9b2a82dadc5111a5016282205498b48f2bee674"
         }
       ],
       "copyrightText": "NOASSERTION",
@@ -8069,7 +8069,7 @@
       "checksums": [
         {
           "algorithm": "SHA256",
-          "checksumValue": "6f03743334fb2ec606216be78c69b3a1f61ea2e9f919ea960f16b5e2be8daf79"
+          "checksumValue": "55a632abb52b481ed959bdd99580e27e7493b5e32aa679d284225161c58bd1a1"
         }
       ],
       "copyrightText": "NOASSERTION",
@@ -9314,7 +9314,7 @@
       "checksums": [
         {
           "algorithm": "SHA256",
-          "checksumValue": "fc0bd8da700e00955e9a49c4b620b5bf8a382f68fc88f6a9b5eb4d97abd6b313"
+          "checksumValue": "8f552d9c132716132279fa76e76bf26f77f0d98ca03560c16eb57cac52dbe98f"
         }
       ],
       "copyrightText": "NOASSERTION",
@@ -10374,7 +10374,7 @@
       ],
       "name": "Skyrim Forge",
       "packageVerificationCode": {
-        "packageVerificationCodeValue": "15e6cdc046813c98084a07faa1e51392fb114f69"
+        "packageVerificationCodeValue": "d0518d5c81ba31733b9c96a1aaa9c10f22f0528a"
       },
       "versionInfo": "6.12.3"
     },

@@ -14,7 +14,7 @@ Forge distinguishes evidence levels so an AI cannot turn a configured adapter in
 | Papyrus analysis | Profiled | Implemented | Performance findings are review heuristics |
 | Architecture recommendation | Direct | Implemented | Keyword/constraint routing; installed frameworks and runtime compatibility remain unverified |
 | Skyrim source/API registry | Direct | Implemented | Curated URLs and local probes; DETECTED is not a version or signature proof |
-| Mod quality gate | Direct | Implemented | Selects applicable dimensions and refuses PASS without hash-verified tool receipts; no single score |
+| Mod quality gate | Direct | Implemented | Selects applicable dimensions and requires subject/scope-bound verifier receipts; a general report cannot verify unrelated dimensions |
 | Performance comparison | Direct | Implemented | Explicit metric and process; frame-time arithmetic over matching captures; no capture, visual or FPS guarantee |
 | Papyrus compile | Adapter | Implemented | Pinned official compiler; fresh PEX is not runtime proof |
 | CommonLibSSE-NG scaffold | Profiled | Implemented | Source-locked project generation |

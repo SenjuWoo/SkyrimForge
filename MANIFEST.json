@@ -189,8 +189,8 @@
     {
       "executable": false,
       "path": "docs/CAPABILITY-MATRIX.md",
-      "sha256": "6f03743334fb2ec606216be78c69b3a1f61ea2e9f919ea960f16b5e2be8daf79",
-      "size": 3465
+      "sha256": "55a632abb52b481ed959bdd99580e27e7493b5e32aa679d284225161c58bd1a1",
+      "size": 3499
     },
     {
       "executable": false,
@@ -2871,8 +2871,8 @@
     {
       "executable": false,
       "path": "README.md",
-      "sha256": "b4f0c368f595ddc688ee847b52b8e951ad30184c0998bd0ff6b6123df6cc3be6",
-      "size": 11566
+      "sha256": "277e0d47a3875a80c4758a8ce9b2a82dadc5111a5016282205498b48f2bee674",
+      "size": 11640
     },
     {
       "executable": false,
@@ -3225,8 +3225,8 @@
     {
       "executable": false,
       "path": "skyrim_forge/docs/CAPABILITY-MATRIX.md",
-      "sha256": "6f03743334fb2ec606216be78c69b3a1f61ea2e9f919ea960f16b5e2be8daf79",
-      "size": 3465
+      "sha256": "55a632abb52b481ed959bdd99580e27e7493b5e32aa679d284225161c58bd1a1",
+      "size": 3499
     },
     {
       "executable": false,
@@ -3723,8 +3723,8 @@
     {
       "executable": false,
       "path": "STATE.md",
-      "sha256": "fc0bd8da700e00955e9a49c4b620b5bf8a382f68fc88f6a9b5eb4d97abd6b313",
-      "size": 44663
+      "sha256": "8f552d9c132716132279fa76e76bf26f77f0d98ca03560c16eb57cac52dbe98f",
+      "size": 45665
     },
     {
       "executable": false,

@@ -91,8 +91,9 @@ native plugins, UI, animation, assets, LOD and packaging, and returns open
 questions plus verification steps. `knowledge-status` reports curated source
 pins and local probe presence without pretending a detected file proves a
 version. `quality-audit` keeps a missing runtime check `UNVERIFIED` instead of
-turning it into a pass; only hash-verified tool receipts produce a verified
-`PASS`, and bare-string claims require review. See [docs/MOD-INTELLIGENCE.md](docs/MOD-INTELLIGENCE.md).
+turning it into a pass; only known verifier receipts bound to the report subject,
+dimension and scope produce a verified `PASS`, and a general repository report
+cannot verify unrelated dimensions. See [docs/MOD-INTELLIGENCE.md](docs/MOD-INTELLIGENCE.md).
 
 ## Free assets
 

@@ -1,3 +1,9 @@
+# Forge 6.12.3 scoped quality evidence (2026-11-07)
+- Start/end: `b2a95cc` -> `d793c685591a03d2558503afb0d4b56ea09fc1ef`; tag `v6.12.3` on that SHA; 8 published assets; release ZIP `5ad27f7ee6f03b81a672793d7b80d7e2005bc1213a9456308544fec8154b7b48`.
+- Fixed unrelated artifacts claiming verified quality PASS: receipts now need a known verifier that supports the dimension and scope, a report subject, matching receipt/artifact subject and scope, a hash-matching artifact, and an artifact using `skyrim-forge-quality-evidence/1` whose tool/dimension/subject/scope/result all agree.
+- Verified: 477 tests, 7 skipped, full gate PASS; exact-SHA CI 11/11 on `d793c68`; live 6.12.3 is 593/593, doctor PASS, 18/18 self-tests; live checks show `VALIDATION.json` reuse FAIL, bare `{"result":"PASS"}` FAIL, legitimate supported receipt PASS.
+- Remaining: static/verifier evidence is not runtime proof; no automatic profiler or texture/mesh optimizer. Protected `AGENTS.md` still contains `.orge`; not modified.
+
 # Forge 6.12.2 forged receipts and benchmark PID gate (2026-11-07)
 - Start/end: `dffc395` -> `ae942dd425bada6c6202e7d2c85af11e3f3c72b5`; tag `v6.12.2` on that SHA; 8 published assets; release ZIP `943d98f1e1300f013bd0148e5d985d27b8f142b14c32127b8b8ae40184f5b597`.
 - Fixed forged quality receipts: evidence now requires a known Forge verifier, an explicit dimension binding, a hash-matching JSON artifact and an artifact `result: PASS`. The reproduced README/unknown-verifier receipt returns FAIL; malformed receipts become FAIL with a specific reason.
