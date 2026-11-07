@@ -1,3 +1,11 @@
+## 6.12.0 (2026-11-07)
+
+- Added `architect-recommend` / `forge_architect_recommend`: ranks a small set of known implementation routes from a plain-English description and explicit constraints, with complexity, runtime/save risk, required checks, alternatives and open questions. Ambiguous requests return `NEEDS_INPUT`; it never claims a framework is installed.
+- Added a curated, provenance-aware Skyrim source/API registry (`references/SKYRIM-KNOWLEDGE.json`, `knowledge-status`, `knowledge-lookup`). Local probes report `DETECTED` or `MISSING`; they are not presented as verified versions, API signatures or runtime compatibility.
+- Added the applicability-aware quality gate (`quality-plan`, `quality-audit`) for framework, plugin, Papyrus, native, texture, mesh, animation, LOD, audio and packaging work. `PASS` requires evidence; missing runtime proof stays `UNVERIFIED`; there is no single quality score.
+- Added deterministic frame-time evidence comparison (`perf-compare`) and PresentMon CSV ingestion (`perf-ingest`). Scenarios must match; fewer than 120 frames is `INSUFFICIENT`; the report gives mean/median/p95/p99 and slow-frame ratios, not FPS or visual-quality claims.
+- Papyrus heuristics now ignore comments and string literals, so commented `RegisterForUpdate` calls and example strings no longer become findings. ScriptName/Event/Function discovery uses the same lexical view.
+- New schemas, capability registry entries, self-tests, CLI/MCP routes (75 tools), fixtures and [docs/MOD-INTELLIGENCE.md](docs/MOD-INTELLIGENCE.md). No third-party binaries or runtime claims were added.
 ## 6.11.7 (2026-11-06)
 
 - Fixed `skse-inspect-pe` export parsing. The PE export directory was decoded with a short field layout, so a real MSVC-built SKSE plugin lost its export names and reported bogus RVAs: a valid DLL with `SKSEPlugin_Load`, `SKSEPlugin_Query` and `SKSEPlugin_Version` was marked FAIL. The parser now reads the complete `IMAGE_EXPORT_DIRECTORY`, uses `NumberOfNames`, bounds name ordinals against `NumberOfFunctions`, and the fixture matches the real layout. Verified against a freshly built CommonLibSSE-NG v14.1.0 plugin: all three exports found, `skse-inspect-pe` PASS, `native-binary-audit` PASS.

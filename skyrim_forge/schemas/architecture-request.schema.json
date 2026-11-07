@@ -1,0 +1,17 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.invalid/skyrim-forge/architecture-request.schema.json",
+  "title": "Skyrim Forge Architecture Request",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["description"],
+  "properties": {
+    "schema": {"const": "skyrim-forge-architecture-request/1"},
+    "description": {"type": "string", "minLength": 1, "maxLength": 4000},
+    "edition": {"enum": ["se", "ae", "vr", "unknown"]},
+    "runtime_frequency": {"enum": ["event", "occasional", "frame", "unknown"]},
+    "modifies_existing": {"type": "boolean"},
+    "performance_sensitive": {"type": "boolean"},
+    "save_sensitive": {"type": "boolean"}
+  }
+}

@@ -3,15 +3,15 @@
     "files": {
       "counts": {
         "go": 2,
-        "json": 66,
+        "json": 69,
         "pascal": 4,
         "powershell": 18,
-        "python": 131,
+        "python": 141,
         "toml": 2,
         "xml": 1,
         "yaml": 8
       },
-      "file_count": 676,
+      "file_count": 690,
       "result": "PASS",
       "third_party_binary_bundling": "disabled"
     },
@@ -19,17 +19,17 @@
       "builds": {
         "linux": {
           "buildvcs": false,
-          "bundled": "542d8228657528095c4127e88f919e471d2278ee91aac93b88e18a91cf32daad",
-          "first": "542d8228657528095c4127e88f919e471d2278ee91aac93b88e18a91cf32daad",
+          "bundled": "56bfc2a15fc5e394fa02baf597b3b6f290db924b3acd49ebf76340d334a348d6",
+          "first": "56bfc2a15fc5e394fa02baf597b3b6f290db924b3acd49ebf76340d334a348d6",
           "result": "PASS",
-          "second": "542d8228657528095c4127e88f919e471d2278ee91aac93b88e18a91cf32daad"
+          "second": "56bfc2a15fc5e394fa02baf597b3b6f290db924b3acd49ebf76340d334a348d6"
         },
         "windows": {
           "buildvcs": false,
-          "bundled": "6431cea81991474fdd0a2df02337911d86d553b122e967202e074cda24c804c2",
-          "first": "6431cea81991474fdd0a2df02337911d86d553b122e967202e074cda24c804c2",
+          "bundled": "6cc23c03903218abfafad0bb2214cec62c438bea66e8da0f333af484153fdcd4",
+          "first": "6cc23c03903218abfafad0bb2214cec62c438bea66e8da0f333af484153fdcd4",
           "result": "PASS",
-          "second": "6431cea81991474fdd0a2df02337911d86d553b122e967202e074cda24c804c2"
+          "second": "6cc23c03903218abfafad0bb2214cec62c438bea66e8da0f333af484153fdcd4"
         }
       },
       "format": {
@@ -86,19 +86,19 @@
         "forge://schemas/nexus-publication-plan"
       ],
       "result": "PASS",
-      "tools": 68
+      "tools": 75
     },
     "native": {
       "executed_platform": "windows",
       "hashes": {
-        "linux": "542d8228657528095c4127e88f919e471d2278ee91aac93b88e18a91cf32daad",
-        "windows": "6431cea81991474fdd0a2df02337911d86d553b122e967202e074cda24c804c2"
+        "linux": "56bfc2a15fc5e394fa02baf597b3b6f290db924b3acd49ebf76340d334a348d6",
+        "windows": "6cc23c03903218abfafad0bb2214cec62c438bea66e8da0f333af484153fdcd4"
       },
       "linux_elf": true,
       "package_copies_match": true,
       "package_copy_hashes": {
-        "linux": "542d8228657528095c4127e88f919e471d2278ee91aac93b88e18a91cf32daad",
-        "windows": "6431cea81991474fdd0a2df02337911d86d553b122e967202e074cda24c804c2"
+        "linux": "56bfc2a15fc5e394fa02baf597b3b6f290db924b3acd49ebf76340d334a348d6",
+        "windows": "6cc23c03903218abfafad0bb2214cec62c438bea66e8da0f333af484153fdcd4"
       },
       "result": "PASS",
       "self_test": {
@@ -117,7 +117,7 @@
         ],
         "returncode": 0,
         "stderr": "",
-        "stdout": "SkyrimForge.Native 6.11.7 go\n"
+        "stdout": "SkyrimForge.Native 6.12.0 go\n"
       },
       "windows_pe": true
     },
@@ -125,13 +125,13 @@
       "result": "PASS",
       "sdist": {
         "result": "PASS",
-        "sha256": "2c427a1662cf10cf2b6ffae02368720edbb08842019bd0f4e79abcb99849314e",
-        "size": 6869361
+        "sha256": "7f737069415509d60e6406f595980a4a14b5a0a6288ab531bb199bf78a21ed5d",
+        "size": 6893891
       },
       "wheel": {
         "result": "PASS",
-        "sha256": "aa1fed9dcf1be1800a8cd7da98567e8b6d76f6d9dc2f52feef3ffe86f8194868",
-        "size": 2826583
+        "sha256": "626743c15a730078e0c9f77cf8e5eb1d7df1a25564ece326417f9cac8a806428",
+        "size": 2843447
       }
     },
     "powershell": {
@@ -170,18 +170,18 @@
       "self_test": {
         "returncode": 0
       },
-      "test_count": 416,
+      "test_count": 449,
       "tests": {
         "errors": 0,
         "failures": 0,
         "returncode": 0,
         "skipped": 7,
-        "tests": 416
+        "tests": 449
       }
     },
     "sbom": {
-      "files": 676,
-      "relationships": 679,
+      "files": 690,
+      "relationships": 693,
       "result": "PASS",
       "schema": "SPDX-2.3",
       "violations": 0
@@ -190,24 +190,24 @@
       "hardcoded_in_ci": [],
       "result": "PASS",
       "sources": {
-        "CURRENT.txt": "6.11.7",
-        "README.md": "6.11.7",
-        "START-HERE.bat": "6.11.7",
-        "VERSION.txt": "6.11.7",
-        "integrations/skyrim-pack/skills/skyrim-forge/SKILL.md (series)": "6.11",
-        "pyproject.toml": "6.11.7",
-        "server.json": "6.11.7",
-        "skyrim_forge/version.py": "6.11.7",
-        "writer/native-go/main.go": "6.11.7"
+        "CURRENT.txt": "6.12.0",
+        "README.md": "6.12.0",
+        "START-HERE.bat": "6.12.0",
+        "VERSION.txt": "6.12.0",
+        "integrations/skyrim-pack/skills/skyrim-forge/SKILL.md (series)": "6.12",
+        "pyproject.toml": "6.12.0",
+        "server.json": "6.12.0",
+        "skyrim_forge/version.py": "6.12.0",
+        "writer/native-go/main.go": "6.12.0"
       },
-      "version": "6.11.7"
+      "version": "6.12.0"
     }
   },
   "errors": [],
   "product": "Skyrim Forge",
   "result": "PASS",
   "scope": "full",
-  "version": "6.11.7",
+  "version": "6.12.0",
   "warnings": [
     "PowerShell syntax is statically screened here; Windows CI executes the shipped parser gate, the exact START-HERE batch startup path, and every skill-provider installation"
   ]

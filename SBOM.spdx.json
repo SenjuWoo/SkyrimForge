@@ -1,13 +1,13 @@
 {
   "SPDXID": "SPDXRef-DOCUMENT",
   "creationInfo": {
-    "created": "2026-11-06T21:56:54Z",
+    "created": "2026-11-06T22:04:57Z",
     "creators": [
-      "Tool: Skyrim Forge validator 6.11.7"
+      "Tool: Skyrim Forge validator 6.12.0"
     ]
   },
   "dataLicense": "CC0-1.0",
-  "documentNamespace": "https://github.com/SenjuWoo/SkyrimForge/spdx/6.11.7/14daf915cb75",
+  "documentNamespace": "https://github.com/SenjuWoo/SkyrimForge/spdx/6.12.0/c67e0541fbbe",
   "files": [
     {
       "SPDXID": "SPDXRef-File-.editorconfig",
@@ -194,7 +194,7 @@
       "checksums": [
         {
           "algorithm": "SHA256",
-          "checksumValue": "c02045fbf89d5d72b4ac8c4bd2420c81c95857dfefe2aa5fb0b6c66044bcaa75"
+          "checksumValue": "6678e06ff1e7c3a7c91769ab2e15e232acbe61416936c477c41ddc529a66d4cf"
         }
       ],
       "copyrightText": "NOASSERTION",
@@ -254,7 +254,7 @@
       "checksums": [
         {
           "algorithm": "SHA256",
-          "checksumValue": "8a17c3c1d532aad29066a42456c5ca4e31fd67fb588500cec634fd7f127beefa"
+          "checksumValue": "16aac912dffc7c9110d2be566b0ec5c36b718e73becb7577059cf61b8cb734a2"
         }
       ],
       "copyrightText": "NOASSERTION",
@@ -269,7 +269,7 @@
       "checksums": [
         {
           "algorithm": "SHA256",
-          "checksumValue": "330dc47545e94e40c37308e4246b0ac7ebd98d0354bb160c6b4fdfb6c793401c"
+          "checksumValue": "2a2a7817a3d8ddda4fffaaac1ce7b468cb9f0bc1dfa67ff2a349e220aa8b8f9f"
         }
       ],
       "copyrightText": "NOASSERTION",
@@ -374,7 +374,7 @@
       "checksums": [
         {
           "algorithm": "SHA256",
-          "checksumValue": "f8da1c9dd3bac1a29333ae3657a2c1630a17d4906d7a4c3fd2e745b3d2b1fd9f"
+          "checksumValue": "26ca10c15d00d68ad63bbf62a819e2262a552ea6ebb39461e44659e46a0bafb4"
         }
       ],
       "copyrightText": "NOASSERTION",
@@ -479,7 +479,7 @@
       "checksums": [
         {
           "algorithm": "SHA256",
-          "checksumValue": "6705fc4acedef40d565430232b2da1a838d495fac361953aeee4c9d8e5492ef5"
+          "checksumValue": "e0ec47c29645fdd7de0d2743ce76449b9a6f236201ecc97779b16849974e656c"
         }
       ],
       "copyrightText": "NOASSERTION",
@@ -709,6 +709,21 @@
       ],
       "copyrightText": "NOASSERTION",
       "fileName": "./docs/MO2-AUTOMATION.md",
+      "licenseConcluded": "MIT",
+      "licenseInfoInFiles": [
+        "MIT"
+      ]
+    },
+    {
+      "SPDXID": "SPDXRef-File-docs-MOD-INTELLIGENCE.md",
+      "checksums": [
+        {
+          "algorithm": "SHA256",
+          "checksumValue": "a3430741203832c376f51bc5000ac4a2a1775e46b2e84c05ed691f05265f5717"
+        }
+      ],
+      "copyrightText": "NOASSERTION",
+      "fileName": "./docs/MOD-INTELLIGENCE.md",
       "licenseConcluded": "MIT",
       "licenseInfoInFiles": [
         "MIT"
@@ -6134,7 +6149,7 @@
       "checksums": [
         {
           "algorithm": "SHA256",
-          "checksumValue": "427dd673225fc69789d30053a6a7e30f2c25b13987fffe6d500c87aa8783e4be"
+          "checksumValue": "6d994fb2a205663f98c5794a61cf620e856079c4a626bdd28d14ad473b85898a"
         }
       ],
       "copyrightText": "NOASSERTION",
@@ -7154,7 +7169,7 @@
       "checksums": [
         {
           "algorithm": "SHA256",
-          "checksumValue": "ed319f10ddee61650fdc992f9b8747860457ae2e572ccb50073424684b2f22c6"
+          "checksumValue": "5ba35a96c1e2be12878eff89ed8bdff3026bb6f0bb476051b9af97d9355ae4b2"
         }
       ],
       "copyrightText": "NOASSERTION",
@@ -7169,7 +7184,7 @@
       "checksums": [
         {
           "algorithm": "SHA256",
-          "checksumValue": "9937c3cd470d5f870c09fc3a89f4584a762a21cd0ce24b6881357629d5bafacc"
+          "checksumValue": "31442dbe7da5e114c29ea74581481c6a24e5120b62f0fd6528a7b49e44e06e30"
         }
       ],
       "copyrightText": "NOASSERTION",
@@ -7294,6 +7309,21 @@
       ],
       "copyrightText": "NOASSERTION",
       "fileName": "./references/SDK-LOCK.json",
+      "licenseConcluded": "MIT",
+      "licenseInfoInFiles": [
+        "MIT"
+      ]
+    },
+    {
+      "SPDXID": "SPDXRef-File-references-SKYRIM-KNOWLEDGE.json",
+      "checksums": [
+        {
+          "algorithm": "SHA256",
+          "checksumValue": "4b7b7902a085eac1a6cee77b55a74631d5958cdc2f5068ba64248aea0dc290c3"
+        }
+      ],
+      "copyrightText": "NOASSERTION",
+      "fileName": "./references/SKYRIM-KNOWLEDGE.json",
       "licenseConcluded": "MIT",
       "licenseInfoInFiles": [
         "MIT"
@@ -7724,7 +7754,7 @@
       "checksums": [
         {
           "algorithm": "SHA256",
-          "checksumValue": "17cf171eef3d556848e89f53211c797dd92a6b96eb04303a6ec5a0a5b6b410d8"
+          "checksumValue": "5e1ae41441ccc0a1d5dd0606dc7352e72863a6e8eea6c0924f821bc470998c30"
         }
       ],
       "copyrightText": "NOASSERTION",
@@ -7810,6 +7840,21 @@
       ]
     },
     {
+      "SPDXID": "SPDXRef-File-skyrim-forge-architecture.py",
+      "checksums": [
+        {
+          "algorithm": "SHA256",
+          "checksumValue": "efbf15a8daff2dfb591c55f051042df7523690376a9c96165a58fe0d055eb69b"
+        }
+      ],
+      "copyrightText": "NOASSERTION",
+      "fileName": "./skyrim_forge/architecture.py",
+      "licenseConcluded": "MIT",
+      "licenseInfoInFiles": [
+        "MIT"
+      ]
+    },
+    {
       "SPDXID": "SPDXRef-File-skyrim-forge-archive.py",
       "checksums": [
         {
@@ -7889,7 +7934,7 @@
       "checksums": [
         {
           "algorithm": "SHA256",
-          "checksumValue": "542d8228657528095c4127e88f919e471d2278ee91aac93b88e18a91cf32daad"
+          "checksumValue": "56bfc2a15fc5e394fa02baf597b3b6f290db924b3acd49ebf76340d334a348d6"
         }
       ],
       "copyrightText": "NOASSERTION",
@@ -7904,7 +7949,7 @@
       "checksums": [
         {
           "algorithm": "SHA256",
-          "checksumValue": "6431cea81991474fdd0a2df02337911d86d553b122e967202e074cda24c804c2"
+          "checksumValue": "6cc23c03903218abfafad0bb2214cec62c438bea66e8da0f333af484153fdcd4"
         }
       ],
       "copyrightText": "NOASSERTION",
@@ -7919,7 +7964,7 @@
       "checksums": [
         {
           "algorithm": "SHA256",
-          "checksumValue": "f1aa7b1b2b1a37e711cd9c7b8c05a4ea42b404b1c8e673a44837069d2c0946fc"
+          "checksumValue": "15b6148465a6f12fbd529c8a3392b89c31a8705628a651dd014d1d70c2a6ede2"
         }
       ],
       "copyrightText": "NOASSERTION",
@@ -7934,7 +7979,7 @@
       "checksums": [
         {
           "algorithm": "SHA256",
-          "checksumValue": "4629528f7db99c9030542bdde45426dfa1c018768249d220beab1fddf2afa656"
+          "checksumValue": "89b730a39bf664a09e14aff4404c59bb0aaed4cead29ef598453f2620dc70217"
         }
       ],
       "copyrightText": "NOASSERTION",
@@ -8024,7 +8069,7 @@
       "checksums": [
         {
           "algorithm": "SHA256",
-          "checksumValue": "6705fc4acedef40d565430232b2da1a838d495fac361953aeee4c9d8e5492ef5"
+          "checksumValue": "e0ec47c29645fdd7de0d2743ce76449b9a6f236201ecc97779b16849974e656c"
         }
       ],
       "copyrightText": "NOASSERTION",
@@ -8335,6 +8380,21 @@
       ]
     },
     {
+      "SPDXID": "SPDXRef-File-skyrim-forge-knowledge.py",
+      "checksums": [
+        {
+          "algorithm": "SHA256",
+          "checksumValue": "e2573613dc9b7aec03429cf7c9690808cf2d53a53ae5642c2f8224fd2df7e3e9"
+        }
+      ],
+      "copyrightText": "NOASSERTION",
+      "fileName": "./skyrim_forge/knowledge.py",
+      "licenseConcluded": "MIT",
+      "licenseInfoInFiles": [
+        "MIT"
+      ]
+    },
+    {
       "SPDXID": "SPDXRef-File-skyrim-forge-loadorder.py",
       "checksums": [
         {
@@ -8384,7 +8444,7 @@
       "checksums": [
         {
           "algorithm": "SHA256",
-          "checksumValue": "3b5dd56923ddd786747ead72b34d67828504d150b34ce39eaf90a06b94a88d83"
+          "checksumValue": "9012fa06ce6715847db1427a5a22f618df67e48fd460fe979379be61e4f96d7a"
         }
       ],
       "copyrightText": "NOASSERTION",
@@ -8459,11 +8519,26 @@
       "checksums": [
         {
           "algorithm": "SHA256",
-          "checksumValue": "ed7478b734b99762e0430766c6d17e5026af012e52111cfeeca0ddb2d3d01735"
+          "checksumValue": "539d81b5d8e9a1c42a182337173740615293351aafb2847010074dc3cc542501"
         }
       ],
       "copyrightText": "NOASSERTION",
       "fileName": "./skyrim_forge/papyrus.py",
+      "licenseConcluded": "MIT",
+      "licenseInfoInFiles": [
+        "MIT"
+      ]
+    },
+    {
+      "SPDXID": "SPDXRef-File-skyrim-forge-performance.py",
+      "checksums": [
+        {
+          "algorithm": "SHA256",
+          "checksumValue": "5ff02ad5f6ddf58758633c63f727855134e83f9ec7126fcac29d505d521683f0"
+        }
+      ],
+      "copyrightText": "NOASSERTION",
+      "fileName": "./skyrim_forge/performance.py",
       "licenseConcluded": "MIT",
       "licenseInfoInFiles": [
         "MIT"
@@ -8524,6 +8599,21 @@
       ],
       "copyrightText": "NOASSERTION",
       "fileName": "./skyrim_forge/profiles.py",
+      "licenseConcluded": "MIT",
+      "licenseInfoInFiles": [
+        "MIT"
+      ]
+    },
+    {
+      "SPDXID": "SPDXRef-File-skyrim-forge-quality.py",
+      "checksums": [
+        {
+          "algorithm": "SHA256",
+          "checksumValue": "2dbae249a3b1da9c945ccb2f9586b46e15de423c6fd8be207ed944e35042e5be"
+        }
+      ],
+      "copyrightText": "NOASSERTION",
+      "fileName": "./skyrim_forge/quality.py",
       "licenseConcluded": "MIT",
       "licenseInfoInFiles": [
         "MIT"
@@ -8755,6 +8845,21 @@
       ]
     },
     {
+      "SPDXID": "SPDXRef-File-skyrim-forge-schemas-architecture-request.schema.json",
+      "checksums": [
+        {
+          "algorithm": "SHA256",
+          "checksumValue": "cc3df5a032df5333d71311e31d51f9208d182b983b32508605238a96daa235ea"
+        }
+      ],
+      "copyrightText": "NOASSERTION",
+      "fileName": "./skyrim_forge/schemas/architecture-request.schema.json",
+      "licenseConcluded": "MIT",
+      "licenseInfoInFiles": [
+        "MIT"
+      ]
+    },
+    {
       "SPDXID": "SPDXRef-File-skyrim-forge-schemas-automation-job.schema.json",
       "checksums": [
         {
@@ -8860,6 +8965,21 @@
       ]
     },
     {
+      "SPDXID": "SPDXRef-File-skyrim-forge-schemas-quality-report.schema.json",
+      "checksums": [
+        {
+          "algorithm": "SHA256",
+          "checksumValue": "ea3e139fbc690a51c59db32807cfc53265526054f2c771a2fb5b2a1414868e39"
+        }
+      ],
+      "copyrightText": "NOASSERTION",
+      "fileName": "./skyrim_forge/schemas/quality-report.schema.json",
+      "licenseConcluded": "MIT",
+      "licenseInfoInFiles": [
+        "MIT"
+      ]
+    },
+    {
       "SPDXID": "SPDXRef-File-skyrim-forge-schemas-ui-job.schema.json",
       "checksums": [
         {
@@ -8894,7 +9014,7 @@
       "checksums": [
         {
           "algorithm": "SHA256",
-          "checksumValue": "5663de68045785f5b6b7b00ef1d7a0b1857403f91d92fd6460b0247738cec3af"
+          "checksumValue": "5c660b42a2eb9f4b795c876f775470d30c1ac3eab8d974b4dfc148d035ac8897"
         }
       ],
       "copyrightText": "NOASSERTION",
@@ -8924,7 +9044,7 @@
       "checksums": [
         {
           "algorithm": "SHA256",
-          "checksumValue": "c77eb67acc68604a6c28d1d4bc2f8b10d01b96ca750903e23d3b6bcc1b10c7d3"
+          "checksumValue": "fce469c31ae176246bca44af8317400f00f4fe84238baf07cf4db99c05969559"
         }
       ],
       "copyrightText": "NOASSERTION",
@@ -9104,7 +9224,7 @@
       "checksums": [
         {
           "algorithm": "SHA256",
-          "checksumValue": "7d9969147508b9909256bb51441588166a4e85ab60ecdfc4ddf9148e6b6617e1"
+          "checksumValue": "c76897fcb5f0f02b483e69062235af1304c9a1467fd0027a51c24fd896193a69"
         }
       ],
       "copyrightText": "NOASSERTION",
@@ -9179,7 +9299,7 @@
       "checksums": [
         {
           "algorithm": "SHA256",
-          "checksumValue": "00f190d6b683ce9a20ef53da8c7f1df635c9022ed5199652e047658edba67c58"
+          "checksumValue": "6f05da3496125585c66cbe61ac044c495859f49121266e12364a05fa92abe2e7"
         }
       ],
       "copyrightText": "NOASSERTION",
@@ -9229,6 +9349,21 @@
       ],
       "copyrightText": "NOASSERTION",
       "fileName": "./tests/test_adapter_outputs.py",
+      "licenseConcluded": "MIT",
+      "licenseInfoInFiles": [
+        "MIT"
+      ]
+    },
+    {
+      "SPDXID": "SPDXRef-File-tests-test-architecture.py",
+      "checksums": [
+        {
+          "algorithm": "SHA256",
+          "checksumValue": "489da0e12971f975620de47fcea71976ed23c7c1b9a55d592921fbaa0042a752"
+        }
+      ],
+      "copyrightText": "NOASSERTION",
+      "fileName": "./tests/test_architecture.py",
       "licenseConcluded": "MIT",
       "licenseInfoInFiles": [
         "MIT"
@@ -9460,6 +9595,36 @@
       ]
     },
     {
+      "SPDXID": "SPDXRef-File-tests-test-intelligence-integration.py",
+      "checksums": [
+        {
+          "algorithm": "SHA256",
+          "checksumValue": "a4e095f4f51d1116ebe030773c58b30c3b7a19cee5a8c200b43f760ccc865b8f"
+        }
+      ],
+      "copyrightText": "NOASSERTION",
+      "fileName": "./tests/test_intelligence_integration.py",
+      "licenseConcluded": "MIT",
+      "licenseInfoInFiles": [
+        "MIT"
+      ]
+    },
+    {
+      "SPDXID": "SPDXRef-File-tests-test-knowledge.py",
+      "checksums": [
+        {
+          "algorithm": "SHA256",
+          "checksumValue": "cd7ee7683dc54f8fb762e4b95a6f1817cd9ddaa4f2f7f41878271931affad11c"
+        }
+      ],
+      "copyrightText": "NOASSERTION",
+      "fileName": "./tests/test_knowledge.py",
+      "licenseConcluded": "MIT",
+      "licenseInfoInFiles": [
+        "MIT"
+      ]
+    },
+    {
       "SPDXID": "SPDXRef-File-tests-test-maintenance.py",
       "checksums": [
         {
@@ -9625,6 +9790,36 @@
       ]
     },
     {
+      "SPDXID": "SPDXRef-File-tests-test-papyrus-lexical.py",
+      "checksums": [
+        {
+          "algorithm": "SHA256",
+          "checksumValue": "16f0efde4c7a628eb85d2de779a7736f0659a579420411f5a275887db638e834"
+        }
+      ],
+      "copyrightText": "NOASSERTION",
+      "fileName": "./tests/test_papyrus_lexical.py",
+      "licenseConcluded": "MIT",
+      "licenseInfoInFiles": [
+        "MIT"
+      ]
+    },
+    {
+      "SPDXID": "SPDXRef-File-tests-test-performance.py",
+      "checksums": [
+        {
+          "algorithm": "SHA256",
+          "checksumValue": "3eba1161b914f0d0ce6f42825b7b0c5d038671ef6fe6cf5fb422f0bf3b28972f"
+        }
+      ],
+      "copyrightText": "NOASSERTION",
+      "fileName": "./tests/test_performance.py",
+      "licenseConcluded": "MIT",
+      "licenseInfoInFiles": [
+        "MIT"
+      ]
+    },
+    {
       "SPDXID": "SPDXRef-File-tests-test-powershell-release.py",
       "checksums": [
         {
@@ -9679,6 +9874,21 @@
       ],
       "copyrightText": "NOASSERTION",
       "fileName": "./tests/test_publish_release.py",
+      "licenseConcluded": "MIT",
+      "licenseInfoInFiles": [
+        "MIT"
+      ]
+    },
+    {
+      "SPDXID": "SPDXRef-File-tests-test-quality.py",
+      "checksums": [
+        {
+          "algorithm": "SHA256",
+          "checksumValue": "ae5a383bb029d874de36b9c3af0838412f848709a2eb09243e61c2a66f81b1f3"
+        }
+      ],
+      "copyrightText": "NOASSERTION",
+      "fileName": "./tests/test_quality.py",
       "licenseConcluded": "MIT",
       "licenseInfoInFiles": [
         "MIT"
@@ -9899,7 +10109,7 @@
       "checksums": [
         {
           "algorithm": "SHA256",
-          "checksumValue": "0575f29f02fc72ef4cad201387b135c739e280ef7f2abe128180fca25d4dba80"
+          "checksumValue": "3abf115b4fa2d0dc126543388ceb97c58c6e7df013df7ab0fb029e69b1f33a0d"
         }
       ],
       "copyrightText": "NOASSERTION",
@@ -10019,7 +10229,7 @@
       "checksums": [
         {
           "algorithm": "SHA256",
-          "checksumValue": "844c293bd0498fe54ba250911f6254a94afeef94eed0057d94a98fe93e294a52"
+          "checksumValue": "29698ca74ad5905b01ab02285ceca498a775954b86da6c47f9ae51b74e4500d5"
         }
       ],
       "copyrightText": "NOASSERTION",
@@ -10094,7 +10304,7 @@
       "checksums": [
         {
           "algorithm": "SHA256",
-          "checksumValue": "3e197887c008226678ef9b5c946629b2b4c88fa31e094ec2010242ccd54c3237"
+          "checksumValue": "846b2f8801ec66b4c0229c6daef2554cd162fd57821397707a07d666487a0b1c"
         }
       ],
       "copyrightText": "NOASSERTION",
@@ -10124,7 +10334,7 @@
       "checksums": [
         {
           "algorithm": "SHA256",
-          "checksumValue": "542d8228657528095c4127e88f919e471d2278ee91aac93b88e18a91cf32daad"
+          "checksumValue": "56bfc2a15fc5e394fa02baf597b3b6f290db924b3acd49ebf76340d334a348d6"
         }
       ],
       "copyrightText": "NOASSERTION",
@@ -10139,7 +10349,7 @@
       "checksums": [
         {
           "algorithm": "SHA256",
-          "checksumValue": "6431cea81991474fdd0a2df02337911d86d553b122e967202e074cda24c804c2"
+          "checksumValue": "6cc23c03903218abfafad0bb2214cec62c438bea66e8da0f333af484153fdcd4"
         }
       ],
       "copyrightText": "NOASSERTION",
@@ -10150,7 +10360,7 @@
       ]
     }
   ],
-  "name": "Skyrim-Forge-6.11.7",
+  "name": "Skyrim-Forge-6.12.0",
   "packages": [
     {
       "SPDXID": "SPDXRef-Package-Forge",
@@ -10164,9 +10374,9 @@
       ],
       "name": "Skyrim Forge",
       "packageVerificationCode": {
-        "packageVerificationCodeValue": "fda711167cb74253bc8efabe67ef62cf9d9f10e6"
+        "packageVerificationCodeValue": "87f967c77cb2c947415a0e22b58ffeb97e222a27"
       },
-      "versionInfo": "6.11.7"
+      "versionInfo": "6.12.0"
     },
     {
       "SPDXID": "SPDXRef-Package-HouseCARL-Skills",
@@ -10182,7 +10392,7 @@
       "packageVerificationCode": {
         "packageVerificationCodeValue": "3615770292165f9139d2c3bd9855aaa91daf33db"
       },
-      "versionInfo": "6.11.7"
+      "versionInfo": "6.12.0"
     },
     {
       "SPDXID": "SPDXRef-Package-SPDX-Schema",
@@ -10449,6 +10659,11 @@
     },
     {
       "relatedSpdxElement": "SPDXRef-File-docs-MO2-AUTOMATION.md",
+      "relationshipType": "CONTAINS",
+      "spdxElementId": "SPDXRef-Package-Forge"
+    },
+    {
+      "relatedSpdxElement": "SPDXRef-File-docs-MOD-INTELLIGENCE.md",
       "relationshipType": "CONTAINS",
       "spdxElementId": "SPDXRef-Package-Forge"
     },
@@ -12648,6 +12863,11 @@
       "spdxElementId": "SPDXRef-Package-Forge"
     },
     {
+      "relatedSpdxElement": "SPDXRef-File-references-SKYRIM-KNOWLEDGE.json",
+      "relationshipType": "CONTAINS",
+      "spdxElementId": "SPDXRef-Package-Forge"
+    },
+    {
       "relatedSpdxElement": "SPDXRef-File-references-spdx-2.3.schema.json",
       "relationshipType": "CONTAINS",
       "spdxElementId": "SPDXRef-Package-SPDX-Schema"
@@ -12814,6 +13034,11 @@
     },
     {
       "relatedSpdxElement": "SPDXRef-File-skyrim-forge---main--.py",
+      "relationshipType": "CONTAINS",
+      "spdxElementId": "SPDXRef-Package-Forge"
+    },
+    {
+      "relatedSpdxElement": "SPDXRef-File-skyrim-forge-architecture.py",
       "relationshipType": "CONTAINS",
       "spdxElementId": "SPDXRef-Package-Forge"
     },
@@ -12993,6 +13218,11 @@
       "spdxElementId": "SPDXRef-Package-Forge"
     },
     {
+      "relatedSpdxElement": "SPDXRef-File-skyrim-forge-knowledge.py",
+      "relationshipType": "CONTAINS",
+      "spdxElementId": "SPDXRef-Package-Forge"
+    },
+    {
       "relatedSpdxElement": "SPDXRef-File-skyrim-forge-loadorder.py",
       "relationshipType": "CONTAINS",
       "spdxElementId": "SPDXRef-Package-Forge"
@@ -13038,6 +13268,11 @@
       "spdxElementId": "SPDXRef-Package-Forge"
     },
     {
+      "relatedSpdxElement": "SPDXRef-File-skyrim-forge-performance.py",
+      "relationshipType": "CONTAINS",
+      "spdxElementId": "SPDXRef-Package-Forge"
+    },
+    {
       "relatedSpdxElement": "SPDXRef-File-skyrim-forge-plugin-plan.schema.json",
       "relationshipType": "CONTAINS",
       "spdxElementId": "SPDXRef-Package-Forge"
@@ -13054,6 +13289,11 @@
     },
     {
       "relatedSpdxElement": "SPDXRef-File-skyrim-forge-profiles.py",
+      "relationshipType": "CONTAINS",
+      "spdxElementId": "SPDXRef-Package-Forge"
+    },
+    {
+      "relatedSpdxElement": "SPDXRef-File-skyrim-forge-quality.py",
       "relationshipType": "CONTAINS",
       "spdxElementId": "SPDXRef-Package-Forge"
     },
@@ -13133,6 +13373,11 @@
       "spdxElementId": "SPDXRef-Package-Forge"
     },
     {
+      "relatedSpdxElement": "SPDXRef-File-skyrim-forge-schemas-architecture-request.schema.json",
+      "relationshipType": "CONTAINS",
+      "spdxElementId": "SPDXRef-Package-Forge"
+    },
+    {
       "relatedSpdxElement": "SPDXRef-File-skyrim-forge-schemas-automation-job.schema.json",
       "relationshipType": "CONTAINS",
       "spdxElementId": "SPDXRef-Package-Forge"
@@ -13164,6 +13409,11 @@
     },
     {
       "relatedSpdxElement": "SPDXRef-File-skyrim-forge-schemas-plugin-plan.schema.json",
+      "relationshipType": "CONTAINS",
+      "spdxElementId": "SPDXRef-Package-Forge"
+    },
+    {
+      "relatedSpdxElement": "SPDXRef-File-skyrim-forge-schemas-quality-report.schema.json",
       "relationshipType": "CONTAINS",
       "spdxElementId": "SPDXRef-Package-Forge"
     },
@@ -13293,6 +13543,11 @@
       "spdxElementId": "SPDXRef-Package-Forge"
     },
     {
+      "relatedSpdxElement": "SPDXRef-File-tests-test-architecture.py",
+      "relationshipType": "CONTAINS",
+      "spdxElementId": "SPDXRef-Package-Forge"
+    },
+    {
       "relatedSpdxElement": "SPDXRef-File-tests-test-audio.py",
       "relationshipType": "CONTAINS",
       "spdxElementId": "SPDXRef-Package-Forge"
@@ -13368,6 +13623,16 @@
       "spdxElementId": "SPDXRef-Package-Forge"
     },
     {
+      "relatedSpdxElement": "SPDXRef-File-tests-test-intelligence-integration.py",
+      "relationshipType": "CONTAINS",
+      "spdxElementId": "SPDXRef-Package-Forge"
+    },
+    {
+      "relatedSpdxElement": "SPDXRef-File-tests-test-knowledge.py",
+      "relationshipType": "CONTAINS",
+      "spdxElementId": "SPDXRef-Package-Forge"
+    },
+    {
       "relatedSpdxElement": "SPDXRef-File-tests-test-maintenance.py",
       "relationshipType": "CONTAINS",
       "spdxElementId": "SPDXRef-Package-Forge"
@@ -13423,6 +13688,16 @@
       "spdxElementId": "SPDXRef-Package-Forge"
     },
     {
+      "relatedSpdxElement": "SPDXRef-File-tests-test-papyrus-lexical.py",
+      "relationshipType": "CONTAINS",
+      "spdxElementId": "SPDXRef-Package-Forge"
+    },
+    {
+      "relatedSpdxElement": "SPDXRef-File-tests-test-performance.py",
+      "relationshipType": "CONTAINS",
+      "spdxElementId": "SPDXRef-Package-Forge"
+    },
+    {
       "relatedSpdxElement": "SPDXRef-File-tests-test-powershell-release.py",
       "relationshipType": "CONTAINS",
       "spdxElementId": "SPDXRef-Package-Forge"
@@ -13439,6 +13714,11 @@
     },
     {
       "relatedSpdxElement": "SPDXRef-File-tests-test-publish-release.py",
+      "relationshipType": "CONTAINS",
+      "spdxElementId": "SPDXRef-Package-Forge"
+    },
+    {
+      "relatedSpdxElement": "SPDXRef-File-tests-test-quality.py",
       "relationshipType": "CONTAINS",
       "spdxElementId": "SPDXRef-Package-Forge"
     },

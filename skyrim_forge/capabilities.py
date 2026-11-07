@@ -50,6 +50,10 @@ _CAPABILITIES: tuple[dict[str, Any], ...] = (
     {"id": "quest.dialogue", "level": "worker_contract", "status": "adapter_only", "limitations": "CK fragment/SEQ/voice manifests may be automated by a pinned worker; quest flow, aliases, scenes, and dialogue timing require CK and runtime review."},
     {"id": "worldspace.landscape", "level": "human_gate", "status": "not_automated", "limitations": "Reference placement, landscape, lighting, occlusion, and seams are not safely judged by generic static automation."},
     {"id": "navmesh.write", "level": "unsupported", "status": "blocked", "limitations": "No generic NAVM writer is exposed. CK finalization and in-game traversal checks remain required."},
+    {"id": "architecture.recommend", "level": "direct", "status": "implemented", "outputs": ["ranked implementation routes", "framework candidates", "complexity/runtime/save risk", "open questions", "verification steps"], "limitations": "Keyword and declared-constraint routing only. It does not verify installed frameworks, signatures, or runtime behaviour."},
+    {"id": "knowledge.registry", "level": "direct", "status": "implemented", "outputs": ["curated API/source entries", "upstream provenance", "local probe status", "unknown-id boundary"], "limitations": "DETECTED means a path exists, not that its version or API contract was verified. No signatures are fabricated."},
+    {"id": "quality.gate", "level": "direct", "status": "implemented", "outputs": ["mod-type-specific dimensions", "per-dimension evidence", "PASS/FAIL/WARNING/NOT_APPLICABLE/NOT_RUN/BLOCKED/UNVERIFIED", "no single quality score"], "limitations": "It evaluates supplied evidence and static reports; runtime, visual and gameplay proof must still be supplied by a real test."},
+    {"id": "performance.compare", "level": "direct", "status": "implemented", "outputs": ["frame-time percentiles", "baseline/candidate deltas", "scenario compatibility check", "slow-frame ratio"], "limitations": "Only deterministic arithmetic over captured frame times. It does not capture the game, prove hardware parity, or replace visual review."},
 )
 
 

@@ -90,6 +90,13 @@ def parser() -> argparse.ArgumentParser:
     ti = sub.add_parser("texture-inspect"); ti.add_argument("path")
     mt = sub.add_parser("maintain"); mt.add_argument("--days", type=int, default=7); mt.add_argument("--keep-backups", type=int, default=2); mt.add_argument("--apply", action="store_true"); mt.add_argument("--fix-roots", action="store_true"); mt.add_argument("--no-self-test", action="store_true"); mt.add_argument("--approve", action="store_true")
     mt.add_argument("--schedule", action="store_true"); mt.add_argument("--unschedule", action="store_true"); mt.add_argument("--schedule-status", action="store_true"); mt.add_argument("--schedule-day", default="SUN"); mt.add_argument("--schedule-time", default="12:00")
+    ar = sub.add_parser("architect-recommend"); ar.add_argument("request")
+    ks = sub.add_parser("knowledge-status")
+    kl = sub.add_parser("knowledge-lookup"); kl.add_argument("id")
+    qp = sub.add_parser("quality-plan"); qp.add_argument("--types", required=True)
+    qa = sub.add_parser("quality-audit"); qa.add_argument("report")
+    pc = sub.add_parser("perf-compare"); pc.add_argument("baseline"); pc.add_argument("candidate"); pc.add_argument("--tolerance", type=float, default=2.0)
+    pi = sub.add_parser("perf-ingest"); pi.add_argument("csv"); pi.add_argument("output"); pi.add_argument("--scenario", required=True); pi.add_argument("--approve", action="store_true")
     mcp = sub.add_parser("mcp"); mcp.add_argument("--surface", choices=["full", "compact"], default=None)
     gui = sub.add_parser("gui")
     return root
@@ -191,6 +198,13 @@ def main(argv: list[str] | None = None) -> int:
             case "framework-correlate-logs": value = service.framework_correlate_logs(args.mod_root, args.log_dir)
             case "fomod-test-install": value = service.fomod_test_install(args.plan, args.source_root, args.approve, args.selections, args.state, args.all_branches)
             case "texture-inspect": value = service.texture_inspect(args.path)
+            case "architect-recommend": value = service.architecture_recommend(args.request)
+            case "knowledge-status": value = service.knowledge_status()
+            case "knowledge-lookup": value = service.knowledge_lookup(args.id)
+            case "quality-plan": value = service.quality_plan(args.types)
+            case "quality-audit": value = service.quality_audit(args.report)
+            case "perf-compare": value = service.performance_compare(args.baseline, args.candidate, args.tolerance)
+            case "perf-ingest": value = service.performance_ingest(args.csv, args.output, args.scenario, args.approve)
             case "maintain":
                 if args.schedule or args.unschedule or args.schedule_status:
                     action = "install" if args.schedule else ("remove" if args.unschedule else "status")

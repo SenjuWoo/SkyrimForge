@@ -112,6 +112,13 @@ TOOL_SPECS: dict[str, dict[str, Any]] = {
     "forge_audio_extract_fuz": {"description": "Split a FUZ into its .lip and .xwm payloads inside Forge workspace staging.", "inputSchema": _schema({"fuz": _string(), "output_dir": _string(), "approved": _boolean()}, ["fuz", "output_dir", "approved"])},
     "forge_audio_create_fuz": {"description": "Pack an .xwm (and optional .lip) into a FUZ container inside Forge workspace staging.", "inputSchema": _schema({"xwm": _string(), "output": _string(), "lip": _string(), "approved": _boolean()}, ["xwm", "output", "approved"])},
     "forge_voice_path_validate": {"description": "Check a staged mod keeps voice files at Sound/Voice/<plugin>/<voice type>/<file>.", "inputSchema": _schema({"root": _string()}, ["root"])},
+    "forge_architect_recommend": {"description": "Rank Skyrim implementation routes from a plain-English task description and explicit constraints; state unknowns and verification steps. It does not claim a framework is installed.", "inputSchema": _schema({"request": _string()}, ["request"])},
+    "forge_knowledge_status": {"description": "Report curated Skyrim API/source entries and whether their configured local probes exist; DETECTED is not a version or runtime claim.", "inputSchema": _schema()},
+    "forge_knowledge_lookup": {"description": "Look up one Skyrim source/API registry entry by id; unknown ids stay UNKNOWN.", "inputSchema": _schema({"id": _string()}, ["id"])},
+    "forge_quality_plan": {"description": "List the evidence dimensions required for one or more mod types; unrelated dimensions are excluded.", "inputSchema": _schema({"mod_types": _array()}, ["mod_types"])},
+    "forge_quality_audit": {"description": "Audit a mod-quality evidence report; PASS requires evidence and missing runtime checks stay UNVERIFIED.", "inputSchema": _schema({"report": _string()}, ["report"])},
+    "forge_performance_compare": {"description": "Compare two frame-time benchmark reports with matching scenario metadata; report percentiles and reject incompatible captures.", "inputSchema": _schema({"baseline": _string(), "candidate": _string(), "tolerance_percent": {"type": "number"}}, ["baseline", "candidate"])},
+    "forge_performance_ingest": {"description": "Convert a PresentMon CSV with msBetweenPresents/msBetweenDisplayChange/MsGPUActive into a benchmark report in the workspace.", "inputSchema": _schema({"csv": _string(), "output": _string(), "scenario": _string(), "approved": _boolean()}, ["csv", "output", "scenario", "approved"])},
     "forge_maintain": {"description": "Report or remove Forge-owned leftovers (spills, sandbox runs, old provider skill backups), flag configured roots that moved and name a discovered replacement; optionally run the self-test. Dry-run unless apply is true.", "inputSchema": _schema({"days": _integer(), "keep_backups": _integer(), "apply": _boolean(), "fix_roots": _boolean(), "self_test": _boolean(), "approved": _boolean()})},
     "forge_texture_inspect": {"description": "Read a DDS header: format (BC1/BC3/A8R8G8B8), dimensions, mip chain and payload consistency.", "inputSchema": _schema({"path": _string()}, ["path"])},
     "forge_texture_generate": {"description": "Generate a deterministic procedural DDS texture inside the workspace: solid, checker, gradient, noise, bricks or a tangent-space normal map, with full mip chains and an optional PNG preview.", "inputSchema": _schema({
@@ -142,7 +149,8 @@ READ_ONLY_TOOLS = {
     "forge_nexus_policy_status", "forge_lint_frameworks", "forge_framework_plan_validate", "forge_fomod_validate",
     "forge_fomod_plan_validate", "forge_release_validate", "forge_nexus_plan_validate", "forge_nexus_audit",
     "forge_native_plan_validate", "forge_native_audit", "forge_native_binary_audit", "forge_plugin_plan_validate",
-    "forge_automation_validate",
+    "forge_automation_validate", "forge_architect_recommend", "forge_knowledge_status",
+    "forge_knowledge_lookup", "forge_quality_plan", "forge_quality_audit", "forge_performance_compare",
 }
 DESTRUCTIVE_TOOLS = {
     "forge_config_set", "forge_tool_import", "forge_tool_import_all", "forge_tool_configure",
@@ -156,12 +164,14 @@ COMPACT_GROUPS: dict[str, set[str]] = {
         "forge_record_conflicts", "forge_archive_info", "forge_mod_tree", "forge_bsarch_info",
         "forge_audio_inspect", "forge_voice_path_validate", "forge_texture_inspect", "forge_skse_inspect_pe", "forge_skse_audit_imports",
         "forge_skse_verify_reproducible", "forge_framework_correlate_logs", "forge_fomod_simulate",
-        "forge_nexus_policy_status",
+        "forge_nexus_policy_status", "forge_knowledge_status", "forge_knowledge_lookup",
+        "forge_performance_compare",
     },
     "validate": {
         "forge_lint_frameworks", "forge_framework_plan_validate", "forge_fomod_validate", "forge_fomod_plan_validate",
         "forge_release_validate", "forge_nexus_plan_validate", "forge_nexus_audit", "forge_native_plan_validate",
         "forge_native_audit", "forge_native_binary_audit", "forge_plugin_plan_validate", "forge_automation_validate",
+        "forge_architect_recommend", "forge_quality_plan", "forge_quality_audit",
     },
     "execute": {
         "forge_config_set", "forge_tool_import", "forge_tool_import_all", "forge_tool_configure",
@@ -170,6 +180,7 @@ COMPACT_GROUPS: dict[str, set[str]] = {
         "forge_framework_build", "forge_papyrus_compile", "forge_native_scaffold", "forge_native_build",
         "forge_fomod_scaffold", "forge_fomod_build", "forge_fomod_test_install", "forge_plugin_build",
         "forge_automation_run", "forge_audio_extract_fuz", "forge_audio_create_fuz", "forge_texture_generate", "forge_maintain",
+        "forge_performance_ingest",
     },
     "release": {"forge_release_build", "forge_nexus_scaffold", "forge_nexus_build", "forge_nexus_page_render"},
 }
@@ -307,6 +318,13 @@ def _call(service: ForgeService, name: str, args: dict[str, Any]) -> Any:
         case "forge_audio_create_fuz": return service.audio_create_fuz(args["xwm"], args["output"], approved, args.get("lip") or None)
         case "forge_voice_path_validate": return service.voice_path_validate(args["root"])
         case "forge_texture_inspect": return service.texture_inspect(args["path"])
+        case "forge_architect_recommend": return service.architecture_recommend(args["request"])
+        case "forge_knowledge_status": return service.knowledge_status()
+        case "forge_knowledge_lookup": return service.knowledge_lookup(args["id"])
+        case "forge_quality_plan": return service.quality_plan(args["mod_types"])
+        case "forge_quality_audit": return service.quality_audit(args["report"])
+        case "forge_performance_compare": return service.performance_compare(args["baseline"], args["candidate"], float(args.get("tolerance_percent", 2.0)))
+        case "forge_performance_ingest": return service.performance_ingest(args["csv"], args["output"], args["scenario"], approved)
         case "forge_maintain": return service.maintain(int(args.get("days", 7)), int(args.get("keep_backups", 2)), bool(args.get("apply", False)), bool(args.get("fix_roots", False)), bool(args.get("self_test", True)), approved)
         case "forge_texture_generate": return service.texture_generate(args["kind"], args["output"], size=int(args.get("size", 512)), fmt=args.get("format", "bc1"), seed=int(args.get("seed", 0)), primary=args.get("primary", "#808080"), secondary=args.get("secondary", "#303030"), octaves=int(args.get("octaves", 5)), frequency=float(args.get("frequency", 4.0)), cells=int(args.get("cells", 8)), strength=float(args.get("strength", 0.12)), flip_green=bool(args.get("flip_green", False)), preview=args.get("preview") or None, approved=approved)
         case "forge_skse_inspect_pe": return service.skse_inspect_pe(args["dll"])

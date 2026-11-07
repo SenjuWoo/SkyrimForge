@@ -5,6 +5,10 @@ from pathlib import Path
 from typing import Any
 
 from .archive import inspect_archive
+from .architecture import recommend as recommend_architecture
+from .knowledge import lookup as knowledge_lookup, status as knowledge_status
+from .performance import compare_reports, metrics as performance_metrics, presentmon_csv
+from .quality import audit as quality_audit, plan as quality_plan
 from .audio import create_fuz as audio_create_fuz, extract_fuz as audio_extract_fuz, inspect as audio_inspect, validate_voice_tree
 from .textures import generate as texture_generate, inspect as texture_inspect
 from .maintenance import install_schedule, remove_schedule, run as maintenance_run, schedule_status
@@ -29,7 +33,7 @@ from .records import query_records
 from .release import build_release, validate_release_tree
 from .sdk import sdk_install, sdk_status
 from .skse_pe import audit_imports as pe_audit_imports, inspect as pe_inspect, verify_reproducible as pe_verify_reproducible
-from .strictjson import load
+from .strictjson import dumps, load
 from .telemetry import correlate as correlate_framework_logs
 from .tools import tool_status, resolve_tool
 from .toolchain import scan_tool_source, import_tool, import_all_tools, configure_existing_tool, resolve_capability, toolchain_status, reuse_reverse_tools
@@ -197,6 +201,34 @@ class ForgeService:
         source_paths = [self._read(item) for item in scripts]
         import_paths = [self._read(item) for item in (imports or [])]
         return analyze_sources(source_paths, imports=import_paths)
+
+    def architecture_recommend(self, request: str) -> dict[str, Any]:
+        return recommend_architecture(load(self._read(request)))
+
+    def knowledge_status(self) -> dict[str, Any]:
+        return knowledge_status(self.config)
+
+    def knowledge_lookup(self, identifier: str) -> dict[str, Any]:
+        return knowledge_lookup(identifier, self.config)
+
+    def quality_plan(self, mod_types: list[str]) -> dict[str, Any]:
+        return quality_plan(mod_types)
+
+    def quality_audit(self, report: str) -> dict[str, Any]:
+        return quality_audit(load(self._read(report)))
+
+    def performance_compare(self, baseline: str, candidate: str, tolerance_percent: float = 2.0) -> dict[str, Any]:
+        return compare_reports(load(self._read(baseline)), load(self._read(candidate)), tolerance_percent)
+
+    def performance_ingest(self, csv_path: str, output: str, scenario: str, approved: bool) -> dict[str, Any]:
+        require_approval(approved, "Importing a PresentMon capture writes a benchmark report")
+        report = presentmon_csv(self._read(csv_path), load(self._read(scenario)))
+        target = require_within(Path(output), self.config.workspace_root)
+        target.parent.mkdir(parents=True, exist_ok=True)
+        atomic_write_text(target, dumps(report) + "\n")
+        return {"result": "PASS", "output": str(target), "sample_count": report["sample_count"],
+                "metrics": performance_metrics(report["frames_ms"]), "scenario": report["scenario"],
+                "evidence": "Report written from an external capture; scenario metadata is caller-asserted."}
 
     def papyrus_compile(self, scripts: list[str], output_dir: str, imports: list[str] | None, flags_file: str | None, approved: bool, optimize: bool = True) -> dict[str, Any]:
         source_paths = [self._read(item) for item in scripts]

@@ -104,6 +104,10 @@ package to a new version
 report remaining in-game tests
 ```
 
+## Choose architecture before writing
+
+For a new mod or compatibility change, call `forge architect-recommend` with a short JSON request first. It ranks framework distribution, record patches, Papyrus, native, UI, animation, asset, LOD and packaging routes, and returns `NEEDS_INPUT` rather than forcing a choice when the description is vague. `forge knowledge-status` lists the curated source pins and local probes; `DETECTED` does not prove a version. After implementation use `forge quality-plan --types <types>` to load only the relevant evidence dimensions, then `forge quality-audit report.json`. `PASS` requires evidence and missing runtime proof remains `UNVERIFIED`. For performance, ingest an external PresentMon CSV with `forge perf-ingest` and compare matching scenarios with `forge perf-compare`; never claim FPS from one play session. See `docs/MOD-INTELLIGENCE.md`.
+
 ## Maintenance and moved paths
 
 `forge maintain` lists Forge-owned leftovers (spills, sandbox runs, old provider skill backups), flags configured roots that no longer exist and names a discovered replacement, then runs the self-test. It is a dry run; delete with `--apply --approve`, accept a moved root with `--fix-roots`. Never delete mods, tool installs or user files to "clean up" — the command exists so nothing else has to be touched.

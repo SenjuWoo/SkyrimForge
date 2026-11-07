@@ -4,7 +4,7 @@
 
 <div align="center">
 
-# Skyrim Forge 6.11.7
+# Skyrim Forge 6.12.0
 
 **Typed, safety-first Skyrim SE/AE mod engineering for AI agents — offline, free, MCP-ready.**
 
@@ -76,6 +76,24 @@ Setup bootstraps a durable Python runtime, installs the Forge skill and the 50-s
 
 `forge doctor` reports separate readiness levels: `read_only_ready`, `plugin_write_ready`, `xedit_automation_ready`, `mo2_automation_ready`. A missing external tool does not make the core install broken.
 
+## Mod intelligence
+
+Before writing files, ask Forge to rank the smallest suitable route:
+
+```powershell
+.\forge architect-recommend request.json
+.\forge knowledge-status
+.\forge quality-plan --types papyrus,native
+```
+
+`architect-recommend` compares framework distribution, record patches, Papyrus,
+native plugins, UI, animation, assets, LOD and packaging, and returns open
+questions plus verification steps. `knowledge-status` reports curated source
+pins and local probe presence without pretending a detected file proves a
+version. `quality-audit` keeps a missing runtime check `UNVERIFIED` instead of
+turning it into a pass, and `perf-compare` compares matching frame-time
+captures. See [docs/MOD-INTELLIGENCE.md](docs/MOD-INTELLIGENCE.md).
+
 ## Free assets
 
 `texture-generate` writes deterministic DDS files — BC1, BC3 or A8R8G8B8, full mip chains — from solid, checker, gradient, seeded-noise, brick and tangent-space-normal patterns, with an optional PNG preview. No paid tool, no network, no new dependency.
@@ -111,7 +129,7 @@ Updates are explicit: `Update Forge.bat` or `Update-Forge.ps1 -CheckOnly`. The u
 
 ## MCP
 
-Forge serves the current **MCP `2026-07-28`** revision and the `initialize` handshake older clients still use, from one process. The full surface exposes 68 tools with annotations; `--surface compact` exposes four orthogonal tools for hosts with a server-slot or token ceiling. Oversized results spill to a workspace artifact instead of being truncated, and Grok's 8-server limit is handled by skipping registration rather than taking the last slot. See [docs/MCP.md](docs/MCP.md).
+Forge serves the current **MCP `2026-07-28`** revision and the `initialize` handshake older clients still use, from one process. The full surface exposes 75 tools with annotations; `--surface compact` exposes four orthogonal tools for hosts with a server-slot or token ceiling. Oversized results spill to a workspace artifact instead of being truncated, and Grok's 8-server limit is handled by skipping registration rather than taking the last slot. See [docs/MCP.md](docs/MCP.md).
 
 ## Safety and evidence
 

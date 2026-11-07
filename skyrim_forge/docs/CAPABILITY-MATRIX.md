@@ -12,6 +12,10 @@ Forge distinguishes evidence levels so an AI cannot turn a configured adapter in
 | Typed KYWD/GLOB/FLST/OTFT output | Direct | Implemented | No arbitrary record writing |
 | SPID/KID/BOS/SkyPatcher/FLM lint/build | Profiled | Implemented | Modeled source-locked subsets; unknown syntax is unverified, not rewritten |
 | Papyrus analysis | Profiled | Implemented | Performance findings are review heuristics |
+| Architecture recommendation | Direct | Implemented | Keyword/constraint routing; installed frameworks and runtime compatibility remain unverified |
+| Skyrim source/API registry | Direct | Implemented | Curated URLs and local probes; DETECTED is not a version or signature proof |
+| Mod quality gate | Direct | Implemented | Selects applicable dimensions and refuses PASS without evidence; no single score |
+| Performance comparison | Direct | Implemented | Frame-time arithmetic over matching captures; no capture, visual or FPS guarantee |
 | Papyrus compile | Adapter | Implemented | Pinned official compiler; fresh PEX is not runtime proof |
 | CommonLibSSE-NG scaffold | Profiled | Implemented | Source-locked project generation |
 | SKSE PE inspection | Direct | Implemented | Exports, `SKSEPlugin_Version`, imports, timestamp-normalised reproducibility; not a load or hook proof |

@@ -3,6 +3,10 @@ from __future__ import annotations
 from typing import Any
 
 from .capabilities import registry as capability_registry
+from .architecture import self_test as architecture_self_test
+from .knowledge import self_test as knowledge_self_test
+from .performance import self_test as performance_self_test
+from .quality import self_test as quality_self_test
 from .audio import self_test as audio_self_test
 from .fomod import self_test as fomod_self_test
 from .framework_builder import self_test as framework_builder_self_test
@@ -35,6 +39,10 @@ def run_all() -> dict[str, Any]:
         "vfs_sandbox": vfs_sandbox_self_test(),
         "nexus": nexus_self_test(),
         "capabilities": capability_registry(),
+        "architecture": architecture_self_test(),
+        "knowledge": knowledge_self_test(),
+        "quality": quality_self_test(),
+        "performance": performance_self_test(),
         "toolchain": {"result": "PASS" if any(item["id"] == "bsarch" for item in catalog["tools"]) and all(not item.get("public_bundle_allowed", False) for item in catalog["tools"]) else "FAIL", "catalog_count": len(catalog["tools"])},
     }
     failed = [name for name, report in checks.items() if str(report.get("result", "FAIL")).upper() != "PASS"]

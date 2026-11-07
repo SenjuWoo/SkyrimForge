@@ -20,6 +20,10 @@ Never bump a pin because a newer tag exists. Change one only with the gate named
 | Area | File |
 |---|---|
 | FOMOD parse/validate/simulate/xml | `skyrim_forge/fomod.py` |
+| Architecture selector | `skyrim_forge/architecture.py` |
+| Skyrim source/API registry | `skyrim_forge/knowledge.py`, `references/SKYRIM-KNOWLEDGE.json` |
+| Applicability-aware quality gate | `skyrim_forge/quality.py` |
+| Frame-time evidence comparison | `skyrim_forge/performance.py` |
 | Sandbox install test, branch enumeration | `skyrim_forge/vfs_sandbox.py` |
 | Native scaffold/CMake/PE | `skyrim_forge/native.py`, `skse_pe.py` |
 | Maintenance, roots, scheduled task | `skyrim_forge/maintenance.py` |
@@ -33,6 +37,8 @@ Never bump a pin because a newer tag exists. Change one only with the gate named
 python scripts/preflight.py             # versions, control chars, manifest, critical tests
 python -m unittest discover -s tests -q   # SBOM schema test needs: pip install .[test]
 python scripts/validate_repository.py --scope full --write-reports
+.orge architect-recommend request.json   # route before writing
+.orge quality-plan --types papyrus,native  # relevant checks only
 ```
 
 `preflight.py` is the cheap gate; `validate_repository.py --scope full` is the release gate and writes `VALIDATION.json`. Do not claim `PASS` for a category that was skipped or blocked.

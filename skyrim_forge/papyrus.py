@@ -18,12 +18,45 @@ EVENT_RE = re.compile(r"(?im)^\s*Event\s+([A-Za-z_][A-Za-z0-9_]*)\s*\(")
 FUNCTION_RE = re.compile(r"(?im)^\s*(?:[A-Za-z_][A-Za-z0-9_]*(?:\[\])?\s+)?Function\s+([A-Za-z_][A-Za-z0-9_]*)\s*\(")
 
 
+def _code_only(text: str) -> str:
+    """Blank Papyrus comments and string literals while preserving line numbers."""
+    chars = list(text)
+    in_string = False
+    in_comment = False
+    escaped = False
+    for index, char in enumerate(chars):
+        if char == "\n":
+            in_comment = False
+            escaped = False
+            continue
+        if in_comment:
+            chars[index] = " "
+            continue
+        if in_string:
+            if escaped:
+                escaped = False
+            elif char == "\\":
+                escaped = True
+            elif char == '"':
+                in_string = False
+            chars[index] = " "
+            continue
+        if char == '"':
+            in_string = True
+            chars[index] = " "
+        elif char == ";":
+            in_comment = True
+            chars[index] = " "
+    return "".join(chars)
+
+
 def _source_info(path: Path) -> dict[str, Any]:
     source = path.resolve(strict=True)
     if source.suffix.casefold() != ".psc":
         raise ValidationError(f"Papyrus source must be .psc: {source}")
     text = source.read_text(encoding="utf-8-sig", errors="replace")
-    declaration = SCRIPT_RE.search(text)
+    code = _code_only(text)
+    declaration = SCRIPT_RE.search(code)
     errors: list[dict[str, Any]] = []
     warnings: list[dict[str, Any]] = []
     if declaration is None:
@@ -38,31 +71,31 @@ def _source_info(path: Path) -> dict[str, Any]:
             errors.append({"line": line, "code": "PAPYRUS-FILENAME-MISMATCH", "message": f"ScriptName {identity!r} does not match filename {source.name!r}"})
         elif identity != source.stem:
             warnings.append({"line": line, "code": "PAPYRUS-CASE-MISMATCH", "message": "ScriptName and filename differ only by case; normalize them for portable archives"})
-    lower = text.casefold()
+    lower = code.casefold()
     if "registerforupdate(" in lower and "unregisterforupdate(" not in lower:
         warnings.append({"line": 0, "code": "PAPYRUS-UPDATE-NO-UNREGISTER", "message": "RegisterForUpdate is present without an obvious UnregisterForUpdate; verify lifecycle cleanup"})
     if "registerforupdategametime(" in lower and "unregisterforupdategametime(" not in lower:
         warnings.append({"line": 0, "code": "PAPYRUS-GAMETIME-NO-UNREGISTER", "message": "RegisterForUpdateGameTime is present without an obvious unregister call"})
-    for match in re.finditer(r"(?i)RegisterFor(?:Single)?Update\s*\(\s*(0(?:\.\d+)?|1(?:\.0+)?)\s*\)", text):
+    for match in re.finditer(r"(?i)RegisterFor(?:Single)?Update\s*\(\s*(0(?:\.\d+)?|1(?:\.0+)?)\s*\)", code):
         try: interval=float(match.group(1))
         except ValueError: continue
         if interval < 1.0:
             warnings.append({"line": text.count("\n",0,match.start())+1,"code":"PAPYRUS-HIGH-FREQUENCY-UPDATE","message":f"Update interval {interval:g}s is below one second; confirm this polling rate is necessary"})
-    if re.search(r"(?is)Event\s+OnUpdate\s*\([^)]*\).*?\bWhile\b", text):
+    if re.search(r"(?is)Event\s+OnUpdate\s*\([^)]*\).*?\bWhile\b", code):
         warnings.append({"line": 0, "code": "PAPYRUS-LOOP-IN-UPDATE", "message": "OnUpdate contains a While loop; verify bounded work and yielding"})
-    for match in re.finditer(r"(?i)Utility\.Wait\s*\(\s*0(?:\.0+)?\s*\)", text):
+    for match in re.finditer(r"(?i)Utility\.Wait\s*\(\s*0(?:\.0+)?\s*\)", code):
         warnings.append({"line": text.count("\n",0,match.start())+1,"code":"PAPYRUS-ZERO-WAIT","message":"Utility.Wait(0) is not a reliable scheduling or optimization primitive"})
-    player_calls = len(re.findall(r"(?i)Game\.GetPlayer\s*\(", text))
+    player_calls = len(re.findall(r"(?i)Game\.GetPlayer\s*\(", code))
     if player_calls >= 5:
         warnings.append({"line":0,"code":"PAPYRUS-REPEATED-GETPLAYER","message":f"Game.GetPlayer() appears {player_calls} times; consider caching locally where semantics permit"})
     expensive = re.compile(r"(?i)(FindAllReferencesOfType|GetAllMatchingForms|GetNumItems|GetNthForm)")
-    for event in re.finditer(r"(?is)Event\s+(OnUpdate|OnHit|OnObjectEquipped|OnCellAttach)\s*\([^)]*\)(.*?)EndEvent", text):
+    for event in re.finditer(r"(?is)Event\s+(OnUpdate|OnHit|OnObjectEquipped|OnCellAttach)\s*\([^)]*\)(.*?)EndEvent", code):
         if expensive.search(event.group(2)):
             warnings.append({"line":text.count("\n",0,event.start())+1,"code":"PAPYRUS-HOT-EVENT-SCAN","message":f"{event.group(1)} contains a broad/iterative API call; profile before publishing"})
     return {
         "path": str(source), "filename": source.name, "script_name": identity, "parent": parent,
-        "sha256": sha256_file(source), "events": sorted(set(EVENT_RE.findall(text)), key=str.casefold),
-        "functions": sorted(set(FUNCTION_RE.findall(text)), key=str.casefold),
+        "sha256": sha256_file(source), "events": sorted(set(EVENT_RE.findall(code)), key=str.casefold),
+        "functions": sorted(set(FUNCTION_RE.findall(code)), key=str.casefold),
         "errors": errors, "warnings": warnings,
     }
 

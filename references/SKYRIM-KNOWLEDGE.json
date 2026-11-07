@@ -1,0 +1,252 @@
+{
+  "schema": "skyrim-forge-knowledge-registry/1",
+  "reviewed": "2026-11-07",
+  "policy": "Entries describe upstream projects and the evidence Forge has for them. A URL is not a compatibility claim, and a detected local file is not a verified version. Runtime behaviour remains unproven until tested.",
+  "entries": [
+    {
+      "id": "skse64",
+      "name": "SKSE64",
+      "category": "runtime",
+      "url": "https://github.com/ianpatt/skse64",
+      "version_scope": "1.5.97 through current 1.6.x (select the build matching the executable)",
+      "supports": ["SE", "AE"],
+      "provenance": "official upstream repository; local loader probe",
+      "demo": "loads a DLL only when its SKSEPlugin_Version/Address Library contract matches the running executable",
+      "limitations": "Version compatibility is per executable. A successful compile is not load proof.",
+      "probe": {"kind": "path", "path": "{game_root}/skse64_loader.exe"}
+    },
+    {
+      "id": "commonlibsse_ng",
+      "name": "CommonLibSSE-NG",
+      "category": "native-api",
+      "url": "https://github.com/alandtse/CommonLibSSE-NG",
+      "version_scope": "v14.1.0",
+      "commit": "896f6d02e465576b6d044b36fd441835aa9c8bf6",
+      "supports": ["SE", "AE", "VR"],
+      "provenance": "references/SDK-LOCK.json and references/NATIVE-SOURCE-LOCK.json",
+      "limitations": "The API signatures are tied to the pinned commit. Newer upstream revisions are not adopted without a representative build.",
+      "probe": {"kind": "sdk", "name": "commonlibsse_ng"}
+    },
+    {
+      "id": "papyrus",
+      "name": "Papyrus compiler and sources",
+      "category": "scripting",
+      "url": "https://github.com/ianpatt/skse64",
+      "version_scope": "installed Creation Kit compiler and matching .psc imports",
+      "supports": ["SE", "AE"],
+      "provenance": "configured local tool and Papyrus import roots",
+      "limitations": "The installed compiler accepts syntax; it does not prove runtime behaviour or API availability in the running game.",
+      "probe": {"kind": "tool", "name": "papyrus_compiler"}
+    },
+    {
+      "id": "creation_kit",
+      "name": "Creation Kit",
+      "category": "authoring",
+      "url": "https://bethesda.net/en/game/skyrim",
+      "version_scope": "matching installed game executable",
+      "supports": ["SE", "AE"],
+      "provenance": "configured local tool",
+      "limitations": "No universal headless bridge is bundled; UI automation is narrow and requires review.",
+      "probe": {"kind": "tool", "name": "creation_kit"}
+    },
+    {
+      "id": "skyui",
+      "name": "SkyUI",
+      "category": "ui",
+      "url": "https://github.com/schlangster/skyui",
+      "version_scope": "installed SkyUI release",
+      "supports": ["SE", "AE"],
+      "provenance": "upstream repository; local archive probe",
+      "limitations": "Menus are game-version specific and require in-game layout testing.",
+      "probe": {"kind": "path", "path": "{skyrim_data}/SkyUI_SE.bsa"}
+    },
+    {
+      "id": "mcm_helper",
+      "name": "MCM Helper",
+      "category": "ui",
+      "url": "https://github.com/Exit-9B/MCM-Helper",
+      "version_scope": "installed MCM Helper release",
+      "supports": ["SE", "AE"],
+      "provenance": "upstream repository; local plugin probe",
+      "limitations": "SKI_ConfigBase is legacy; MCM Helper is the current route. Menu behaviour needs a save/reload test.",
+      "probe": {"kind": "path", "path": "{skyrim_data}/MCMHelper.esp"}
+    },
+    {
+      "id": "spid",
+      "name": "Spell Perk Item Distributor",
+      "category": "distribution",
+      "url": "https://github.com/powerof3/Spell-Perk-Item-Distributor",
+      "version_scope": "grammar profile 7.3",
+      "supports": ["SE", "AE"],
+      "provenance": "Forge capability profile; upstream repository",
+      "limitations": "Only the modeled grammar subset is validated. Runtime distribution needs a log/load-order test.",
+      "probe": {"kind": "path", "path": "{skyrim_data}/SKSE/Plugins/po3_SpellPerkItemDistributor.dll"}
+    },
+    {
+      "id": "kid",
+      "name": "Keyword Item Distributor",
+      "category": "distribution",
+      "url": "https://github.com/powerof3/Keyword-Item-Distributor",
+      "version_scope": "grammar profile 4.0.6",
+      "supports": ["SE", "AE"],
+      "provenance": "Forge capability profile; upstream repository",
+      "limitations": "Only the modeled grammar subset is validated; keyword/form coverage needs runtime evidence.",
+      "probe": {"kind": "path", "path": "{skyrim_data}/SKSE/Plugins/po3_KeywordItemDistributor.dll"}
+    },
+    {
+      "id": "bos",
+      "name": "Base Object Swapper",
+      "category": "distribution",
+      "url": "https://github.com/powerof3/BaseObjectSwapper",
+      "version_scope": "grammar profile 3.4.1",
+      "supports": ["SE", "AE"],
+      "provenance": "Forge capability profile; upstream repository",
+      "limitations": "Only the modeled grammar subset is validated; object/reference resolution needs runtime evidence.",
+      "probe": {"kind": "path", "path": "{skyrim_data}/SKSE/Plugins/po3_BaseObjectSwapper.dll"}
+    },
+    {
+      "id": "skypatcher",
+      "name": "SkyPatcher",
+      "category": "distribution",
+      "url": "https://github.com/Zzyxz/SkyPatcher",
+      "version_scope": "grammar profile 6.4.2",
+      "supports": ["SE", "AE"],
+      "provenance": "Forge capability profile; upstream repository",
+      "limitations": "Unknown properties are reported as unverified, never invented or rewritten.",
+      "probe": {"kind": "path", "path": "{skyrim_data}/SKSE/Plugins/SkyPatcher.dll"}
+    },
+    {
+      "id": "oar",
+      "name": "Open Animation Replacer",
+      "category": "animation",
+      "url": "https://github.com/ersh1/OpenAnimationReplacer",
+      "version_scope": "installed OAR release",
+      "supports": ["SE", "AE"],
+      "provenance": "upstream repository; local plugin probe",
+      "limitations": "Animation selection needs in-game visual review; behavior graph generation is a separate toolchain.",
+      "probe": {"kind": "path", "path": "{skyrim_data}/SKSE/Plugins/OpenAnimationReplacer.dll"}
+    },
+    {
+      "id": "housecarl",
+      "name": "houseCARL",
+      "category": "record-authoring",
+      "url": "https://github.com/Avick3110/houseCARL",
+      "version_scope": "runtime pin 2.1.2",
+      "supports": ["SE", "AE"],
+      "provenance": "integrations/skyrim-pack/housecarl-pin.json and capability parity notes",
+      "limitations": "Forge does not bundle it; live record work requires the pinned installation and record-level verification."
+    },
+    {
+      "id": "mutagen",
+      "name": "Mutagen",
+      "category": "record-authoring",
+      "url": "https://github.com/Mutagen-Modding/Mutagen",
+      "version_scope": "version selected by the patcher project",
+      "supports": ["SE", "AE"],
+      "provenance": "upstream repository",
+      "limitations": "Typed access still requires master/index validation and semantic round-trip checks."
+    },
+    {
+      "id": "synthesis",
+      "name": "Synthesis",
+      "category": "record-authoring",
+      "url": "https://github.com/Mutagen-Modding/Synthesis",
+      "version_scope": "pinned local Synthesis.Bethesda.CLI",
+      "supports": ["SE", "AE"],
+      "provenance": "Forge capability profile; upstream repository",
+      "limitations": "The GUI executable is not accepted as the CLI. Patcher output requires load-order comparison."
+    },
+    {
+      "id": "xedit",
+      "name": "xEdit / SSEEdit",
+      "category": "inspection",
+      "url": "https://github.com/TES5Edit/TES5Edit",
+      "version_scope": "configured hash-pinned executable",
+      "supports": ["SE", "AE"],
+      "provenance": "configured local tool",
+      "limitations": "Scripted automation needs an allowlisted Pascal script and completion markers; GUI inspection is not a headless proof.",
+      "probe": {"kind": "tool", "name": "xedit"}
+    },
+    {
+      "id": "loot",
+      "name": "LOOT",
+      "category": "load-order",
+      "url": "https://github.com/loot/loot",
+      "version_scope": "configured local executable",
+      "supports": ["SE", "AE"],
+      "provenance": "Forge capability profile",
+      "limitations": "Forge validates typed plans and does not invent unsupported GUI arguments.",
+      "probe": {"kind": "tool", "name": "loot"}
+    },
+    {
+      "id": "nifskope",
+      "name": "NifSkope",
+      "category": "assets",
+      "url": "https://github.com/niftools/nifskope",
+      "version_scope": "version selected by the user",
+      "supports": ["SE", "AE"],
+      "provenance": "upstream repository",
+      "limitations": "Forge does not bundle NIF editing. Structural inspection is not visual or collision proof."
+    },
+    {
+      "id": "directxtex",
+      "name": "DirectXTex / texconv",
+      "category": "assets",
+      "url": "https://github.com/microsoft/DirectXTex",
+      "version_scope": "pinned local conversion tool",
+      "supports": ["SE", "AE"],
+      "provenance": "upstream repository; optional tool integration",
+      "limitations": "Format conversion is not an art-direction or quality decision; alpha and normal-map semantics must be preserved."
+    },
+    {
+      "id": "pandora",
+      "name": "Pandora Behaviour Engine+",
+      "category": "animation",
+      "url": "https://github.com/Monitor221hz/Pandora-Behaviour-Engine-Plus",
+      "version_scope": "pinned local worker",
+      "supports": ["SE", "AE"],
+      "provenance": "upstream repository",
+      "limitations": "Behavior generation is animation/tool-version specific and needs in-game review."
+    },
+    {
+      "id": "dyndolod",
+      "name": "DynDOLOD / xLODGen / TexGen",
+      "category": "lod",
+      "url": "https://dyndolod.info/",
+      "version_scope": "pinned local worker",
+      "supports": ["SE", "AE"],
+      "provenance": "upstream project and Forge worker contract",
+      "limitations": "Generation is load-order and worldspace specific; visual and performance verification remain mandatory."
+    },
+    {
+      "id": "papyrusprofiler",
+      "name": "Papyrus Profiler",
+      "category": "performance",
+      "url": "https://github.com/DennisSoemers/PapyrusProfiler",
+      "version_scope": "compatible installed profiler",
+      "supports": ["SE", "AE"],
+      "provenance": "upstream repository",
+      "limitations": "No profiler is bundled. Forge can ingest exported evidence but cannot invent script timings."
+    },
+    {
+      "id": "presentmon",
+      "name": "PresentMon",
+      "category": "performance",
+      "url": "https://github.com/GameTechDev/PresentMon",
+      "version_scope": "compatible installed capture tool",
+      "supports": ["SE", "AE"],
+      "provenance": "upstream repository",
+      "limitations": "PresentMon capture is external and must use comparable scene, settings and hardware metadata."
+    },
+    {
+      "id": "community_shaders",
+      "name": "Community Shaders",
+      "category": "graphics",
+      "url": "https://github.com/community-shaders/skyrim-community-shaders",
+      "version_scope": "installed release",
+      "supports": ["SE", "AE"],
+      "provenance": "upstream repository",
+      "limitations": "Shader effects and compatibility are GPU/driver and game-version specific; no performance claim without comparable captures."
+    }
+  ]
+}
