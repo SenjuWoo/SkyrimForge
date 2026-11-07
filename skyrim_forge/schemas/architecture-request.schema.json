@@ -12,6 +12,7 @@
     "runtime_frequency": {"enum": ["event", "occasional", "frame", "unknown"]},
     "modifies_existing": {"type": "boolean"},
     "performance_sensitive": {"type": "boolean"},
-    "save_sensitive": {"type": "boolean"}
+    "save_sensitive": {"type": "boolean"},
+    "avoid": {"type": "array", "items": {"type": "string", "minLength": 1}, "uniqueItems": true}
   }
 }

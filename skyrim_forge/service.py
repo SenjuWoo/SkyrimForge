@@ -220,9 +220,10 @@ class ForgeService:
     def performance_compare(self, baseline: str, candidate: str, tolerance_percent: float = 2.0) -> dict[str, Any]:
         return compare_reports(load(self._read(baseline)), load(self._read(candidate)), tolerance_percent)
 
-    def performance_ingest(self, csv_path: str, output: str, scenario: str, approved: bool) -> dict[str, Any]:
+    def performance_ingest(self, csv_path: str, output: str, scenario: str, approved: bool,
+                           metric: str | None = None, process: str | None = None) -> dict[str, Any]:
         require_approval(approved, "Importing a PresentMon capture writes a benchmark report")
-        report = presentmon_csv(self._read(csv_path), load(self._read(scenario)))
+        report = presentmon_csv(self._read(csv_path), load(self._read(scenario)), metric=metric, process=process)
         target = require_within(Path(output), self.config.workspace_root)
         target.parent.mkdir(parents=True, exist_ok=True)
         atomic_write_text(target, dumps(report) + "\n")

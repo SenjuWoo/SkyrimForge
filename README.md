@@ -4,7 +4,7 @@
 
 <div align="center">
 
-# Skyrim Forge 6.12.0
+# Skyrim Forge 6.12.1
 
 **Typed, safety-first Skyrim SE/AE mod engineering for AI agents — offline, free, MCP-ready.**
 
@@ -91,8 +91,8 @@ native plugins, UI, animation, assets, LOD and packaging, and returns open
 questions plus verification steps. `knowledge-status` reports curated source
 pins and local probe presence without pretending a detected file proves a
 version. `quality-audit` keeps a missing runtime check `UNVERIFIED` instead of
-turning it into a pass, and `perf-compare` compares matching frame-time
-captures. See [docs/MOD-INTELLIGENCE.md](docs/MOD-INTELLIGENCE.md).
+turning it into a pass; only hash-verified tool receipts produce a verified
+`PASS`, and bare-string claims require review. See [docs/MOD-INTELLIGENCE.md](docs/MOD-INTELLIGENCE.md).
 
 ## Free assets
 

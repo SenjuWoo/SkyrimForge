@@ -8,7 +8,7 @@
       "name": "SKSE64",
       "category": "runtime",
       "url": "https://github.com/ianpatt/skse64",
-      "version_scope": "1.5.97 through current 1.6.x (select the build matching the executable)",
+      "version_scope": "1.5.97 through 1.6.1170 observed on the current machine; AE is not one executable build - verify SKSE/Address Library against the exact installed SkyrimSE.exe",
       "supports": ["SE", "AE"],
       "provenance": "official upstream repository; local loader probe",
       "demo": "loads a DLL only when its SKSEPlugin_Version/Address Library contract matches the running executable",

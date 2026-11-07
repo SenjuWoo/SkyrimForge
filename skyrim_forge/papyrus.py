@@ -18,36 +18,80 @@ EVENT_RE = re.compile(r"(?im)^\s*Event\s+([A-Za-z_][A-Za-z0-9_]*)\s*\(")
 FUNCTION_RE = re.compile(r"(?im)^\s*(?:[A-Za-z_][A-Za-z0-9_]*(?:\[\])?\s+)?Function\s+([A-Za-z_][A-Za-z0-9_]*)\s*\(")
 
 
+def _lexical_view(text: str) -> tuple[str, list[dict[str, Any]]]:
+    """Return executable characters plus lexical diagnostics, preserving lines.
+
+    Papyrus has ``;`` line comments and ``;/ ... /;`` block comments. Strings use
+    backslash escaping. Comment and string contents become spaces, so a regex
+    over the result cannot see commented-out calls or quoted examples.
+    """
+    chars = list(text)
+    issues: list[dict[str, Any]] = []
+    index = 0
+    line = 1
+    start_line = 1
+    state = "normal"
+    while index < len(chars):
+        char = chars[index]
+        if char == "\n":
+            if state == "line":
+                state = "normal"
+            index += 1
+            line += 1
+            continue
+        if state == "block":
+            if char == "/" and index + 1 < len(chars) and chars[index + 1] == ";":
+                chars[index] = chars[index + 1] = " "
+                index += 2
+                state = "normal"
+            else:
+                chars[index] = " "
+                index += 1
+            continue
+        if state == "line":
+            chars[index] = " "
+            index += 1
+            continue
+        if state == "string":
+            if char == "\\" and index + 1 < len(chars):
+                chars[index] = chars[index + 1] = " "
+                index += 2
+            elif char == '"':
+                chars[index] = " "
+                index += 1
+                state = "normal"
+            else:
+                chars[index] = " "
+                index += 1
+            continue
+        if char == ";" and index + 1 < len(chars) and chars[index + 1] == "/":
+            start_line = line
+            chars[index] = chars[index + 1] = " "
+            index += 2
+            state = "block"
+        elif char == ";":
+            chars[index] = " "
+            index += 1
+            state = "line"
+        elif char == '"':
+            start_line = line
+            chars[index] = " "
+            index += 1
+            state = "string"
+        else:
+            index += 1
+    if state == "block":
+        issues.append({"line": start_line, "code": "PAPYRUS-UNTERMINATED-COMMENT",
+                       "message": "Block comment opened with ';/' is not closed with '/;'"})
+    elif state == "string":
+        issues.append({"line": start_line, "code": "PAPYRUS-UNTERMINATED-STRING",
+                       "message": "String literal is not terminated with a closing quote"})
+    return "".join(chars), issues
+
+
 def _code_only(text: str) -> str:
     """Blank Papyrus comments and string literals while preserving line numbers."""
-    chars = list(text)
-    in_string = False
-    in_comment = False
-    escaped = False
-    for index, char in enumerate(chars):
-        if char == "\n":
-            in_comment = False
-            escaped = False
-            continue
-        if in_comment:
-            chars[index] = " "
-            continue
-        if in_string:
-            if escaped:
-                escaped = False
-            elif char == "\\":
-                escaped = True
-            elif char == '"':
-                in_string = False
-            chars[index] = " "
-            continue
-        if char == '"':
-            in_string = True
-            chars[index] = " "
-        elif char == ";":
-            in_comment = True
-            chars[index] = " "
-    return "".join(chars)
+    return _lexical_view(text)[0]
 
 
 def _source_info(path: Path) -> dict[str, Any]:
@@ -55,9 +99,9 @@ def _source_info(path: Path) -> dict[str, Any]:
     if source.suffix.casefold() != ".psc":
         raise ValidationError(f"Papyrus source must be .psc: {source}")
     text = source.read_text(encoding="utf-8-sig", errors="replace")
-    code = _code_only(text)
+    code, lexical_issues = _lexical_view(text)
     declaration = SCRIPT_RE.search(code)
-    errors: list[dict[str, Any]] = []
+    errors: list[dict[str, Any]] = list(lexical_issues)
     warnings: list[dict[str, Any]] = []
     if declaration is None:
         errors.append({"line": 1, "code": "PAPYRUS-NO-SCRIPTNAME", "message": "Source has no ScriptName declaration"})

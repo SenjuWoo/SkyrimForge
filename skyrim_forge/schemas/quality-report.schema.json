@@ -21,7 +21,26 @@
         "required": ["status"],
         "properties": {
           "status": {"enum": ["PASS", "FAIL", "WARNING", "NOT_APPLICABLE", "NOT_RUN", "BLOCKED", "UNVERIFIED"]},
-          "evidence": {"type": "array", "items": {"type": "string", "minLength": 1}},
+          "evidence": {
+            "type": "array",
+            "items": {
+              "oneOf": [
+                {"type": "string", "minLength": 1},
+                {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "required": ["type", "tool", "result", "artifact", "sha256"],
+                  "properties": {
+                    "type": {"const": "forge-tool"},
+                    "tool": {"type": "string", "minLength": 1},
+                    "result": {"const": "PASS"},
+                    "artifact": {"type": "string", "minLength": 1},
+                    "sha256": {"type": "string", "pattern": "^[A-Fa-f0-9]{64}$"}
+                  }
+                }
+              ]
+            }
+          },
           "notes": {"type": "string"}
         }
       }

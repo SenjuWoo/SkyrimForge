@@ -44,6 +44,48 @@ class PapyrusLexicalTests(unittest.TestCase):
         self.assertIn("PAPYRUS-HIGH-FREQUENCY-UPDATE", codes)
         self.assertIn("PAPYRUS-UPDATE-NO-UNREGISTER", codes)
 
+    def test_block_comments_are_ignored(self):
+        report = self._run(
+            "ScriptName LexicalProbe\n"
+            ";/\n"
+            "Event OnUpdate()\n"
+            "RegisterForUpdate(0.1)\n"
+            "EndEvent\n"
+            "/;\n"
+            "Event OnInit()\n"
+            "    RegisterForSingleUpdate(5.0)\n"
+            "EndEvent\n"
+        )
+        codes = {item["code"] for item in report["warnings"]}
+        self.assertNotIn("PAPYRUS-HIGH-FREQUENCY-UPDATE", codes)
+        self.assertNotIn("PAPYRUS-LOOP-IN-UPDATE", codes)
+        self.assertNotIn("OnUpdate", report["scripts"][0]["events"])
+
+    def test_executable_code_after_block_comment_is_visible(self):
+        report = self._run(
+            "ScriptName LexicalProbe\n"
+            ";/\n"
+            "RegisterForUpdate(0.1)\n"
+            "/;\n"
+            "Event OnInit()\n"
+            "    RegisterForUpdate(0.1)\n"
+            "EndEvent\n"
+        )
+        codes = {item["code"] for item in report["warnings"]}
+        self.assertIn("PAPYRUS-HIGH-FREQUENCY-UPDATE", codes)
+
+    def test_unterminated_block_comment_is_reported(self):
+        report = self._run(
+            "ScriptName LexicalProbe\n"
+            ";/\n"
+            "RegisterForUpdate(0.1)\n"
+        )
+        self.assertIn("PAPYRUS-UNTERMINATED-COMMENT", {item["code"] for item in report["errors"]})
+
+    def test_unterminated_string_is_reported(self):
+        report = self._run("ScriptName LexicalProbe\nEvent OnInit()\nDebug.Trace(\"unterminated)\nEndEvent\n")
+        self.assertIn("PAPYRUS-UNTERMINATED-STRING", {item["code"] for item in report["errors"]})
+
     def test_commented_scriptname_and_event_are_ignored(self):
         report = self._run(
             "; ScriptName WrongName\n"

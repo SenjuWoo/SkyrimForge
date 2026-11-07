@@ -1,3 +1,10 @@
+## 6.12.1 (2026-11-07)
+
+- Fixed the quality gate's false PASS: bare strings are now self-reports and return `REVIEW_REQUIRED`; an authoritative `PASS` requires a `forge-tool` receipt whose artifact exists and whose SHA-256 matches. `NOT_APPLICABLE` is limited to optional dimensions with a specific reason, and additive all-waived reports cannot pass.
+- Fixed performance comparisons across different measurements: reports now require an explicit metric (`msBetweenPresents`, `msBetweenDisplayChange` or `MsGPUActive`), reject mixed metrics/processes, and label every comparison `FRAME_TIME_COMPARISON_ONLY`. PresentMon ingestion requires an explicit metric and performs process/process-ID filtering instead of silently mixing rows.
+- Fixed architecture exclusions and composites: `avoid`/`without`/`do not use` now remove a route before scoring, contradictions return `NEEDS_INPUT`, and complementary routes (for example Papyrus plus MCM) are reported. Unknown edition/modifies-existing caps confidence.
+- Fixed Papyrus block comments: `;/ ... /;` is blanked with line preservation, and unterminated comments/strings get explicit lexical errors.
+- Updated the SKSE knowledge entry to the locally observed 1.6.1170 build instead of a permanent "current 1.6.x" claim, and updated the user/agent docs with the new evidence and metric rules.
 ## 6.12.0 (2026-11-07)
 
 - Added `architect-recommend` / `forge_architect_recommend`: ranks a small set of known implementation routes from a plain-English description and explicit constraints, with complexity, runtime/save risk, required checks, alternatives and open questions. Ambiguous requests return `NEEDS_INPUT`; it never claims a framework is installed.

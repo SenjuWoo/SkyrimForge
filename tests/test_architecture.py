@@ -33,6 +33,32 @@ class ArchitectureTests(unittest.TestCase):
         report = recommend({"description": "Run a hook every frame in the engine", "runtime_frequency": "frame"})
         self.assertEqual(report["recommendation"]["id"], "native.skse")
 
+    def test_explicit_exclusion_overrides_keyword(self):
+        report = recommend({"description": "Avoid SPID, write a Papyrus script to give items", "edition": "ae"})
+        self.assertEqual(report["recommendation"]["id"], "script.papyrus")
+        self.assertIn("SPID", report["exclusions"])
+
+    def test_explicit_request_still_selects_spid(self):
+        report = recommend({"description": "Use SPID to distribute spells to NPCs", "edition": "ae"})
+        self.assertEqual(report["recommendation"]["id"], "distribution.spid")
+
+    def test_composite_requirements_are_reported(self):
+        report = recommend({"description": "A quest with Papyrus scripting and an MCM menu for settings", "edition": "ae"})
+        self.assertEqual(report["recommendation"]["id"], "script.papyrus")
+        self.assertIn("ui.mcm", [item["id"] for item in report["components"]])
+
+    def test_contradictory_requirements_are_not_recommended(self):
+        report = recommend({"description": "Use SPID but avoid SPID for this mod", "edition": "ae"})
+        self.assertIsNone(report["recommendation"])
+        self.assertEqual(report["status"], "NEEDS_INPUT")
+        self.assertEqual(report["confidence"], "low")
+        self.assertTrue(report["conflicts"])
+
+    def test_unknown_edition_caps_confidence(self):
+        report = recommend({"description": "Use SPID to distribute spells to NPCs"})
+        self.assertNotEqual(report["confidence"], "high")
+        self.assertTrue(report["questions"])
+
     def test_vague_request_is_not_forced(self):
         report = recommend({"description": "Make my mod better"})
         self.assertIsNone(report["recommendation"])

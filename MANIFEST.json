@@ -99,14 +99,14 @@
     {
       "executable": false,
       "path": "CHANGELOG.md",
-      "sha256": "16aac912dffc7c9110d2be566b0ec5c36b718e73becb7577059cf61b8cb734a2",
-      "size": 63402
+      "sha256": "cfa33b8c7d409a6e76db2c95f414cc37e7007ad7d1cd92c4a1bb1fcf905e8934",
+      "size": 64741
     },
     {
       "executable": false,
       "path": "CHANGELOG.txt",
-      "sha256": "2a2a7817a3d8ddda4fffaaac1ce7b468cb9f0bc1dfa67ff2a349e220aa8b8f9f",
-      "size": 40585
+      "sha256": "956458c3387fb551e961eafb89075f58f012df5357b0d88c8457957342effc46",
+      "size": 41924
     },
     {
       "executable": false,
@@ -147,7 +147,7 @@
     {
       "executable": false,
       "path": "CURRENT.txt",
-      "sha256": "26ca10c15d00d68ad63bbf62a819e2262a552ea6ebb39461e44659e46a0bafb4",
+      "sha256": "7028313b2bf68b94700692da7c1eb59599c20a02c400b427b343f1a56bbdd3fb",
       "size": 7
     },
     {
@@ -189,8 +189,8 @@
     {
       "executable": false,
       "path": "docs/CAPABILITY-MATRIX.md",
-      "sha256": "e0ec47c29645fdd7de0d2743ce76449b9a6f236201ecc97779b16849974e656c",
-      "size": 3417
+      "sha256": "6f03743334fb2ec606216be78c69b3a1f61ea2e9f919ea960f16b5e2be8daf79",
+      "size": 3465
     },
     {
       "executable": false,
@@ -285,8 +285,8 @@
     {
       "executable": false,
       "path": "docs/MOD-INTELLIGENCE.md",
-      "sha256": "a3430741203832c376f51bc5000ac4a2a1775e46b2e84c05ed691f05265f5717",
-      "size": 5305
+      "sha256": "470ca0ec094256686458e77b043a16148c96aad8d78d0e6a39a454dc8982052c",
+      "size": 6884
     },
     {
       "executable": false,
@@ -2457,8 +2457,8 @@
     {
       "executable": false,
       "path": "integrations/skyrim-pack/skills/skyrim-forge/SKILL.md",
-      "sha256": "6d994fb2a205663f98c5794a61cf620e856079c4a626bdd28d14ad473b85898a",
-      "size": 12058
+      "sha256": "d60e1172c8651019c0909fbc9ecb3a91f3fbd07011efce6054326877d0dc3d99",
+      "size": 12216
     },
     {
       "executable": false,
@@ -2865,14 +2865,14 @@
     {
       "executable": false,
       "path": "pyproject.toml",
-      "sha256": "5ba35a96c1e2be12878eff89ed8bdff3026bb6f0bb476051b9af97d9355ae4b2",
+      "sha256": "5cea43b4657ceb26dbd97fcd5a579712db71ceae59784699a664015011cc5eb6",
       "size": 995
     },
     {
       "executable": false,
       "path": "README.md",
-      "sha256": "31442dbe7da5e114c29ea74581481c6a24e5120b62f0fd6528a7b49e44e06e30",
-      "size": 11525
+      "sha256": "2569039c3b6adb5bb95e8d6257a622fe9b94a112d9fdaaa3dcc4736f3bea76ac",
+      "size": 11566
     },
     {
       "executable": false,
@@ -2925,8 +2925,8 @@
     {
       "executable": false,
       "path": "references/SKYRIM-KNOWLEDGE.json",
-      "sha256": "4b7b7902a085eac1a6cee77b55a74631d5958cdc2f5068ba64248aea0dc290c3",
-      "size": 11302
+      "sha256": "464460cfd70fee13052e36a2016026c78c1e1d54600bbbc31c6d8b2c3c448aa6",
+      "size": 11389
     },
     {
       "executable": false,
@@ -3099,7 +3099,7 @@
     {
       "executable": false,
       "path": "server.json",
-      "sha256": "5e1ae41441ccc0a1d5dd0606dc7352e72863a6e8eea6c0924f821bc470998c30",
+      "sha256": "7fefed3261924d3ed6c8ea5068f9fd1c5653dae158f2f15f944978116098f976",
       "size": 411
     },
     {
@@ -3135,8 +3135,8 @@
     {
       "executable": false,
       "path": "skyrim_forge/architecture.py",
-      "sha256": "efbf15a8daff2dfb591c55f051042df7523690376a9c96165a58fe0d055eb69b",
-      "size": 16616
+      "sha256": "9440d42f9ba9374ba1b4d44d5d3a13e58fe5d7adfbc62857af7e7e103f05cc14",
+      "size": 21807
     },
     {
       "executable": false,
@@ -3171,13 +3171,13 @@
     {
       "executable": false,
       "path": "skyrim_forge/bin/linux-x64/SkyrimForge.Native",
-      "sha256": "56bfc2a15fc5e394fa02baf597b3b6f290db924b3acd49ebf76340d334a348d6",
+      "sha256": "115aeb6929cfdd8ace660feab81a99ec4b4bf3ac85e2d899e39cd4d3d26eaabb",
       "size": 2920572
     },
     {
       "executable": true,
       "path": "skyrim_forge/bin/win-x64/SkyrimForge.Native.exe",
-      "sha256": "6cc23c03903218abfafad0bb2214cec62c438bea66e8da0f333af484153fdcd4",
+      "sha256": "86b9d37d0e8e12e8bb7b4bd12b03dd65fbb1001ac31d405d7478658ef1dcff0c",
       "size": 3024384
     },
     {
@@ -3189,8 +3189,8 @@
     {
       "executable": false,
       "path": "skyrim_forge/cli.py",
-      "sha256": "89b730a39bf664a09e14aff4404c59bb0aaed4cead29ef598453f2620dc70217",
-      "size": 21915
+      "sha256": "7cf3868b14528139ff5b9222e25fa87028dfe4b120d88e50d3afbc265b13e22c",
+      "size": 22001
     },
     {
       "executable": false,
@@ -3225,8 +3225,8 @@
     {
       "executable": false,
       "path": "skyrim_forge/docs/CAPABILITY-MATRIX.md",
-      "sha256": "e0ec47c29645fdd7de0d2743ce76449b9a6f236201ecc97779b16849974e656c",
-      "size": 3417
+      "sha256": "6f03743334fb2ec606216be78c69b3a1f61ea2e9f919ea960f16b5e2be8daf79",
+      "size": 3465
     },
     {
       "executable": false,
@@ -3375,8 +3375,8 @@
     {
       "executable": false,
       "path": "skyrim_forge/mcp_server.py",
-      "sha256": "9012fa06ce6715847db1427a5a22f618df67e48fd460fe979379be61e4f96d7a",
-      "size": 55167
+      "sha256": "00df4f2ed25c2926ca75ff1c1089672445c0c83e1a5405474f7e2680d33a56dd",
+      "size": 55310
     },
     {
       "executable": false,
@@ -3405,14 +3405,14 @@
     {
       "executable": false,
       "path": "skyrim_forge/papyrus.py",
-      "sha256": "539d81b5d8e9a1c42a182337173740615293351aafb2847010074dc3cc542501",
-      "size": 11760
+      "sha256": "24914c51a46b91df22b781a6994bb7f5a0ecb775e731ad0c527ebd1c183e6e18",
+      "size": 13552
     },
     {
       "executable": false,
       "path": "skyrim_forge/performance.py",
-      "sha256": "5ff02ad5f6ddf58758633c63f727855134e83f9ec7126fcac29d505d521683f0",
-      "size": 7945
+      "sha256": "3a1533027c5173b56757335c4de771ae81a8200d694c6c925f121bb02751fc34",
+      "size": 13782
     },
     {
       "executable": false,
@@ -3441,8 +3441,8 @@
     {
       "executable": false,
       "path": "skyrim_forge/quality.py",
-      "sha256": "2dbae249a3b1da9c945ccb2f9586b46e15de423c6fd8be207ed944e35042e5be",
-      "size": 7173
+      "sha256": "1578cb6b69e9b307905c6992d17079a7572573cf81127e30a81c0da7ad06a79e",
+      "size": 10872
     },
     {
       "executable": false,
@@ -3537,8 +3537,8 @@
     {
       "executable": false,
       "path": "skyrim_forge/schemas/architecture-request.schema.json",
-      "sha256": "cc3df5a032df5333d71311e31d51f9208d182b983b32508605238a96daa235ea",
-      "size": 713
+      "sha256": "ca6e242cd9faa9de796a8127a159ce2203b9fefb91bd761cd8991b7a70ccb418",
+      "size": 811
     },
     {
       "executable": false,
@@ -3585,8 +3585,8 @@
     {
       "executable": false,
       "path": "skyrim_forge/schemas/quality-report.schema.json",
-      "sha256": "ea3e139fbc690a51c59db32807cfc53265526054f2c771a2fb5b2a1414868e39",
-      "size": 1035
+      "sha256": "0de94662e96f3dc4090b49464724104fa9595956a4482f6c9a8d5a73b01c6415",
+      "size": 1715
     },
     {
       "executable": false,
@@ -3615,8 +3615,8 @@
     {
       "executable": false,
       "path": "skyrim_forge/service.py",
-      "sha256": "fce469c31ae176246bca44af8317400f00f4fe84238baf07cf4db99c05969559",
-      "size": 24820
+      "sha256": "855394a760acd5d0e649a1cbe616c59880df84ccebf93199746cf8d8080005d2",
+      "size": 24934
     },
     {
       "executable": false,
@@ -3687,7 +3687,7 @@
     {
       "executable": false,
       "path": "skyrim_forge/version.py",
-      "sha256": "c76897fcb5f0f02b483e69062235af1304c9a1467fd0027a51c24fd896193a69",
+      "sha256": "39a0809269fef46b702e96a9da4728624b21250a1540aa5f6dc406149970c287",
       "size": 19
     },
     {
@@ -3717,7 +3717,7 @@
     {
       "executable": true,
       "path": "START-HERE.bat",
-      "sha256": "6f05da3496125585c66cbe61ac044c495859f49121266e12364a05fa92abe2e7",
+      "sha256": "0ac21d48343672563da87a27fb8f701f381a2bca4a2f885fab633f07a716e1bc",
       "size": 4785
     },
     {
@@ -3741,8 +3741,8 @@
     {
       "executable": false,
       "path": "tests/test_architecture.py",
-      "sha256": "489da0e12971f975620de47fcea71976ed23c7c1b9a55d592921fbaa0042a752",
-      "size": 2263
+      "sha256": "cb0bc0f326af0ecdf83f1ebe944bb20c1843ee2f0baec8b9cc3d3355f3173632",
+      "size": 3752
     },
     {
       "executable": false,
@@ -3837,8 +3837,8 @@
     {
       "executable": false,
       "path": "tests/test_intelligence_integration.py",
-      "sha256": "a4e095f4f51d1116ebe030773c58b30c3b7a19cee5a8c200b43f760ccc865b8f",
-      "size": 4077
+      "sha256": "e63fc0c67a8d73e8bb656e5ba11eefe2d44feae9ebb6a90e086bfb87e8ff03ba",
+      "size": 4541
     },
     {
       "executable": false,
@@ -3915,14 +3915,14 @@
     {
       "executable": false,
       "path": "tests/test_papyrus_lexical.py",
-      "sha256": "16f0efde4c7a628eb85d2de779a7736f0659a579420411f5a275887db638e834",
-      "size": 1982
+      "sha256": "5b0d4a595fe8764a46b94bc512afbbc7b193a6718b0b023e2ec869adaf2dba4a",
+      "size": 3605
     },
     {
       "executable": false,
       "path": "tests/test_performance.py",
-      "sha256": "3eba1161b914f0d0ce6f42825b7b0c5d038671ef6fe6cf5fb422f0bf3b28972f",
-      "size": 2736
+      "sha256": "795b5821be2a9aa7ebbbaee207e3151d3f35791def1c8078f9dec27b9575740c",
+      "size": 5247
     },
     {
       "executable": false,
@@ -3951,8 +3951,8 @@
     {
       "executable": false,
       "path": "tests/test_quality.py",
-      "sha256": "ae5a383bb029d874de36b9c3af0838412f848709a2eb09243e61c2a66f81b1f3",
-      "size": 3092
+      "sha256": "230a7e59264ece4739591f321476a51cfbd8374d3d5928b18befaa73746c9a54",
+      "size": 5627
     },
     {
       "executable": false,
@@ -4089,7 +4089,7 @@
     {
       "executable": false,
       "path": "VERSION.txt",
-      "sha256": "29698ca74ad5905b01ab02285ceca498a775954b86da6c47f9ae51b74e4500d5",
+      "sha256": "ca894909eb5a5288ca010ea2124d9b5915a933294c4c80156247b5da36142c63",
       "size": 20
     },
     {
@@ -4119,7 +4119,7 @@
     {
       "executable": false,
       "path": "writer/native-go/main.go",
-      "sha256": "846b2f8801ec66b4c0229c6daef2554cd162fd57821397707a07d666487a0b1c",
+      "sha256": "8c274dc9ba23c4f0d3efa0ca4f55a209b14d7d4f56db0bcd6bfc37d769e7881a",
       "size": 4475
     },
     {
@@ -4131,16 +4131,16 @@
     {
       "executable": false,
       "path": "writer/published/linux-x64/SkyrimForge.Native",
-      "sha256": "56bfc2a15fc5e394fa02baf597b3b6f290db924b3acd49ebf76340d334a348d6",
+      "sha256": "115aeb6929cfdd8ace660feab81a99ec4b4bf3ac85e2d899e39cd4d3d26eaabb",
       "size": 2920572
     },
     {
       "executable": true,
       "path": "writer/published/win-x64/SkyrimForge.Native.exe",
-      "sha256": "6cc23c03903218abfafad0bb2214cec62c438bea66e8da0f333af484153fdcd4",
+      "sha256": "86b9d37d0e8e12e8bb7b4bd12b03dd65fbb1001ac31d405d7478658ef1dcff0c",
       "size": 3024384
     }
   ],
   "product": "Skyrim Forge",
-  "version": "6.12.0"
+  "version": "6.12.1"
 }

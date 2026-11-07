@@ -46,7 +46,11 @@ framework is installed.
 
 Useful constraint fields: `edition` (`se`, `ae`, `vr`, `unknown`),
 `runtime_frequency` (`event`, `occasional`, `frame`, `unknown`),
-`modifies_existing`, `performance_sensitive`, `save_sensitive`.
+`modifies_existing`, `performance_sensitive`, `save_sensitive` and
+`avoid` (an array of route names such as `SPID`, `Papyrus` or `SKSE`).
+Explicit exclusions override keyword matches; contradictory requests return
+`NEEDS_INPUT`. `components` names complementary routes when a request needs
+more than one system.
 
 ## Source and API registry
 
@@ -83,40 +87,66 @@ A report is a JSON object with `mod_types` and a `checks` map. Required
 dimensions depend on the mod type, so a Papyrus mod does not trigger texture or
 mesh checks and a texture mod does not require native binary analysis.
 
-Each dimension has `status`, optional `evidence` and optional `notes`. `PASS`
-requires at least one evidence item. `NOT_APPLICABLE` requires a reason. Missing
+Each dimension has `status`, optional `evidence` and optional `notes`. A bare
+string is a self-report and cannot produce a verified `PASS`. To establish a
+verified PASS, point at a Forge-produced artifact:
+
+```json
+{
+  "type": "forge-tool",
+  "tool": "forge",
+  "result": "PASS",
+  "artifact": "Workspaces/my-mod/reports/validation.json",
+  "sha256": "64 lowercase or uppercase hex characters"
+}
+```
+
+The artifact must exist and its SHA-256 must match. `NOT_APPLICABLE` is
+permitted only for optional dimensions and needs a specific reason; functional,
+installation, reproducibility and publication are never waived. Missing
 required dimensions are `NOT_RUN`.
 
-Overall verdicts: `PASS`, `WARNING`, `FAIL` or `UNVERIFIED`. There is no single
-quality score. Static workspace evidence never becomes runtime proof.
+Overall verdicts: `PASS`, `WARNING`, `REVIEW_REQUIRED`, `INCOMPLETE`, `FAIL` or
+`UNVERIFIED`. Bare-string evidence returns `REVIEW_REQUIRED`; an all-waived
+report cannot pass. There is no single quality score. Static workspace evidence
+never becomes runtime proof.
 
 ## Performance evidence
 
-PresentMon-style CSV capture (a column named `msBetweenPresents`,
-`msBetweenDisplayChange` or `MsGPUActive`) plus a metadata file:
+PresentMon-style CSV capture plus a metadata file. The measurement must be
+selected explicitly with `--metric`; Forge never picks `MsGPUActive` merely
+because it is present. Use `--process` for a multi-process capture:
 
 ```powershell
-forge perf-ingest capture.csv imported.json --scenario scenario.json --approve
+forge perf-ingest capture.csv imported.json --scenario scenario.json --metric msBetweenPresents --process SkyrimSE.exe --approve
 forge perf-compare baseline.json candidate.json
 ```
 
 The scenario metadata must be identical for a comparison: name, game version,
-load order, resolution, graphics preset and hardware. The report gives mean,
-median, p95, p99, slow-frame ratio and percentage deltas. Fewer than 120 frames
-is `INSUFFICIENT`; mismatched scenarios are `INCOMPATIBLE`; only a matching
-comparison can report `IMPROVEMENT`, `REGRESSION` or `NO_MEASURABLE_CHANGE`.
+load order, resolution, graphics preset, hardware and metric. GPU-active time
+and presented-frame interval are different measurements and are rejected as
+incompatible. Fewer than 120 frames is `INSUFFICIENT`; mismatched scenarios or
+metrics are `INCOMPATIBLE`; only a matching comparison can report
+`IMPROVEMENT`, `REGRESSION` or `NO_MEASURABLE_CHANGE`. Even then the verification
+label is `FRAME_TIME_COMPARISON_ONLY`: the arithmetic is real, but an in-game
+performance win is not proven.
 
-These are frame-time numbers, not an FPS or visual-quality claim. Capture the
-same repeatable scene, settings and hardware, and keep the raw files shown in
-the report.
+Capture provenance includes the selected process and process ID when available.
+Keep the raw capture, scenario metadata and report together.
 
 ## Limits
 
 - Architecture selection is keyword/constraint routing, not semantic proof.
-- Knowledge probes report presence, not API compatibility.
-- Quality audit evaluates supplied evidence; it cannot run the game for you.
-- Performance comparison consumes external captures; Forge does not record or
-  control PresentMon by default.
+- Knowledge probes report presence, not API compatibility or version. The
+  SKSE row names the locally observed executable (`1.6.1170`) rather than a
+  permanent "current 1.6.x" range; AE is not one build.
+- Quality audit evaluates supplied evidence; only hash-verified tool receipts
+  produce a verified PASS. It cannot run the game for you.
+- Performance comparison consumes external captures and reports frame-time
+  arithmetic, not an in-game FPS win, visual quality or gameplay correctness.
+- Forge does not capture PresentMon data or profile Papyrus automatically.
+- No texture, mesh, behavior or LOD optimizer is implemented by this layer;
+  it only plans, validates and compares supplied evidence.
 - In-game loading, visuals, saves, hooks and gameplay remain human-gated.
 
 ## Commands and MCP tools

@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import hashlib
 import json
 import sys
 import tempfile
@@ -38,6 +39,12 @@ class IntelligenceIntegrationTests(unittest.TestCase):
         path.write_text(json.dumps(payload), encoding="utf-8")
         return path
 
+    def _receipt(self, name: str) -> dict[str, str]:
+        path = self.workspace / f"{name}.receipt.json"
+        path.write_text(json.dumps({"result": "PASS"}), encoding="utf-8")
+        return {"type": "forge-tool", "tool": "forge", "result": "PASS",
+                "artifact": str(path), "sha256": hashlib.sha256(path.read_bytes()).hexdigest()}
+
     def test_architecture_and_quality_workflow(self):
         request = self._json("request.json", {"description": "Distribute spells to NPCs with SPID"})
         architecture = self.service.architecture_recommend(str(request))
@@ -45,7 +52,7 @@ class IntelligenceIntegrationTests(unittest.TestCase):
         plan = self.service.quality_plan(["framework"])
         self.assertIn("conflicts", plan["dimensions"])
         report = self._json("quality.json", {"mod_types": ["framework"], "checks": {
-            item: {"status": "PASS", "evidence": ["integration fixture"]} for item in plan["dimensions"]}})
+            item: {"status": "PASS", "evidence": [self._receipt(f"quality-{item}")]} for item in plan["dimensions"]}})
         self.assertEqual(self.service.quality_audit(str(report))["verdict"], "PASS")
 
     def test_knowledge_status_and_lookup(self):
@@ -57,7 +64,8 @@ class IntelligenceIntegrationTests(unittest.TestCase):
     def test_performance_ingest_and_compare(self):
         scenario = self._json("scenario.json", {
             "name": "fixture", "game_version": "1.6.1170", "load_order": "profile",
-            "resolution": "1920x1080", "graphics_preset": "high", "hardware": "fixture gpu"})
+            "resolution": "1920x1080", "graphics_preset": "high", "hardware": "fixture gpu",
+            "metric": "msBetweenPresents"})
         csv_path = self.workspace / "capture.csv"
         csv_path.write_text("Application,MsBetweenPresents\n" +
                             "\n".join(f"SkyrimSE.exe,{16.0 + i % 3}" for i in range(130)) + "\n",
@@ -81,7 +89,8 @@ class IntelligenceIntegrationTests(unittest.TestCase):
         csv_path.write_text("MsBetweenPresents\n16\n", encoding="utf-8")
         scenario = self._json("scenario.json", {
             "name": "fixture", "game_version": "1.6.1170", "load_order": "profile",
-            "resolution": "1920x1080", "graphics_preset": "high", "hardware": "fixture gpu"})
+            "resolution": "1920x1080", "graphics_preset": "high", "hardware": "fixture gpu",
+            "metric": "msBetweenPresents"})
         with self.assertRaises(Exception):
             self.service.performance_ingest(str(csv_path), str(self.workspace / "out.json"), str(scenario), False)
 

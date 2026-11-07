@@ -96,7 +96,7 @@ def parser() -> argparse.ArgumentParser:
     qp = sub.add_parser("quality-plan"); qp.add_argument("--types", required=True)
     qa = sub.add_parser("quality-audit"); qa.add_argument("report")
     pc = sub.add_parser("perf-compare"); pc.add_argument("baseline"); pc.add_argument("candidate"); pc.add_argument("--tolerance", type=float, default=2.0)
-    pi = sub.add_parser("perf-ingest"); pi.add_argument("csv"); pi.add_argument("output"); pi.add_argument("--scenario", required=True); pi.add_argument("--approve", action="store_true")
+    pi = sub.add_parser("perf-ingest"); pi.add_argument("csv"); pi.add_argument("output"); pi.add_argument("--scenario", required=True); pi.add_argument("--metric"); pi.add_argument("--process"); pi.add_argument("--approve", action="store_true")
     mcp = sub.add_parser("mcp"); mcp.add_argument("--surface", choices=["full", "compact"], default=None)
     gui = sub.add_parser("gui")
     return root
@@ -204,7 +204,7 @@ def main(argv: list[str] | None = None) -> int:
             case "quality-plan": value = service.quality_plan(args.types)
             case "quality-audit": value = service.quality_audit(args.report)
             case "perf-compare": value = service.performance_compare(args.baseline, args.candidate, args.tolerance)
-            case "perf-ingest": value = service.performance_ingest(args.csv, args.output, args.scenario, args.approve)
+            case "perf-ingest": value = service.performance_ingest(args.csv, args.output, args.scenario, args.approve, args.metric, args.process)
             case "maintain":
                 if args.schedule or args.unschedule or args.schedule_status:
                     action = "install" if args.schedule else ("remove" if args.unschedule else "status")

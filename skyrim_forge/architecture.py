@@ -4,6 +4,7 @@
 # claims a framework/tool is installed or that the recommendation will work.
 from __future__ import annotations
 
+import re
 from typing import Any
 
 from .errors import ValidationError
@@ -202,6 +203,27 @@ _CANDIDATES: tuple[dict[str, Any], ...] = (
 
 _COMPLEXITY_ORDER = {"none": 0, "low": 1, "medium": 2, "high": 3}
 
+# Explicit exclusions are resolved by route aliases, not by deleting words from
+# the whole description. This keeps "avoid SPID" from still scoring SPID.
+_ALIASES: dict[str, tuple[str, ...]] = {
+    "distribution.spid": ("spid",),
+    "distribution.kid": ("kid", "keyword item distributor"),
+    "distribution.skypatcher": ("skypatcher",),
+    "records.housecarl": ("housecarl", "record patch"),
+    "records.synthesis": ("synthesis", "mutagen"),
+    "script.papyrus": ("papyrus", "papyrus script"),
+    "native.skse": ("skse", "native", "dll", "commonlibsse-ng", "commonlib"),
+    "ui.mcm": ("mcm", "skyui", "menu"),
+    "animation.oar": ("oar", "open animation replacer", "animation"),
+    "assets.texture": ("texture", "dds", "retexture"),
+    "assets.mesh": ("mesh", "nif"),
+    "lod.world": ("lod", "dyndolod", "xlodgen", "texgen"),
+    "audio.voice": ("audio", "voice", "fuz", "xwm"),
+    "packaging.fomod": ("fomod", "fomod installer"),
+}
+_EXCLUSION_RE = re.compile(r"(?i)\b(?:avoid|without|do not use|don't use|never use)\s+([^,.;\n]+)")
+_ALIAS_SPLIT_RE = re.compile(r"(?i)\s*(?:,|;|\band\b|\bor\b)\s*")
+
 
 def _text(value: Any, name: str, limit: int) -> str:
     if not isinstance(value, str) or not value.strip():
@@ -218,6 +240,58 @@ def _optional_bool(data: dict[str, Any], name: str) -> bool | None:
     if not isinstance(value, bool):
         raise ValidationError(f"{name} must be a boolean")
     return value
+
+
+def _avoided(data: dict[str, Any], description: str) -> tuple[set[str], list[tuple[int, int]], list[str]]:
+    """Parse explicit exclusions from structured input and plain English."""
+    raw = data.get("avoid")
+    phrases: list[str] = []
+    if raw is not None:
+        if isinstance(raw, str):
+            phrases.append(raw)
+        elif isinstance(raw, list) and all(isinstance(item, str) and item.strip() for item in raw):
+            phrases.extend(item.strip() for item in raw)
+        else:
+            raise ValidationError("avoid must be a string or a list of non-empty strings")
+    spans: list[tuple[int, int]] = []
+    for match in _EXCLUSION_RE.finditer(description):
+        spans.append((match.start(), match.end()))
+        phrases.extend(part.strip() for part in _ALIAS_SPLIT_RE.split(match.group(1)) if part.strip())
+    excluded: set[str] = set()
+    for phrase in phrases:
+        lower = phrase.casefold().strip()
+        for route, aliases in _ALIASES.items():
+            if lower == route or any(alias in lower for alias in aliases):
+                excluded.update(aliases)
+    return excluded, spans, phrases
+
+
+def _remaining_text(description: str, spans: list[tuple[int, int]]) -> str:
+    chars = list(description)
+    for start, end in spans:
+        chars[start:end] = " " * (end - start)
+    return "".join(chars)
+
+
+def _conflicting_aliases(description: str, spans: list[tuple[int, int]], excluded: set[str]) -> list[str]:
+    remainder = _remaining_text(description, spans).casefold()
+    return sorted(alias for alias in excluded
+                  if re.search(rf"(?<![a-z0-9]){re.escape(alias)}(?![a-z0-9])", remainder))
+
+
+def _display_aliases(excluded: set[str]) -> list[str]:
+    names = {"spid": "SPID", "kid": "KID", "skypatcher": "SkyPatcher", "housecarl": "houseCARL",
+             "synthesis": "Synthesis", "mutagen": "Mutagen", "papyrus": "Papyrus", "papyrus script": "Papyrus",
+             "skse": "SKSE", "native": "native", "dll": "DLL", "commonlibsse-ng": "CommonLibSSE-NG",
+             "commonlib": "CommonLib", "mcm": "MCM", "skyui": "SkyUI", "menu": "menu", "oar": "OAR",
+             "animation": "animation", "texture": "texture", "dds": "DDS", "mesh": "mesh", "lod": "LOD",
+             "dyndolod": "DynDOLOD", "xlodgen": "xLODGen", "texgen": "TexGen", "audio": "audio", "voice": "voice",
+             "fomod": "FOMOD"}
+    return sorted({names.get(alias, alias) for alias in excluded}, key=str.casefold)
+
+
+def _route_excluded(route: str, excluded: set[str]) -> bool:
+    return any(alias in excluded for alias in _ALIASES.get(route, ()))
 
 
 def recommend(request: dict[str, Any]) -> dict[str, Any]:
@@ -238,9 +312,23 @@ def recommend(request: dict[str, Any]) -> dict[str, Any]:
     performance = _optional_bool(request, "performance_sensitive") or False
     save_sensitive = _optional_bool(request, "save_sensitive") or False
     lower = " ".join(description.casefold().split())
+    excluded, spans, _phrases = _avoided(request, description)
+    conflicts = _conflicting_aliases(description, spans, excluded)
+    exclusions = _display_aliases(excluded)
+    if conflicts:
+        return {
+            "schema": SCHEMA, "result": "PASS", "status": "NEEDS_INPUT",
+            "description": description, "recommendation": None, "alternatives": [], "components": [],
+            "confidence": "low", "exclusions": exclusions, "conflicts": conflicts,
+            "questions": ["Resolve the contradiction: the request both excludes and asks for the same route. "
+                          "State one requirement and whether it is mandatory."],
+            "evidence": "Keyword/constraint routing only. No framework, API or runtime compatibility was verified.",
+        }
 
     scored: list[dict[str, Any]] = []
     for item in _CANDIDATES:
+        if _route_excluded(item["id"], excluded):
+            continue
         hits = [term for term in item["terms"] if term in lower]
         if not hits:
             continue
@@ -266,16 +354,20 @@ def recommend(request: dict[str, Any]) -> dict[str, Any]:
     if modifies is None:
         questions.append("Confirm whether this creates a new mod or changes an existing one, because save compatibility differs.")
     if not scored:
+        extra = ["Name the concrete behaviour and the game system it touches; no architecture can be recommended from this description yet."]
+        if exclusions:
+            extra.insert(0, "No known route satisfies the stated exclusions; relax an exclusion or describe the required behaviour differently.")
         return {
             "schema": SCHEMA, "result": "PASS", "status": "NEEDS_INPUT",
-            "description": description, "recommendation": None, "alternatives": [],
-            "confidence": "low", "questions": questions + [
-                "Name the concrete behaviour and the game system it touches; no architecture can be recommended from this description yet."],
+            "description": description, "recommendation": None, "alternatives": [], "components": [],
+            "confidence": "low", "questions": questions + extra, "exclusions": exclusions, "conflicts": [],
             "evidence": "Keyword/constraint routing only. No framework, API or runtime compatibility was verified.",
         }
     top = scored[0]
     margin = top["score"] - (scored[1]["score"] if len(scored) > 1 else 0)
     confidence = "high" if top["score"] >= 8 and margin >= 4 else "medium" if top["score"] >= 5 and margin >= 2 else "low"
+    if confidence == "high" and (edition == "unknown" or modifies is None):
+        confidence = "medium"
     if confidence == "low":
         questions.append("The request matches several routes weakly; confirm the concrete behaviour before committing to an implementation.")
     recommendation = {key: top[key] for key in ("id", "label", "workflow", "frameworks", "complexity",
@@ -285,10 +377,14 @@ def recommend(request: dict[str, Any]) -> dict[str, Any]:
         "Use Forge's framework lint, record or native validation for the selected route.",
         "Run only the checks relevant to this mod type; do not claim runtime proof from static evidence.",
     ]
+    components = [row for row in scored[1:]
+                  if row["score"] >= 5 and row["workflow"] != top["workflow"]][:2]
+    recommendation["components"] = [row["id"] for row in components]
     return {
         "schema": SCHEMA, "result": "PASS", "status": "RECOMMENDED",
         "description": description, "recommendation": recommendation,
-        "alternatives": scored[1:4], "confidence": confidence, "questions": questions,
+        "alternatives": scored[1:4], "components": components, "confidence": confidence, "questions": questions,
+        "exclusions": exclusions, "conflicts": [],
         "constraints": {"edition": edition, "runtime_frequency": frequency,
                         "modifies_existing": modifies, "performance_sensitive": performance,
                         "save_sensitive": save_sensitive},
