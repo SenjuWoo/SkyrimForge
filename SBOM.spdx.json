@@ -1,13 +1,13 @@
 {
   "SPDXID": "SPDXRef-DOCUMENT",
   "creationInfo": {
-    "created": "2026-11-07T02:25:33Z",
+    "created": "2026-11-07T02:34:15Z",
     "creators": [
-      "Tool: Skyrim Forge validator 6.12.2"
+      "Tool: Skyrim Forge validator 6.12.3"
     ]
   },
   "dataLicense": "CC0-1.0",
-  "documentNamespace": "https://github.com/SenjuWoo/SkyrimForge/spdx/6.12.2/ae942dd425ba",
+  "documentNamespace": "https://github.com/SenjuWoo/SkyrimForge/spdx/6.12.3/b2a95cc212ce",
   "files": [
     {
       "SPDXID": "SPDXRef-File-.editorconfig",
@@ -254,7 +254,7 @@
       "checksums": [
         {
           "algorithm": "SHA256",
-          "checksumValue": "fa002eacb3994e2348aa0f53d7d834080a977a860da0e6134a00a862160043c6"
+          "checksumValue": "85d099e9a7da007cc2d808bd7c2aa25112fab786eeedac86c12e0c2ec6e256ee"
         }
       ],
       "copyrightText": "NOASSERTION",
@@ -269,7 +269,7 @@
       "checksums": [
         {
           "algorithm": "SHA256",
-          "checksumValue": "fbe00518d731b63112e43ab3933f0f46bfa53d89c866d98cd8b2341bfa1c810b"
+          "checksumValue": "49244a0e28c14794839d47f3eabac07c6b89401d83c5624951c8c3c565a557c5"
         }
       ],
       "copyrightText": "NOASSERTION",
@@ -374,7 +374,7 @@
       "checksums": [
         {
           "algorithm": "SHA256",
-          "checksumValue": "b224c14aee6b00f76522ceeff9434bd71e5b904b921ee2e6697282c46dc7a7b6"
+          "checksumValue": "13b8dfc6b7ad2f96d9068a68eec43e190a56d36b4054baceb916eae8bb25e658"
         }
       ],
       "copyrightText": "NOASSERTION",
@@ -719,7 +719,7 @@
       "checksums": [
         {
           "algorithm": "SHA256",
-          "checksumValue": "9ace354d6d222b1d86c3aae85eb741409c5c0c4972a391e1e3336980bfb20a0b"
+          "checksumValue": "80f94c384e90ed0346381c16aa520628fb28d0b83f54f6f911f99dcae82fb45c"
         }
       ],
       "copyrightText": "NOASSERTION",
@@ -6149,7 +6149,7 @@
       "checksums": [
         {
           "algorithm": "SHA256",
-          "checksumValue": "2c0ad3dc6ddb4a211414fdff9ff8604206ad54ba0071c7ff912511f8f6a2aa47"
+          "checksumValue": "adeb5409fa3af19ed3f5570ed6ba2d3b0dc9ba0820e47558cb73c3468441aed2"
         }
       ],
       "copyrightText": "NOASSERTION",
@@ -7169,7 +7169,7 @@
       "checksums": [
         {
           "algorithm": "SHA256",
-          "checksumValue": "4255ef2b72f9aedd4dcb7f1be5059dc288bec7a614edb9c8e42207d5f3639da4"
+          "checksumValue": "f006a8ff44b331a8f2e43ea021e3def6c0fd0577305749cfa9cc1ace5f3c848a"
         }
       ],
       "copyrightText": "NOASSERTION",
@@ -7184,7 +7184,7 @@
       "checksums": [
         {
           "algorithm": "SHA256",
-          "checksumValue": "e9030dd46c419db3137dc11b0561284367472259855526f75a5ab2fd7a442b6a"
+          "checksumValue": "b4f0c368f595ddc688ee847b52b8e951ad30184c0998bd0ff6b6123df6cc3be6"
         }
       ],
       "copyrightText": "NOASSERTION",
@@ -7754,7 +7754,7 @@
       "checksums": [
         {
           "algorithm": "SHA256",
-          "checksumValue": "ba39b848ff6f9325974fb67392e6e202a4d484597a51434a1966f8ee587c2836"
+          "checksumValue": "2f98d9713164d222e0534cc120cf5b9348b4d5380f210430e3d52fd118e0c587"
         }
       ],
       "copyrightText": "NOASSERTION",
@@ -7934,7 +7934,7 @@
       "checksums": [
         {
           "algorithm": "SHA256",
-          "checksumValue": "c83aa827d588b7e949ac844a8e2c8c9d99204642901006ec6a8353b9aa45ebd4"
+          "checksumValue": "a7077103bea0dab84933b2ff99b076260671c9de65c60f512564d4a2b7bd3764"
         }
       ],
       "copyrightText": "NOASSERTION",
@@ -7949,7 +7949,7 @@
       "checksums": [
         {
           "algorithm": "SHA256",
-          "checksumValue": "96f7ca1041bdb2acb7c444fc64b085ad5b0a53ecfa296022bd0303eef700ee76"
+          "checksumValue": "b2cc38e5df6fd6d28a64fe36d804944f7480c7c9f97d99922a1ceed9e807ef61"
         }
       ],
       "copyrightText": "NOASSERTION",
@@ -8609,7 +8609,7 @@
       "checksums": [
         {
           "algorithm": "SHA256",
-          "checksumValue": "a5afe381716494a3b90495336f5c7b4f26f1990a1728aa6829f4212fe0b3a401"
+          "checksumValue": "9c191f577a90530523f6da6794bc5f029858a02297d87bb6feb0fe5e06ede351"
         }
       ],
       "copyrightText": "NOASSERTION",
@@ -8969,7 +8969,7 @@
       "checksums": [
         {
           "algorithm": "SHA256",
-          "checksumValue": "f88b93b8970b0b38ee92bc66ce70f7079db04b53ee07bf414629b373ff153dc7"
+          "checksumValue": "06b1f01fd9b0f52d95cbebf7ba2f75f890547d1cd678775ab0a7e29152a7c346"
         }
       ],
       "copyrightText": "NOASSERTION",
@@ -9224,7 +9224,7 @@
       "checksums": [
         {
           "algorithm": "SHA256",
-          "checksumValue": "309c27fbe9c64ce32b7074dfd9575c66498c15844ddd06754bdb99b94b13e9ca"
+          "checksumValue": "b51a58cc84c96aa9ce5f648527777fd20ede3894e252be2d11af0be942a15f9d"
         }
       ],
       "copyrightText": "NOASSERTION",
@@ -9299,7 +9299,7 @@
       "checksums": [
         {
           "algorithm": "SHA256",
-          "checksumValue": "b192bc5a30a329ae9b1f5a38dea2a22d7d0c018375ebea249067c893d27dba55"
+          "checksumValue": "ef5f11ae5b8d0b51840fa275b6cc21a3fd75a14450cf7dcb2bbd84709534f851"
         }
       ],
       "copyrightText": "NOASSERTION",
@@ -9599,7 +9599,7 @@
       "checksums": [
         {
           "algorithm": "SHA256",
-          "checksumValue": "d8b1c8f1d266f2d27ca04c87fab08ff8d3751cb7942420c63ea756f1a6c34ad6"
+          "checksumValue": "4c2198b801e1d47ca623395d86edbd022c16673eabd5c961ab0393b49ae69a98"
         }
       ],
       "copyrightText": "NOASSERTION",
@@ -9884,7 +9884,7 @@
       "checksums": [
         {
           "algorithm": "SHA256",
-          "checksumValue": "083ba4dc09fc51a83afa37570dca0bb7e4b9959811a7b6df14935086a9bb8d45"
+          "checksumValue": "99b01648e9d037c7951fb07b97a53b3e6cd6ddbe2386eacfff6505d4b8baceea"
         }
       ],
       "copyrightText": "NOASSERTION",
@@ -10229,7 +10229,7 @@
       "checksums": [
         {
           "algorithm": "SHA256",
-          "checksumValue": "dc4b20c996b1aec9bced8c1f409ae17e04d850f882f589388e4dc4baf8899363"
+          "checksumValue": "7f1cdbd8d72e65ea1834afeeb15e5711e377939a1397d58b5c44430a5c5b84ad"
         }
       ],
       "copyrightText": "NOASSERTION",
@@ -10304,7 +10304,7 @@
       "checksums": [
         {
           "algorithm": "SHA256",
-          "checksumValue": "2f65dc798c99fcd1859820fcaf44ce33ec1e229eb566412d24334a280f87a73c"
+          "checksumValue": "f6ba4942ddb2a768989fb69b77cac6cd771bcd951af5091c47e58635e4708abe"
         }
       ],
       "copyrightText": "NOASSERTION",
@@ -10334,7 +10334,7 @@
       "checksums": [
         {
           "algorithm": "SHA256",
-          "checksumValue": "c83aa827d588b7e949ac844a8e2c8c9d99204642901006ec6a8353b9aa45ebd4"
+          "checksumValue": "a7077103bea0dab84933b2ff99b076260671c9de65c60f512564d4a2b7bd3764"
         }
       ],
       "copyrightText": "NOASSERTION",
@@ -10349,7 +10349,7 @@
       "checksums": [
         {
           "algorithm": "SHA256",
-          "checksumValue": "96f7ca1041bdb2acb7c444fc64b085ad5b0a53ecfa296022bd0303eef700ee76"
+          "checksumValue": "b2cc38e5df6fd6d28a64fe36d804944f7480c7c9f97d99922a1ceed9e807ef61"
         }
       ],
       "copyrightText": "NOASSERTION",
@@ -10360,7 +10360,7 @@
       ]
     }
   ],
-  "name": "Skyrim-Forge-6.12.2",
+  "name": "Skyrim-Forge-6.12.3",
   "packages": [
     {
       "SPDXID": "SPDXRef-Package-Forge",
@@ -10374,9 +10374,9 @@
       ],
       "name": "Skyrim Forge",
       "packageVerificationCode": {
-        "packageVerificationCodeValue": "9468299cdc311813230a706c5d31ba4ecc6f32c9"
+        "packageVerificationCodeValue": "15e6cdc046813c98084a07faa1e51392fb114f69"
       },
-      "versionInfo": "6.12.2"
+      "versionInfo": "6.12.3"
     },
     {
       "SPDXID": "SPDXRef-Package-HouseCARL-Skills",
@@ -10392,7 +10392,7 @@
       "packageVerificationCode": {
         "packageVerificationCodeValue": "3615770292165f9139d2c3bd9855aaa91daf33db"
       },
-      "versionInfo": "6.12.2"
+      "versionInfo": "6.12.3"
     },
     {
       "SPDXID": "SPDXRef-Package-SPDX-Schema",

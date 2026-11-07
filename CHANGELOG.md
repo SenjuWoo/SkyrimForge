@@ -1,3 +1,8 @@
+## 6.12.3 (2026-11-07)
+
+- Fixed unrelated artifacts establishing a verified quality PASS. A receipt now needs a known verifier that supports the selected dimension and scope, a report `subject`, a same-subject receipt and artifact, a hash-matching artifact, and an artifact with the `skyrim-forge-quality-evidence/1` schema whose tool/dimension/subject/scope/result all agree.
+- General reports such as `VALIDATION.json`, bare `{"result":"PASS"}` files, unknown verifiers, reused dimension results and scope mismatches now return a non-PASS verdict. Self-reported strings still work but remain `REVIEW_REQUIRED`.
+- Added regression tests for repository-report reuse, bare result JSON, dimension reuse, subject mismatch, scope mismatch, and legitimate supported verification.
 ## 6.12.2 (2026-11-07)
 
 - Closed the forged-receipt gap: `forge-tool` evidence now requires a known Forge verifier identity, an explicit dimension binding, a hash-matching JSON artifact, and an artifact whose own result is PASS. Unknown verifiers and non-JSON artifacts (including the reproduced README receipt) cannot pass; malformed receipts become FAIL with a specific note.

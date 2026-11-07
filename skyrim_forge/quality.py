@@ -17,10 +17,23 @@ STATUSES = {"PASS", "FAIL", "WARNING", "NOT_APPLICABLE", "NOT_RUN", "BLOCKED", "
 # A missing core outcome is never waived; optional dimensions may be waived with
 # a specific reason. This prevents an all-NOT_APPLICABLE report from passing.
 NON_WAIVABLE = {"functional", "installation", "reproducibility", "publication"}
-# Only these Forge verifier identities may establish tool-verified evidence.
-# "forge" is the generic CLI report producer; the rest are concrete checks.
-VERIFIERS = {"forge", "framework-lint", "framework-build", "fomod-validate", "papyrus-analyze",
-             "native-binary-audit", "texture-inspect", "audio-inspect", "skse-inspect-pe", "validate-release"}
+# Only concrete Forge verifiers may establish tool-verified evidence. Each
+# verifier declares the dimensions and scopes it can actually support. A general
+# repository report (such as VALIDATION.json) is not a universal mod proof.
+EVIDENCE_SCHEMA = "skyrim-forge-quality-evidence/1"
+VERIFIERS: dict[str, dict[str, set[str]]] = {
+    "lint": {"dimensions": {"functional", "compatibility"}, "scopes": {"framework-source"}},
+    "framework-plan-validate": {"dimensions": {"compatibility", "conflicts"}, "scopes": {"framework-plan"}},
+    "framework-build": {"dimensions": {"installation", "reproducibility"}, "scopes": {"framework-build"}},
+    "fomod-validate": {"dimensions": {"installation", "reproducibility"}, "scopes": {"fomod-package"}},
+    "papyrus-analyze": {"dimensions": {"functional", "resources", "save_safety"}, "scopes": {"papyrus-source"}},
+    "native-audit": {"dimensions": {"functional", "compatibility", "resources", "save_safety"}, "scopes": {"native-source"}},
+    "native-binary-audit": {"dimensions": {"functional", "compatibility", "resources"}, "scopes": {"native-binary"}},
+    "texture-inspect": {"dimensions": {"functional", "assets"}, "scopes": {"texture-file"}},
+    "audio-inspect": {"dimensions": {"assets"}, "scopes": {"audio-file"}},
+    "skse-inspect-pe": {"dimensions": {"compatibility"}, "scopes": {"skse-binary"}},
+    "release-validate": {"dimensions": {"installation", "reproducibility", "publication"}, "scopes": {"release-package"}},
+}
 
 # Each type names only the dimensions that can actually be judged for it.
 _REQUIRED: dict[str, tuple[str, ...]] = {
@@ -60,17 +73,17 @@ def plan(mod_types: Any) -> dict[str, Any]:
         "schema": SCHEMA, "result": "PASS", "mod_types": types,
         "dimensions": required,
         "checks": {dimension: {"status": "NOT_RUN", "evidence": [], "notes": ""} for dimension in required},
-        "rule": "Every required dimension must carry hash-verified forge-tool evidence, or be NOT_APPLICABLE under policy with a specific reason. Bare strings are self-reports and cannot establish a verified PASS. Static PASS is not runtime proof.",
+        "rule": "Every required dimension must carry a known verifier result bound to this subject, dimension and scope, or be NOT_APPLICABLE under policy with a specific reason. Bare strings are self-reports and cannot establish a verified PASS. Static PASS is not runtime proof.",
     }
 
 
-def _evidence(value: Any, label: str, dimension: str) -> tuple[list[str], int, int, str | None]:
+def _evidence(value: Any, label: str, dimension: str, subject: str | None) -> tuple[list[str], int, int, str | None]:
     """Return claims, verified/self-reported counts and an evidence error.
 
     A bare string is a useful manual claim but never machine verification. A
-    tool receipt is authoritative only when its verifier is known, it is bound
-    to this dimension, its artifact exists, its SHA-256 matches and the artifact
-    is a JSON report whose own result is PASS.
+    tool receipt is authoritative only when a known verifier supports the
+    dimension and scope, the receipt and the artifact agree on the subject,
+    scope, verifier, dimension and PASS result, and the artifact hash matches.
     """
     if value is None:
         return [], 0, 0, None
@@ -92,10 +105,19 @@ def _evidence(value: Any, label: str, dimension: str) -> tuple[list[str], int, i
         artifact = item.get("artifact")
         digest = item.get("sha256")
         bound = item.get("dimension")
+        receipt_subject = item.get("subject")
+        scope = item.get("scope")
         if not isinstance(tool, str) or tool not in VERIFIERS:
             return [], verified, self_reported, f"{label} names an unknown verifier {tool!r}"
-        if bound != dimension:
-            return [], verified, self_reported, f"{label} receipt is bound to {bound!r}, not {dimension!r}"
+        verifier = VERIFIERS[tool]
+        if bound != dimension or dimension not in verifier["dimensions"]:
+            return [], verified, self_reported, f"{label} verifier {tool!r} does not support dimension {dimension!r}"
+        if not isinstance(receipt_subject, str) or not receipt_subject.strip():
+            return [], verified, self_reported, f"{label} receipt requires a subject"
+        if not subject or receipt_subject != subject:
+            return [], verified, self_reported, f"{label} receipt subject does not match the report subject"
+        if not isinstance(scope, str) or scope not in verifier["scopes"]:
+            return [], verified, self_reported, f"{label} verifier {tool!r} does not support scope {scope!r}"
         if item.get("result") != "PASS":
             return [], verified, self_reported, f"{label} tool receipt must record result PASS"
         if not isinstance(artifact, str) or not artifact.strip():
@@ -114,7 +136,11 @@ def _evidence(value: Any, label: str, dimension: str) -> tuple[list[str], int, i
             return [], verified, self_reported, f"{label} artifact is not a JSON verification report"
         if not isinstance(payload, dict) or payload.get("result") != "PASS":
             return [], verified, self_reported, f"{label} artifact's own result is not PASS"
-        claims.append(f"{tool}: {path.name} (sha256 verified, result PASS)")
+        expected = {"schema": EVIDENCE_SCHEMA, "tool": tool, "dimension": dimension,
+                    "subject": receipt_subject, "scope": scope}
+        if any(payload.get(key) != want for key, want in expected.items()):
+            return [], verified, self_reported, f"{label} artifact is not a verified {tool} result for {dimension}/{subject}"
+        claims.append(f"{tool}: {path.name} ({dimension}, {receipt_subject}, {scope}; sha256 verified)")
         verified += 1
     return claims, verified, self_reported, None
 
@@ -126,6 +152,10 @@ def audit(report: dict[str, Any]) -> dict[str, Any]:
     if report.get("schema") not in (None, SCHEMA):
         raise ValidationError(f"Unsupported quality report schema: {report.get('schema')}")
     types = _types(report.get("mod_types"))
+    subject = report.get("subject")
+    if subject is not None and (not isinstance(subject, str) or not subject.strip()):
+        raise ValidationError("subject must be a non-empty string when supplied")
+    subject = subject.strip() if isinstance(subject, str) else None
     supplied = report.get("checks", {})
     if not isinstance(supplied, dict):
         raise ValidationError("checks must be an object")
@@ -141,7 +171,7 @@ def audit(report: dict[str, Any]) -> dict[str, Any]:
         if state not in STATUSES:
             raise ValidationError(f"Unknown quality status for {dimension}: {state}")
         evidence, verified_count, self_reported_count, evidence_error = _evidence(
-            raw.get("evidence"), f"{dimension}.evidence", dimension)
+            raw.get("evidence"), f"{dimension}.evidence", dimension, subject)
         notes = raw.get("notes", "")
         if not isinstance(notes, str):
             raise ValidationError(f"{dimension}.notes must be a string")
@@ -187,10 +217,11 @@ def audit(report: dict[str, Any]) -> dict[str, Any]:
         verdict, result = "PASS", "PASS"
     counts = {state: statuses.count(state) for state in sorted(set(statuses))}
     return {"schema": SCHEMA, "result": result, "verdict": verdict, "mod_types": types,
-            "dimensions": rows, "counts": counts,
+            "subject": subject, "dimensions": rows, "counts": counts,
             "summary": {"verified": verified, "self_reported": self_reported, "waived": waived,
                         "missing": missing, "failed": failed},
-            "evidence": "Only hash-verified forge-tool receipts establish verified PASS. Bare strings remain self-reports; missing runtime evidence is never converted to PASS."}
+            "runtime_verified": False,
+            "evidence": "Only known verifier results bound to this subject, dimension and scope establish verified PASS. Bare strings remain self-reports; static evidence is not runtime proof."}
 
 
 def self_test() -> dict[str, Any]:

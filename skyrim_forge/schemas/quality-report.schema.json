@@ -66,6 +66,8 @@
                     "type",
                     "tool",
                     "dimension",
+                    "subject",
+                    "scope",
                     "result",
                     "artifact",
                     "sha256"
@@ -102,6 +104,28 @@
                         "reproducibility",
                         "publication"
                       ]
+                    },
+                    "subject": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 200
+                    },
+                    "scope": {
+                      "type": "string",
+                      "minLength": 1,
+                      "enum": [
+                        "framework-source",
+                        "framework-plan",
+                        "framework-build",
+                        "fomod-package",
+                        "papyrus-source",
+                        "native-source",
+                        "native-binary",
+                        "texture-file",
+                        "audio-file",
+                        "skse-binary",
+                        "release-package"
+                      ]
                     }
                   }
                 }
@@ -113,6 +137,11 @@
           }
         }
       }
+    },
+    "subject": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 200
     }
   }
 }

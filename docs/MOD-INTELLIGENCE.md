@@ -89,23 +89,29 @@ mesh checks and a texture mod does not require native binary analysis.
 
 Each dimension has `status`, optional `evidence` and optional `notes`. A bare
 string is a self-report and cannot produce a verified `PASS`. To establish a
-verified PASS, provide a known Forge verifier receipt bound to that dimension:
+verified PASS, provide a known Forge verifier receipt bound to the same subject
+and dimension, with an artifact that records the verifier's actual scope:
 
 ```json
 {
   "type": "forge-tool",
   "tool": "texture-inspect",
   "dimension": "assets",
+  "subject": "my-texture-mod",
+  "scope": "texture-file",
   "result": "PASS",
   "artifact": "Workspaces/my-mod/reports/assets.json",
   "sha256": "64 lowercase or uppercase hex characters"
 }
 ```
 
-The verifier name must be one of Forge's known checks, the receipt must be bound
-to the dimension being evaluated, the artifact must exist, its SHA-256 must
-match, and the artifact's own JSON `result` must be `PASS`. A hash proves
-artifact integrity, not that an unknown tool ran or that the claim is true.
+The quality report itself must include the same `subject`. The artifact must
+contain `schema: skyrim-forge-quality-evidence/1`, the same tool, dimension,
+subject and scope, and its own `result: PASS`. A hash alone proves only artifact
+integrity; a general `VALIDATION.json` or a bare `{"result":"PASS"}` is not
+accepted as universal mod proof. Supported verifier/scope pairs are declared in
+`skyrim_forge/quality.py` (for example `lint`/`framework-source`,
+`texture-inspect`/`texture-file`, `release-validate`/`release-package`).
 `NOT_APPLICABLE` is permitted only for optional dimensions and needs a specific
 reason; functional, installation, reproducibility and publication are never
 waived. Missing required dimensions are `NOT_RUN`.
@@ -148,9 +154,11 @@ Keep the raw capture, scenario metadata and report together.
   SKSE row names the locally observed executable (`1.6.1170`) rather than a
   permanent "current 1.6.x" range; AE is not one build.
 - Quality audit distinguishes artifact integrity from verifier execution: only
-  known, dimension-bound receipts with a hash-matching JSON artifact whose own
-  result is PASS count as verified. This is local integrity, not cryptographic
-  signing or proof that the game behaved correctly.
+  known verifiers, bound to the report subject, dimension and declared scope,
+  with a hash-matching JSON artifact whose own result is PASS, count as verified.
+  A general repository report cannot verify unrelated mod dimensions. This is
+  local integrity, not cryptographic signing or proof that the game behaved
+  correctly.
 - Performance comparison consumes external captures and reports frame-time
   arithmetic, not an in-game FPS win, visual quality or gameplay correctness.
 - Forge does not capture PresentMon data or profile Papyrus automatically.

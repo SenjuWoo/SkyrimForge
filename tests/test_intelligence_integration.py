@@ -13,6 +13,16 @@ sys.path.insert(0, str(ROOT))
 from skyrim_forge.config import load_config
 from skyrim_forge.service import ForgeService
 
+SUBJECT = "fixture-mod"
+VERIFIER = {
+    "functional": ("lint", "framework-source"),
+    "compatibility": ("lint", "framework-source"),
+    "conflicts": ("framework-plan-validate", "framework-plan"),
+    "installation": ("framework-build", "framework-build"),
+    "reproducibility": ("framework-build", "framework-build"),
+    "publication": ("release-validate", "release-package"),
+}
+
 
 class IntelligenceIntegrationTests(unittest.TestCase):
     def setUp(self):
@@ -40,10 +50,14 @@ class IntelligenceIntegrationTests(unittest.TestCase):
         return path
 
     def _receipt(self, name: str, dimension: str = "functional") -> dict[str, str]:
+        tool, scope = VERIFIER[dimension]
         path = self.workspace / f"{name}.receipt.json"
-        path.write_text(json.dumps({"result": "PASS"}), encoding="utf-8")
-        return {"type": "forge-tool", "tool": "forge", "dimension": dimension, "result": "PASS",
-                "artifact": str(path), "sha256": hashlib.sha256(path.read_bytes()).hexdigest()}
+        path.write_text(json.dumps({"schema": "skyrim-forge-quality-evidence/1", "tool": tool,
+                                    "dimension": dimension, "subject": SUBJECT, "scope": scope,
+                                    "result": "PASS"}), encoding="utf-8")
+        return {"type": "forge-tool", "tool": tool, "dimension": dimension, "subject": SUBJECT,
+                "scope": scope, "result": "PASS", "artifact": str(path),
+                "sha256": hashlib.sha256(path.read_bytes()).hexdigest()}
 
     def test_architecture_and_quality_workflow(self):
         request = self._json("request.json", {"description": "Distribute spells to NPCs with SPID"})
@@ -51,7 +65,7 @@ class IntelligenceIntegrationTests(unittest.TestCase):
         self.assertEqual(architecture["recommendation"]["id"], "distribution.spid")
         plan = self.service.quality_plan(["framework"])
         self.assertIn("conflicts", plan["dimensions"])
-        report = self._json("quality.json", {"mod_types": ["framework"], "checks": {
+        report = self._json("quality.json", {"mod_types": ["framework"], "subject": SUBJECT, "checks": {
             item: {"status": "PASS", "evidence": [self._receipt(f"quality-{item}", item)]} for item in plan["dimensions"]}})
         self.assertEqual(self.service.quality_audit(str(report))["verdict"], "PASS")
 
