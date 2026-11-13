@@ -1,58 +1,85 @@
-# Forge 6.12.3 scoped quality evidence (2026-11-07)
+# Skyrim Forge state
+
+## Current state
+
+- Version: 6.12.4. The release page holds the published commit, assets and checksums.
+- Interface: one CLI (`forge`, 79 commands, JSON output) and an opt-in MCP server (75 tools). `doctor`, `capabilities`, `architect-recommend`, `knowledge-lookup` and `quality-plan` are the cold-start commands; see `AGENTS.md`.
+- Health on the maintainer machine: `forge doctor` PASS from both the source checkout and the installed copy; 18 self-tests PASS.
+- This release: launchers work from a folder whose name contains `!` whether or not delayed expansion is on; `forge maintain` names extra read roots that no longer exist.
+
+## Verified by execution
+
+- Unit suite, repository validator (`--scope full`) and exact-commit CI for every release listed below.
+- Native path: a scaffolded SKSE plugin built with MSVC, CMake, Ninja and vcpkg against the pinned CommonLibSSE-NG, and inspected with `skse-inspect-pe` (6.11.7).
+- Launchers: run from a folder named with `!`, a space, parentheses and a non-ASCII letter, delayed expansion off and on (6.12.4).
+
+## Not verified
+
+- No in-game proof: SKSE load and save, FOMOD installs through a real MO2 or Vortex, dialogue audio in game.
+- Performance evidence is frame-time arithmetic on external captures; there is no automatic profiler and no texture or mesh optimizer.
+- FOMOD `SelectAny`, `SelectAtLeastOne` and `SelectAll` receipts are partial by design.
+- The scheduled maintenance task and the Visual C++ environment import rely on the system default for delayed expansion; only the launchers and the two direct `cmd.exe` calls are pinned.
+
+## Next
+
+1. Runtime proof for the commands that only have static evidence (see `PLAN.md`).
+2. After each bundle update, run the ecosystem check and `forge doctor` against the installed copy.
+
+## Release log
+
+Newest first. Each entry records what was verified for that release at the time.
+
+### Forge 6.12.3 scoped quality evidence (2026-11-07)
 - Start/end: `b2a95cc` -> `d793c685591a03d2558503afb0d4b56ea09fc1ef`; tag `v6.12.3` on that SHA; 8 published assets; release ZIP `5ad27f7ee6f03b81a672793d7b80d7e2005bc1213a9456308544fec8154b7b48`.
 - Fixed unrelated artifacts claiming verified quality PASS: receipts now need a known verifier that supports the dimension and scope, a report subject, matching receipt/artifact subject and scope, a hash-matching artifact, and an artifact using `skyrim-forge-quality-evidence/1` whose tool/dimension/subject/scope/result all agree.
 - Verified: 477 tests, 7 skipped, full gate PASS; exact-SHA CI 11/11 on `d793c68`; live 6.12.3 is 593/593, doctor PASS, 18/18 self-tests; live checks show `VALIDATION.json` reuse FAIL, bare `{"result":"PASS"}` FAIL, legitimate supported receipt PASS.
-- Remaining: static/verifier evidence is not runtime proof; no automatic profiler or texture/mesh optimizer. Protected `AGENTS.md` still contains `.orge`; not modified.
+- Remaining: static/verifier evidence is not runtime proof; no automatic profiler or texture/mesh optimizer. Protected `AGENTS.md` still contained a damaged `.\forge` example at the time; not modified.
 
-# Forge 6.12.2 forged receipts and benchmark PID gate (2026-11-07)
+### Forge 6.12.2 forged receipts and benchmark PID gate (2026-11-07)
 - Start/end: `dffc395` -> `ae942dd425bada6c6202e7d2c85af11e3f3c72b5`; tag `v6.12.2` on that SHA; 8 published assets; release ZIP `943d98f1e1300f013bd0148e5d985d27b8f142b14c32127b8b8ae40184f5b597`.
 - Fixed forged quality receipts: evidence now requires a known Forge verifier, an explicit dimension binding, a hash-matching JSON artifact and an artifact `result: PASS`. The reproduced README/unknown-verifier receipt returns FAIL; malformed receipts become FAIL with a specific reason.
 - Fixed benchmark PID compatibility: PIDs are provenance, not scenario identity. Different PIDs across before/after sessions are accepted; a filtered executable with multiple PIDs is rejected unless a specific PID is selected.
 - Verified: 472 tests, 7 skipped, full gate PASS; exact-SHA CI 11/11 on `ae942dd`; live install 6.12.2 is 593/593, doctor PASS, 18/18 self-tests, MCP `2026-07-28` with 75 tools; live checks show fake receipt FAIL, legitimate receipt PASS, PID change IMPROVEMENT, mixed PID ValidationError.
-- Remaining: no in-game runtime proof; no automatic profiler or texture/mesh optimizer. Protected `AGENTS.md` still contains `.orge`; not modified.
+- Remaining: no in-game runtime proof; no automatic profiler or texture/mesh optimizer. Protected `AGENTS.md` still contained a damaged `.\forge` example at the time; not modified.
 - `AGENTS.md` protected-file status: not modified; exact two-line manual correction is `.\forge architect-recommend request.json` and `.\forge quality-plan --types papyrus,native`.
-orge architect-recommend request.json` and `.
-orge quality-plan --types papyrus,native`.
 
-# Forge 6.12.1 correctness and reliability gate (2026-11-07)
+### Forge 6.12.1 correctness and reliability gate (2026-11-07)
 - Start/end: `b98e39a` -> `93765f214af9e7aad149d7b76cd051161392794e`; tag `v6.12.1` on that SHA; 8 published assets; release ZIP `25392a09dd162685d88e68601559f6942208b543190a00be23e3a7be752b358d`.
 - Fixed quality false PASS: bare evidence strings are self-reports and return `REVIEW_REQUIRED`; verified PASS requires a `forge-tool` receipt whose artifact exists and whose SHA-256 matches. Non-waivable dimensions cannot be `NOT_APPLICABLE`; all-waived reports cannot pass.
 - Fixed performance metric confusion: reports require an explicit metric, mixed metrics/processes are `INCOMPATIBLE`, PresentMon import requires `--metric` and filters `--process`, and successful comparisons are labelled `FRAME_TIME_COMPARISON_ONLY` with `runtime_verified: false`.
 - Fixed architecture exclusions/conflicts/components: `avoid` and plain-English exclusions remove routes before scoring; contradictions return `NEEDS_INPUT`; complementary Papyrus+MCM-style routes are reported; unknown edition/modifies-existing caps confidence at medium.
 - Fixed Papyrus `;/ ... /;` block comments with line-preserving lexical blanking and explicit unterminated-comment/string diagnostics. Updated SKSE knowledge scope to the observed `1.6.1170` build and the user/agent docs.
 - Verified: 467 tests, 7 skipped, full gate PASS; exact-SHA CI 11/11 on `93765f2`; v6.12.1 published with 8 assets and every download verifies against `SHA256SUMS.txt`; live install 6.12.1 is 593/593 byte-identical, doctor PASS, 18/18 self-tests, MCP `2026-07-28` with 75 tools; live reproductions show `REVIEW_REQUIRED`, `INCOMPATIBLE` and `script.papyrus`.
-- Remaining: no in-game SKSE/FOMOD/Vortex/MO2 proof; performance is frame-time arithmetic only; no automatic profiler or texture/mesh optimizer. Protected `AGENTS.md` still has `.orge` on two example lines; correction requires user-approved edit.
-- `AGENTS.md` protected-file status: not modified; exact two-line manual correction is `.
-orge architect-recommend request.json` and `.
-orge quality-plan --types papyrus,native`.
+- Remaining: no in-game SKSE/FOMOD/Vortex/MO2 proof; performance is frame-time arithmetic only; no automatic profiler or texture/mesh optimizer. Protected `AGENTS.md` still had a damaged `.\forge` example on two lines at the time; correction requires user-approved edit.
+- `AGENTS.md` protected-file status: not modified; exact two-line manual correction is `.\forge architect-recommend request.json` and `.\forge quality-plan --types papyrus,native`.
 
-# Forge 6.12.0 architecture, knowledge, quality and performance intelligence (2026-11-07)
+### Forge 6.12.0 architecture, knowledge, quality and performance intelligence (2026-11-07)
 - Start/end: `c67e054` -> `c969bee260311f9393752eb4477fc200a44a3076`; tag `v6.12.0` on that SHA; 8 published assets; release ZIP `3a569dc4614c3b6d524747169c849055bbe00904e1804040401231c058532dd3`.
 - Done: added the architecture selector with `NEEDS_INPUT` instead of forced choices; a curated provenance registry for Skyrim sources/APIs with explicit `DETECTED`/`MISSING`/`UNKNOWN` states; an applicability-aware quality gate whose `PASS` requires evidence and whose missing runtime checks stay `UNVERIFIED`; deterministic frame-time comparison plus PresentMon CSV ingestion with matching-scenario and 120-frame guards; and comment/string-aware Papyrus lexical analysis. Wired seven CLI commands and seven MCP tools (75 total), capability entries, schemas, 18 self-tests and `docs/MOD-INTELLIGENCE.md`.
 - Verified: 449 tests, 7 skipped, full gate PASS (files/go/mcp/native/packaging/powershell/python/sbom/version); exact-SHA CI success on `c969bee` (11 jobs) and the release workflow published 8 assets; every download verifies against `SHA256SUMS.txt`; live install 6.12.0 is 593/593 byte-identical, doctor PASS, 18/18 self-tests PASS, MCP negotiates `2026-07-28` with 75 tools, and live smoke runs of architecture, quality and knowledge commands PASS. `maintain --apply` planned 4 removals and retained 2 backups.
 - Remaining: architecture is keyword/constraint routing, not semantic proof; knowledge probes do not verify API signatures or runtime compatibility; no in-game SKSE/FOMOD/Vortex/MO2 proof; performance comparison consumes external captures only; CommonLibSSE-NG stays v14.1.0 (`896f6d0`).
 
-# Forge 6.11.7 PE export parser repair (2026-11-06)
+### Forge 6.11.7 PE export parser repair (2026-11-06)
 - Start/end: `7939df7` -> `14daf91`; tag `v6.11.7` on `14daf91`; 8 published assets; ZIP `ef9f73a3e8580883fe25b0313a83a7cbca02c5ccacbc108c7e9463e9542f340e`.
 - Confirmed defect: `skse-inspect-pe` decoded `IMAGE_EXPORT_DIRECTORY` with a 9-field layout, shifting Name/Base/NumberOfFunctions and losing every real export. A valid MSVC-built plugin was reported FAIL with an empty export name and a bogus RVA. Fixed by reading all 11 fields, iterating `NumberOfNames`, and bounding ordinals by `NumberOfFunctions`; the fixture now uses the real layout.
 - Native proof: scaffolded `ForgeAcceptanceProbe`, configured with MSVC 19.51.36260, CMake 4.5.0-rc1, Ninja and vcpkg (x64-windows-static-md), built 525 targets in Release against CommonLibSSE-NG `896f6d0` (v14.1.0). `dumpbin` and `skse-inspect-pe` both show `SKSEPlugin_Load`, `SKSEPlugin_Query`, `SKSEPlugin_Version`; `native-binary-audit` PASS, size 551936, SHA-256 `23dc1abfc16a19a28b05bdd84dfaee55cd874e298d740dcca65bdc943baa701b`. The rebuilt parser also passes on the installed `0_OStrands.dll`.
 - Verified: 416 tests, 7 skipped, full gate PASS; exact-SHA CI success on `14daf91` (15 check runs); v6.11.7 published with 8 assets and every download verifies against `SHA256SUMS.txt`; extracted ZIP runs `version` and `self-test` PASS; live install 6.11.7 is 585/585 byte-identical, doctor and self-test PASS, rollback `.forge-backup-61def58644c24c54860645021976ca93`.
 - Remaining: no in-game SKSE load/save proof; FOMOD SelectAny/SelectAtLeastOne/SelectAll receipts remain PARTIAL; MO2 is not installed and Vortex staging is not configured for sandbox receipts.
 
-# Forge 6.11.6 deterministic release evidence and fail-closed gates (2026-11-06)
+### Forge 6.11.6 deterministic release evidence and fail-closed gates (2026-11-06)
 - Start/end: `5ebc3a5` -> `73ccc66`; tag `v6.11.6` on `73ccc66`; 8 published assets; published ZIP `5668d30cebca7bbd8200623bb1a336f886f9aa7ab96654f7e0b611bd84d35596` (Linux runner; identical 586-entry tree and per-file SHA-256 to the Windows build `d6b74122f44866282afb25512187c5e14a4c11814eb61d37d18d199c4c9f3dc2`).
 - Done: `VALIDATION.json` and `BUILD-RECEIPT.json` are deterministic summaries (results, counts, pinned versions, stable errors and hashes); raw unittest/Go/MCP transcripts stay in CI logs. `--scope full` requires every category to PASS, so missing Go or a missing `jsonschema` can no longer pass, and the full gate validates the shipped SPDX SBOM against the vendored official schema. Both release tag lookups capture `git ls-remote` and abort on a non-zero exit; the release job runs `scripts/preflight.py --release`. The Windows skill-ledger replace retries transient locks. Handoff for the bundle lives at `docs/BUNDLE-HANDOFF-SPDX-JSONSCHEMA.md`; the bundle was not edited.
 - Verified: 416 Python tests, 7 skipped locally, full gate PASS (files/go/mcp/native/packaging/powershell/python/sbom/version); exact-SHA CI success on `73ccc66` (11 jobs); v6.11.6 published with 8 assets and `SHA256SUMS.txt` verifies every download; the release ZIP extracts to 586 entries, `version` and `self-test` PASS; two clean Windows checkouts of `73ccc66` built all eight assets with identical SHA-256; partial-publication recovery tests (20) upload only missing assets and refuse mismatched bytes; 0 open Dependabot/code-scanning alerts; live install 6.11.6 is 585/585 byte-identical with doctor and self-test PASS, rollback `.forge-backup-433849d7d38d46989b36b5bbb718e2b7`.
 - Remaining: native MSVC/CMake/CommonLibSSE-NG v15.7.1 build remains DEFERRED; no in-game SKSE/MO2/Vortex runtime proof; FOMOD SelectAny/SelectAtLeastOne/SelectAll receipts stay PARTIAL. Cross-OS packaging metadata differs (zlib), although extracted contents are identical.
 
-# Forge 6.11.5 official SPDX schema validation (2026-11-06)
+### Forge 6.11.5 official SPDX schema validation (2026-11-06)
 
 - Goal: close the last "not validated against the official schema" gap and record the general-tooling handoff.
 - Start/end: `7afa175` -> `5ebc3a5`; tag `v6.11.5` on `5ebc3a5`; 8 assets; ZIP `2afed08e65eebe7259f92842169b4eeb53fba4994c57e7288d12a897eb7f0359`.
 - Done: vendored the unmodified SPDX 2.3 JSON schema (`references/spdx-2.3.schema.json`, CC-BY-3.0, provenance file), declared `jsonschema>=4.18` as the `test` extra, installed it in the Python matrix, repository gate, Windows and Release jobs. `tests/test_sbom.py` validates the generated SBOM with the official schema (0 errors), fails in CI when the validator is missing and skips locally with an install hint. The SBOM now models the schema as a third CC-BY-3.0 package. Handoff for the bundle is kept in Forge at `docs/BUNDLE-HANDOFF-SPDX-JSONSCHEMA.md` (the bundle itself was not edited).
 - Verified: 411 tests, 7 skipped locally; full gate PASS; CI success on `5ebc3a5` (11 jobs, including Development preflight); release published; downloaded ZIP matches `SHA256SUMS.txt`, ships the schema, its SBOM validates against it with 0 errors, `forge.cmd version/doctor` PASS; live install 6.11.5 is 584/584 byte-identical.
 - Not done: no MSVC/vcpkg native build (BLOCKED); FOMOD non-enumerated group types remain PARTIAL by design; the bundle handoff is a note inside Forge, not an installed dependency.
-# Forge 6.11.4 preflight, pins, provenance and recovery (2026-11-06)
+### Forge 6.11.4 preflight, pins, provenance and recovery (2026-11-06)
 
 - Goal: apply the v6.11.3 follow-up audit only where it reproduced, without reopening the 12-phase work.
 - Start/end: `f4504ff` -> `954929a`; tag `v6.11.4` on `954929a`; 8 assets; release ZIP `d2f82cb624dea4be694c8a210434088566d5cf89aa4b6aa985f4aee407507084`.
@@ -60,7 +87,7 @@ orge quality-plan --types papyrus,native`.
 - Verified: 410 Python tests, 7 skipped locally, full gate PASS; CI green on `954929a` including the new Development preflight job; release tag on that SHA; downloaded ZIP matches `SHA256SUMS.txt`, extracts to 582 manifest files with 0 hash mismatches and runs `forge.cmd version/doctor/self-test`; release SBOM lists both licences and 674 relationships; live install 6.11.4 is 582/582 byte-identical with doctor PASS; development preflight on this post-release ledger commit reports POST_RELEASE and PASS.
 - Not done / limits: no MSVC or pinned-vcpkg CMake configure/build, so the native CMake/DLL gate stays BLOCKED; no in-game, CK, MO2 or Vortex run. FOMOD SelectAtLeastOne/SelectAny/SelectAll remain deliberately unenumerated and reports stay PARTIAL. SBOM is checked for SPDX-required structure and licence accuracy, not against the official JSON schema (no schema validator on this machine). `commonlibsse_ng` stays v14.1.0; Go 1.27.3; houseCARL installer 2.1.2.
 
-# Forge 6.11.3 final correctness and release repair (2026-11-06)
+### Forge 6.11.3 final correctness and release repair (2026-11-06)
 
 - Goal: apply the third audit only where it reproduced, close each P1/P2 with a regression test, and publish one trustworthy patch.
 - Start/end: `f31fbc2` -> `2c3e08d`; tag `v6.11.3` on `2c3e08d`; 8 release assets; release ZIP `ad0cdf7a72...` (verified against `SHA256SUMS.txt`).
@@ -68,7 +95,7 @@ orge quality-plan --types papyrus,native`.
 - Verified: local suite 375 tests, 7 skipped (Windows symlink privilege, machine discovery); full gate PASS; preflight PASS (versions, no control characters, manifest, critical tests); CI green on `2c3e08d`; release tag on that SHA; downloaded ZIP matches `SHA256SUMS.txt`, extracts to 581 runtime files with 0 hash mismatches and no form feeds, and its `fomod.py`/`vfs_sandbox.py`/`native.py` carry the new checks; live install updated to 6.11.3, 581/581 byte-identical, doctor PASS, self-test PASS, 4 post-install backups pruned to 0.
 - Not done / limits: no MSVC or pinned-vcpkg CMake configure/build was executed (no representative SDK build here), so Phase 2's CMake/DLL acceptance is BLOCKED, not passed; no in-game, CK, MO2 or Vortex run. Task spoofing was verified with a real registered notepad task; the scheduled check itself was not re-registered after 6.11.2. houseCARL installer pin stays 2.1.2 (skill snapshot 2.1.1); CommonLibSSE-NG stays v14.1.0; Go 1.27.3.
 
-# Forge 6.11.2 evidence, escaping and task ownership (2026-11-06)
+### Forge 6.11.2 evidence, escaping and task ownership (2026-11-06)
 
 - Goal: close the second audit's P1/P2 findings without reopening v6.11.0/v6.11.1 work.
 - Done: FOMOD simulation errors fail a branch and the CLI status; the zero-selection branch is explicit; impossible all-branch combinations are `INFEASIBLE`; selections plus all-branches is rejected; branch cap is checked before a run directory exists. Native metadata uses `_cpp_string`/`_cmake_string`, and CMake gets numeric project versions. Task ownership uses `Get-ScheduledTask` objects plus a marker and exact check-only action, with exists/owned/healthy/reason. Compact MCP groups inherit the riskiest member's annotations. FOMOD paths reject ADS colons, reserved device names and trailing dots/spaces. PowerShell examples use `.
@@ -76,28 +103,28 @@ orge`; a read-only freshness report was added.
 - Verified: full local gate PASS (`VALIDATION.json` records the suite; 7 skipped locally for symlink privilege and machine-specific houseCARL discovery); native self-test PASS; scheduled task created, executed (last result 0), log parsed (`PASS`, `applied:false`), and removed on a path containing spaces; a spoofed same-name task was refused for install and remove; CI 15/15 on `d808f3d`; v6.11.2 has 8 assets, tag on that SHA, ZIP `2c3e06c0…` matches `SHA256SUMS`; clean extraction runs `forge.cmd version`, doctor PASS and MCP 2026-07-28 with 68 tools from outside the install root; live install 6.11.2 is 581/581 byte-identical, doctor PASS, self-test 14/14, 4 post-install backups pruned to 0.
 - Not done: no in-game, CK, MO2 or Vortex run. CommonLibSSE-NG stays v14.1.0; v15.7.1 is named by the freshness report as an untested candidate. houseCARL skill snapshot stays 2.1.1 while the installer pin is 2.1.2. Go 1.27.3 remains the pinned toolchain.
 
-# Forge 6.11.1 houseCARL checksum and working scheduled check (2026-11-06)
+### Forge 6.11.1 houseCARL checksum and working scheduled check (2026-11-06)
 
 - Goal: fix the confirmed follow-up defects from the second review without reopening the v6.11.0 hardening.
 - Done: houseCARL 2.1.2 now carries its own SHA-256 in the installer, `PACK.json` and `housecarl-pin.json`; the scheduled task runs `forge.cmd` through `cmd /c`, writes a real log and refuses to touch a task Forge does not own; single-branch FOMOD runs name every unexercised group type; `docs/CI.md`, the `--fix-roots` example and the weekly-upkeep section were corrected.
 - Verified: the full Python suite (one network test skipped by default), full gate PASS; `FORGE_HOUSECARL_ONLINE=1` downloaded the official asset and matched `4e69494c…`; `Install-HouseCarl.ps1` updated the real install to 2.1.2 and `-CheckOnly` now verifies it (last good server retained); the task was created, executed (last result 0), its JSON log parsed, and removed, and an unrelated same-named task was refused rather than overwritten or deleted. CI 15/15 on `0895d25`; v6.11.1 has 8 assets, tag on that SHA, ZIP matches `SHA256SUMS`. Live install 6.11.1 is 581/581 byte-identical, doctor PASS, self-test 14/14, `maintain` pruned 4 post-install backups to 0.
 - Not done: no in-game run; the houseCARL skill snapshot stays 2.1.1 (install pin is 2.1.2); the scheduled task is not registered unless requested; Reverse THIS! kit lags upstream 1.14.3 and belongs to its own project.
 
-# Forge 6.11.0 confinement, approval and installer hardening (2026-11-06)
+### Forge 6.11.0 confinement, approval and installer hardening (2026-11-06)
 
 - Goal: apply the independently reported defects only after reproducing them, close each with a regression test, modernize the toolchain where evidence allowed, and publish a single reviewed release.
 - Done: `require_within` rejects dangling symlinks and junctions; `maintain --fix-roots` requires approval and refuses ambiguous Steam libraries; sandbox runs get unique directories, a preflighted budget and explicit FOMOD coverage; the native helper publishes through a unique temp file and hard link; `forge.cmd` ships; README/INSTALLATION statements now match the standalone installer and the GPL-3.0 houseCARL-derived skills are called out; Go moves to 1.27.3; houseCARL's installer pin moves to 2.1.2; `maintain --schedule` adds an opt-in check-only weekly task.
 - Verified: 337 Python tests and 14 self-tests, full local gate PASS; CI 15/15 on `e87add7`; v6.11.0 has 8 assets, tag on `e87add7`, and the downloaded ZIP matches `SHA256SUMS`; a clean extraction of the release ZIP ran `forge.cmd version`, `doctor` (PASS) and an MCP `2026-07-28` handshake with 68 tools from an unrelated working directory; the live install is 6.11.0, 580/580 byte-identical to the release manifest, doctor PASS, and `maintain` pruned 8 post-install skill backups to 0 planned with all roots OK. Ecosystem check PASS 9/9.
 - Not done: no in-game or Creation Kit run for any subsystem; CommonLibSSE-NG stays at v14.1.0 because v15.7.0 has no representative native build here; the scheduled task is not registered unless the user asks; the bundled houseCARL skill snapshot is still 2.1.1 even though the installer now fetches 2.1.2.
 
-# Forge 6.10.0 maintenance, moved roots and README reset (2026-11-04)
+### Forge 6.10.0 maintenance, moved roots and README reset (2026-11-04)
 
 - Goal: make Forge self-sustaining after the repository move to `Z:\Backup\Ai documentation\Tools\Ai tools\Skyrim-Forge`, and cut the README back to one story.
 - Done: `forge maintain` (dry-run, `--apply --approve`, `--fix-roots`, self-test) with `forge_maintain` over MCP and an `maintenance` capability; it prunes only Forge-owned spills, sandbox runs and provider skill backups, reports MISSING/MOVED roots with a discovered Steam/Vortex/workspace candidate and can write one back with a config backup. README rewritten around install, capabilities, assets, skills, maintenance, MCP, safety and docs; the duplicated Nexus/FOMOD/evidence sections collapse into their guides. `docs/MAINTENANCE.md` added, plus a pointer in the Forge skill and installation guide.
 - Verified: local gate PASS at 6.10.0 (324 tests, 14 self-tests, 68 MCP tools); exact-SHA CI 15/15 on `1d01c41`; v6.10.0 published with 8 assets and the downloaded ZIP matches SHA256SUMS; live install 6.10.0 is 579/579 byte-identical, doctor PASS with 0 warnings, self-test 14/14, and `maintain` reported then pruned 4 post-install skill backups down to 0 planned. The Python 3.14.10 venv still runs from the moved repository path. Ecosystem check PASS 9/9 (bundle catalog 8.35.1, release v6.10.0, Reverse THIS! kit 1.13.3).
 - Not done: no in-game proof for any subsystem; `maintain` deliberately refuses to judge non-Forge folders; automatic updates stay off (the documented weekly task runs cleanup only, because swapping a running install on a schedule is how an MCP server disappears).
 
-# Forge 6.9.1 Skyrim knowledge consolidation (2026-11-04)
+### Forge 6.9.1 Skyrim knowledge consolidation (2026-11-04)
 
 ## 6.9.1 candidate (2026-11-04)
 
@@ -114,7 +141,7 @@ orge`; a read-only freshness report was added.
 - Not changed: KID/SPID/SkyPatcher/OAR/SKSE skills stay Forge's (ahead of houseCARL upstream for the installed framework versions); `papyrus-reference` not resynced (contents tables only).
 - Shipped: local full gate PASS (318 tests) three times; pushed 2e4f5e0, exact-SHA CI 15/15, 0 open Dependabot/code-scanning/secret-scanning alerts; v6.9.0 published from 2e4f5e0 (8 assets, downloaded files match SHA256SUMS, ZIP carries the new catalog and NOTICE). Follow-up 5487fae writes gate reports with LF (no version change). Live install: on the user's go-ahead (2026-11-04) `Update-Forge.ps1 -ReleaseVersion 6.9.0` reported it already matched the verified payload (the bundle auto-update had installed it); verified 569/569 files byte-identical to the release ZIP manifest, doctor PASS with 0 warnings and read_only_ready, self-test 13/13, MCP serves 67 tools, updated skills present in Claude, Codex, Grok and the Hermes skyrim profile, config.toml unchanged (backup config.toml.before-6.9.0-20261104T000059.bak), external processes and UI automation still off, two rollback backups kept.
 
-# Forge 6.8.1 free procedural textures and the free-tool map (2026-10-31)
+### Forge 6.8.1 free procedural textures and the free-tool map (2026-10-31)
 
 - Goal: close the missing-asset gap with 100% free, offline generation and point agents at the typed tool.
 - Done: `texture-generate`/`texture-inspect` — deterministic BC1/BC3/A8R8G8B8 DDS with full mip chains, six kinds (solid, checker, gradient, seeded noise, bricks, tangent-space normal), PNG previews, workspace-only writes behind `approved`; `asset.texture` is direct, `asset.mesh` stays a free-Blender worker boundary; `docs/ASSET-GENERATION.md` maps every remaining gap to a free tool and licence; README section; router, tooling-stack, assets and Forge skills route to the typed tool; 67 MCP tools, 13 self-tests.
@@ -122,7 +149,7 @@ orge`; a read-only freshness report was added.
 - Fixed during review: 6.8.0 scaled normal slopes per pixel, so maps were nearly flat and changed with size; 6.8.1 scales per texture unit and defaults to `strength 0.12`. One 6.8.1 install attempt hit a transient `File.Replace` lock, rolled back to 6.8.0, and succeeded on retry.
 - Not done: DDS output is proven by Forge's own header/payload checks and the PNG preview, not by an external DDS loader or an in-game render. Mesh/NIF, BC7 and hand art remain free-tool or human work (Blender, texconv, GIMP/Krita).
 
-# Forge 6.7.3 install audit and backup retention (2026-10-31)
+### Forge 6.7.3 install audit and backup retention (2026-10-31)
 
 - Goal: prove the live install is exactly what the release published, and fix the installer where it is not.
 - Audited the 6.7.1 and 6.7.2 live installs: every release file hash-identical (566/566, then 567/567), `MANIFEST.json` identical to the published asset, the recorded CLI and MCP argv both initialize, the native helper self-tests, 50/50 pack skills present in Claude, Codex, Grok and the Hermes `skyrim` profile, providers deferred to a bundle toolbox that lists `skyrim-forge`, `allow_external_processes`/`allow_ui_automation` still false with 50 tool pins preserved, and no lock or staging leftovers. The only defect: `Update-Forge.ps1` kept every backup forever (eleven copies, ~150 MB) plus an abandoned failed stage.
@@ -130,14 +157,14 @@ orge`; a read-only freshness report was added.
 - Verified: the 6.7.2 update ran the pre-fix updater and kept twelve backups; the 6.7.3 update pruned automatically (`pruned=1`, two backups, log line) and the live install is 567/567 byte-identical with doctor PASS and 0 warnings. v6.7.2 was released from `684381f` (a user commit on top of mine, manifest consistent) and v6.7.3 from `1e1f89c`, eight assets each, downloaded ZIPs match SHA256SUMS, 14/14 CI checks green, 0 alerts.
 - Not done: the abandoned `.forge-stage-*-failed` (five days old) stays until the seven-day window; legacy `Skyrim-Forge.backup-*` directories are never touched. One intermediate commit (`9c95751`) shipped a CRLF test file and failed its gate; it was superseded by `1e1f89c` within minutes and never released.
 
-# Forge 6.7.1 weekly ecosystem contract check, plan refresh, live update (2026-10-31)
+### Forge 6.7.1 weekly ecosystem contract check, plan refresh, live update (2026-10-31)
 
 - Goal: keep Forge honest without syncing the bundle or Reverse THIS!, and remove stale planning debris.
 - Done: `scripts/check_ecosystem.py` + `.github/workflows/ecosystem.yml` verify the bundle's `skyrim-forge` catalog entry, this repository's release assets and Reverse THIS!'s `kit.json`/`installed.json` shape (`PASS`/`DRIFT`/`UNKNOWN`, exit 0/2/3, `--offline`, `--json`); `PLAN.md` replaced with the current plan; no dead Python modules or tracked caches.
 - Verified: local full gate PASS at 6.7.1; exact-SHA CI 15/15 success; v6.7.1 published (8 assets, tag on `d04432e`); downloaded ZIP matches SHA256SUMS; extracted manifest 566/566 files; the ecosystem workflow ran on `d04432e` and passed against the published release; live install updated 6.7.0 -> 6.7.1 with backup `.forge-backup-6c83bc26...`, doctor PASS with a stable venv base, 65 MCP tools all annotated and the compact surface routing; 0 open Dependabot/code-scanning/secret-scanning alerts.
 - Not done / limits: no SKSE, MO2, Vortex or in-game runtime proof for the new commands. The ecosystem check reads public GitHub and local receipts only; a renamed or private upstream reports `UNKNOWN`, which is not a pass.
 
-# Forge 6.7.0 audio, SKSE PE, runtime evidence, sandbox install, MCP surface (2026-10-31)
+### Forge 6.7.0 audio, SKSE PE, runtime evidence, sandbox install, MCP surface (2026-10-31)
 
 - Goal: apply the reviewed v6.1 roadmap to the 6.6.0 tree — take only the gaps that are still real after 6.0.1, with no new runtime dependency.
 - Done: audio containers (`audio-inspect`, `audio-extract-fuz`, `audio-create-fuz`, `voice-path-validate`) plus tool-vault capabilities `audio.xwma.encode` and `audio.lip.generate`; SKSE PE workbench (`skse-inspect-pe`, `skse-audit-imports`, `skse-verify-reproducible`) and pure-Python imports in `native-binary-audit`; `framework-correlate-logs`; `fomod-test-install` with `install_verification_receipt.json`; MCP tool annotations, bounded-output spill and `--surface compact`; venv ephemeral-base rejection in `doctor` and `Install-or-Update.ps1`; `server.json` + `glama.json`; docs, capability registry, CHANGELOG.
@@ -145,7 +172,7 @@ orge`; a read-only freshness report was added.
 - Shipped: pushed 7d8b2c6, exact-SHA CI 15/15 success, 0 open Dependabot/code-scanning/secret-scanning alerts; v6.7.0 published (8 assets, tag on 7d8b2c6). The downloaded product ZIP matches SHA256SUMS, its internal manifest verifies 566/566 files, and the extracted CLI reports 6.7.0 with `self-test` PASS on 12 checks.
 - Not done / limits: the live installation under `%LOCALAPPDATA%\Skyrim-Tools\Skyrim-Forge` is still 6.6.0 — the updater was not run. No Skyrim, SKSE load, MO2/Vortex or USVFS run; the sandbox install test is a folder simulation. Log correlation matches file/line text only. houseCARL evidence ingest was deliberately not added; the independent `load-order`/`record-conflicts` tools supersede it.
 
-# Forge 6.6.0 MCM Helper skill, data frameworks, houseCARL fallback (2026-10-29)
+### Forge 6.6.0 MCM Helper skill, data frameworks, houseCARL fallback (2026-10-29)
 
 - Goal: the AI should know MCM Helper and the other installed SKSE data frameworks without checking online, and Forge must not depend on houseCARL alone.
 - Done: `mcm-helper-authoring` (grammar from schema v1.6.3/code 15 + parser source + wiki; `validate_mcm.py` tuned on 50 shipped menus; 14 tests), `skyrim-data-frameworks` (Light Placer, AOS, EAE, DSD, SRD, SKSE HTTP from wiki/Nexus/docs/shipped examples; authority map for the rest), `load-order` / `record-conflicts` / `seq-build` with MCP tools and 10 tests, `docs/HOUSECARL-PARITY.md`, router/tooling-stack/frameworks-index routing, 50-skill pack.
@@ -158,26 +185,26 @@ orge`; a read-only freshness report was added.
 - Verified after a pause, on disk and remote: main 1b7a978 equals origin/main, 15/15 checks success on that SHA, no open Dependabot, code-scanning or secret-scanning alerts; v6.5.1 is published (8 assets, tag 012765b); the live install under `%LOCALAPPDATA%\Skyrim-Tools\Skyrim-Forge` is 6.5.1 with doctor PASS, 0 warnings and all five SDK vault entries `current`.
 - Open, not blocking: `native-build` has never run end to end because `allow_external_processes` is false (the user's switch); the scaffold compile proof was a by-hand build. A full update attempt on 2026-10-27 rolled back because Hermes, an unrelated provider, could not register: its interpreter `hermes	ools\python-*` has no dependencies installed (`ruamel` missing), so the Hermes CLI is unusable until Hermes is repaired. `Register-MCP.ps1` still assumes `python.exe` beside `hermes.exe` (current Hermes uses a launcher shim), reachable only with `-Global` since 6.4.2 defers to the bundle toolbox, which Hermes' config has. One `.forge-stage-*-failed` directory and eight `.forge-backup-*` rollback directories remain beside the live root.
 
-# Forge 6.5.1 houseCARL discovery and contract tests (2026-10-29)
+### Forge 6.5.1 houseCARL discovery and contract tests (2026-10-29)
 
 - Done: removed the drive-letter scan; Forge-side tests for the doctor fields and UABS_TOOL_ROOTS. Released by the self-publishing workflow from the pushed SHA.
 - After 6.5.1: `release.yml` decides inside the job (no job-level `if`), so a CI run cancelled by a newer push ends as a no-op release run instead of a skipped one that GitHub files under main's newest commit and that reads as a failed exact-SHA verdict; `tests/test_ci_validation.py` pins it. CI-only, no release.
 
-# Forge 6.5.0 independent releases (2026-10-29)
+### Forge 6.5.0 independent releases (2026-10-29)
 
 - Goal: release without a manual tag; nothing in Forge restates a version the bundle would also need to bump.
 - Parent: main 9a568aa (6.4.2). Pushed straight to main after the full local gate.
 - Done: self-publishing `release.yml` (exact SHA, every check, attestation, no asset replacement, re-download compare); Dependabot auto-merge; version-free skill; README fixes.
 - Next: CI on the pushed SHA, the workflow publishes 6.5.0, verify the downloaded bytes.
 
-# Forge 6.4.2 bundle toolbox deferral (2026-10-29)
+### Forge 6.4.2 bundle toolbox deferral (2026-10-29)
 
 - Goal: stop Forge and the Ultimate AI Starter Bundle from undoing each other's MCP registration.
 - Parent: main 31ab30c, public 6.4.1; branch fix/defer-to-bundle-toolbox.
 - Done: `Register-MCP.ps1` defers per provider when the bundle toolbox serves Forge (`-Global` overrides); helpers rebuilt with Go 1.23.2; bridge tests 9/9.
 - Next: full gate, exact-SHA CI/security, release 6.4.2, bundle pin and live update.
 
-# Forge 6.4.1 SDK staging safety audit (2026-10-28)
+### Forge 6.4.1 SDK staging safety audit (2026-10-28)
 
 - Goal: preserve existing SDK partial/recovery directories and isolate concurrent fetches.
 - Parent: clean main 4b95e8d, public 6.4.0; active branch codex/sdk-staging-safety.

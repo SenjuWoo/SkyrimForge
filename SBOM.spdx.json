@@ -1,13 +1,13 @@
 {
   "SPDXID": "SPDXRef-DOCUMENT",
   "creationInfo": {
-    "created": "2026-11-07T02:57:01Z",
+    "created": "2026-11-07T03:03:55Z",
     "creators": [
-      "Tool: Skyrim Forge validator 6.12.3"
+      "Tool: Skyrim Forge validator 6.12.4"
     ]
   },
   "dataLicense": "CC0-1.0",
-  "documentNamespace": "https://github.com/SenjuWoo/SkyrimForge/spdx/6.12.3/3dc50fabe514",
+  "documentNamespace": "https://github.com/SenjuWoo/SkyrimForge/spdx/6.12.4/36b76c94919d",
   "files": [
     {
       "SPDXID": "SPDXRef-File-.editorconfig",
@@ -194,7 +194,7 @@
       "checksums": [
         {
           "algorithm": "SHA256",
-          "checksumValue": "6678e06ff1e7c3a7c91769ab2e15e232acbe61416936c477c41ddc529a66d4cf"
+          "checksumValue": "7cff198ae5bba3ac08c3523f2f24eabba7553dc7025bcc849323d0f2aa5857e3"
         }
       ],
       "copyrightText": "NOASSERTION",
@@ -254,7 +254,7 @@
       "checksums": [
         {
           "algorithm": "SHA256",
-          "checksumValue": "85d099e9a7da007cc2d808bd7c2aa25112fab786eeedac86c12e0c2ec6e256ee"
+          "checksumValue": "e25c3ee4f314cb9ddb3b876edea7e72d1a54af09867b2050b106f84892c64b05"
         }
       ],
       "copyrightText": "NOASSERTION",
@@ -269,7 +269,7 @@
       "checksums": [
         {
           "algorithm": "SHA256",
-          "checksumValue": "49244a0e28c14794839d47f3eabac07c6b89401d83c5624951c8c3c565a557c5"
+          "checksumValue": "aa7d22c8f5a9420eebfe76bbdcf930c86405b325af1102a0310ee02e6d9003ec"
         }
       ],
       "copyrightText": "NOASSERTION",
@@ -374,7 +374,7 @@
       "checksums": [
         {
           "algorithm": "SHA256",
-          "checksumValue": "13b8dfc6b7ad2f96d9068a68eec43e190a56d36b4054baceb916eae8bb25e658"
+          "checksumValue": "ed2edeeda29461019d7252bb590541fb2cdc18481e134cdfa79b813062f515ef"
         }
       ],
       "copyrightText": "NOASSERTION",
@@ -1289,7 +1289,7 @@
       "checksums": [
         {
           "algorithm": "SHA256",
-          "checksumValue": "98414bf0e1aba55d59fce603ffa7f5bdbdf2d832dc2e484d1fbaf4e699e321e8"
+          "checksumValue": "e09a29e5befc48fb2a8ff31822321ff4754222ba3343349719c6717476880c74"
         }
       ],
       "copyrightText": "NOASSERTION",
@@ -1304,7 +1304,7 @@
       "checksums": [
         {
           "algorithm": "SHA256",
-          "checksumValue": "8a86dd433153162b4910e85afa760245e08f3dfb4c1632ac93057343a33df8eb"
+          "checksumValue": "5cbcf2c8b7abcae4c64b26b26fe5ca4a5f6a20595c33564a398213ff2b161700"
         }
       ],
       "copyrightText": "NOASSERTION",
@@ -7124,7 +7124,7 @@
       "checksums": [
         {
           "algorithm": "SHA256",
-          "checksumValue": "156f503547e128d626e3737ee9ac441718a61feb8377e1a1d0b882a3cbb98715"
+          "checksumValue": "264035749e1f4b3e78d3ef72c2201a7df770d3d359313580756e3aac651fb933"
         }
       ],
       "copyrightText": "NOASSERTION",
@@ -7169,7 +7169,7 @@
       "checksums": [
         {
           "algorithm": "SHA256",
-          "checksumValue": "f006a8ff44b331a8f2e43ea021e3def6c0fd0577305749cfa9cc1ace5f3c848a"
+          "checksumValue": "13e674ef3844e6e0ed26a36c3da28a704745c636233d408b9f6d655fc4758be3"
         }
       ],
       "copyrightText": "NOASSERTION",
@@ -7184,7 +7184,7 @@
       "checksums": [
         {
           "algorithm": "SHA256",
-          "checksumValue": "277e0d47a3875a80c4758a8ce9b2a82dadc5111a5016282205498b48f2bee674"
+          "checksumValue": "8ac42d25690c98aa3a21956dee8436871a539f4baba4a44807ecb385f03605e5"
         }
       ],
       "copyrightText": "NOASSERTION",
@@ -7454,7 +7454,7 @@
       "checksums": [
         {
           "algorithm": "SHA256",
-          "checksumValue": "6af504f8a204cc5555e95dd7ade0d6314bc35b2828ce54c6cbbbbac45f737a14"
+          "checksumValue": "05513b652bec772d10cda2a3eb5d196248a24c7df4ea50244d1caa0524ceb8c6"
         }
       ],
       "copyrightText": "NOASSERTION",
@@ -7754,7 +7754,7 @@
       "checksums": [
         {
           "algorithm": "SHA256",
-          "checksumValue": "2f98d9713164d222e0534cc120cf5b9348b4d5380f210430e3d52fd118e0c587"
+          "checksumValue": "a8490353ec3b61d93f1f9aa1d3c5909a938635c5699afcc74dc848db7b85e05c"
         }
       ],
       "copyrightText": "NOASSERTION",
@@ -7769,7 +7769,7 @@
       "checksums": [
         {
           "algorithm": "SHA256",
-          "checksumValue": "23c896d85819bcb26176d9d65df9ccd3cdada73986a840fbd1a4af1013abaf43"
+          "checksumValue": "c90e8d6c956a0c4c42772b9886c08a750dd37de380775f1e540f9dfc1e3a7a84"
         }
       ],
       "copyrightText": "NOASSERTION",
@@ -7784,7 +7784,7 @@
       "checksums": [
         {
           "algorithm": "SHA256",
-          "checksumValue": "dfad2b04ae42f55649181600f0df0e0433f9d3fd34d7f057f96fa4ad1e26ed60"
+          "checksumValue": "a81b7b67528b0d891f3619b00538a08bd3eef4c8cede51cb3db345335470ab51"
         }
       ],
       "copyrightText": "NOASSERTION",
@@ -7799,7 +7799,7 @@
       "checksums": [
         {
           "algorithm": "SHA256",
-          "checksumValue": "283e54dbc7d81697459112b25706aa8b43d11ee8121449211842f2b90c606bcb"
+          "checksumValue": "18732f81e216c4f8a93fe7b13f01b27137f223cbb3bf68f805aa5ab509689d2c"
         }
       ],
       "copyrightText": "NOASSERTION",
@@ -7934,7 +7934,7 @@
       "checksums": [
         {
           "algorithm": "SHA256",
-          "checksumValue": "a7077103bea0dab84933b2ff99b076260671c9de65c60f512564d4a2b7bd3764"
+          "checksumValue": "e535f936a45afe8c08c95537c31029a73eccce7c3eb4db4e39834ec4b3e74528"
         }
       ],
       "copyrightText": "NOASSERTION",
@@ -7949,7 +7949,7 @@
       "checksums": [
         {
           "algorithm": "SHA256",
-          "checksumValue": "b2cc38e5df6fd6d28a64fe36d804944f7480c7c9f97d99922a1ceed9e807ef61"
+          "checksumValue": "69697d05f847ebaff9110cca13d2123c9f92743f84825109a67b22ea0ab971f7"
         }
       ],
       "copyrightText": "NOASSERTION",
@@ -8429,7 +8429,7 @@
       "checksums": [
         {
           "algorithm": "SHA256",
-          "checksumValue": "eb3c629218f2eff5868cc31a1a5b5ef9faa2e6b6c263800723b5951bfbace076"
+          "checksumValue": "74f13490cb5f4c8956b6662a8e0cae10c4f2f950e985d22560c838a3bbd2574b"
         }
       ],
       "copyrightText": "NOASSERTION",
@@ -8489,7 +8489,7 @@
       "checksums": [
         {
           "algorithm": "SHA256",
-          "checksumValue": "bbdaa59a5ae3ce7d1e5f9f8694df66d4ff7cf07a8dbb7d3394a498dd626853a1"
+          "checksumValue": "a74a8a39a3e9cbdf965d1dde5289b81ddcd04c4f0e800c00946d5b3d9bc30d40"
         }
       ],
       "copyrightText": "NOASSERTION",
@@ -8999,7 +8999,7 @@
       "checksums": [
         {
           "algorithm": "SHA256",
-          "checksumValue": "f2f1fc0b0fa0eb2039e1c769580ce4810e05745cba01a12e8f44f4191f764556"
+          "checksumValue": "581d106483508761d640e6f9c3bef07ec65ffb6f35ac7f7d4c130d9b6fe5efd2"
         }
       ],
       "copyrightText": "NOASSERTION",
@@ -9224,7 +9224,7 @@
       "checksums": [
         {
           "algorithm": "SHA256",
-          "checksumValue": "b51a58cc84c96aa9ce5f648527777fd20ede3894e252be2d11af0be942a15f9d"
+          "checksumValue": "270daf2fa283d8740d45340296a37f2660f929cf992c58fc95ad12648d645d1d"
         }
       ],
       "copyrightText": "NOASSERTION",
@@ -9299,7 +9299,7 @@
       "checksums": [
         {
           "algorithm": "SHA256",
-          "checksumValue": "ef5f11ae5b8d0b51840fa275b6cc21a3fd75a14450cf7dcb2bbd84709534f851"
+          "checksumValue": "6faa4bc70ac75b7fd1c22a7fc8d7b28119f1f4360f5c9f4c47bb7703c115ccae"
         }
       ],
       "copyrightText": "NOASSERTION",
@@ -9314,7 +9314,7 @@
       "checksums": [
         {
           "algorithm": "SHA256",
-          "checksumValue": "8f552d9c132716132279fa76e76bf26f77f0d98ca03560c16eb57cac52dbe98f"
+          "checksumValue": "cbdcd528bf326ce7b10298a0d3a3e7e93817e22e1eff0c733bdab7a7396e1c5a"
         }
       ],
       "copyrightText": "NOASSERTION",
@@ -9434,7 +9434,7 @@
       "checksums": [
         {
           "algorithm": "SHA256",
-          "checksumValue": "997cc49b8357017bbd9642fb41e0b5335f5201025e3a44d678e2825321a0e697"
+          "checksumValue": "611d17232cef3b9a9b57ffd63f7d483dbd0e06a1275ac3bbd0217c1cf1ecb291"
         }
       ],
       "copyrightText": "NOASSERTION",
@@ -9629,7 +9629,7 @@
       "checksums": [
         {
           "algorithm": "SHA256",
-          "checksumValue": "29b79024266899eab5e02b31f7c2f7491189af944fbb3d2b98565779d12cfa1d"
+          "checksumValue": "601da04426cd5ea7f17bf7c5cd90c6ceac3b898661de99591eb25ff4493491b7"
         }
       ],
       "copyrightText": "NOASSERTION",
@@ -10184,7 +10184,7 @@
       "checksums": [
         {
           "algorithm": "SHA256",
-          "checksumValue": "6477d495b129ff635150c6364c27bad87d2a36815f112f5fa736b89e9780d6cf"
+          "checksumValue": "d21b6c08f6c49faa047eacde01aefcad7975ffa4f80640d4e2d8a7565aa49327"
         }
       ],
       "copyrightText": "NOASSERTION",
@@ -10229,7 +10229,7 @@
       "checksums": [
         {
           "algorithm": "SHA256",
-          "checksumValue": "7f1cdbd8d72e65ea1834afeeb15e5711e377939a1397d58b5c44430a5c5b84ad"
+          "checksumValue": "895b9ad4420382a59c8cdef3b774ad7aa173859dff1cba565fc42a047666180a"
         }
       ],
       "copyrightText": "NOASSERTION",
@@ -10304,7 +10304,7 @@
       "checksums": [
         {
           "algorithm": "SHA256",
-          "checksumValue": "f6ba4942ddb2a768989fb69b77cac6cd771bcd951af5091c47e58635e4708abe"
+          "checksumValue": "7a862862c3d6eaa95e93ad3c2dc7ad9914e89b3980026d7748c611404b9dcf22"
         }
       ],
       "copyrightText": "NOASSERTION",
@@ -10334,7 +10334,7 @@
       "checksums": [
         {
           "algorithm": "SHA256",
-          "checksumValue": "a7077103bea0dab84933b2ff99b076260671c9de65c60f512564d4a2b7bd3764"
+          "checksumValue": "e535f936a45afe8c08c95537c31029a73eccce7c3eb4db4e39834ec4b3e74528"
         }
       ],
       "copyrightText": "NOASSERTION",
@@ -10349,7 +10349,7 @@
       "checksums": [
         {
           "algorithm": "SHA256",
-          "checksumValue": "b2cc38e5df6fd6d28a64fe36d804944f7480c7c9f97d99922a1ceed9e807ef61"
+          "checksumValue": "69697d05f847ebaff9110cca13d2123c9f92743f84825109a67b22ea0ab971f7"
         }
       ],
       "copyrightText": "NOASSERTION",
@@ -10360,7 +10360,7 @@
       ]
     }
   ],
-  "name": "Skyrim-Forge-6.12.3",
+  "name": "Skyrim-Forge-6.12.4",
   "packages": [
     {
       "SPDXID": "SPDXRef-Package-Forge",
@@ -10374,9 +10374,9 @@
       ],
       "name": "Skyrim Forge",
       "packageVerificationCode": {
-        "packageVerificationCodeValue": "c1364e971d17dbbf809e91e8c6e8817dfa2f2ff5"
+        "packageVerificationCodeValue": "68f3035a7ea4ab4318c4c9d71ac8d16caedec5b1"
       },
-      "versionInfo": "6.12.3"
+      "versionInfo": "6.12.4"
     },
     {
       "SPDXID": "SPDXRef-Package-HouseCARL-Skills",
@@ -10392,7 +10392,7 @@
       "packageVerificationCode": {
         "packageVerificationCodeValue": "3615770292165f9139d2c3bd9855aaa91daf33db"
       },
-      "versionInfo": "6.12.3"
+      "versionInfo": "6.12.4"
     },
     {
       "SPDXID": "SPDXRef-Package-SPDX-Schema",

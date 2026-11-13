@@ -1,3 +1,10 @@
+## 6.12.4 (2026-11-12)
+
+- Fixed the launchers for an install folder whose name contains `!` (for example `!Skyrim`). With delayed expansion enabled in the calling shell, `Skyrim Forge.bat` reported "Forge is not installed", `Skyrim Forge MCP.bat` did not start the server and `START-HERE.bat` validated a path that does not exist. All eight batch launchers now pin delayed expansion off.
+- The two `cmd.exe` calls Forge makes itself (the Visual C++ environment import and the vcpkg bootstrap) pass `/v:off` for the same reason.
+- `forge maintain` now lists extra read roots that no longer exist as `stale_read_roots`. A check changes nothing; `--fix-roots --approve` removes them and keeps a config backup. A project folder that moved is no longer looked for in its old place without anyone being told.
+- Corrected the two command examples in `AGENTS.md` that had lost their `.\f` to an escape sequence.
+- Added regression tests: every batch launcher is checked for the pin, and `forge.cmd`, `Skyrim Forge.bat` and `Skyrim Forge MCP.bat` are run from a folder named with `!`, a space, parentheses and a non-ASCII letter with delayed expansion both off and on.
 ## 6.12.3 (2026-11-07)
 
 - Fixed unrelated artifacts establishing a verified quality PASS. A receipt now needs a known verifier that supports the selected dimension and scope, a report `subject`, a same-subject receipt and artifact, a hash-matching artifact, and an artifact with the `skyrim-forge-quality-evidence/1` schema whose tool/dimension/subject/scope/result all agree.

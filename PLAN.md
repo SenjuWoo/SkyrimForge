@@ -1,14 +1,13 @@
-# Current plan (2026-11-03)
+# Current plan (2026-11-12)
 
-0. [complete] Forge 6.9.0 — whole-pack audit: single-walk tool discovery, three catalog tools, observed tool inventory, houseCARL 2.1.1 Mutagen schema and .NET 10 setup, GPL notice for houseCARL-derived skills, SkyrimForge name disambiguation.
-1. [complete] Forge 6.10.0 — maintenance and moved-root detection (`forge maintain`, `forge_maintain`), README reset and the local cleanup (148 stale skill backups, 8 kept). Released from `1d01c41`; live install 6.10.0 is 579/579 with doctor PASS.
-2. [complete] Forge 6.11.3 — final audit repairs: FOMOD partial semantics, SDK metadata rejection, control-character repair, resumable releases, structural task ownership, provider-root bounds, honest freshness.
-3. [complete] Forge 6.11.2 — FOMOD simulation propagation and real empty branch, native escaping and CMake version, structured task ownership, compact annotations, Windows path rules, freshness report.
-4. [complete] Forge 6.11.1 — houseCARL 2.1.2 checksum, working scheduled check, single-branch FOMOD coverage, doc sync.
-3. [complete] Forge 6.11.0 — released from `e87add7`, live install 580/580 with doctor PASS. Hardening release: symlink/junction confinement, approval on root writes, ambiguous-root refusal, per-run sandbox isolation and budget preflight, race-safe native temp files, `forge.cmd`, Go 1.27.3, houseCARL 2.1.2 pin and optional check-only scheduling.
-5. [complete] Forge 6.8.1 — free procedural textures plus the free-tool map. `texture-generate` writes deterministic BC1/BC3/A8R8G8B8 DDS with mip chains, six kinds and normal maps; `texture-inspect` reads any DDS; agents are routed to the typed tool. Released from `785cf51`; the live install is 6.8.1, 569/569 byte-identical, doctor PASS.
-6. [complete] The contract check runs weekly (`.github/workflows/ecosystem.yml`) and on demand: bundle `skyrim-forge` catalog entry, release assets, Reverse THIS! receipts. Forge never copies either project's version.
-7. [next] After each bundle auto-update, run the ecosystem check plus `forge doctor` against the live install; a `DRIFT` row names the exact contract that changed.
-8. [open] Runtime proof for the new commands: a real SKSE load for `skse-inspect-pe`/`skse-audit-imports`, an MO2 and a Vortex installation for `fomod-test-install`, and one dialogue line for `audio-*`. The current evidence is static and sandboxed.
+Released: 6.12.4. Earlier per-release plans are in Git history; `STATE.md` holds the verified outcome of each release.
 
-Earlier per-release plans remain in Git history; STATE.md holds the verified outcome of each release.
+## Open
+
+1. Runtime proof for the commands that only have static or sandboxed evidence: a real SKSE load for `skse-inspect-pe` and `skse-audit-imports`, an MO2 and a Vortex installation for `fomod-test-install`, and one dialogue line in game for the `audio-*` commands.
+2. Pin delayed expansion off in the scheduled maintenance task's `cmd.exe` action. It changes the canonical task arguments, so it needs a takeover path for tasks registered by earlier versions.
+
+## Standing
+
+- After each bundle update, run the ecosystem check (`.github/workflows/ecosystem.yml`, weekly and on demand) and `forge doctor` against the installed copy; a `DRIFT` row names the contract that changed.
+- Never move a pin because a newer tag exists; `scripts/check_freshness.py --online` names the gate for each one.

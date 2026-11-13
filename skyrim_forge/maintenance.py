@@ -338,14 +338,28 @@ def apply(config: ForgeConfig, report: dict[str, Any], provider_homes: Iterable[
     return {"removed": removed, "count": len(removed)}
 
 
+def stale_read_roots(config: ForgeConfig) -> list[str]:
+    """Extra read roots that no longer exist, usually because a project folder moved.
+
+    They grant nothing and break nothing, but they are how a moved project keeps
+    being looked for in its old place, so maintenance names them.
+    """
+    return [str(path) for path in config.extra_read_roots if not Path(path).exists()]
+
+
 def fix_roots(config: ForgeConfig, rows: list[dict[str, Any]]) -> dict[str, Any]:
-    """Write discovered replacements for MISSING/MOVED roots, keeping a config backup."""
+    """Write discovered replacements for MISSING/MOVED roots and drop extra read
+    roots that are gone, keeping a config backup."""
     changed = []
     backup = ""
     for row in rows:
         if row["status"] == "MOVED" and Path(row["candidate"]).is_dir():
             setattr(config, row["key"], Path(row["candidate"]))
             changed.append({"key": row["key"], "value": row["candidate"]})
+    gone = stale_read_roots(config)
+    if gone:
+        config.extra_read_roots = [path for path in config.extra_read_roots if str(path) not in gone]
+        changed.append({"key": "extra_read_roots", "removed": gone})
     if changed:
         backup = config.config_path.with_name(config.config_path.name + ".bak-maintain-" + utc_now().replace(":", "").replace("-", ""))
         shutil.copy2(config.config_path, backup)
@@ -370,12 +384,14 @@ def run(config: ForgeConfig, *, days: int = 7, keep_backups: int = 2, apply_chan
         "removals": found["removals"],
         "kept_skill_backups": found["kept_skill_backups"],
         "roots": rows,
+        "stale_read_roots": stale_read_roots(config),
         "applied": False,
         "roots_changed": [],
     }
     if add_roots:
         result["roots_changed"] = fix_roots(config, rows)["changed"]
         result["roots"] = root_report(config, steam_roots)
+        result["stale_read_roots"] = stale_read_roots(config)
     if apply_changes:
         result["applied"] = apply(config, found, provider_homes)
     if include_health:

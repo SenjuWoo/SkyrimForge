@@ -98,6 +98,30 @@ class MaintenanceTests(unittest.TestCase):
         backup = Path(changed["backup"])
         self.assertTrue(backup.is_file() and backup.name.startswith("config.toml.bak-maintain-"))
 
+    def test_stale_extra_read_roots_are_named_and_removed_only_on_request(self):
+        kept = self.root / "!Sky tools (x)" / "project"
+        kept.mkdir(parents=True)
+        gone = self.root / "moved away" / "project"
+        self.config.extra_read_roots = [kept, gone]
+        from skyrim_forge.config import save_config
+        save_config(self.config)
+        before = self.config.config_path.read_text(encoding="utf-8")
+
+        report = maintenance.run(self.config, provider_homes=[self.provider], include_health=False)
+        self.assertEqual(report["stale_read_roots"], [str(gone)])
+        self.assertEqual(report["result"], "PASS", "a stale read root is reported, not a failure")
+        self.assertEqual(self.config.config_path.read_text(encoding="utf-8"), before, "a check changes nothing")
+
+        fixed = maintenance.run(self.config, provider_homes=[self.provider], include_health=False,
+                                add_roots=True, approved=True)
+        self.assertEqual(fixed["roots_changed"], [{"key": "extra_read_roots", "removed": [str(gone)]}])
+        self.assertEqual(fixed["stale_read_roots"], [])
+        self.assertEqual(self.config.extra_read_roots, [kept])
+        saved = self.config.config_path.read_text(encoding="utf-8")
+        self.assertIn("!Sky tools (x)", saved)
+        self.assertNotIn("moved away", saved)
+        self.assertTrue(list(self.root.glob("config.toml.bak-maintain-*")), "the previous config is kept")
+
     def test_add_roots_without_approval_refuses_and_leaves_config_alone(self):
         library = self.root / "SteamLibrary"
         data = library / "steamapps" / "common" / "Skyrim Special Edition" / "Data"

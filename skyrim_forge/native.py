@@ -382,7 +382,7 @@ def _msvc_environment() -> dict[str, str]:
     if not script or not script.is_file():
         return {}
     # One raw command line: list2cmdline would mangle the nested quotes cmd needs around a path with spaces.
-    done = subprocess.run(f'cmd.exe /d /s /c ""{script}" >nul && set"', capture_output=True, text=True, encoding="oem", errors="replace", timeout=120, check=False)
+    done = subprocess.run(f'cmd.exe /d /v:off /s /c ""{script}" >nul && set"', capture_output=True, text=True, encoding="oem", errors="replace", timeout=120, check=False)
     if done.returncode:
         raise ToolError(f"Could not load the Visual C++ environment from {script}")
     pairs = (line.partition("=") for line in done.stdout.splitlines())

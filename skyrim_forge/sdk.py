@@ -170,7 +170,7 @@ def _bootstrap(entry: dict[str, Any], dest: Path) -> dict[str, Any]:
     if os.name != "nt":
         raise ToolError(f"{entry['id']}: the bootstrap script is Windows-only")
     # ".\" is required: cmd skips the current directory when NoDefaultCurrentDirectoryInExePath is set.
-    done = subprocess.run(["cmd.exe", "/c", ".\\" + spec["script"], *spec.get("args", [])], cwd=dest, env={**os.environ, "VCPKG_DISABLE_METRICS": "1"}, capture_output=True, text=True, timeout=GIT_TIMEOUT, check=False)
+    done = subprocess.run(["cmd.exe", "/d", "/v:off", "/c", ".\\" + spec["script"], *spec.get("args", [])], cwd=dest, env={**os.environ, "VCPKG_DISABLE_METRICS": "1"}, capture_output=True, text=True, timeout=GIT_TIMEOUT, check=False)
     if done.returncode or not artifact.is_file():
         raise ToolError(f"{entry['id']}: bootstrap failed: {truncate((done.stderr or done.stdout).strip(), 2000)}")
     return {"artifact": str(artifact), "sha256": sha256_file(artifact), "bootstrapped": True}

@@ -37,8 +37,8 @@ Never bump a pin because a newer tag exists. Change one only with the gate named
 python scripts/preflight.py             # versions, control chars, manifest, critical tests
 python -m unittest discover -s tests -q   # SBOM schema test needs: pip install .[test]
 python scripts/validate_repository.py --scope full --write-reports
-.orge architect-recommend request.json   # route before writing
-.orge quality-plan --types papyrus,native  # relevant checks only
+.\forge architect-recommend request.json   # route before writing
+.\forge quality-plan --types papyrus,native  # relevant checks only
 ```
 
 `preflight.py` is the cheap gate; `validate_repository.py --scope full` is the release gate and writes `VALIDATION.json`. Do not claim `PASS` for a category that was skipped or blocked.
