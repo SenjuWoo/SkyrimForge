@@ -31,7 +31,9 @@ Newest first. Each entry records what was verified for that release at the time.
 
 ### Forge 6.12.6 pack content policy removed (2026-11-14)
 - Start: `82edabf` (6.12.5). Removed five content-rule lines from the pack (kept the AOS `C`-trait note); added `tests/test_pack_content_policy.py` (fails on the 6.12.5 pack, passes now).
-- Pending: full gate, exact-SHA CI, release asset check, live update.
+- Verified: full gate PASS three times (482 tests), preflight PASS; pushed `3a7f32f4e5cc721844541f0c73cdb6cd0cc2b900`, exact-SHA CI 16/16, 0 open Dependabot/code-scanning/secret-scanning alerts; tag `v6.12.6` on that SHA with 8 assets, all matching `SHA256SUMS.txt`; the extracted ZIP runs `forge.cmd version` (6.12.6), `doctor` PASS and an MCP handshake (75 tools) from outside its folder.
+- Live install: `Update-Forge.ps1 -ReleaseVersion 6.12.6` installed it (last good release kept); 593/593 files match the release manifest, self-test 18/18, external processes and UI automation still off, `config.toml` changed only in the installer-owned version string (backup taken first). Pack skills in Claude, Codex, Grok, Kimi and the Hermes skyrim profile carry no removed rule and keep the AOS note. The bundle's own `Update-UabsInstructionPacks` refreshed the marked Skyrim block in the Claude, Codex, Grok and Kimi instruction files (one line each, `.before-pack-*.bak` backups).
+- Not verified: nothing loaded in game (no behaviour change there).
 
 ### Forge 6.12.3 scoped quality evidence (2026-11-07)
 - Start/end: `b2a95cc` -> `d793c685591a03d2558503afb0d4b56ea09fc1ef`; tag `v6.12.3` on that SHA; 8 published assets; release ZIP `5ad27f7ee6f03b81a672793d7b80d7e2005bc1213a9456308544fec8154b7b48`.
