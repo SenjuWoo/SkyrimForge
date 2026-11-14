@@ -19,17 +19,17 @@
       "builds": {
         "linux": {
           "buildvcs": false,
-          "bundled": "e535f936a45afe8c08c95537c31029a73eccce7c3eb4db4e39834ec4b3e74528",
-          "first": "e535f936a45afe8c08c95537c31029a73eccce7c3eb4db4e39834ec4b3e74528",
+          "bundled": "1cadc28eb6de2242a85b76e7235fedd4960de4efd06be16ccfe3dfc25fb10929",
+          "first": "1cadc28eb6de2242a85b76e7235fedd4960de4efd06be16ccfe3dfc25fb10929",
           "result": "PASS",
-          "second": "e535f936a45afe8c08c95537c31029a73eccce7c3eb4db4e39834ec4b3e74528"
+          "second": "1cadc28eb6de2242a85b76e7235fedd4960de4efd06be16ccfe3dfc25fb10929"
         },
         "windows": {
           "buildvcs": false,
-          "bundled": "69697d05f847ebaff9110cca13d2123c9f92743f84825109a67b22ea0ab971f7",
-          "first": "69697d05f847ebaff9110cca13d2123c9f92743f84825109a67b22ea0ab971f7",
+          "bundled": "6812dc29d8f510d6756b8ae968b5cc2026e70958d6fe882d616d7d468d4d0b89",
+          "first": "6812dc29d8f510d6756b8ae968b5cc2026e70958d6fe882d616d7d468d4d0b89",
           "result": "PASS",
-          "second": "69697d05f847ebaff9110cca13d2123c9f92743f84825109a67b22ea0ab971f7"
+          "second": "6812dc29d8f510d6756b8ae968b5cc2026e70958d6fe882d616d7d468d4d0b89"
         }
       },
       "format": {
@@ -91,14 +91,14 @@
     "native": {
       "executed_platform": "windows",
       "hashes": {
-        "linux": "e535f936a45afe8c08c95537c31029a73eccce7c3eb4db4e39834ec4b3e74528",
-        "windows": "69697d05f847ebaff9110cca13d2123c9f92743f84825109a67b22ea0ab971f7"
+        "linux": "1cadc28eb6de2242a85b76e7235fedd4960de4efd06be16ccfe3dfc25fb10929",
+        "windows": "6812dc29d8f510d6756b8ae968b5cc2026e70958d6fe882d616d7d468d4d0b89"
       },
       "linux_elf": true,
       "package_copies_match": true,
       "package_copy_hashes": {
-        "linux": "e535f936a45afe8c08c95537c31029a73eccce7c3eb4db4e39834ec4b3e74528",
-        "windows": "69697d05f847ebaff9110cca13d2123c9f92743f84825109a67b22ea0ab971f7"
+        "linux": "1cadc28eb6de2242a85b76e7235fedd4960de4efd06be16ccfe3dfc25fb10929",
+        "windows": "6812dc29d8f510d6756b8ae968b5cc2026e70958d6fe882d616d7d468d4d0b89"
       },
       "result": "PASS",
       "self_test": {
@@ -117,7 +117,7 @@
         ],
         "returncode": 0,
         "stderr": "",
-        "stdout": "SkyrimForge.Native 6.12.4 go\n"
+        "stdout": "SkyrimForge.Native 6.12.5 go\n"
       },
       "windows_pe": true
     },
@@ -125,13 +125,13 @@
       "result": "PASS",
       "sdist": {
         "result": "PASS",
-        "sha256": "427c25b2d407978808725993a88b62fd81fe00b5ec0a2a022b4b6d2bbe3dc61d",
-        "size": 6910048
+        "sha256": "ffca327e47a5baead9ca5a626098e6d9a6d6b20a358a7f59c4804ee124f580cc",
+        "size": 6910291
       },
       "wheel": {
         "result": "PASS",
-        "sha256": "6d0ac376a8100d455ab78956e81803c90454abb5328e73d333dbeab970ac3dbf",
-        "size": 2849277
+        "sha256": "c496112c53106fa9e17bc8310e0b8544ab1fcba993854e66cf56884d9f2d7f4b",
+        "size": 2849279
       }
     },
     "powershell": {
@@ -190,24 +190,24 @@
       "hardcoded_in_ci": [],
       "result": "PASS",
       "sources": {
-        "CURRENT.txt": "6.12.4",
-        "README.md": "6.12.4",
-        "START-HERE.bat": "6.12.4",
-        "VERSION.txt": "6.12.4",
+        "CURRENT.txt": "6.12.5",
+        "README.md": "6.12.5",
+        "START-HERE.bat": "6.12.5",
+        "VERSION.txt": "6.12.5",
         "integrations/skyrim-pack/skills/skyrim-forge/SKILL.md (series)": "6.12",
-        "pyproject.toml": "6.12.4",
-        "server.json": "6.12.4",
-        "skyrim_forge/version.py": "6.12.4",
-        "writer/native-go/main.go": "6.12.4"
+        "pyproject.toml": "6.12.5",
+        "server.json": "6.12.5",
+        "skyrim_forge/version.py": "6.12.5",
+        "writer/native-go/main.go": "6.12.5"
       },
-      "version": "6.12.4"
+      "version": "6.12.5"
     }
   },
   "errors": [],
   "product": "Skyrim Forge",
   "result": "PASS",
   "scope": "full",
-  "version": "6.12.4",
+  "version": "6.12.5",
   "warnings": [
     "PowerShell syntax is statically screened here; Windows CI executes the shipped parser gate, the exact START-HERE batch startup path, and every skill-provider installation"
   ]

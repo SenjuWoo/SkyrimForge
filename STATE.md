@@ -2,7 +2,7 @@
 
 ## Current state
 
-- Version: 6.12.4. The release page holds the published commit, assets and checksums.
+- Version: 6.12.5. The release page holds the published commit, assets and checksums.
 - Interface: one CLI (`forge`, 79 commands, JSON output) and an opt-in MCP server (75 tools). `doctor`, `capabilities`, `architect-recommend`, `knowledge-lookup` and `quality-plan` are the cold-start commands; see `AGENTS.md`.
 - Health on the maintainer machine: `forge doctor` PASS from both the source checkout and the installed copy; 18 self-tests PASS.
 - This release: launchers work from a folder whose name contains `!` whether or not delayed expansion is on; `forge maintain` names extra read roots that no longer exist.

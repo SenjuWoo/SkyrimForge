@@ -1,3 +1,7 @@
+## 6.12.5 (2026-11-13)
+
+- Test isolation: the Antigravity and Kimi provider-bridge tests now point `LOCALAPPDATA` at their temporary tree. The Antigravity test used to write a real ownership ledger (and its lock file) into the user's `%LOCALAPPDATA%\Skyrim-Forge\managed-skills` on every run, one per temporary folder; 218 had accumulated on one machine. No product behaviour changed.
+
 ## 6.12.4 (2026-11-12)
 
 - Fixed the launchers for an install folder whose name contains `!` (for example `!Skyrim`). With delayed expansion enabled in the calling shell, `Skyrim Forge.bat` reported "Forge is not installed", `Skyrim Forge MCP.bat` did not start the server and `START-HERE.bat` validated a path that does not exist. All eight batch launchers now pin delayed expansion off.
