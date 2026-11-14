@@ -68,7 +68,8 @@ class WindowsProviderBridgeTests(unittest.TestCase):
             )
             ag_home = temp / "antigravity"
             env = os.environ.copy()
-            env.update({"ANTIGRAVITY_CONFIG_DIR": str(ag_home)})
+            # The pack writes its ownership ledger under LOCALAPPDATA; keep it in the temp tree.
+            env.update({"ANTIGRAVITY_CONFIG_DIR": str(ag_home), "LOCALAPPDATA": str(temp / "local")})
             result = self.run_script(fixture / "Install-Skyrim-Pack.ps1", "-Provider", "Antigravity", env=env)
             self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
             self.assertTrue((ag_home / "skills" / "skyrim-forge" / "SKILL.md").is_file())
@@ -93,7 +94,8 @@ class WindowsProviderBridgeTests(unittest.TestCase):
             (fake_bin / "kimi.cmd").write_text("@exit /b 0\n", encoding="ascii")
             report = temp / "report.json"
             env = os.environ.copy()
-            env.update({"KIMI_CODE_HOME": str(kimi_home), "PATH": str(fake_bin) + os.pathsep + env["PATH"]})
+            env.update({"KIMI_CODE_HOME": str(kimi_home), "LOCALAPPDATA": str(temp / "local"),
+                        "PATH": str(fake_bin) + os.pathsep + env["PATH"]})
             result = self.run_script(
                 ROOT / "Register-MCP.ps1", "-Provider", "Kimi", "-Yes", "-ReportPath", str(report), env=env
             )
@@ -236,7 +238,8 @@ class WindowsProviderBridgeTests(unittest.TestCase):
             (fake_bin / "kimi.cmd").write_text("@exit /b 7\n", encoding="ascii")
             report = temp / "report.json"
             env = os.environ.copy()
-            env.update({"KIMI_CODE_HOME": str(kimi_home), "PATH": str(fake_bin) + os.pathsep + env["PATH"]})
+            env.update({"KIMI_CODE_HOME": str(kimi_home), "LOCALAPPDATA": str(temp / "local"),
+                        "PATH": str(fake_bin) + os.pathsep + env["PATH"]})
             result = self.run_script(
                 ROOT / "Register-MCP.ps1", "-Provider", "Kimi", "-Yes", "-ReportPath", str(report), env=env
             )
@@ -259,7 +262,8 @@ class WindowsProviderBridgeTests(unittest.TestCase):
             (fake_bin / "kimi.cmd").write_text("@exit /b 0\n", encoding="ascii")
             report = temp / "report.json"
             env = os.environ.copy()
-            env.update({"KIMI_CODE_HOME": str(kimi_home), "PATH": str(fake_bin) + os.pathsep + env["PATH"]})
+            env.update({"KIMI_CODE_HOME": str(kimi_home), "LOCALAPPDATA": str(temp / "local"),
+                        "PATH": str(fake_bin) + os.pathsep + env["PATH"]})
             result = self.run_script(
                 ROOT / "Register-MCP.ps1", "-Provider", "Kimi", "-Yes", "-ReportPath", str(report), env=env
             )
