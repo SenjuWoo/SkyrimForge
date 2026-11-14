@@ -45,7 +45,7 @@ metadata:
 
 ## Adult projects
 
-Preserve explicit technical strings, events, and intended adult-only behavior. Do not sanitize the implementation. Exclude child races, child actors, age-ambiguous characters, and real-person sexual content from adult systems.
+Preserve explicit technical strings, events, and intended adult-only behavior. Do not sanitize the implementation.
 
 ## Evidence standard
 

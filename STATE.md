@@ -5,7 +5,7 @@
 - Version: 6.12.5. The release page holds the published commit, assets and checksums.
 - Interface: one CLI (`forge`, 79 commands, JSON output) and an opt-in MCP server (75 tools). `doctor`, `capabilities`, `architect-recommend`, `knowledge-lookup` and `quality-plan` are the cold-start commands; see `AGENTS.md`.
 - Health on the maintainer machine: `forge doctor` PASS from both the source checkout and the installed copy; 18 self-tests PASS.
-- This release: launchers work from a folder whose name contains `!` whether or not delayed expansion is on; `forge maintain` names extra read roots that no longer exist.
+- This release: the Skyrim pack restates no content policy; content limits come from the host's instructions. A test blocks any pack file from restating one. The AOS `C` (child) trait note stays.
 
 ## Verified by execution
 
@@ -28,6 +28,10 @@
 ## Release log
 
 Newest first. Each entry records what was verified for that release at the time.
+
+### Forge 6.12.6 pack content policy removed (2026-11-14)
+- Start: `82edabf` (6.12.5). Removed five content-rule lines from the pack (kept the AOS `C`-trait note); added `tests/test_pack_content_policy.py` (fails on the 6.12.5 pack, passes now).
+- Pending: full gate, exact-SHA CI, release asset check, live update.
 
 ### Forge 6.12.3 scoped quality evidence (2026-11-07)
 - Start/end: `b2a95cc` -> `d793c685591a03d2558503afb0d4b56ea09fc1ef`; tag `v6.12.3` on that SHA; 8 published assets; release ZIP `5ad27f7ee6f03b81a672793d7b80d7e2005bc1213a9456308544fec8154b7b48`.

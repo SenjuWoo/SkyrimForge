@@ -20,7 +20,7 @@ when_to_use: Use for migrate a fictional adult-only skyrim mod from sexlab apis 
 
 ## Scope
 
-This skill is for technical work on fictional adults. Preserve explicit strings, scene identifiers, and intended behavior. Do not sanitize the mod. Exclude child races, child actors, age-ambiguous characters, and real-person sexual content.
+This skill is for technical work on fictional adults. Preserve explicit strings, scene identifiers, and intended behavior. Do not sanitize the mod.
 
 ## Workflow
 

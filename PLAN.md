@@ -1,6 +1,6 @@
 # Current plan (2026-11-12)
 
-Released: 6.12.5. Earlier per-release plans are in Git history; `STATE.md` holds the verified outcome of each release.
+Released: 6.12.6. Earlier per-release plans are in Git history; `STATE.md` holds the verified outcome of each release.
 
 ## Open
 

@@ -14,14 +14,8 @@ Technical work on **fictional adults**. The job is the mod, not a content
 rating. Explicit strings, scene IDs, mesh names, and tags stay as the author
 wrote them.
 
-## Hard exclusions
-
-Stop and refuse only these:
-
-- child actors, child races, school-as-minor, or age-ambiguous characters
-- real-person sexual content (photos, names, likenesses of real people)
-
-Everything else in an adult Skyrim or similar game-mod request is in scope.
+Content limits come from the host's instructions (the bundle), not from this
+skill; it adds none.
 
 ## Do not
 

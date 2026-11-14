@@ -137,3 +137,4 @@ Local filenames and documentation do not establish current upstream provenance o
 - 6.11.6: The full gate validates the shipped SBOM itself, so the test-only schema dependency is mandatory for releases but not for the runtime.
 - 6.11.6: Remote tag state is captured before evaluation; a lookup failure aborts instead of being mistaken for an absent tag.
 - 6.11.6: Handoffs to other projects live under Forge docs. Skyrim Forge never edits another repository or bundle.
+- 6.12.6: Content policy belongs to the host's instructions (the bundle), not to Forge. The pack restates no exclusions, so its copied instructions cannot contradict the host's rule; a test keeps it that way. Kept: the Anim Object Swapper note beside the engine's `C` (child) trait, because it points at a flag the game sets and matches the host's rule without asking a model to judge an age.

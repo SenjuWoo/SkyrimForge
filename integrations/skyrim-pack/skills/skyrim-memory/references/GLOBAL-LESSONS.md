@@ -130,8 +130,6 @@ Run checks against the final archive, not only the working directory.
 - Technical work may contain explicit fictional adult-only strings, events,
   dialogue, frameworks, and assets. Preserve the intended technical behavior and
   identifiers rather than sanitizing them.
-- Adult systems must exclude child races, child actors, age-ambiguous characters,
-  and real-person sexual content.
 
 ## Context discipline
 

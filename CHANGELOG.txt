@@ -1,3 +1,8 @@
+## 6.12.6 (2026-11-14)
+
+- The Skyrim pack no longer restates a content policy. Five lines added exclusions beyond the host's rule ("age-ambiguous" characters, "real-person" content, "stop and refuse") in the pack instructions, `fictional-adult-modding`, the `skyrim-memory` lessons, `skyrim-papyrus-modding` and `skyrim-sexlab-to-ostim-modernization`. The pack instructions are copied into each provider's instruction file, so that wording contradicted the host's own rule there. Content limits now come from the host's instructions. The Anim Object Swapper note beside the engine's `C` (child) trait stays: it names a flag the game sets and matches the host's rule.
+- `tests/test_pack_content_policy.py` fails if any pack text file restates one of those rules.
+
 ## 6.12.5 (2026-11-13)
 
 - Test isolation: the Antigravity and Kimi provider-bridge tests now point `LOCALAPPDATA` at their temporary tree. The Antigravity test used to write a real ownership ledger (and its lock file) into the user's `%LOCALAPPDATA%\Skyrim-Forge\managed-skills` on every run, one per temporary folder; 218 had accumulated on one machine. No product behaviour changed.

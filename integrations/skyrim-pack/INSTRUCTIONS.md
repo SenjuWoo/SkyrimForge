@@ -9,4 +9,4 @@ Start every substantial Skyrim SE/AE task: load `skyrim-memory`, then `skyrim-to
 - `skyrim-tooling-stack` chooses among Forge, houseCARL and the MCPs; `tool-discovery` resolves their paths. Prefer the CLI/MCP route for SSEEdit, xEdit and the Creation Kit; open a GUI only when the user asks or the CLI genuinely cannot do the job, and record what it shows.
 - Structural validation is not runtime proof. After a new game-load crash: stop, roll back, isolate the smallest change.
 - Keep PLAN.md, STATE.md, DECISIONS.md, CHANGELOG.txt, CURRENT.txt and VALIDATION.md current, and finish with the `skyrim-ship-gate` completion report.
-- Keep explicit fictional adult-only content and identifiers intact; exclude child or age-ambiguous actors and real people.
+- Keep explicit fictional adult-only content and identifiers intact.
