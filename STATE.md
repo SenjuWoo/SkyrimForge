@@ -2,10 +2,10 @@
 
 ## Current state
 
-- Version: 6.12.5. The release page holds the published commit, assets and checksums.
-- Interface: one CLI (`forge`, 79 commands, JSON output) and an opt-in MCP server (75 tools). `doctor`, `capabilities`, `architect-recommend`, `knowledge-lookup` and `quality-plan` are the cold-start commands; see `AGENTS.md`.
+- Version: 6.13.0. The release page holds the published commit, assets and checksums.
+- Interface: one CLI (`forge`, 115 commands, JSON output, exit 0 ok / 1 findings / 2 named failure / 3 bug) and an opt-in MCP server (75 tools; the 6.13 commands are CLI-only so far). `doctor`, `capabilities`, `plan`, `facts`, `architect-recommend` and `quality-plan` are the cold-start commands; see `AGENTS.md`.
 - Health on the maintainer machine: `forge doctor` PASS from both the source checkout and the installed copy; 18 self-tests PASS.
-- This release: the Skyrim pack restates no content policy; content limits come from the host's instructions. A test blocks any pack file from restating one. The AOS `C` (child) trait note stays.
+- This release: parity with Fallout 4 Forge 0.1.1 - Mutagen records worker, Spriggit YAML, native BSA, PEX + shared Papyrus diagnostics, NIF + PyNifly, one-command voice, deploy/undeploy, Creation Kit jobs, evidence tiers, tiered facts and routes, Nexus lookups, tool lock, BodySlide/INI validators, CLI exit-code contract.
 
 ## Verified by execution
 
@@ -28,6 +28,19 @@
 ## Release log
 
 Newest first. Each entry records what was verified for that release at the time.
+
+### Forge 6.13.0 parity with Fallout 4 Forge (2026-11-15)
+- Start: `a0ba8f4` (6.12.6). Reference read in place, not modified: Fallout 4 Forge 0.1.1. Item 9 (deterministic package) dropped: already covered by `release-build` and `tests/test_core.py`.
+- Gate on the installed game (counts and hashes; throwaway config, game files read only):
+  - Native BSA: 508/508 archives in Data re-serialize byte-identical; 83,061 folder/file hashes recomputed with 0 mismatches; 509/509 decoded files (123 LZ4) equal BSArch 0.9e output; an archive packed by Forge (LZ4 and stored) unpacks in BSArch with 85/85 files equal.
+  - PEX: 12,223/12,223 loose scripts parse (big-endian, game 1, 12,220 at 3.2 and 3 at 3.1).
+  - NIF: 1,572/1,572 meshes sampled from Skyrim - Meshes0.bsa parse with consistent block sizes (11,532 texture refs). Blender 5.3.0 + PyNifly 30.3.0 round trip of vanilla weapons/iron/longsword.nif (sha256 876d2351...): 8 meshes, 26 blocks before and after, same 9 texture paths.
+  - Papyrus: a planted call to an undefined function gives exactly one diagnostic from the official compiler (4,4 0-based) and from Caprica 0.3.0 (4,5); both report column 5 after normalization; clean scripts compile to Skyrim PEX with both. An undefined variable gives two official lines (the second is a cascade) and one Caprica line.
+  - Voice: a synthetic 1 s WAV -> XWM 6,756 B (xwmaencode) + LIP 198 B (LipGenerator) -> FUZ 6,966 B (sha256 b47cc337...).
+  - Records worker (Mutagen.Bethesda.Skyrim 0.54.4.0): EditorID index of the active 2,942-plugin load order = 578,136 EditorIDs from 3,547,169 records in 12.6 s; `IronSword` exact find in 2.4 s -> 012EB7:Skyrim.esm, winner USSEP (same as houseCARL); new light QUST with script ForgeGateGood and Start Game Enabled -> 000800, VMAD present, Forge's SEQ parser sees the flag, `validate` PASS.
+  - Spriggit 0.41.0: ccffbsse002-crossbowpack.esl (81 records, 75 YAML files) round-trips record-equal; not byte-equal.
+  - Nexus GraphQL: 31 page IDs verified by API (four first guesses were wrong and were corrected by name lookup).
+- Not verified: no Creation Kit job was run with `--approve` and nothing was deployed into the game (game Data stays read-only); nothing was loaded in Skyrim. Packed BSAs and generated voice files are not tested in game.
 
 ### Forge 6.12.6 pack content policy removed (2026-11-14)
 - Start: `82edabf` (6.12.5). Removed five content-rule lines from the pack (kept the AOS `C`-trait note); added `tests/test_pack_content_policy.py` (fails on the 6.12.5 pack, passes now).
@@ -125,7 +138,7 @@ orge`; a read-only freshness report was added.
 
 ### Forge 6.10.0 maintenance, moved roots and README reset (2026-11-04)
 
-- Goal: make Forge self-sustaining after the repository move to `Z:\Backup\Ai documentation\Tools\Ai tools\Skyrim-Forge`, and cut the README back to one story.
+- Goal: make Forge self-sustaining after the repository moved to a new local folder, and cut the README back to one story.
 - Done: `forge maintain` (dry-run, `--apply --approve`, `--fix-roots`, self-test) with `forge_maintain` over MCP and an `maintenance` capability; it prunes only Forge-owned spills, sandbox runs and provider skill backups, reports MISSING/MOVED roots with a discovered Steam/Vortex/workspace candidate and can write one back with a config backup. README rewritten around install, capabilities, assets, skills, maintenance, MCP, safety and docs; the duplicated Nexus/FOMOD/evidence sections collapse into their guides. `docs/MAINTENANCE.md` added, plus a pointer in the Forge skill and installation guide.
 - Verified: local gate PASS at 6.10.0 (324 tests, 14 self-tests, 68 MCP tools); exact-SHA CI 15/15 on `1d01c41`; v6.10.0 published with 8 assets and the downloaded ZIP matches SHA256SUMS; live install 6.10.0 is 579/579 byte-identical, doctor PASS with 0 warnings, self-test 14/14, and `maintain` reported then pruned 4 post-install skill backups down to 0 planned. The Python 3.14.10 venv still runs from the moved repository path. Ecosystem check PASS 9/9 (bundle catalog 8.35.1, release v6.10.0, Reverse THIS! kit 1.13.3).
 - Not done: no in-game proof for any subsystem; `maintain` deliberately refuses to judge non-Forge folders; automatic updates stay off (the documented weekly task runs cleanup only, because swapping a running install on a schedule is how an MCP server disappears).

@@ -28,6 +28,11 @@ Never bump a pin because a newer tag exists. Change one only with the gate named
 | Native scaffold/CMake/PE | `skyrim_forge/native.py`, `skse_pe.py` |
 | Maintenance, roots, scheduled task | `skyrim_forge/maintenance.py` |
 | MCP surface, annotations, spill | `skyrim_forge/mcp_server.py` |
+| Records worker (Mutagen, .NET) | `workers/SkyrimForge.Records/`, `skyrim_forge/records_worker.py` |
+| Native BSA, PEX, NIF, data kinds | `skyrim_forge/bsa.py`, `pex.py`, `nif.py`, `nif_blender.py`, `datakinds.py` |
+| Spriggit, voice, deploy, Creation Kit | `skyrim_forge/spriggit.py`, `audio.py`, `deploy.py`, `ck.py` |
+| Evidence tiers, facts/routes, Nexus API, tool lock | `skyrim_forge/check.py`, `facts.py` + `references/SKYRIM-FACTS.json`, `nexus_api.py`, `tools_lock.py` + `references/TOOLS-LOCK.json` |
+| CLI contract (exit codes, invocation log) | `skyrim_forge/cli.py` |
 | Release publication | `scripts/publish_release.py`, `.github/workflows/release.yml` |
 
 ## Loop

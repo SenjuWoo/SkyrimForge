@@ -1,3 +1,24 @@
+## 6.13.0 (2026-11-15)
+
+Parity with Fallout 4 Forge 0.1.1, adapted to Skyrim SE/AE and to Forge's workspace and approval rules.
+
+- Records worker: `worker-build` publishes a Forge-owned .NET worker (Mutagen.Bethesda.Skyrim 0.54.4, the version houseCARL 2.1.1 ships). `records-find`, `records-show`, `records-override`, `records-new`, `records-conflicts`, `records-overlap`, `records-validate` and `records-index` work over an MO2 profile or plugins.txt. `records-new QUST --script X --start-enabled` makes a smoke-test quest without the Creation Kit. Writes go only to a workspace plugin, through a temporary folder that keeps the real file name.
+- Spriggit: `spriggit-export`, `spriggit-build`, `spriggit-roundtrip` with the pinned Spriggit 0.41.0 and Spriggit.Yaml.Skyrim; the round trip compares every record with Forge's own parser.
+- Native BSA: `bsa-info`, `bsa-extract`, `bsa-pack` read and write BSA 104/105 with zlib or LZ4 frames using only the standard library. Re-serializing an archive reproduces its bytes, including archives that store data out of record order or share data between records.
+- Papyrus: `pex-info` reads compiled scripts (Skyrim PEX is big-endian). `papyrus-check` compiles into a temporary folder with the official compiler or Caprica (`-g skyrim`) and returns one diagnostics format; columns are 1-based for both (the official compiler counts from 0). `papyrus-compile` keeps the official compiler.
+- NIF: `nif-info` and `nif-refs` read the header, block table and texture sets per nif.xml and resolve textures against folders and archive name tables; `nif-blender` imports or exports through PyNifly in headless Blender without installing the add-on.
+- Voice: `audio-encode` (xwmaencode), `audio-lip` (LipGenerator) and `voice-generate` (WAV -> XWM + LIP -> FUZ in one command) use the Creation Kit's own tools.
+- `deploy` / `undeploy`: dry run unless `--approve`; a receipt lists every file written with its SHA-256; a file the receipt does not own is replaced only with `--force` and a backup; undeploy removes exactly what the receipt lists and leaves changed files alone. CLI only.
+- Creation Kit: `ck-info` reads the switch list from CreationKit.exe; `ck-run` prints the argv until `--approve`, then records every file the CK changed. CLI only.
+- `check <mod folder>` runs every applicable validator and reports the evidence tiers static, compiled, packaged and runtime; runtime is always NOT RUN.
+- `facts` and `plan`: tiered facts (installed, primary, secondary, unverified) with a source and the command that re-reads each; only installed and primary facts are enforced. 31 verified Nexus page IDs. `plan "<goal>"` returns the command route, and a test checks every routed command exists.
+- `nexus-mod` and `nexus-find` use the public Nexus GraphQL v2 API without a key.
+- `tools-sync` and `tools-lock-status`: `references/TOOLS-LOCK.json` pins Spriggit, Caprica, Champollion and PyNifly by asset and file SHA-256. An identical copy already on the machine is used in place; a second sync downloads nothing; a tool you configured yourself is kept.
+- `data-validate`: BodySlide slider presets and groups, INI files; keys before a section and type-prefix mismatches are warnings. BOS lint warns on FormIDs longer than a local ID.
+- CLI contract: usage errors are JSON with exit 2; exit codes are 0 ok, 1 findings, 2 named failure, 3 unexpected exception (findings used to exit 2). `capabilities` lists every command from the parser. Each run appends one line to `~/.skyrim-forge/logs/invocations.jsonl` (override with `SKYRIM_FORGE_INVOCATION_LOG`).
+- A hygiene test rejects personal machine paths in tracked files; one old STATE entry was cleaned.
+- Not adopted: a deterministic package step, because `release-build` already writes fixed timestamps in sorted order and a test builds twice and compares.
+
 ## 6.12.6 (2026-11-14)
 
 - The Skyrim pack no longer restates a content policy. Five lines added exclusions beyond the host's rule ("age-ambiguous" characters, "real-person" content, "stop and refuse") in the pack instructions, `fictional-adult-modding`, the `skyrim-memory` lessons, `skyrim-papyrus-modding` and `skyrim-sexlab-to-ostim-modernization`. The pack instructions are copied into each provider's instruction file, so that wording contradicted the host's own rule there. Content limits now come from the host's instructions. The Anim Object Swapper note beside the engine's `C` (child) trait stays: it names a flag the game sets and matches the host's rule.

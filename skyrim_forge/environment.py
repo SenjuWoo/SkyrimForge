@@ -121,6 +121,9 @@ def discover_tools(config: ForgeConfig) -> dict[str, str]:
         "texture_analyzer": ["TextureAnalyzer.exe"],
         "bethini": ["Bethini.exe"],
         "pca_se": ["PCA SE.exe"],
+        "caprica": ["Caprica.exe"],
+        "spriggit": ["Spriggit.CLI.exe"],
+        "blender": ["blender.exe"],
         "hkxcmd": ["hkxcmd.exe"],
         "cmake": ["cmake.exe", "cmake"],
         "xmake": ["xmake.exe", "xmake"],
@@ -142,7 +145,8 @@ def discover_tools(config: ForgeConfig) -> dict[str, str]:
             found[name] = str(path)
     # The Creation Kit's own compiler beside the game is the authority; copies elsewhere are older or unknown.
     game = config.skyrim_data.parent if config.skyrim_data else None
-    for name, relative in (("creation_kit", "CreationKit.exe"), ("papyrus_compiler", "Papyrus Compiler/PapyrusCompiler.exe")):
+    for name, relative in (("creation_kit", "CreationKit.exe"), ("papyrus_compiler", "Papyrus Compiler/PapyrusCompiler.exe"),
+                           ("audio_xwma_encode", "Tools/Audio/xwmaencode.exe"), ("audio_lip_generate", "Tools/LipGen/LipGenerator/LipGenerator.exe")):
         if game and (game / relative).is_file():
             found[name] = str((game / relative).resolve())
     return found

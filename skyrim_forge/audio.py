@@ -1,9 +1,8 @@
 """Inspect, split and assemble Skyrim voice containers (FUZ/XWM/WAV) with the standard library.
 
 Forge owns the container layer so an agent never hand-writes struct code against
-a live mod. Codec transcoding (WAV -> XWM) and FaceFX lip-sync generation stay
-external: they need the pinned xWMAEncode/FaceFXWrapper tools in the tool vault,
-and Forge only records that boundary rather than pretending to encode.
+a live mod. Encoding (WAV -> XWM) and lip-sync run the Creation Kit's own
+xwmaencode.exe and LipGenerator.exe when they are pinned in the configuration.
 """
 from __future__ import annotations
 
@@ -183,6 +182,85 @@ def validate_voice_tree(root: Path) -> dict[str, Any]:
     return {"result": "PASS" if not errors else "FAIL", "root": str(base), "voice_files": len(rows), "files": rows,
             "errors": sorted(set(errors)), "warnings": warnings, "generated_utc": utc_now(),
             "evidence": "Path layout only. Voice file presence in a plugin's INFO records and in-game dialogue timing are not checked."}
+
+
+# --- encoding and lip-sync through the Creation Kit's own tools ----------------------------------------
+# Tools/Audio/xwmaencode.exe: "XWMAENCODE [-b <N>] <InputFile> <OutputFile>" (its usage text).
+# Tools/LipGen/LipGenerator/LipGenerator.exe: "LipGenerator wav text [-Language:..]" (its usage text); it writes
+# <wav stem>.lip beside the WAV, so it runs on a private copy and the result is moved.
+XWMA_BITRATES = (20000, 32000, 48000, 64000, 96000, 160000, 192000)
+LIP_LANGUAGES = ("USEnglish", "French", "German")
+
+
+def _voice_ready_wav(wav: Path) -> None:
+    report = inspect(wav)
+    if not report.get("audio", {}).get("voice_ready"):
+        raise ValidationError(f"{wav.name} is not a voice-ready WAV (16-bit PCM mono): {report.get('audio')}")
+
+
+def encode_xwm(config: Any, wav: Path, output: Path, *, approved: bool, bitrate: int | None = None) -> dict[str, Any]:
+    from .tools import resolve_tool, run_process
+    require_approval(approved, "XWM encoding")
+    if bitrate is not None and bitrate not in XWMA_BITRATES:
+        raise ValidationError(f"bitrate must be one of {XWMA_BITRATES}")
+    target = require_within(output, config.workspace_root)
+    if target.suffix.casefold() != ".xwm":
+        raise ValidationError("XWM output must use the .xwm suffix")
+    tool, exe = resolve_tool(config, "audio_xwma_encode", require_pin=True)
+    target.parent.mkdir(parents=True, exist_ok=True)
+    args = (["-b", str(bitrate)] if bitrate else []) + [str(wav.resolve(strict=True)), str(target)]
+    process = run_process(exe, args, cwd=target.parent, timeout_seconds=tool.timeout_seconds)
+    if process["returncode"] != 0 or not target.is_file():
+        raise ValidationError(f"xwmaencode failed: {(process['stdout'] + process['stderr'])[-400:]}")
+    return {"result": "PASS", "wav": str(wav), "xwm": str(target), "size": target.stat().st_size, "sha256": sha256_bytes(target.read_bytes()),
+            "container": inspect(target).get("audio")}
+
+
+def generate_lip(config: Any, wav: Path, text: str, output: Path, *, approved: bool, language: str = "USEnglish") -> dict[str, Any]:
+    import shutil
+    import tempfile
+    from .tools import resolve_tool, run_process
+    require_approval(approved, "LIP generation")
+    if language not in LIP_LANGUAGES:
+        raise ValidationError(f"language must be one of {LIP_LANGUAGES}")
+    if not text.strip():
+        raise ValidationError("LIP generation needs the spoken text")
+    target = require_within(output, config.workspace_root)
+    if target.suffix.casefold() != ".lip":
+        raise ValidationError("LIP output must use the .lip suffix")
+    _voice_ready_wav(wav)
+    tool, exe = resolve_tool(config, "audio_lip_generate", require_pin=True)
+    with tempfile.TemporaryDirectory(prefix="forge-lip-") as temp:
+        copy = Path(temp) / (target.stem + ".wav")
+        shutil.copy2(wav, copy)
+        process = run_process(exe, [str(copy), text, f"-Language:{language}"], cwd=exe.parent, timeout_seconds=tool.timeout_seconds)
+        produced = copy.with_suffix(".lip")
+        if not produced.is_file() or produced.stat().st_size == 0:
+            raise ValidationError(f"LipGenerator wrote no .lip: {(process['stdout'] + process['stderr'])[-400:]}")
+        target.parent.mkdir(parents=True, exist_ok=True)
+        atomic_write_bytes(target, produced.read_bytes())
+    return {"result": "PASS", "wav": str(wav), "lip": str(target), "size": target.stat().st_size, "language": language}
+
+
+def generate_voice(config: Any, wav: Path, text: str, output: Path, *, approved: bool, language: str = "USEnglish", bitrate: int | None = None) -> dict[str, Any]:
+    """WAV -> XWM (xwmaencode) + LIP (LipGenerator) -> FUZ in one command; intermediates stay in a private temp folder."""
+    import tempfile
+    require_approval(approved, "voice generation")
+    target = require_within(output, config.workspace_root)
+    if target.suffix.casefold() != ".fuz":
+        raise ValidationError("voice output must use the .fuz suffix")
+    if target.exists():
+        raise SafetyError(f"Refusing to overwrite FUZ file: {target}")
+    _voice_ready_wav(wav)
+    with tempfile.TemporaryDirectory(prefix="forge-voice-", dir=config.workspace_root) as temp:
+        stage = Path(temp)
+        xwm = encode_xwm(config, wav, stage / "line.xwm", approved=True, bitrate=bitrate)
+        lip = generate_lip(config, wav, text, stage / "line.lip", approved=True, language=language)
+        packed = create_fuz(stage / "line.xwm", target, config.workspace_root, lip_path=stage / "line.lip", approved=True)
+    unpacked = _fuz_info(target.read_bytes())
+    return {"result": "PASS", "fuz": str(target), "size": packed["size"], "sha256": packed["sha256"], "xwm_size": xwm["size"],
+            "lip_size": lip["size"], "language": language, "container": unpacked,
+            "evidence": "Encoded and lip-synced by the Creation Kit's own tools and re-read as a FUZ; in-game playback and timing are not tested."}
 
 
 def self_test() -> dict[str, Any]:

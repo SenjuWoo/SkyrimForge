@@ -253,6 +253,9 @@ def _lint_bos(path: Path) -> list[dict[str, Any]]:
             continue
         if section not in BOS_SECTIONS:
             continue
+        for match in re.finditer(r"0x([0-9A-Fa-f]{7,8})~", line):
+            # A padded or load-order-prefixed ID is an author quirk seen in shipped configs, so it warns instead of failing.
+            issues.append({"severity": "warning", "line": number, "message": f"FormID 0x{match.group(1)} is longer than a local ID; write the plugin-local ID (last 6 hex digits, 3 for a light plugin)"})
         for match in transform.finditer(line):
             arguments = match.group(1)
             if re.search(r"\s", arguments):

@@ -865,9 +865,10 @@
       "license": "third-party; verify the upstream licence before use",
       "names": [
         "FaceFXWrapper.exe",
-        "LipGen.exe"
+        "LipGen.exe",
+        "LipGenerator.exe"
       ],
-      "notes": "Generates FaceFX .lip tracks from mono PCM WAV plus response text. Verify the exact build and licence with its author; Forge pins the hash and never redistributes it.",
+      "notes": "Generates FaceFX .lip tracks from mono PCM WAV plus response text. Verify the exact build and licence with its author; Forge pins the hash and never redistributes it. LipGenerator.exe ships with the Creation Kit under Tools/LipGen/LipGenerator; `audio-lip` and `voice-generate` run it.",
       "path_hints": [
         "facefx",
         "lipgen",
@@ -938,6 +939,88 @@
       "priority": 20,
       "public_bundle_allowed": false,
       "source": "Cathedral Assets Optimizer distribution"
+    },
+    {
+      "automation": "direct",
+      "capabilities": [
+        "papyrus.compile.caprica"
+      ],
+      "config_key": "caprica",
+      "id": "caprica",
+      "import_mode": "single",
+      "license": "MIT",
+      "names": [
+        "Caprica.exe"
+      ],
+      "notes": "Open-source Papyrus compiler (Orvid/Caprica 0.3.0 accepts -g skyrim). `papyrus-check --compiler caprica` uses it; `papyrus-compile` keeps the official compiler. Discover/configure existing installation only. No public binary bundling.",
+      "path_hints": [
+        "caprica"
+      ],
+      "priority": 60,
+      "public_bundle_allowed": false,
+      "source": "https://github.com/Orvid/Caprica"
+    },
+    {
+      "automation": "direct",
+      "capabilities": [
+        "plugin.yaml.serialize",
+        "plugin.yaml.deserialize"
+      ],
+      "config_key": "spriggit",
+      "id": "spriggit",
+      "import_mode": "directory_runtime",
+      "license": "GPL-3.0",
+      "names": [
+        "Spriggit.CLI.exe"
+      ],
+      "notes": "Plugin <-> YAML tree (Spriggit.Yaml.Skyrim NuGet package fetched by Spriggit on first use). Discover/configure existing installation only. No public binary bundling.",
+      "path_hints": [
+        "spriggit"
+      ],
+      "priority": 80,
+      "public_bundle_allowed": false,
+      "source": "https://github.com/Mutagen-Modding/Spriggit"
+    },
+    {
+      "automation": "direct",
+      "capabilities": [
+        "mesh.nif.blender"
+      ],
+      "config_key": "blender",
+      "id": "blender",
+      "import_mode": "configure_only",
+      "license": "GPL-2.0-or-later",
+      "names": [
+        "blender.exe"
+      ],
+      "notes": "Headless Blender for `nif-blender`; PyNifly is loaded by path for that process only. Discover/configure existing installation only. No public binary bundling.",
+      "path_hints": [
+        "blender"
+      ],
+      "priority": 50,
+      "public_bundle_allowed": false,
+      "source": "https://www.blender.org/"
+    },
+    {
+      "automation": "direct",
+      "capabilities": [
+        "mesh.nif.blender.addon"
+      ],
+      "config_key": "pynifly",
+      "id": "pynifly",
+      "import_mode": "configure_only",
+      "license": "GPL-3.0",
+      "names": [
+        "NiflyDLL.dll"
+      ],
+      "notes": "Configure io_scene_nifly/NiflyDLL.dll of a PyNifly release (the add-on folder is its parent); Forge never installs it into Blender. Discover/configure existing installation only. No public binary bundling.",
+      "path_hints": [
+        "io_scene_nifly",
+        "pynifly"
+      ],
+      "priority": 10,
+      "public_bundle_allowed": false,
+      "source": "https://github.com/BadDogSkyrim/PyNifly"
     }
   ]
 }

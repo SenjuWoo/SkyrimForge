@@ -4,7 +4,7 @@
 
 <div align="center">
 
-# Skyrim Forge 6.12.6
+# Skyrim Forge 6.13.0
 
 **Typed, safety-first Skyrim SE/AE mod engineering for AI agents — offline, free, MCP-ready.**
 
@@ -67,7 +67,13 @@ Setup bootstraps a durable Python runtime, installs the Forge skill and the 50-s
 | FOMOD 5.0 generation and simulation | `fomod-*` | Every `SelectExactlyOne`/`SelectAtMostOne` branch extracted into an MO2/Vortex-shaped sandbox; other group types are reported as uncovered, never claimed as tested |
 | Archives, release trees, deterministic ZIPs | `bsarch-*`, `release-*` | Payload hashes and manifest |
 | Nexus publication gate | `nexus-*` | File-level rights, credits, licences, AI disclosure; the uploader signs |
-| Voice containers (FUZ/XWM/WAV/LIP) | `audio-*`, `voice-path-validate` | Container bytes; codec and lip-sync stay external |
+| Voice containers and generation | `audio-*`, `voice-generate`, `voice-path-validate` | Container bytes; WAV -> XWM + LIP -> FUZ with the Creation Kit's own encoder and lip generator; playback not tested |
+| Typed records through Mutagen | `worker-build`, `records-find/show/override/new/conflicts/overlap/validate/index` | Forge-built .NET worker; new quests with a script and Start Game Enabled without opening the Creation Kit |
+| Plugins as YAML | `spriggit-export`, `spriggit-build`, `spriggit-roundtrip` | Pinned Spriggit; record-equal round trip |
+| Native BSA archives, PEX, NIF | `bsa-info/extract/pack`, `pex-info`, `papyrus-check`, `nif-info`, `nif-refs`, `nif-blender` | Standard-library readers; one diagnostics format for two Papyrus compilers; headless PyNifly |
+| Test deploys and Creation Kit jobs | `deploy`, `undeploy`, `ck-info`, `ck-run` | Dry run until `--approve`; receipts; exact undo |
+| Evidence tiers, facts, routes, Nexus | `check`, `facts`, `plan`, `nexus-mod`, `nexus-find` | static / compiled / packaged; runtime is never claimed |
+| Pinned toolchain | `tools-lock-status`, `tools-sync` | SHA-256-pinned assets; identical existing copies reused, so a second sync downloads nothing |
 | SKSE DLL inspection | `skse-inspect-pe`, `skse-audit-imports`, `skse-verify-reproducible` | PE32+ bytes; never loaded |
 | Native CommonLibSSE-NG projects | `native-scaffold`, `native-build`, `native-audit` | Source-locked scaffold, pinned tools |
 | xEdit fixed scripts, LOOT, Wrye Bash, Creation Kit | `automation-*` | Allowlisted scripts or pinned workers; completion markers required |

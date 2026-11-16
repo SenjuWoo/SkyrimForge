@@ -1,0 +1,23 @@
+{
+  "schema": "skyrim-forge-tools-lock/1",
+  "reviewed": "2026-11-15",
+  "note": "Pinned third-party tools. A release asset is verified by SHA-256 before extraction and the pinned file after it. An existing copy whose pinned file has the same SHA-256 is used in place instead of downloading a second one.",
+  "tools": [
+    {"id": "spriggit", "config_key": "spriggit", "repo": "Mutagen-Modding/Spriggit", "tag": "0.41.0", "asset": "SpriggitCLI.zip",
+     "asset_sha256": "9b1088eed09f3b6b9d30a40b3b0545cea4c84c3f821b512590a60819f6916529", "folder": "Spriggit 0.41.0",
+     "pin_file": "Spriggit.CLI.exe", "pin_sha256": "e7667c537fd24df9982d15c8a225f5604d2167018b85674be88dd75a9b7880eb", "license": "GPL-3.0",
+     "safe_tools": "Spriggit CLI (Mutagen-Modding/Spriggit) | https://github.com/Mutagen-Modding/Spriggit | 0.41.0 SpriggitCLI.zip | safe | GPL-3.0; portable .NET CLI; fetches Spriggit.Yaml.<Game> NuGet packages on first use"},
+    {"id": "caprica", "config_key": "caprica", "repo": "Orvid/Caprica", "tag": "v0.3.0", "asset": "Caprica.v0.3.0.7z",
+     "asset_sha256": "0037e54cf3a1021e976278d9a637e8ae541aaf9ebeb8d274b6c2cfe32f4ee559", "folder": "Caprica 0.3.0",
+     "pin_file": "Caprica.exe", "pin_sha256": "389fef19a803c36342fa7f733c96b6e27ef10fcd0b171af10427e29cbe153ec6", "license": "MIT",
+     "safe_tools": "Caprica (Orvid/Caprica) | https://github.com/Orvid/Caprica | v0.3.0 7z | safe | MIT; Papyrus compiler; portable exe, no network"},
+    {"id": "champollion", "config_key": "champollion", "repo": "Orvid/Champollion", "tag": "v1.3.2", "asset": "Champollion.v1.3.2.zip",
+     "asset_sha256": "ea53054276ac8006ccd3b323286bfbc6e34a454fa419d08da9bd440cbd31b383", "folder": "Champollion 1.3.2",
+     "pin_file": "Champollion.exe", "pin_sha256": "450d9c74dade66331d573cfad881ef3e55384b5478e019af6d90a82378d1a1ec", "license": "LGPL-3.0",
+     "safe_tools": "Champollion (Orvid/Champollion) | https://github.com/Orvid/Champollion | v1.3.2 zip | safe | LGPL-3.0; Papyrus PEX decompiler; portable exe, no network"},
+    {"id": "pynifly", "config_key": "pynifly", "repo": "BadDogSkyrim/PyNifly", "tag": "V30.3.0", "asset": "io_scene_nifly.zip",
+     "asset_sha256": "e00da181ae1c15a785d6aa6f9a9a1bf4f4b7212eda3b8f1f9abe53a05122a359", "folder": "PyNifly 30.3.0",
+     "pin_file": "io_scene_nifly/NiflyDLL.dll", "pin_sha256": "93da0fadb9327b3ba7f4c8a392d3b4b53fafdd1013846254c534691dd0567bb9", "license": "GPL-3.0",
+     "safe_tools": "PyNifly (BadDogSkyrim/PyNifly) | https://github.com/BadDogSkyrim/PyNifly | V30.3.0 io_scene_nifly.zip | safe | GPL-3.0 Blender add-on with its own NIF DLL; loaded headless by path, never installed into Blender"}
+  ]
+}

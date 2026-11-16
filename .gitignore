@@ -16,3 +16,7 @@ htmlcov/
 artifacts/
 config.toml
 /tmp*/
+
+# .NET worker build output
+workers/*/bin/
+workers/*/obj/

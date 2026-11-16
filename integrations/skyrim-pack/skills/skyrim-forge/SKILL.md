@@ -120,6 +120,22 @@ chain, and `forge texture-inspect` reads any DDS header. It is free, offline and
 workspace-only; `docs/ASSET-GENERATION.md` maps the remaining mesh/audio/BC7 gaps
 to free tools. Do not hand-write DDS bytes and do not use a paid converter.
 
+## Routes, evidence tiers and pinned tools
+
+- `forge plan "<goal>"` returns the command route for a goal; `forge facts <topic>` gives tiered facts
+  (installed / primary / secondary / unverified) with the command that re-reads each one. Act only on
+  installed or primary facts.
+- `forge check <mod folder>` reports `static`, `compiled`, `packaged` and `runtime`. Runtime is always
+  `NOT RUN`: never report a structural pass as in-game proof.
+- Records without houseCARL: `forge worker-build --approve` once, then `records-find`, `records-show`,
+  `records-override`, `records-new` (a QUST with `--script` and `--start-enabled` makes a smoke mod
+  without the Creation Kit), `records-validate`. `spriggit-*` keeps a plugin as diffable YAML.
+- `deploy`/`undeploy` and `ck-run` write into the game only with `--approve`, keep receipts and undo
+  exactly what they wrote. They are CLI-only by design.
+- `tools-sync --approve` installs the pinned Spriggit, Caprica, Champollion and PyNifly (reusing an
+  identical copy already on the machine); a tool you configured yourself is kept.
+- Exit codes: 0 ok, 1 findings, 2 named failure (usage errors included, as JSON), 3 Forge bug.
+
 ## Player-facing quality gate
 
 When a mod has a menu, HUD, preview, visual asset, or interactive workflow, load `skyrim-mod-development` (or

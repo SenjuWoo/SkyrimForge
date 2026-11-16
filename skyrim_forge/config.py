@@ -140,6 +140,7 @@ def default_tools() -> dict[str, ToolConfig]:
         "resaverpp_cli", "resaverpp_gui", "pgpatcher", "pgtools", "easynpc", "clibdt", "texture_analyzer", "bethini",
         "eslifier", "nif_optimizer", "nif_analyzer", "resaver", "sniff", "cathedral_assets_optimizer",
         "nifskope", "texconv", "bodyslide", "pandora", "nemesis", "xlodgen", "dyndolod",
+        "caprica", "spriggit", "blender", "pynifly", "audio_xwma_encode", "audio_lip_generate",
         "cmake", "xmake", "vcpkg", "ninja", "ui_worker", "loot_worker", "wrye_worker", "ck_worker",
         "asset_worker", "animation_worker", "bodyslide_worker", "lod_worker", "grass_worker", "synthesis_worker", "audio_worker",
     )}

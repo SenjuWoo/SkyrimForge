@@ -21,7 +21,18 @@ Forge distinguishes evidence levels so an AI cannot turn a configured adapter in
 | SKSE PE inspection | Direct | Implemented | Exports, `SKSEPlugin_Version`, imports, timestamp-normalised reproducibility; not a load or hook proof |
 | Maintenance | Direct | Implemented | Forge-owned spill/sandbox/skill-backup cleanup, moved-root detection, self-test; never touches mods or tools |
 | Procedural textures | Direct | Implemented | DDS BC1/BC3/A8R8G8B8 with mip chains, six procedural kinds, tangent-space normals, PNG preview; placeholders, not art direction |
-| Audio containers | Direct | Implemented | FUZ/XWM/WAV/LIP inspect, split, pack, voice layout; codec and lip generation stay external |
+| Audio containers | Direct | Implemented | FUZ/XWM/WAV/LIP inspect, split, pack, voice layout |
+| Voice generation | Adapter | Implemented | WAV -> XWM (xwmaencode) + LIP (LipGenerator) -> FUZ with the Creation Kit's own tools; playback and timing not tested |
+| Native BSA archives | Direct | Implemented | BSA 104/105 read, extract, pack with LZ4/zlib; re-serializes installed archives byte-identical; no game load test |
+| PEX reader and Papyrus diagnostics | Direct | Implemented | One 1-based diagnostics format for the official compiler and Caprica; bytecode not disassembled |
+| NIF meshes | Direct | Implemented | Header, blocks, texture-set references; headless PyNifly import/export; effect-shader textures not listed |
+| Records worker (Mutagen) | Adapter | Implemented | Forge-built .NET worker: find, show, override, new QUST with script, conflicts, overlap, EditorID index, validate; workspace plugin writes only |
+| Spriggit YAML | Adapter | Implemented | Pinned Spriggit 0.41.0; record-equal round trip, not byte-equal |
+| Deploy / undeploy | Direct | Implemented | CLI only; receipt-owned writes into Data or a mod folder with --approve; exact undo |
+| Creation Kit jobs | Adapter | Implemented | CLI only; switches read from CreationKit.exe; dry run until --approve; receipt of files written |
+| Evidence tiers (`check`) | Direct | Implemented | static / compiled / packaged reported; runtime always NOT RUN |
+| Facts, routes, Nexus lookup | Direct | Implemented | Tiered facts with recheck commands; verified Nexus IDs; public GraphQL, read-only |
+| Tool lock | Direct | Implemented | SHA-256-pinned release assets, receipt-owned tools root, identical existing copies reused |
 | Framework runtime correlation | Direct | Implemented | Log text matched to file and row; static errors are never cleared |
 | Native build | Adapter | Implemented | Pinned local build tools; workspace staging only |
 | FOMOD XML | Profiled | Implemented | Declarative ModuleConfig only; arbitrary C# blocked |

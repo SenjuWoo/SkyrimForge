@@ -169,7 +169,7 @@ def validate_files(errors: list[str], warnings: list[str]) -> dict[str, Any]:
     for name in ("SkyrimForgeCheckErrors.pas", "SkyrimForgeReportRecords.pas"):
         if (ROOT / "resources" / "xedit" / name).read_bytes() != (ROOT / "skyrim_forge" / "resources" / "xedit" / name).read_bytes():
             errors.append(f"xEdit resource copies differ: {name}")
-    reference_names = ("AUTOMATION-SOURCE-LOCK.json", "ERROR-REGISTRY.json", "FOMOD-SOURCE-LOCK.json", "FRAMEWORK-SOURCE-LOCK.json", "NATIVE-SOURCE-LOCK.json", "NEXUS-POLICY-LOCK.json", "TOOL-CATALOG.json", "TOOLCHAIN-SOURCE-LOCK.json", "SDK-LOCK.json", "PLUGIN-INVARIANTS.md")
+    reference_names = ("AUTOMATION-SOURCE-LOCK.json", "ERROR-REGISTRY.json", "FOMOD-SOURCE-LOCK.json", "FRAMEWORK-SOURCE-LOCK.json", "NATIVE-SOURCE-LOCK.json", "NEXUS-POLICY-LOCK.json", "TOOL-CATALOG.json", "TOOLCHAIN-SOURCE-LOCK.json", "SDK-LOCK.json", "PLUGIN-INVARIANTS.md", "SKYRIM-FACTS.json", "TOOLS-LOCK.json")
     for name in reference_names:
         if (ROOT / "references" / name).read_bytes() != (ROOT / "skyrim_forge" / "references" / name).read_bytes():
             errors.append(f"reference copies differ: {name}")

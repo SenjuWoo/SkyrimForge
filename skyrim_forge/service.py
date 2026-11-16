@@ -401,3 +401,176 @@ class ForgeService:
     def self_test(self) -> dict[str, Any]:
         from .selftest import run_all
         return run_all()
+
+    # --- 6.13 parity: native archives, PEX, NIF, records worker, Spriggit, voice, deploy, CK, check, facts, Nexus, tools
+
+    def bsa_info(self, archive: str) -> dict[str, Any]:
+        from . import bsa
+        return bsa.info(self._read(archive))
+
+    def bsa_extract(self, archive: str, output_dir: str, approved: bool, only: str = "") -> dict[str, Any]:
+        from . import bsa
+        return bsa.extract(self._read(archive), Path(output_dir), self.config.workspace_root, approved=approved, only=only)
+
+    def bsa_pack(self, source_dir: str, output: str, approved: bool, compress: bool = True, version: int = 105) -> dict[str, Any]:
+        from . import bsa
+        return bsa.pack(self._read(source_dir), Path(output), self.config.workspace_root, approved=approved, compress=compress, version=version)
+
+    def pex_info(self, path: str) -> dict[str, Any]:
+        from . import pex
+        return pex.info(self._read(path))
+
+    def papyrus_check(self, scripts: list[str], imports: list[str] | None, flags_file: str | None, compiler: str = "official") -> dict[str, Any]:
+        from . import pex
+        configured = imports if imports else [str(path) for path in self.config.papyrus_imports]
+        flags = flags_file or (str(self.config.papyrus_flags) if self.config.papyrus_flags else "")
+        if not flags:
+            raise ValidationError("Papyrus flags file is not configured; pass --flags-file or set papyrus.flags")
+        return pex.check(self.config, [self._read(item) for item in scripts], imports=[self._read(item) for item in configured],
+                         flags_file=self._read(flags), compiler=compiler)
+
+    def nif_info(self, path: str) -> dict[str, Any]:
+        from . import nif
+        return nif.info(self._read(path))
+
+    def nif_refs(self, path: str, data_roots: list[str] | None = None, archives: list[str] | None = None) -> dict[str, Any]:
+        from . import nif
+        return nif.refs(self._read(path), data_roots=[self._read(item) for item in data_roots or []], archives=[self._read(item) for item in archives or []])
+
+    def nif_blender(self, mode: str, source: str, output: str, approved: bool) -> dict[str, Any]:
+        from . import nif
+        return nif.blender(self.config, mode, self._read(source), Path(output), approved=approved)
+
+    def data_validate(self, paths: list[str]) -> dict[str, Any]:
+        from . import datakinds
+        return datakinds.validate_paths([self._read(item) for item in paths])
+
+    def audio_encode(self, wav: str, output: str, approved: bool, bitrate: int | None = None) -> dict[str, Any]:
+        from .audio import encode_xwm
+        return encode_xwm(self.config, self._read(wav), Path(output), approved=approved, bitrate=bitrate)
+
+    def audio_lip(self, wav: str, text: str, output: str, approved: bool, language: str = "USEnglish") -> dict[str, Any]:
+        from .audio import generate_lip
+        return generate_lip(self.config, self._read(wav), text, Path(output), approved=approved, language=language)
+
+    def voice_generate(self, wav: str, text: str, output: str, approved: bool, language: str = "USEnglish", bitrate: int | None = None) -> dict[str, Any]:
+        from .audio import generate_voice
+        return generate_voice(self.config, self._read(wav), text, Path(output), approved=approved, language=language, bitrate=bitrate)
+
+    def deploy(self, source: str, approved: bool, to: str | None = None, mod_id: str | None = None, force: bool = False) -> dict[str, Any]:
+        from .deploy import deploy
+        return deploy(self.config, self._read(source), to=to, mod_id=mod_id, approved=approved, force=force)
+
+    def undeploy(self, source_or_id: str, approved: bool, to: str | None = None) -> dict[str, Any]:
+        from .deploy import undeploy
+        return undeploy(self.config, source_or_id, to=to, approved=approved)
+
+    def ck_info(self) -> dict[str, Any]:
+        from . import ck
+        return ck.info(self.config)
+
+    def ck_run(self, switch: str, plugin: str | None, extra: list[str] | None, approved: bool) -> dict[str, Any]:
+        from . import ck
+        return ck.run(self.config, switch.lstrip("-"), plugin, extra, approved=approved)
+
+    def check(self, root: str, package: str | None = None) -> dict[str, Any]:
+        from .check import check
+        return check(self._read(root), package=self._read(package) if package else None)
+
+    def facts(self, query: str | None = None) -> dict[str, Any]:
+        from .facts import facts
+        return facts(query)
+
+    def plan(self, goal: str) -> dict[str, Any]:
+        from .cli import subcommands
+        from .facts import plan
+        return plan(goal, set(subcommands()))
+
+    def nexus_mod(self, mod_id: int, game: str = "skyrimspecialedition", description: bool = False) -> dict[str, Any]:
+        from .nexus_api import mod
+        return mod(mod_id, game=game, description=description)
+
+    def nexus_find(self, name: str, game: str = "skyrimspecialedition", limit: int = 10) -> dict[str, Any]:
+        from .nexus_api import find
+        return find(name, game=game, limit=limit)
+
+    def tools_lock_status(self) -> dict[str, Any]:
+        from .tools_lock import status
+        return status(self.config)
+
+    def tools_sync(self, only: list[str] | None, approved: bool) -> dict[str, Any]:
+        from .tools_lock import sync
+        return sync(self.config, only=only, approved=approved)
+
+    def worker_status(self) -> dict[str, Any]:
+        from .records_worker import status
+        return status(self.config)
+
+    def worker_build(self, approved: bool) -> dict[str, Any]:
+        from .records_worker import build
+        return build(self.config, approved=approved)
+
+    def _worker_request(self, verb: str, mo2_instance: str | None, plugins_file: str | None, roots: list[str] | None, **fields: Any) -> dict[str, Any]:
+        from .records_worker import call, load_order_paths
+        order = self._load_order(mo2_instance, plugins_file, roots)
+        request = {"verb": verb, "load_order": load_order_paths(order), **{key: value for key, value in fields.items() if value not in (None, "", False)}}
+        result = call(self.config, request)
+        if order["missing"]:
+            result["missing_from_load_order"] = order["missing"]
+        return result
+
+    def records_find(self, mo2_instance: str | None, plugins_file: str | None, roots: list[str] | None, editor_id: str = "", name: str = "",
+                     signature: str = "", exact: bool = False, plugin: str = "", limit: int = 50) -> dict[str, Any]:
+        if not 1 <= limit <= 500:
+            raise ValidationError("limit must be from 1 to 500")
+        if not (editor_id or name):
+            raise ValidationError("give --editor-id or --name")
+        return self._worker_request("find", mo2_instance, plugins_file, roots, edid=editor_id or None, name=name or None, type=signature or None,
+                                    exact=exact, plugin=plugin or None, limit=limit)
+
+    def records_show(self, mo2_instance: str | None, plugins_file: str | None, roots: list[str] | None, form_key: str) -> dict[str, Any]:
+        return self._worker_request("show", mo2_instance, plugins_file, roots, formkey=form_key)
+
+    def records_conflicts(self, mo2_instance: str | None, plugins_file: str | None, roots: list[str] | None, plugin: str, limit: int = 200) -> dict[str, Any]:
+        return self._worker_request("conflicts", mo2_instance, plugins_file, roots, plugin=plugin, limit=limit)
+
+    def records_index(self, mo2_instance: str | None, plugins_file: str | None, roots: list[str] | None) -> dict[str, Any]:
+        out = self.config.config_path.parent / "index" / "records.jsonl"
+        return self._worker_request("index", mo2_instance, plugins_file, roots, out=str(out))
+
+    def records_index_find(self, text: str, limit: int = 50) -> dict[str, Any]:
+        from .records_worker import find_index
+        return find_index(self.config.config_path.parent / "index" / "records.jsonl", text, limit=limit)
+
+    def records_override(self, mo2_instance: str | None, plugins_file: str | None, roots: list[str] | None, form_key: str, target: str, approved: bool) -> dict[str, Any]:
+        from .records_worker import write_target
+        return self._worker_request("override", mo2_instance, plugins_file, roots, formkey=form_key, target=write_target(self.config, target, approved, "record override"))
+
+    def records_new(self, target: str, signature: str, editor_id: str, approved: bool, script: str = "", start_enabled: bool = False,
+                    light: bool = False, mo2_instance: str | None = None, plugins_file: str | None = None, roots: list[str] | None = None) -> dict[str, Any]:
+        from .records_worker import call, load_order_paths, write_target
+        request: dict[str, Any] = {"verb": "new", "target": write_target(self.config, target, approved, "new record"), "type": signature, "edid": editor_id}
+        if script: request["script"] = script
+        if start_enabled: request["start_enabled"] = True
+        if light: request["light"] = True
+        if mo2_instance or plugins_file:
+            request["load_order"] = load_order_paths(self._load_order(mo2_instance, plugins_file, roots))
+        return call(self.config, request)
+
+    def records_overlap(self, mo2_instance: str | None, plugins_file: str | None, roots: list[str] | None, target: str, limit: int = 200) -> dict[str, Any]:
+        return self._worker_request("overlap", mo2_instance, plugins_file, roots, target=str(self._read(target)), limit=limit)
+
+    def records_validate(self, mo2_instance: str | None, plugins_file: str | None, roots: list[str] | None, target: str) -> dict[str, Any]:
+        return self._worker_request("validate", mo2_instance, plugins_file, roots, target=str(self._read(target)))
+
+    def spriggit_export(self, plugin: str, output: str, approved: bool) -> dict[str, Any]:
+        from . import spriggit
+        return spriggit.export(self.config, self._read(plugin), Path(output), approved=approved)
+
+    def spriggit_build(self, yaml_dir: str, output: str, approved: bool) -> dict[str, Any]:
+        from . import spriggit
+        return spriggit.build(self.config, self._read(yaml_dir), Path(output), approved=approved)
+
+    def spriggit_roundtrip(self, plugin: str, work: str, approved: bool) -> dict[str, Any]:
+        from . import spriggit
+        return spriggit.roundtrip(self.config, self._read(plugin), Path(work), approved=approved)

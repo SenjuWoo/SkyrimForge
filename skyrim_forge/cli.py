@@ -12,11 +12,20 @@ from .strictjson import dumps
 from .version import VERSION
 
 
+class UsageError(Exception):
+    """Bad command line: reported as JSON with exit code 2, like any named failure."""
+
+
+class JsonArgumentParser(argparse.ArgumentParser):
+    def error(self, message: str) -> None:  # argparse would print plain text and exit 2
+        raise UsageError(f"{self.prog}: {message}")
+
+
 def parser() -> argparse.ArgumentParser:
-    root = argparse.ArgumentParser(prog="forge", description=f"Skyrim Forge {VERSION} Automation Fabric and publication gate")
+    root = JsonArgumentParser(prog="forge", description=f"Skyrim Forge {VERSION} Automation Fabric and publication gate")
     root.add_argument("--config", help="Alternate config.toml")
     root.add_argument("--version", action="version", version=f"Skyrim Forge {VERSION}")
-    sub = root.add_subparsers(dest="command", required=True)
+    sub = root.add_subparsers(dest="command", required=True, parser_class=JsonArgumentParser)
     sub.add_parser("version")
     sub.add_parser("doctor")
     sub.add_parser("self-test")
@@ -97,21 +106,110 @@ def parser() -> argparse.ArgumentParser:
     qa = sub.add_parser("quality-audit"); qa.add_argument("report")
     pc = sub.add_parser("perf-compare"); pc.add_argument("baseline"); pc.add_argument("candidate"); pc.add_argument("--tolerance", type=float, default=2.0)
     pi = sub.add_parser("perf-ingest"); pi.add_argument("csv"); pi.add_argument("output"); pi.add_argument("--scenario", required=True); pi.add_argument("--metric"); pi.add_argument("--process"); pi.add_argument("--approve", action="store_true")
+    bi = sub.add_parser("bsa-info"); bi.add_argument("archive")
+    bx = sub.add_parser("bsa-extract"); bx.add_argument("archive"); bx.add_argument("output_dir"); bx.add_argument("--only", default=""); bx.add_argument("--approve", action="store_true")
+    bp = sub.add_parser("bsa-pack"); bp.add_argument("source_dir"); bp.add_argument("output"); bp.add_argument("--no-compress", action="store_true"); bp.add_argument("--version", type=int, choices=[104, 105], default=105); bp.add_argument("--approve", action="store_true")
+    px = sub.add_parser("pex-info"); px.add_argument("path")
+    pck = sub.add_parser("papyrus-check"); pck.add_argument("scripts", nargs="+"); pck.add_argument("--import", dest="imports", action="append", default=[]); pck.add_argument("--flags-file"); pck.add_argument("--compiler", choices=["official", "caprica"], default="official")
+    ni = sub.add_parser("nif-info"); ni.add_argument("path")
+    nr = sub.add_parser("nif-refs"); nr.add_argument("path"); nr.add_argument("--data", action="append", default=[], help="loose Data-style folder to resolve textures in"); nr.add_argument("--archive", action="append", default=[], help="BSA whose name table counts as present")
+    nbl = sub.add_parser("nif-blender"); nbl.add_argument("mode", choices=["import", "export", "roundtrip"]); nbl.add_argument("source"); nbl.add_argument("output"); nbl.add_argument("--approve", action="store_true")
+    dv = sub.add_parser("data-validate"); dv.add_argument("paths", nargs="+")
+    aen = sub.add_parser("audio-encode"); aen.add_argument("wav"); aen.add_argument("output"); aen.add_argument("--bitrate", type=int); aen.add_argument("--approve", action="store_true")
+    alp = sub.add_parser("audio-lip"); alp.add_argument("wav"); alp.add_argument("text"); alp.add_argument("output"); alp.add_argument("--language", default="USEnglish"); alp.add_argument("--approve", action="store_true")
+    vg = sub.add_parser("voice-generate"); vg.add_argument("wav"); vg.add_argument("text"); vg.add_argument("output"); vg.add_argument("--language", default="USEnglish"); vg.add_argument("--bitrate", type=int); vg.add_argument("--approve", action="store_true")
+    dep = sub.add_parser("deploy"); dep.add_argument("source"); dep.add_argument("--to", help="mod-manager mod folder instead of the game's Data"); dep.add_argument("--id"); dep.add_argument("--force", action="store_true"); dep.add_argument("--approve", action="store_true")
+    und = sub.add_parser("undeploy"); und.add_argument("source_or_id"); und.add_argument("--to"); und.add_argument("--approve", action="store_true")
+    sub.add_parser("ck-info")
+    ckr = sub.add_parser("ck-run"); ckr.add_argument("switch"); ckr.add_argument("--plugin"); ckr.add_argument("--extra", action="append", default=[]); ckr.add_argument("--approve", action="store_true")
+    chk = sub.add_parser("check"); chk.add_argument("root"); chk.add_argument("--package", help="extracted release folder to count as the packaged tier")
+    fct = sub.add_parser("facts"); fct.add_argument("query", nargs="?")
+    pln = sub.add_parser("plan"); pln.add_argument("goal")
+    nxm = sub.add_parser("nexus-mod"); nxm.add_argument("mod_id", type=int); nxm.add_argument("--game", default="skyrimspecialedition"); nxm.add_argument("--description", action="store_true")
+    nxf = sub.add_parser("nexus-find"); nxf.add_argument("name"); nxf.add_argument("--game", default="skyrimspecialedition"); nxf.add_argument("--limit", type=int, default=10)
+    sub.add_parser("tools-lock-status")
+    tsy = sub.add_parser("tools-sync"); tsy.add_argument("--only", action="append", default=[]); tsy.add_argument("--approve", action="store_true")
+    sub.add_parser("worker-status")
+    wb = sub.add_parser("worker-build"); wb.add_argument("--approve", action="store_true")
+    for name in ("records-find", "records-show", "records-conflicts", "records-index", "records-override", "records-overlap", "records-validate", "records-new"):
+        rw = sub.add_parser(name); rw.add_argument("--mo2-instance"); rw.add_argument("--plugins-file"); rw.add_argument("--root", action="append", default=[])
+        if name == "records-find":
+            rw.add_argument("--editor-id", default=""); rw.add_argument("--name", default=""); rw.add_argument("--signature", default=""); rw.add_argument("--exact", action="store_true"); rw.add_argument("--plugin", default=""); rw.add_argument("--limit", type=int, default=50); rw.add_argument("--from-index", action="store_true", help="search the saved EditorID index instead of the load order")
+        elif name == "records-show":
+            rw.add_argument("form_key", help="012EB7:Skyrim.esm")
+        elif name == "records-conflicts":
+            rw.add_argument("plugin"); rw.add_argument("--limit", type=int, default=200)
+        elif name == "records-override":
+            rw.add_argument("form_key"); rw.add_argument("target"); rw.add_argument("--approve", action="store_true")
+        elif name in ("records-overlap", "records-validate"):
+            rw.add_argument("target")
+            if name == "records-overlap":
+                rw.add_argument("--limit", type=int, default=200)
+        elif name == "records-new":
+            rw.add_argument("target"); rw.add_argument("signature"); rw.add_argument("editor_id"); rw.add_argument("--script", default=""); rw.add_argument("--start-enabled", action="store_true"); rw.add_argument("--light", action="store_true"); rw.add_argument("--approve", action="store_true")
+    spe = sub.add_parser("spriggit-export"); spe.add_argument("plugin"); spe.add_argument("output_dir"); spe.add_argument("--approve", action="store_true")
+    spb = sub.add_parser("spriggit-build"); spb.add_argument("yaml_dir"); spb.add_argument("output"); spb.add_argument("--approve", action="store_true")
+    spr = sub.add_parser("spriggit-roundtrip"); spr.add_argument("plugin"); spr.add_argument("work_dir"); spr.add_argument("--approve", action="store_true")
     mcp = sub.add_parser("mcp"); mcp.add_argument("--surface", choices=["full", "compact"], default=None)
     gui = sub.add_parser("gui")
     return root
+
+
+# Exit codes: 0 ok, 1 the command ran and reported findings, 2 a named failure (bad input, missing tool,
+# refused write, usage error), 3 an unexpected exception (a Forge bug).
+EXIT_OK, EXIT_FINDINGS, EXIT_FAILURE, EXIT_BUG = 0, 1, 2, 3
+INVOCATION_LOG_LIMIT = 5 * 1024 * 1024
 
 
 def _exit_code(value: Any) -> int:
     if isinstance(value, dict):
         status = str(value.get("result", value.get("status", ""))).upper()
         if status in {"FAIL", "BLOCKED", "INVALID", "INCOMPLETE", "CANCELLED", "PARTIAL"}:
-            return 2
-    return 0
+            return EXIT_FINDINGS
+    return EXIT_OK
+
+
+def subcommands(root: argparse.ArgumentParser | None = None) -> dict[str, list[str]]:
+    """Every subcommand and its arguments, read from the parser so the list cannot drift from the CLI."""
+    root = root or parser()
+    action = next(a for a in root._actions if isinstance(a, argparse._SubParsersAction))
+    return {name: [opt.option_strings[0] if opt.option_strings else opt.dest for opt in sub._actions if opt.dest != "help"]
+            for name, sub in sorted(action.choices.items())}
+
+
+def _log_invocation(argv: list[str], command: str, code: int, started: float) -> None:
+    """Append one JSON line per run to the local invocation log; logging never changes the result."""
+    import json, time
+    try:
+        path = Path(os.environ.get("SKYRIM_FORGE_INVOCATION_LOG") or Path.home() / ".skyrim-forge" / "logs" / "invocations.jsonl")
+        path.parent.mkdir(parents=True, exist_ok=True)
+        if path.is_file() and path.stat().st_size > INVOCATION_LOG_LIMIT:
+            os.replace(path, path.with_suffix(".jsonl.1"))
+        row = {"time": time.strftime("%Y-%m-%dT%H:%M:%S"), "version": VERSION, "command": command, "argv": argv, "exit": code,
+               "seconds": round(time.time() - started, 3)}
+        with path.open("a", encoding="utf-8") as stream:
+            stream.write(json.dumps(row) + "\n")
+    except OSError:
+        pass
 
 
 def main(argv: list[str] | None = None) -> int:
-    args = parser().parse_args(argv)
+    import time
+    started = time.time()
+    raw = list(sys.argv[1:] if argv is None else argv)
+    try:
+        args = parser().parse_args(raw)
+    except UsageError as exc:
+        print(dumps({"result": "FAIL", "error": "UsageError", "message": str(exc), "exit": EXIT_FAILURE}), file=sys.stderr)
+        _log_invocation(raw, "", EXIT_FAILURE, started)
+        return EXIT_FAILURE
+    code = _run(args)
+    if args.command not in {"mcp", "gui"}:
+        _log_invocation(raw, args.command, code, started)
+    return code
+
+
+def _run(args: argparse.Namespace) -> int:
     if args.command == "version":
         print(dumps({"product": "Skyrim Forge", "version": VERSION}))
         return 0
@@ -129,8 +227,8 @@ def main(argv: list[str] | None = None) -> int:
         run_gui(args.config)
         return 0
     from .config import load_config
-    service = ForgeService(load_config(args.config))
     try:
+        service = ForgeService(load_config(args.config))
         match args.command:
             case "doctor": value = service.doctor()
             case "config-show": value = service.config_show()
@@ -212,12 +310,58 @@ def main(argv: list[str] | None = None) -> int:
                 else:
                     value = service.maintain(args.days, args.keep_backups, args.apply, args.fix_roots, not args.no_self_test, args.approve)
             case "texture-generate": value = service.texture_generate(args.kind, args.output, size=args.size, fmt=args.format, seed=args.seed, primary=args.primary, secondary=args.secondary, octaves=args.octaves, frequency=args.frequency, cells=args.cells, strength=args.strength, flip_green=args.flip_green, preview=args.preview, approved=args.approve)
+            case "bsa-info": value = service.bsa_info(args.archive)
+            case "bsa-extract": value = service.bsa_extract(args.archive, args.output_dir, args.approve, args.only)
+            case "bsa-pack": value = service.bsa_pack(args.source_dir, args.output, args.approve, not args.no_compress, args.version)
+            case "pex-info": value = service.pex_info(args.path)
+            case "papyrus-check": value = service.papyrus_check(args.scripts, args.imports, args.flags_file, args.compiler)
+            case "nif-info": value = service.nif_info(args.path)
+            case "nif-refs": value = service.nif_refs(args.path, args.data, args.archive)
+            case "nif-blender": value = service.nif_blender(args.mode, args.source, args.output, args.approve)
+            case "data-validate": value = service.data_validate(args.paths)
+            case "audio-encode": value = service.audio_encode(args.wav, args.output, args.approve, args.bitrate)
+            case "audio-lip": value = service.audio_lip(args.wav, args.text, args.output, args.approve, args.language)
+            case "voice-generate": value = service.voice_generate(args.wav, args.text, args.output, args.approve, args.language, args.bitrate)
+            case "deploy": value = service.deploy(args.source, args.approve, args.to, args.id, args.force)
+            case "undeploy": value = service.undeploy(args.source_or_id, args.approve, args.to)
+            case "ck-info": value = service.ck_info()
+            case "ck-run": value = service.ck_run(args.switch, args.plugin, args.extra, args.approve)
+            case "check": value = service.check(args.root, args.package)
+            case "facts": value = service.facts(args.query)
+            case "plan": value = service.plan(args.goal)
+            case "nexus-mod": value = service.nexus_mod(args.mod_id, args.game, args.description)
+            case "nexus-find": value = service.nexus_find(args.name, args.game, args.limit)
+            case "tools-lock-status": value = service.tools_lock_status()
+            case "tools-sync": value = service.tools_sync(args.only or None, args.approve)
+            case "worker-status": value = service.worker_status()
+            case "worker-build": value = service.worker_build(args.approve)
+            case "records-find":
+                if args.from_index:
+                    value = service.records_index_find(args.editor_id or args.name, args.limit)
+                else:
+                    value = service.records_find(args.mo2_instance, args.plugins_file, args.root, args.editor_id, args.name, args.signature, args.exact, args.plugin, args.limit)
+            case "records-show": value = service.records_show(args.mo2_instance, args.plugins_file, args.root, args.form_key)
+            case "records-conflicts": value = service.records_conflicts(args.mo2_instance, args.plugins_file, args.root, args.plugin, args.limit)
+            case "records-index": value = service.records_index(args.mo2_instance, args.plugins_file, args.root)
+            case "records-override": value = service.records_override(args.mo2_instance, args.plugins_file, args.root, args.form_key, args.target, args.approve)
+            case "records-overlap": value = service.records_overlap(args.mo2_instance, args.plugins_file, args.root, args.target, args.limit)
+            case "records-validate": value = service.records_validate(args.mo2_instance, args.plugins_file, args.root, args.target)
+            case "records-new": value = service.records_new(args.target, args.signature, args.editor_id, args.approve, args.script, args.start_enabled, args.light, args.mo2_instance, args.plugins_file, args.root)
+            case "spriggit-export": value = service.spriggit_export(args.plugin, args.output_dir, args.approve)
+            case "spriggit-build": value = service.spriggit_build(args.yaml_dir, args.output, args.approve)
+            case "spriggit-roundtrip": value = service.spriggit_roundtrip(args.plugin, args.work_dir, args.approve)
             case _: raise AssertionError(args.command)
+        if args.command == "capabilities" and not args.identifier and isinstance(value, dict):
+            value["commands"] = subcommands()
         print(dumps(value))
         return _exit_code(value)
+    except (ForgeError, OSError, UsageError) as exc:
+        print(dumps({"result": "FAIL", "error": type(exc).__name__, "message": str(exc), "exit": EXIT_FAILURE}), file=sys.stderr)
+        return EXIT_FAILURE
     except Exception as exc:
-        print(dumps({"result": "FAIL", "error": type(exc).__name__, "message": str(exc)}), file=sys.stderr)
-        return 2
+        print(dumps({"result": "FAIL", "error": type(exc).__name__, "message": str(exc), "exit": EXIT_BUG,
+                     "fix": "This is a Forge defect; report the command and this message."}), file=sys.stderr)
+        return EXIT_BUG
 
 
 if __name__ == "__main__":

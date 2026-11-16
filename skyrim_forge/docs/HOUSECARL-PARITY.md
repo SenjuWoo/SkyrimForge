@@ -14,17 +14,17 @@ when its MCP is absent, erroring, or the task is outside what houseCARL exposes.
 | `records` (select / project / tree) | `load-order`, `record-query` (one plugin), `record-conflicts` (EditorID or form key across the load order: every version, winner, changed subrecords, optional generic dump) | **partial**: no field schema (names/types/enums for 133 record types), no `where=` predicates, no reverse-reference index or link walks, no `info_order`, no SkyPatcher overlay |
 | `check` (findings, facegen) | `record-query` + `record-conflicts` for evidence; procedure in `facegen-diagnostics` | **partial**: no packaged findings |
 | `apply` `create` `remove` | `plugin-plan-validate` / `plugin-build` (new KYWD, GLOB, FLST, OTFT); xEdit automation adapter for anything else | **partial**: no generic typed edit |
-| `forward` `copy` | none native; xEdit automation (copy as override into new file) | **missing** |
+| `forward` `copy` | `records-override` (copies the winning version of a FormKey into a workspace plugin, masters ordered by load order) | **partial**: whole-record copy, no field-level forward |
 | `write_seq` | `seq-build` | **covered**: 229/257 shipped SEQ files byte-identical, 251/257 same set (rest differ in record order or are stale files) |
-| `create_plugin` | `plugin-build` | **partial** (the four record types) |
+| `create_plugin` | `plugin-build` (KYWD/GLOB/FLST/OTFT), `records-new` (any record type by signature; QUST with script and Start Game Enabled) | **partial**: new records carry an EditorID and defaults, not arbitrary fields |
 | `compact_plugin` `merge_plugins` | xEdit / Synthesis adapters, Merge Plugins externally | **missing** (needs a record schema to remap FormIDs) |
 | `asset_status` `place` | `mod-tree`, `archive-info`, `release-validate` | **partial**: no VFS winner view |
-| `nif_inspect` `nif_set` | `deadmesh-scan` (collision report), `skyrim-nif` routing to NifSkope/Nifly/CAO/NIF Optimizer | **missing** native NIF read/write |
+| `nif_inspect` `nif_set` | `nif-info`, `nif-refs` (header, blocks, texture sets); `nif-blender` (PyNifly import/export) | **partial**: read is native, edits go through Blender |
 | `compile_script` `decompile_script` | `papyrus-compile`, `champollion-decompile`, `papyrus-analyze` | **covered** (needs pinned compiler/Champollion) |
-| `bsa_list` `bsa_extract` `bsa_repack` | `bsarch-info` `bsarch-unpack` `bsarch-pack`, `archive-info` | **covered** (needs pinned BSArch) |
+| `bsa_list` `bsa_extract` `bsa_repack` | `bsa-info` `bsa-extract` `bsa-pack` (native, no external tool), `bsarch-*` | **covered** |
 | `skypatcher_layer` | `framework-plan-validate` / `framework-build` / `lint` (SkyPatcher 6.4.2 core rules) | **partial**: no replay of the INI layer onto records |
 | `skse` | `native-scaffold` `native-audit` `native-build` `native-binary-audit`, `sdk-status` | **partial**: authoring/building is covered, installed-plugin inventory is not |
-| `nexus_search` `nexus_mod` `nexus_graphql` `nexus_check_updates` `nexus_identify` | `nexus-*` publication tooling only | **missing** (read-only API client would need the user's key) |
+| `nexus_search` `nexus_mod` `nexus_graphql` `nexus_check_updates` `nexus_identify` | `nexus-find`, `nexus-mod` (public GraphQL v2, no key) | **partial**: no update check or file identification |
 | `set_mo2_instance` `set_tool_path` `load_order_status` `update_status` | `config-set`, `tool-configure`, `load-order`, `doctor` | **covered** |
 
 ## Running without houseCARL
