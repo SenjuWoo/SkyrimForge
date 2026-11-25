@@ -1,6 +1,6 @@
 # Current plan (2026-11-15)
 
-Released: 6.13.0. Earlier per-release plans are in Git history; `STATE.md` holds the verified outcome of each release.
+Released: 6.13.1. Earlier per-release plans are in Git history; `STATE.md` holds the verified outcome of each release.
 
 ## Done in 6.13.0: parity with Fallout 4 Forge 0.1.1
 

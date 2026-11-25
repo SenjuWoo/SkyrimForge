@@ -3,17 +3,17 @@
     "builds": {
       "linux": {
         "buildvcs": false,
-        "bundled": "699cf8e6bbf3ad44c1d55068d2a63c12fe2f48a852e93dfde3f60615a374e22f",
-        "first": "699cf8e6bbf3ad44c1d55068d2a63c12fe2f48a852e93dfde3f60615a374e22f",
+        "bundled": "11e2fbf5cc73fd0fe99b9e9f7fc201f12c591223e8206a89e19eb317696d9a8b",
+        "first": "11e2fbf5cc73fd0fe99b9e9f7fc201f12c591223e8206a89e19eb317696d9a8b",
         "result": "PASS",
-        "second": "699cf8e6bbf3ad44c1d55068d2a63c12fe2f48a852e93dfde3f60615a374e22f"
+        "second": "11e2fbf5cc73fd0fe99b9e9f7fc201f12c591223e8206a89e19eb317696d9a8b"
       },
       "windows": {
         "buildvcs": false,
-        "bundled": "6a6814108dad50eda6e23ef634289084cf3bc3a9e605bb5560670d2e20651a2a",
-        "first": "6a6814108dad50eda6e23ef634289084cf3bc3a9e605bb5560670d2e20651a2a",
+        "bundled": "a437aa6b91528d8508f118766d1be2ea95f1968f874a166a933276b5d03ffc84",
+        "first": "a437aa6b91528d8508f118766d1be2ea95f1968f874a166a933276b5d03ffc84",
         "result": "PASS",
-        "second": "6a6814108dad50eda6e23ef634289084cf3bc3a9e605bb5560670d2e20651a2a"
+        "second": "a437aa6b91528d8508f118766d1be2ea95f1968f874a166a933276b5d03ffc84"
       }
     },
     "format": {
@@ -81,14 +81,14 @@
   "native": {
     "executed_platform": "windows",
     "hashes": {
-      "linux": "699cf8e6bbf3ad44c1d55068d2a63c12fe2f48a852e93dfde3f60615a374e22f",
-      "windows": "6a6814108dad50eda6e23ef634289084cf3bc3a9e605bb5560670d2e20651a2a"
+      "linux": "11e2fbf5cc73fd0fe99b9e9f7fc201f12c591223e8206a89e19eb317696d9a8b",
+      "windows": "a437aa6b91528d8508f118766d1be2ea95f1968f874a166a933276b5d03ffc84"
     },
     "linux_elf": true,
     "package_copies_match": true,
     "package_copy_hashes": {
-      "linux": "699cf8e6bbf3ad44c1d55068d2a63c12fe2f48a852e93dfde3f60615a374e22f",
-      "windows": "6a6814108dad50eda6e23ef634289084cf3bc3a9e605bb5560670d2e20651a2a"
+      "linux": "11e2fbf5cc73fd0fe99b9e9f7fc201f12c591223e8206a89e19eb317696d9a8b",
+      "windows": "a437aa6b91528d8508f118766d1be2ea95f1968f874a166a933276b5d03ffc84"
     },
     "result": "PASS",
     "self_test": {
@@ -107,11 +107,11 @@
       ],
       "returncode": 0,
       "stderr": "",
-      "stdout": "SkyrimForge.Native 6.13.0 go\n"
+      "stdout": "SkyrimForge.Native 6.13.1 go\n"
     },
     "windows_pe": true
   },
   "product": "Skyrim Forge",
   "result": "PASS",
-  "version": "6.13.0"
+  "version": "6.13.1"
 }

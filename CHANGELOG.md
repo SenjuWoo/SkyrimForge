@@ -1,3 +1,10 @@
+## 6.13.1 (2026-11-25)
+
+- `champollion-decompile` works with Champollion 1.0.1. Forge always passed `-d`, which 1.0.1 rejects ("unrecognised option '-d'"), so every decompile with that build failed. Forge now reads the configured build's own `--help` and passes `-d` (debug and compiler-generated functions) and `-r` only when the build lists them, so the pinned 1.3.2 behaves as before. `--recursive` on a build without it is a named error instead of a failed run. Checked against the real 1.0.1 binary and an installed `actor.pex`.
+- The pack's `audit_plugin_headers.py --master-root` no longer fails every HEDR 1.70 plugin that masters the AE `Skyrim.esm` (HEDR 1.71). HEDR 1.71 only widens a light module's local IDs, so a full 1.71 master imposes nothing; a 1.70 dependent now fails only when it overrides the 0x001-0x7FF range of a 1.71 light master, and gets a warning for other references into that range. Master lookup tries the direct path before searching a folder recursively. The fixture script covers the chain cases and now runs in the unit suite.
+- `skyrim-ship-gate` states the same HEDR chain rule; `docs/ASSET-GENERATION.md` names the real `nif-info`/`nif-refs` commands.
+- README rebuilt around real terminal output (`docs/presentation/`), with a cover image and a short tour. Removed `assets/hero.svg`, which still described this repository as a frozen, unsupported 6.0.0 mirror.
+
 ## 6.13.0 (2026-11-15)
 
 Parity with Fallout 4 Forge 0.1.1, adapted to Skyrim SE/AE and to Forge's workspace and approval rules.

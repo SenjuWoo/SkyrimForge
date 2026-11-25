@@ -3,6 +3,7 @@ from __future__ import annotations
 import os
 import json
 import csv
+import re
 import shutil
 import uuid
 from pathlib import Path
@@ -106,9 +107,19 @@ def champollion_decompile(config: ForgeConfig, pex: Path, output_dir: Path, *, a
     if output.exists(): raise FileExistsError(output)
     output.mkdir(parents=True)
     tool,exe=_selected(config,"papyrus.decompile","champollion")
+    # Champollion's option table changed between releases: 1.0.1 has no -r or -d
+    # and rejects them, 1.3.2 (the TOOLS-LOCK pin) has both. Read the build's own
+    # --help (it exits 1) instead of assuming the pinned release is configured.
+    help_run=run_process(exe,["--help"],cwd=output,timeout_seconds=tool.timeout_seconds)
+    options=set(re.findall(r"--([a-z][a-z-]+)",f"{help_run['stdout']}\n{help_run['stderr']}"))
     args=[]
-    if recursive: args.append("-r")
-    args.extend(["-d","-p",str(output),str(source)])
+    if recursive:
+        if "recursive" not in options:
+            shutil.rmtree(output,ignore_errors=True)
+            raise ToolError("This Champollion build has no --recursive option (1.0.1 and older); decompile one .pex at a time or install the pinned 1.3.2 with tools-sync")
+        args.append("-r")
+    if "debug-funcs" in options: args.append("-d")
+    args.extend(["-p",str(output),str(source)])
     process=run_process(exe,args,cwd=output,timeout_seconds=tool.timeout_seconds)
     if process["returncode"]!=0: shutil.rmtree(output,ignore_errors=True); raise ToolError(f"Champollion failed: {process['stderr'] or process['stdout']}")
     files=[p for p in output.rglob("*.psc") if p.is_file() and p.stat().st_size]

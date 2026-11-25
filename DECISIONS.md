@@ -142,3 +142,4 @@ Local filenames and documentation do not establish current upstream provenance o
 - 6.13.0: `deploy`, `undeploy` and `ck-run` are the only commands that write into the game folder. They are CLI-only (not on the MCP surface), dry run until --approve, and keep receipts so every write can be undone. The new read-only commands are CLI-only for now too; the MCP surface is unchanged.
 - 6.13.0: Exit code 1 now means findings and 2 a named failure, matching the other owner forges; no caller depended on 2 for findings.
 - 6.13.0: Papyrus diagnostics report 1-based columns for both compilers; the official compiler's 0-based column is shifted on parse.
+- 6.13.1: Forge passes a third-party tool only the options its configured build lists in its own help, so an older build the user chose keeps working; the pinned version's behaviour does not change.

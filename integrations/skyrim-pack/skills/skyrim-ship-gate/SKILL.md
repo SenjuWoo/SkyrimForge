@@ -67,7 +67,7 @@ For every generated or changed plugin:
 
 - audit HEDR, ESL flag, record form versions, local-ID mode, master indices, and HEDR count;
 - fail extended local IDs below 0x800 unless HEDR is 1.71 and `Skyrim.esm` is first master;
-- when master files are available, pass `--master-root` and validate 1.71 dependency compatibility plus transitive master ordering;
+- when master files are available, pass `--master-root` and validate transitive master ordering; a HEDR 1.70 module may master a full 1.71 module such as AE `Skyrim.esm`, and needs 1.71 only to override or reference the 0x001-0x7FF range of a 1.71 light master;
 - do not call a plugin runtime-valid from header checks alone.
 
 ## V4 framework gate

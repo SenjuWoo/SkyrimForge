@@ -48,7 +48,7 @@ they stay in the local tool vault with a SHA-256 pin, or the human runs them.
 
 | Gap | Free tool | Licence | How it fits |
 |---|---|---|---|
-| Meshes, collision, rigs, NIF authoring | Blender + NIF exporter | GPL | Forge does not write meshes; export NIF, then `forge nif` checks and `nif-optimizer` converts |
+| Meshes, collision, rigs, NIF authoring | Blender + NIF exporter | GPL | Forge does not write meshes; export NIF, then `forge nif-info` and `forge nif-refs` check it and `nif-optimizer` converts |
 | Hand painting, photo texturing | GIMP or Krita | GPL-3.0-or-later | source art; Forge generates placeholders only |
 | Vector UI, icons, maps | Inkscape | GPL-3.0-or-later | export PNG, convert to DDS with `texconv` |
 | PBR channel synthesis (normal/roughness/AO from height) | Materialize | free | Forge's `normal` kind is a rough stand-in |

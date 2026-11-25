@@ -67,15 +67,16 @@ def discover_masters(names,roots):
     result={}
     for name in names:
         for root in roots:
-            candidates=[root/name]
-            if root.is_dir(): candidates += list(root.rglob(name))
-            found=next((p for p in candidates if p.is_file()),None)
+            # Direct hit first; the recursive search runs only when it misses (a game
+            # Data folder holds tens of thousands of files).
+            found=root/name if (root/name).is_file() else next((p for p in root.rglob(name) if p.is_file()),None) if root.is_dir() else None
             if found:
                 try:
                     flags,fv,hedr,masters,onam,start=parse_tes4(found.read_bytes())
-                    result[name.casefold()]={'path':found,'hedr':hedr[0] if hedr else None,'masters':masters}
+                    light=bool(flags&ESL_FLAG) or found.suffix.casefold()=='.esl'
+                    result[name.casefold()]={'path':found,'hedr':hedr[0] if hedr else None,'masters':masters,'light':light}
                 except Exception as exc:
-                    result[name.casefold()]={'path':found,'error':str(exc),'hedr':None,'masters':[]}
+                    result[name.casefold()]={'path':found,'error':str(exc),'hedr':None,'masters':[],'light':False}
                 break
     return result
 
@@ -113,8 +114,15 @@ def audit_bytes(buf,label,expect,target_header,esl_range,required_fv,master_root
                 if not info: warnings.append(f'master not found for header-chain audit: {name}'); continue
                 if info.get('error'): errors.append(f'cannot parse master {name}: {info["error"]}'); continue
                 mh=info.get('hedr')
-                if mh is not None and close(mh,1.71) and (header is None or not close(header,1.71)):
-                    errors.append(f'master {name} uses HEDR 1.71 but dependent module does not')
+                # HEDR 1.71 only widens a LIGHT module's local IDs to 0x001-0x7FF. A full
+                # 1.71 master (AE Skyrim.esm) imposes nothing on a 1.70 dependent; a 1.70
+                # dependent needs 1.71 only to reach a light master's extended range
+                # (references/plugin-invariants.md). Overrides are checked here; FormID
+                # references inside subrecords are not parsed, so they are a warning.
+                if mh is not None and close(mh,1.71) and info.get('light') and (header is None or not close(header,1.71)):
+                    reached=[o for o in overrides if o[2]==i and EXTENDED_LIGHT_MIN<=o[3]<LEGACY_LIGHT_MIN]
+                    if reached: errors.append(f'{len(reached)} override(s) of extended-range records in HEDR 1.71 light master {name} need HEDR 1.71')
+                    else: warnings.append(f'light master {name} uses HEDR 1.71; references into its 0x001-0x7FF range need HEDR 1.71 here (only overrides were checked)')
                 required=[x.casefold() for x in info.get('masters',[])]
                 prior=[x.casefold() for x in masters[:i]]
                 missing=[x for x in required if x not in prior]

@@ -37,6 +37,35 @@ class AdapterOutputTests(unittest.TestCase):
         self.worker('champollion',"pathlib.Path(sys.argv[sys.argv.index('-p')+1],'Example.psc').write_text('ScriptName Example')")
         self.assertEqual(champollion_decompile(self.cfg,self.pex,self.workspace/'fresh',approved=True)['result'],'PASS')
 
+    # Option tables copied from the real binaries: 1.0.1 prints this help (exit 1);
+    # 1.3.2 adds --recursive and --debug-funcs (Orvid/Champollion main.cpp at v1.3.2).
+    CHAMPOLLION_101 = ("HELP='''Champollion PEX decompiler V1.0.1:\n  -h [ --help ] Display the help message\n"
+                       "  -a [ --asm ] arg Output assembly file\n  -p [ --psc ] arg Name of the output dir for psc decompilation\n"
+                       "  -c [ --comment ] Output\n  -t [ --threaded ] Run decompilation in parallel mode'''\n")
+    CHAMPOLLION_132 = CHAMPOLLION_101.replace("V1.0.1", "V1.3.2").replace("'''\n", "\n  -r [ --recursive ] Recursively scan\n  -d [ --debug-funcs ] Decompile debug functions'''\n")
+    FAKE_BODY = ("argv=sys.argv[1:]\n"
+                 "if '--help' in argv: print(HELP); sys.exit(1)\n"
+                 "known={'-h','-a','-p','-c','-t'} | ({'-r','-d'} if 'V1.3.2' in HELP else set())\n"
+                 "bad=[a for a in argv if a.startswith('-') and a not in known]\n"
+                 "if bad: print(\"unrecognised option '\"+bad[0]+\"'\", file=sys.stderr); sys.exit(1)\n"
+                 "pathlib.Path(argv[argv.index('-p')+1],'Example.psc').write_text('ScriptName Example')\n"
+                 "pathlib.Path(argv[argv.index('-p')+1],'argv.txt').write_text(' '.join(argv))\n")
+
+    def test_champollion_101_gets_only_options_it_accepts(self):
+        self.worker('champollion', self.CHAMPOLLION_101 + self.FAKE_BODY)
+        result = champollion_decompile(self.cfg, self.pex, self.workspace/'old', approved=True)
+        self.assertEqual(result['result'], 'PASS')
+        self.assertNotIn('-d', (self.workspace/'old'/'argv.txt').read_text().split())
+        with self.assertRaisesRegex(ToolError, 'recursive'):
+            champollion_decompile(self.cfg, self.pex, self.workspace/'old-r', approved=True, recursive=True)
+        self.assertFalse((self.workspace/'old-r').exists())
+
+    def test_champollion_132_keeps_debug_funcs_and_recursive(self):
+        self.worker('champollion', self.CHAMPOLLION_132 + self.FAKE_BODY)
+        champollion_decompile(self.cfg, self.pex, self.workspace/'new', approved=True, recursive=True)
+        argv = (self.workspace/'new'/'argv.txt').read_text().split()
+        self.assertIn('-d', argv); self.assertIn('-r', argv)
+
     def test_synthesis_exit_zero_requires_a_parseable_plugin(self):
         self.worker('synthesis_cli','')
         with self.assertRaises(ToolError): synthesis_run(self.cfg,self.settings,self.workspace/'empty',approved=True)

@@ -1,13 +1,13 @@
 {
   "SPDXID": "SPDXRef-DOCUMENT",
   "creationInfo": {
-    "created": "2026-11-16T03:36:09Z",
+    "created": "2026-11-16T03:47:16Z",
     "creators": [
-      "Tool: Skyrim Forge validator 6.13.0"
+      "Tool: Skyrim Forge validator 6.13.1"
     ]
   },
   "dataLicense": "CC0-1.0",
-  "documentNamespace": "https://github.com/SenjuWoo/SkyrimForge/spdx/6.13.0/b7aced91ce21",
+  "documentNamespace": "https://github.com/SenjuWoo/SkyrimForge/spdx/6.13.1/109a8f389aee",
   "files": [
     {
       "SPDXID": "SPDXRef-File-.editorconfig",
@@ -29,7 +29,7 @@
       "checksums": [
         {
           "algorithm": "SHA256",
-          "checksumValue": "cc6492ff1c2448105f0a45b333b9e8c243ca4f77fffe0bffd3beb136ee5a34c5"
+          "checksumValue": "d50dbff544ffe6a10dd76ef48e6b48aa21728b234d52b7da63f0655992da84a4"
         }
       ],
       "copyrightText": "NOASSERTION",
@@ -205,21 +205,6 @@
       ]
     },
     {
-      "SPDXID": "SPDXRef-File-assets-hero.svg",
-      "checksums": [
-        {
-          "algorithm": "SHA256",
-          "checksumValue": "0baa58bf32f2ed4019508a624488d7f4e9b25a02bf162319254017780bf934f8"
-        }
-      ],
-      "copyrightText": "NOASSERTION",
-      "fileName": "./assets/hero.svg",
-      "licenseConcluded": "MIT",
-      "licenseInfoInFiles": [
-        "MIT"
-      ]
-    },
-    {
       "SPDXID": "SPDXRef-File-assets-mark.svg",
       "checksums": [
         {
@@ -254,7 +239,7 @@
       "checksums": [
         {
           "algorithm": "SHA256",
-          "checksumValue": "5f83d6783b9649b512d5a63fec2dd8eea9bc5968b71252ced9175a0d6975c4fe"
+          "checksumValue": "6568a5a1734d9d3cbf2deca9bc9f9b38213e0e73bb1af7fea3e295c5f361f362"
         }
       ],
       "copyrightText": "NOASSERTION",
@@ -269,7 +254,7 @@
       "checksums": [
         {
           "algorithm": "SHA256",
-          "checksumValue": "ca4010c1c143108a2f163bd7d26bace3802f240668d33366fe496408fb94b87d"
+          "checksumValue": "2a2b889dfc7bf42e852d73b166e6e7f2d6a42c4655830d45d5dfc0eae05e2c51"
         }
       ],
       "copyrightText": "NOASSERTION",
@@ -374,7 +359,7 @@
       "checksums": [
         {
           "algorithm": "SHA256",
-          "checksumValue": "e2ec254cc07c3e2c3adc28a6a152aad098572df029ae023d580d2c2674cb31c1"
+          "checksumValue": "8fcf94ed3c517028fc89559ffebf53c5e240478efa9237fe8c63447e4071834c"
         }
       ],
       "copyrightText": "NOASSERTION",
@@ -389,7 +374,7 @@
       "checksums": [
         {
           "algorithm": "SHA256",
-          "checksumValue": "4634abe9535128c51898e1c6d0d1937d66c95998a706f32c18369d6e97617729"
+          "checksumValue": "b76c07f752494f897db9e9307b6b0847394411270efbb8be578a4378b870a6c8"
         }
       ],
       "copyrightText": "NOASSERTION",
@@ -419,7 +404,7 @@
       "checksums": [
         {
           "algorithm": "SHA256",
-          "checksumValue": "979b5962186d2e91a02cd27d4ab50e47d8eb972f55293a2ce97664074f83d8fd"
+          "checksumValue": "7f53591219bc6cbf520fdcb2bcd59822023715d20a620115af66cd5fa820e3de"
         }
       ],
       "copyrightText": "NOASSERTION",
@@ -784,6 +769,81 @@
       ],
       "copyrightText": "NOASSERTION",
       "fileName": "./docs/PAPYRUS-ENGINEERING.md",
+      "licenseConcluded": "MIT",
+      "licenseInfoInFiles": [
+        "MIT"
+      ]
+    },
+    {
+      "SPDXID": "SPDXRef-File-docs-presentation-hero.png",
+      "checksums": [
+        {
+          "algorithm": "SHA256",
+          "checksumValue": "5f8eed24ccd2e2ca21246801c455f557490e22e397cc75158680592a7396395d"
+        }
+      ],
+      "copyrightText": "NOASSERTION",
+      "fileName": "./docs/presentation/hero.png",
+      "licenseConcluded": "MIT",
+      "licenseInfoInFiles": [
+        "MIT"
+      ]
+    },
+    {
+      "SPDXID": "SPDXRef-File-docs-presentation-screenshot-doctor.png",
+      "checksums": [
+        {
+          "algorithm": "SHA256",
+          "checksumValue": "a2827a59fe05500359d8b45a5c301aa6b1216d42ca9a13aa472feb08826e69d1"
+        }
+      ],
+      "copyrightText": "NOASSERTION",
+      "fileName": "./docs/presentation/screenshot-doctor.png",
+      "licenseConcluded": "MIT",
+      "licenseInfoInFiles": [
+        "MIT"
+      ]
+    },
+    {
+      "SPDXID": "SPDXRef-File-docs-presentation-screenshot-inspect.png",
+      "checksums": [
+        {
+          "algorithm": "SHA256",
+          "checksumValue": "3e000d9ec619124f2798d88a2a2ff36fae310b73ddbc933bf6af980aca29e59f"
+        }
+      ],
+      "copyrightText": "NOASSERTION",
+      "fileName": "./docs/presentation/screenshot-inspect.png",
+      "licenseConcluded": "MIT",
+      "licenseInfoInFiles": [
+        "MIT"
+      ]
+    },
+    {
+      "SPDXID": "SPDXRef-File-docs-presentation-screenshot-plan.png",
+      "checksums": [
+        {
+          "algorithm": "SHA256",
+          "checksumValue": "4f071df2bced918b9307b7d6dc64d3b12a30b8788b3aebce3673e934d48ee61a"
+        }
+      ],
+      "copyrightText": "NOASSERTION",
+      "fileName": "./docs/presentation/screenshot-plan.png",
+      "licenseConcluded": "MIT",
+      "licenseInfoInFiles": [
+        "MIT"
+      ]
+    },
+    {
+      "SPDXID": "SPDXRef-File-docs-presentation-social-preview.png",
+      "checksums": [
+        {
+          "algorithm": "SHA256",
+          "checksumValue": "fc91a70557bc73682908dd6ec6cd20daafd98ea2d2e08ed6a2d7889d826f9dcd"
+        }
+      ],
+      "copyrightText": "NOASSERTION",
+      "fileName": "./docs/presentation/social-preview.png",
       "licenseConcluded": "MIT",
       "licenseInfoInFiles": [
         "MIT"
@@ -6569,7 +6629,7 @@
       "checksums": [
         {
           "algorithm": "SHA256",
-          "checksumValue": "e795060b121a970bc442a6ff6a73a0d07c34c8692f808e980ce1942c922026ba"
+          "checksumValue": "23a5137b29d5bc06f2307b356be684b8c518545817e05b56b8cd6f05fe2075c3"
         }
       ],
       "copyrightText": "NOASSERTION",
@@ -6599,7 +6659,7 @@
       "checksums": [
         {
           "algorithm": "SHA256",
-          "checksumValue": "42db0128ee4cd01f000be698c875fc3fe78c7d1995c945e0a759d5663af192df"
+          "checksumValue": "ce855cce69e179504d6cb4d235ed3198fdaefffb39cc189b04d66b5b5af9edd4"
         }
       ],
       "copyrightText": "NOASSERTION",
@@ -6764,7 +6824,7 @@
       "checksums": [
         {
           "algorithm": "SHA256",
-          "checksumValue": "e1057a56c025123ec28192de90e56f4ca5917f337cd266dae7e5771555da2f58"
+          "checksumValue": "859dcdf6c28a0ca0207c034c88d71b5e448338060c9d539cc9ea6687c2647eb8"
         }
       ],
       "copyrightText": "NOASSERTION",
@@ -7124,7 +7184,7 @@
       "checksums": [
         {
           "algorithm": "SHA256",
-          "checksumValue": "a98a523bc56aaa313ce169c3f06c8d98f368a49a1445844b2f096c078b867810"
+          "checksumValue": "770790540fe31b11a2f3edc11da9bfaee04a6f739ab73c760362f8c255acaf87"
         }
       ],
       "copyrightText": "NOASSERTION",
@@ -7169,7 +7229,7 @@
       "checksums": [
         {
           "algorithm": "SHA256",
-          "checksumValue": "fb3c7c7a52b888018457e5df732bdcc9c5bbfeb71d931b3ec2435ea2a1029e79"
+          "checksumValue": "d294357f8b89ab441ec9bb838befce65fe3383cd602c5806416727da9c55400d"
         }
       ],
       "copyrightText": "NOASSERTION",
@@ -7184,7 +7244,7 @@
       "checksums": [
         {
           "algorithm": "SHA256",
-          "checksumValue": "ec81b7a37ec5f3a72c20d539e31f71f404f643f5e3e6307c805c39a4f8c32739"
+          "checksumValue": "5e7693723167cb33b23d2e563c4d577ccdd6694f9a8da5204cfa3d55c2e33ace"
         }
       ],
       "copyrightText": "NOASSERTION",
@@ -7784,7 +7844,7 @@
       "checksums": [
         {
           "algorithm": "SHA256",
-          "checksumValue": "c66b0bdbd60e663947878aa9607183d082d92f0402f729283627d159ac2a4f6c"
+          "checksumValue": "e6401319eb9589b164f3997237cf019cb8b3391d729baced5cd51478b90b1a39"
         }
       ],
       "copyrightText": "NOASSERTION",
@@ -7964,7 +8024,7 @@
       "checksums": [
         {
           "algorithm": "SHA256",
-          "checksumValue": "699cf8e6bbf3ad44c1d55068d2a63c12fe2f48a852e93dfde3f60615a374e22f"
+          "checksumValue": "11e2fbf5cc73fd0fe99b9e9f7fc201f12c591223e8206a89e19eb317696d9a8b"
         }
       ],
       "copyrightText": "NOASSERTION",
@@ -7979,7 +8039,7 @@
       "checksums": [
         {
           "algorithm": "SHA256",
-          "checksumValue": "6a6814108dad50eda6e23ef634289084cf3bc3a9e605bb5560670d2e20651a2a"
+          "checksumValue": "a437aa6b91528d8508f118766d1be2ea95f1968f874a166a933276b5d03ffc84"
         }
       ],
       "copyrightText": "NOASSERTION",
@@ -9359,7 +9419,7 @@
       "checksums": [
         {
           "algorithm": "SHA256",
-          "checksumValue": "ad2f82626a16906649ec13290938ebaaa45be7eaa94ed70799b4e58932660e89"
+          "checksumValue": "03ebca4c64d69e2b3d367f93d8b8694b937f0225c4bacd4454175ae911dd54fd"
         }
       ],
       "copyrightText": "NOASSERTION",
@@ -9479,7 +9539,7 @@
       "checksums": [
         {
           "algorithm": "SHA256",
-          "checksumValue": "cc402c1027dc2814b5c692f82262bdc1debea8a23c5f93d67504faa3e6e91757"
+          "checksumValue": "7ead4be9ca31191caf99bcb18f41f04358131d92d0274d1a07300c891cfb12ac"
         }
       ],
       "copyrightText": "NOASSERTION",
@@ -9554,7 +9614,7 @@
       "checksums": [
         {
           "algorithm": "SHA256",
-          "checksumValue": "9ed774d167609fe9a91f1fed07482fc5c11d38087cdd620594ff11ef38961d2f"
+          "checksumValue": "24376e6e7dfa7716c94e871fbdaca2b0f64882a6475f37f2e38a55b964157ea7"
         }
       ],
       "copyrightText": "NOASSERTION",
@@ -9569,7 +9629,7 @@
       "checksums": [
         {
           "algorithm": "SHA256",
-          "checksumValue": "ffd3c7c2ef87df09debb2353746a53f199d8043155dc20aa363642788721c845"
+          "checksumValue": "232633e28882ad71c1b23d2ff4eca6667d3a7182fcad835454ac2cda2b281bc9"
         }
       ],
       "copyrightText": "NOASSERTION",
@@ -9599,7 +9659,7 @@
       "checksums": [
         {
           "algorithm": "SHA256",
-          "checksumValue": "8177b447b80e13da991fdc5d95a1488bbdfe7e3a9af2f2a5c593911e9e57367a"
+          "checksumValue": "b60e34fcb260b2e6fc69e3193b908ee0dcf38f96b6ae1f69639c3d4216c08afd"
         }
       ],
       "copyrightText": "NOASSERTION",
@@ -10120,6 +10180,21 @@
       ]
     },
     {
+      "SPDXID": "SPDXRef-File-tests-test-plugin-header-audit.py",
+      "checksums": [
+        {
+          "algorithm": "SHA256",
+          "checksumValue": "5901ed0d1b1be0648606b03825502f3757d900c7d22575b93bcf95a35babd752"
+        }
+      ],
+      "copyrightText": "NOASSERTION",
+      "fileName": "./tests/test_plugin_header_audit.py",
+      "licenseConcluded": "MIT",
+      "licenseInfoInFiles": [
+        "MIT"
+      ]
+    },
+    {
       "SPDXID": "SPDXRef-File-tests-test-powershell-release.py",
       "checksums": [
         {
@@ -10529,7 +10604,7 @@
       "checksums": [
         {
           "algorithm": "SHA256",
-          "checksumValue": "f72525437392285532971c4fa5e9b92570d73c3b6bc44e8b5c3fce9a60810bdf"
+          "checksumValue": "82a552f22d98f46b27130aaf2cfca08d9aa55ad19b28aebe801825228db77555"
         }
       ],
       "copyrightText": "NOASSERTION",
@@ -10649,7 +10724,7 @@
       "checksums": [
         {
           "algorithm": "SHA256",
-          "checksumValue": "bdc13def046fe451827025fc2b1d000e1ef60d367be15dedc656353133f6f27d"
+          "checksumValue": "5de78a4c7cbb81bd0cf80c1f23a11f21d0f182c4208d013b8a1d92cf50bf7ae2"
         }
       ],
       "copyrightText": "NOASSERTION",
@@ -10679,7 +10754,7 @@
       "checksums": [
         {
           "algorithm": "SHA256",
-          "checksumValue": "699cf8e6bbf3ad44c1d55068d2a63c12fe2f48a852e93dfde3f60615a374e22f"
+          "checksumValue": "11e2fbf5cc73fd0fe99b9e9f7fc201f12c591223e8206a89e19eb317696d9a8b"
         }
       ],
       "copyrightText": "NOASSERTION",
@@ -10694,7 +10769,7 @@
       "checksums": [
         {
           "algorithm": "SHA256",
-          "checksumValue": "6a6814108dad50eda6e23ef634289084cf3bc3a9e605bb5560670d2e20651a2a"
+          "checksumValue": "a437aa6b91528d8508f118766d1be2ea95f1968f874a166a933276b5d03ffc84"
         }
       ],
       "copyrightText": "NOASSERTION",
@@ -10705,7 +10780,7 @@
       ]
     }
   ],
-  "name": "Skyrim-Forge-6.13.0",
+  "name": "Skyrim-Forge-6.13.1",
   "packages": [
     {
       "SPDXID": "SPDXRef-Package-Forge",
@@ -10719,9 +10794,9 @@
       ],
       "name": "Skyrim Forge",
       "packageVerificationCode": {
-        "packageVerificationCodeValue": "6d11ccaeb42937f14919b1359e6114680d2eb23e"
+        "packageVerificationCodeValue": "81df5ab191850d989eeca501c079dbfc1c91a5b8"
       },
-      "versionInfo": "6.13.0"
+      "versionInfo": "6.13.1"
     },
     {
       "SPDXID": "SPDXRef-Package-HouseCARL-Skills",
@@ -10737,7 +10812,7 @@
       "packageVerificationCode": {
         "packageVerificationCodeValue": "3615770292165f9139d2c3bd9855aaa91daf33db"
       },
-      "versionInfo": "6.13.0"
+      "versionInfo": "6.13.1"
     },
     {
       "SPDXID": "SPDXRef-Package-SPDX-Schema",
@@ -10834,11 +10909,6 @@
     },
     {
       "relatedSpdxElement": "SPDXRef-File-AGENTS.md",
-      "relationshipType": "CONTAINS",
-      "spdxElementId": "SPDXRef-Package-Forge"
-    },
-    {
-      "relatedSpdxElement": "SPDXRef-File-assets-hero.svg",
       "relationshipType": "CONTAINS",
       "spdxElementId": "SPDXRef-Package-Forge"
     },
@@ -11029,6 +11099,31 @@
     },
     {
       "relatedSpdxElement": "SPDXRef-File-docs-PAPYRUS-ENGINEERING.md",
+      "relationshipType": "CONTAINS",
+      "spdxElementId": "SPDXRef-Package-Forge"
+    },
+    {
+      "relatedSpdxElement": "SPDXRef-File-docs-presentation-hero.png",
+      "relationshipType": "CONTAINS",
+      "spdxElementId": "SPDXRef-Package-Forge"
+    },
+    {
+      "relatedSpdxElement": "SPDXRef-File-docs-presentation-screenshot-doctor.png",
+      "relationshipType": "CONTAINS",
+      "spdxElementId": "SPDXRef-Package-Forge"
+    },
+    {
+      "relatedSpdxElement": "SPDXRef-File-docs-presentation-screenshot-inspect.png",
+      "relationshipType": "CONTAINS",
+      "spdxElementId": "SPDXRef-Package-Forge"
+    },
+    {
+      "relatedSpdxElement": "SPDXRef-File-docs-presentation-screenshot-plan.png",
+      "relationshipType": "CONTAINS",
+      "spdxElementId": "SPDXRef-Package-Forge"
+    },
+    {
+      "relatedSpdxElement": "SPDXRef-File-docs-presentation-social-preview.png",
       "relationshipType": "CONTAINS",
       "spdxElementId": "SPDXRef-Package-Forge"
     },
@@ -14139,6 +14234,11 @@
     },
     {
       "relatedSpdxElement": "SPDXRef-File-tests-test-performance.py",
+      "relationshipType": "CONTAINS",
+      "spdxElementId": "SPDXRef-Package-Forge"
+    },
+    {
+      "relatedSpdxElement": "SPDXRef-File-tests-test-plugin-header-audit.py",
       "relationshipType": "CONTAINS",
       "spdxElementId": "SPDXRef-Package-Forge"
     },

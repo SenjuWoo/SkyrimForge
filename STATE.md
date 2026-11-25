@@ -2,10 +2,10 @@
 
 ## Current state
 
-- Version: 6.13.0. The release page holds the published commit, assets and checksums.
+- Version: 6.13.1. The release page holds the published commit, assets and checksums.
 - Interface: one CLI (`forge`, 115 commands, JSON output, exit 0 ok / 1 findings / 2 named failure / 3 bug) and an opt-in MCP server (75 tools; the 6.13 commands are CLI-only so far). `doctor`, `capabilities`, `plan`, `facts`, `architect-recommend` and `quality-plan` are the cold-start commands; see `AGENTS.md`.
 - Health on the maintainer machine: `forge doctor` PASS from both the source checkout and the installed copy; 18 self-tests PASS.
-- This release: parity with Fallout 4 Forge 0.1.1 - Mutagen records worker, Spriggit YAML, native BSA, PEX + shared Papyrus diagnostics, NIF + PyNifly, one-command voice, deploy/undeploy, Creation Kit jobs, evidence tiers, tiered facts and routes, Nexus lookups, tool lock, BodySlide/INI validators, CLI exit-code contract.
+- This release: two field-report fixes (Champollion 1.0.1 decompile, HEDR 1.70 plugins on the AE Skyrim.esm in the pack's header audit) and a README rebuilt around real terminal output. 6.13.0 brought parity with Fallout 4 Forge 0.1.1 - Mutagen records worker, Spriggit YAML, native BSA, PEX + shared Papyrus diagnostics, NIF + PyNifly, one-command voice, deploy/undeploy, Creation Kit jobs, evidence tiers, tiered facts and routes, Nexus lookups, tool lock, BodySlide/INI validators, CLI exit-code contract.
 
 ## Verified by execution
 
@@ -28,6 +28,13 @@
 ## Release log
 
 Newest first. Each entry records what was verified for that release at the time.
+
+### Forge 6.13.1 field-report fixes and presentation (2026-11-25)
+- Start: `109a8f3` (6.13.0). Baseline: preflight PASS, `validate_repository.py --scope full` PASS (509 tests), 0 open Dependabot/code-scanning/secret-scanning alerts, no open PRs.
+- Fixed: `champollion-decompile` passed `-d`, which Champollion 1.0.1 rejects; options now come from the configured build's `--help`. Real 1.0.1 binary: an installed `actor.pex` decompiles to `actor.psc` (PASS); `--recursive` returns the named error. Fake 1.0.1/1.3.2 tools in `tests/test_adapter_outputs.py` (the 1.0.1 test fails on 6.13.0).
+- Fixed: `audit_plugin_headers.py --master-root` failed every HEDR 1.70 plugin mastering the AE Skyrim.esm. Real files: a HEDR 1.70 full plugin from the game folder FAILs with the 6.13.0 script and PASSes now; Update.esm and Dawnguard.esm still PASS. Five chain fixtures; `tests/test_plugin_header_audit.py` runs them in the suite.
+- Presentation: `docs/presentation/` hero, social preview and three terminal shots captured from real `skyrim-forge` runs (doctor; plugin-info, pex-info, bsa-info on vanilla files; plan, facts, ck-info), paths redacted. `assets/hero.svg` (an old "unsupported 6.0.0 mirror" banner) removed.
+- Not verified: nothing loaded in game. The social preview image has to be uploaded by hand in the repository settings.
 
 ### Forge 6.13.0 parity with Fallout 4 Forge (2026-11-15)
 - Start: `a0ba8f4` (6.12.6). Reference read in place, not modified: Fallout 4 Forge 0.1.1. Item 9 (deterministic package) dropped: already covered by `release-build` and `tests/test_core.py`.

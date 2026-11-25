@@ -1,59 +1,70 @@
-<p align="center">
-  <img src="assets/mark.svg" width="72" height="72" alt="Skyrim Forge">
-</p>
-
 <div align="center">
 
-# Skyrim Forge 6.13.0
+![Skyrim Forge: the ice-blue Forge mark beside the tagline 'Typed, safety-first Skyrim SE/AE mod engineering for AI agents. Offline, free, MCP-ready.' and the note that game Data, saves and mod-manager staging stay read-only](docs/presentation/hero.png)
 
-**Typed, safety-first Skyrim SE/AE mod engineering for AI agents — offline, free, MCP-ready.**
+# Skyrim Forge 6.13.1
 
-<p>
-  <a href="https://github.com/SenjuWoo/SkyrimForge/actions/workflows/ci.yml"><img src="https://github.com/SenjuWoo/SkyrimForge/actions/workflows/ci.yml/badge.svg" alt="CI"></a>
-  <a href="LICENSE"><img src="https://img.shields.io/badge/license-MIT-8EC8E8?labelColor=0d1117" alt="MIT License"></a>
-  <a href="https://github.com/SenjuWoo/SkyrimForge/releases/latest"><img src="https://img.shields.io/github/v/release/SenjuWoo/SkyrimForge?label=release&color=8EC8E8&labelColor=0d1117" alt="latest release"></a>
-  <img src="https://img.shields.io/badge/python-%3E%3D3.11-8EC8E8?labelColor=0d1117" alt="Python 3.11+">
-</p>
+[![CI](https://github.com/SenjuWoo/SkyrimForge/actions/workflows/ci.yml/badge.svg)](https://github.com/SenjuWoo/SkyrimForge/actions/workflows/ci.yml)
+[![Release](https://img.shields.io/github/v/release/SenjuWoo/SkyrimForge?label=release&color=8EC8E8&labelColor=0d1117)](https://github.com/SenjuWoo/SkyrimForge/releases/latest)
+[![Python](https://img.shields.io/badge/python-3.11%2B-8EC8E8?labelColor=0d1117)](pyproject.toml)
+[![MCP](https://img.shields.io/badge/MCP-2026--07--28-E8A54B?labelColor=0d1117)](docs/MCP.md)
+[![License: MIT](https://img.shields.io/badge/license-MIT-8EC8E8?labelColor=0d1117)](LICENSE)
 
-<p>
-  <a href="#install">Install</a>
-  ·
-  <a href="#what-it-does">Capabilities</a>
-  ·
-  <a href="#free-assets">Free assets</a>
-  ·
-  <a href="#skill-pack">Skill pack</a>
-  ·
-  <a href="#maintenance">Maintenance</a>
-  ·
-  <a href="CHANGELOG.md">Changelog</a>
-</p>
+**[Install](#install)** · **[Tour](#a-short-tour)** · **[Commands](#what-it-does)** · **[Skill pack](#skill-pack)** · **[How it works](#how-it-works)** · **[Docs](#docs)** · **[Changelog](CHANGELOG.md)**
 
 </div>
 
-<p align="center">
-  <img src="assets/hero.svg" alt="Skyrim Forge workbench" width="100%">
-</p>
-
-Skyrim Forge is a local workbench and MCP server that lets an AI build Skyrim mods without clicking through SSEEdit, Creation Kit, Wrye Bash, LOOT or Mod Organizer 2. A job is typed JSON: Forge validates it, runs only hash-pinned adapters, reopens what it can verify, and reports exactly what was and was not proven.
+Skyrim Forge is a local workbench and MCP server that lets an AI build Skyrim SE/AE mods without clicking through SSEEdit, the Creation Kit, Wrye Bash, LOOT or Mod Organizer 2. A job is typed JSON: Forge validates it, runs only hash-pinned adapters, reopens what it can verify, and reports exactly what was and was not proven.
 
 It runs **outside** the game and never installs into `Data`. Live game files, saves, MO2/Vortex staging and profiles are read-only inputs; every write lands in a Forge workspace behind an explicit approval. It is not the in-game SKSE C# framework at [docs.skyrimforge.net](https://docs.skyrimforge.net/).
+
+## What you get
+
+- **Answers read from your own install.** Plugin headers, records, FormIDs, load order and conflicts come from Forge's own parser; compiled scripts, BSA archives and NIF meshes are read natively with the standard library. Nothing is guessed from a wiki.
+- **One command line, JSON out.** 115 CLI commands, each printing one JSON object with stable exit codes (0 ok, 1 findings, 2 a named failure, 3 a bug). `capabilities` lists them all from the parser.
+- **An MCP server for any AI client.** 75 annotated tools on MCP `2026-07-28` plus the older `initialize` handshake, and a four-tool compact surface for hosts with a server-slot or token ceiling.
+- **Writes you can undo.** Plugins, FOMODs, releases and test deploys go to a workspace or behind `--approve`, with receipts that list every file and its SHA-256.
+- **Evidence tiers that never lie.** Static, compiled and packaged results are labelled separately; runtime is reported as not run, because nothing here starts Skyrim.
+- **A 50-skill Skyrim SE/AE pack** for Claude, Codex, Grok, Kimi, Hermes and Antigravity, shipped inside this repository.
+
+![Terminal: skyrim-forge doctor reports result PASS with read_only_ready, plugin_write_ready and skyrim_data_ready true, a 45-entry tool catalog, twelve configured hash-pinned tools from bsarch and papyrus_compiler to spriggit and pynifly, external processes and UI automation off, and no warnings](docs/presentation/screenshot-doctor.png)
 
 ## Install
 
 | Path | What happens |
 |---|---|
 | **Standalone** | Download `Skyrim-Forge-<version>.zip` from [Releases](https://github.com/SenjuWoo/SkyrimForge/releases/latest), check it against `SHA256SUMS.txt`, extract it, rename the folder to something stable such as `SkyrimForge`, then run `START-HERE.bat` inside it. That folder **is** the install root. |
-| **With the bundle** | The [Ultimate AI Starter Bundle](https://github.com/SenjuWoo/Ultimate-AI-Starter-Bundle) extracts the latest digest-verified release to `%LOCALAPPDATA%\Skyrim-Tools\Skyrim-Forge` and never downgrades a newer local install. |
+| **With the bundle** | The [Ultimate AI Starter Bundle](https://github.com/SenjuWoo/Ultimate-AI-Starter-Bundle) extracts the latest digest-verified release to `%LOCALAPPDATA%\Skyrim-Tools\Skyrim-Forge`, never downgrades a newer local install, and puts the same CLI on PATH as `skyrim-forge`. |
 
 Setup bootstraps a durable Python runtime, installs the Forge skill and the 50-skill Skyrim pack into every detected AI app, and registers the MCP server. It needs no admin rights. Re-running `START-HERE.bat`, `Update Forge.bat` or `Install-or-Update.ps1` updates that same folder in place, so a version-stamped extraction folder is safe as long as you keep its name: every AI client stores the MCP command as an absolute path. `SKYRIM_FORGE_ROOT` records the folder for other processes.
 
 ```powershell
 .\forge doctor            # core health, venv durability, tool readiness
-.\forge capabilities      # direct / profiled / adapter / worker / human gate
+.\forge capabilities      # every command, plus direct / profiled / adapter / worker / human-gate levels
 ```
 
 `forge.cmd` beside the install runs the bundled interpreter, so no PATH edit or venv activation is needed. `Forge Doctor.bat` opens the same report.
+
+`forge doctor` reports separate readiness levels: `read_only_ready`, `plugin_write_ready`, `xedit_automation_ready`, `mo2_automation_ready`. A missing external tool does not make the core install broken. External tools and UI automation stay off until you enable them in `config.toml`.
+
+## A short tour
+
+`<Data>` is your game's `Data` folder; Forge only reads it.
+
+```powershell
+.\forge doctor                                        # what is ready, what is missing
+.\forge plan "make a new quest with a start game enabled quest script"   # route a goal to commands
+.\forge facts pex                                     # tiered facts and the command that re-reads each
+.\forge plugin-info "<Data>\Update.esm"               # header, masters, record count
+.\forge pex-info "<Data>\Scripts\actor.pex"           # compiled script header and objects
+.\forge bsa-info "<Data>\Skyrim - Meshes0.bsa"        # archive layout, parsed natively
+.\forge architect-recommend request.json              # rank the smallest suitable route
+.\forge check "<mod folder>"                          # every applicable validator, by evidence tier
+```
+
+![Terminal: skyrim-forge plugin-info Update.esm reports HEDR 1.71, master flag set, Skyrim.esm as its master and 21,232 records; pex-info Scripts/actor.pex reads a big-endian Skyrim PEX 3.2 with object actor extending ObjectReference; bsa-info reads Skyrim - Meshes0.bsa as Skyrim SE/AE with 19,443 files in 978 folders](docs/presentation/screenshot-inspect.png)
+
+![Terminal: skyrim-forge plan routes 'make a new quest with a start game enabled quest script' to worker-build, records-new, records-validate and check; facts pex returns pex.format at tier installed with its recheck command; ck-info reads Creation Kit 1.7.99 with CKPE, its switch list including ConvertToESL, GenerateLips and GenerateSEQ, and finds LipGenerator and xwmaencode](docs/presentation/screenshot-plan.png)
 
 ## What it does
 
@@ -71,6 +82,7 @@ Setup bootstraps a durable Python runtime, installs the Forge skill and the 50-s
 | Typed records through Mutagen | `worker-build`, `records-find/show/override/new/conflicts/overlap/validate/index` | Forge-built .NET worker; new quests with a script and Start Game Enabled without opening the Creation Kit |
 | Plugins as YAML | `spriggit-export`, `spriggit-build`, `spriggit-roundtrip` | Pinned Spriggit; record-equal round trip |
 | Native BSA archives, PEX, NIF | `bsa-info/extract/pack`, `pex-info`, `papyrus-check`, `nif-info`, `nif-refs`, `nif-blender` | Standard-library readers; one diagnostics format for two Papyrus compilers; headless PyNifly |
+| Papyrus decompile | `champollion-decompile` | Pinned Champollion; options read from the configured build's own help |
 | Test deploys and Creation Kit jobs | `deploy`, `undeploy`, `ck-info`, `ck-run` | Dry run until `--approve`; receipts; exact undo |
 | Evidence tiers, facts, routes, Nexus | `check`, `facts`, `plan`, `nexus-mod`, `nexus-find` | static / compiled / packaged; runtime is never claimed |
 | Pinned toolchain | `tools-lock-status`, `tools-sync` | SHA-256-pinned assets; identical existing copies reused, so a second sync downloads nothing |
@@ -79,8 +91,6 @@ Setup bootstraps a durable Python runtime, installs the Forge skill and the 50-s
 | xEdit fixed scripts, LOOT, Wrye Bash, Creation Kit | `automation-*` | Allowlisted scripts or pinned workers; completion markers required |
 | Procedural textures | `texture-generate`, `texture-inspect` | DDS bytes and a PNG preview |
 | Cleanup and drift detection | `maintain` | Forge-owned paths only; dry-run by default |
-
-`forge doctor` reports separate readiness levels: `read_only_ready`, `plugin_write_ready`, `xedit_automation_ready`, `mo2_automation_ready`. A missing external tool does not make the core install broken.
 
 ## Mod intelligence
 
@@ -103,7 +113,7 @@ cannot verify unrelated dimensions. See [docs/MOD-INTELLIGENCE.md](docs/MOD-INTE
 
 ## Free assets
 
-`texture-generate` writes deterministic DDS files — BC1, BC3 or A8R8G8B8, full mip chains — from solid, checker, gradient, seeded-noise, brick and tangent-space-normal patterns, with an optional PNG preview. No paid tool, no network, no new dependency.
+`texture-generate` writes deterministic DDS files (BC1, BC3 or A8R8G8B8, full mip chains) from solid, checker, gradient, seeded-noise, brick and tangent-space-normal patterns, with an optional PNG preview. No paid tool, no network, no new dependency.
 
 ```powershell
 .\forge texture-generate bricks mod/Textures/Stone.dds --size 512 --preview mod/Stone.png --approve
@@ -122,12 +132,32 @@ Forge owns the **50-skill Skyrim SE/AE pack** (`integrations/skyrim-pack/`): rou
 
 The pack's `skyrim-tooling-stack` decides between Forge, houseCARL and external tools. `houseCARL 2.1.2` setup and the Vortex load-order shim live at `integrations/skyrim-pack/skills/housecarl/scripts/Setup-HouseCarl.ps1`.
 
+## How it works
+
+```mermaid
+flowchart TD
+  GAME["Your Skyrim install, saves, MO2/Vortex staging (read-only)"] -->|"native readers"| READ["plugin-info · pex-info · bsa-info · nif-info · records-*"]
+  REQ["typed JSON job or plain-language goal"] --> PLAN["plan · architect-recommend · quality-plan"]
+  PLAN --> VALIDATE["*-plan-validate · lint · facts"]
+  READ --> VALIDATE
+  VALIDATE -->|"approved"| BUILD["build in a Forge workspace: plugins, Papyrus, FOMOD, BSA, voice, native"]
+  LOCK[("hash-pinned tools · TOOLS-LOCK · SDK-LOCK")] --> BUILD
+  BUILD --> CHECK["check: static / compiled / packaged tiers"]
+  CHECK --> SHIP["release-build · nexus-audit · deploy --approve with receipt"]
+  SHIP -->|"undeploy removes exactly what the receipt lists"| GAME
+```
+
+- **Read roots are enforced.** A path outside the configured game, staging and workspace roots is refused, not read.
+- **Writes need approval.** Every writing command needs `--approve` (MCP: `approved: true`) and lands in the workspace; only `deploy`, `undeploy` and `ck-run` touch the game folder, and they keep receipts.
+- **External tools are pinned.** Each adapter selects a tool by exact capability and SHA-256; nothing third-party ships in this repository or a release. Subprocesses use argument arrays and `shell=False`.
+- **Facts carry sources.** Routes, Nexus page IDs and format facts live in `references/` with a tier and the command that re-reads them; only installed and primary facts are enforced.
+
 ## Maintenance and updates
 
 ```powershell
-.\forge maintain                    # report stale Forge-owned files and moved roots
-.\forge maintain --apply --approve  # delete the reported leftovers
-.\forge maintain --fix-roots --approve  # write a discovered Skyrim/Vortex path into config
+.\forge maintain                        # report stale Forge-owned files, moved and stale roots
+.\forge maintain --apply --approve      # delete the reported leftovers
+.\forge maintain --fix-roots --approve  # write discovered paths into config, drop stale read roots
 ```
 
 `maintain` removes only paths Forge can prove it owns: spill files and sandbox runs older than a week under `<workspace>\.forge`, and provider skill backups beyond the newest two. It reports the self-test, flags configured roots that moved with the discovered replacement, and never touches a mod, a tool install or a user file. See [docs/MAINTENANCE.md](docs/MAINTENANCE.md).
@@ -136,7 +166,7 @@ Updates are explicit: `Update Forge.bat` or `Update-Forge.ps1 -CheckOnly`. The u
 
 ## MCP
 
-Forge serves the current **MCP `2026-07-28`** revision and the `initialize` handshake older clients still use, from one process. The full surface exposes 75 tools with annotations; `--surface compact` exposes four orthogonal tools for hosts with a server-slot or token ceiling. Oversized results spill to a workspace artifact instead of being truncated, and Grok's 8-server limit is handled by skipping registration rather than taking the last slot. See [docs/MCP.md](docs/MCP.md).
+Forge serves the current **MCP `2026-07-28`** revision and the `initialize` handshake older clients still use, from one process. The full surface exposes 75 tools with annotations; `--surface compact` exposes four orthogonal tools for hosts with a server-slot or token ceiling. Oversized results spill to a workspace artifact instead of being truncated, and Grok's 8-server limit is handled by skipping registration rather than taking the last slot. The newest commands (records worker, Spriggit, native BSA/PEX/NIF, voice, deploy, Creation Kit) are CLI-only so far. See [docs/MCP.md](docs/MCP.md).
 
 ## Safety and evidence
 
@@ -170,4 +200,6 @@ CI runs Python 3.11/3.13/3.14 on Windows and Ubuntu, the native writer on both, 
 
 Not claimed: gameplay results, in-game visuals, or that any static check replaces a real Skyrim session. The [CHANGELOG](CHANGELOG.md) and [STATE](STATE.md) record what each release actually verified.
 
-Forge is MIT licensed. The bundled houseCARL-derived skills keep their own GPL-3.0 licence and notices (`integrations/skyrim-pack/skills/housecarl/LICENSE`, `THIRD-PARTY-NOTICES.txt`). Ownership across Forge, the bundle and Reverse THIS! is stated once in the [bundle README](https://github.com/SenjuWoo/Ultimate-AI-Starter-Bundle#ownership).
+## License
+
+Forge is MIT licensed ([LICENSE](LICENSE)). The bundled houseCARL-derived skills keep their own GPL-3.0 licence and notices (`integrations/skyrim-pack/skills/housecarl/LICENSE`, `THIRD-PARTY-NOTICES.txt`). Ownership across Forge, the bundle and Reverse THIS! is stated once in the [bundle README](https://github.com/SenjuWoo/Ultimate-AI-Starter-Bundle#ownership). The screenshots show real output from a local install; the game files they inspect belong to their owners and are not redistributed.
